@@ -1,0 +1,204 @@
+<div class="content-block">
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                Add One User
+            </ng-template>
+            <div class="row clearfix">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Add New User Account</h2>
+                        </div>
+                        <div class="body">
+
+                            <form [formGroup]="userForm" class="m-4">
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>User name</mat-label>
+                                            <input formControlName="username" matInput required />
+                                            <mat-error *ngIf="userForm.get('username').hasError('required')">
+                                                User name is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>First name</mat-label>
+                                            <input formControlName="firstname" matInput />
+                                            <mat-error *ngIf="userForm.get('firstname').hasError('required')">
+                                                First name is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Last name</mat-label>
+                                            <input formControlName="lastname" matInput required />
+                                            <mat-error *ngIf="userForm.get('lastname').hasError('required')">
+                                                Last name is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Email</mat-label>
+                                            <input formControlName="email" matInput />
+                                            <mat-error *ngIf="userForm.get('email').hasError('required')">
+                                                Email is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Role</mat-label>
+                                            <mat-select formControlName="role" required>
+                                                <mat-option *ngFor="let role of roles" [value]="role.name">
+                                                    {{ role.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="userForm.get('role').hasError('required')">
+                                                Role is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Phone Number</mat-label>
+                                            <input matInput formControlName="phonenumber" required />
+                                            <mat-error *ngIf="userForm.get('phonenumber').hasError('required')">
+                                                Phone Number is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>User Department</mat-label>
+                                            <mat-icon matSuffix (click)="pickDepartmentDialog()">search</mat-icon>
+                                            <input matInput formControlName="department" required readonly />
+                                            <mat-error *ngIf="userForm.get('department').hasError('required')">
+                                                Department is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Reporting To</mat-label>
+                                            <mat-icon matSuffix (click)="pickReportingToDialog()">search</mat-icon>
+                                            <input matInput formControlName="reportingTo" required readonly />
+                                            <mat-error *ngIf="userForm.get('reportingTo').hasError('required')">
+                                                Reporting to is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                        <div class="example-button-row" align="end">
+                                            <button mat-raised-button color="primary" [disabled]="!userForm.valid"
+                                                (click)="addUser()">
+                                                <span *ngIf="loading"
+                                                    class="spinner-border spinner-border-sm mr-1"></span>
+                                                <b>Submit</b>
+                                            </button>
+                                            <button mat-raised-button color="warn" (click)="onCancel()" tabindex="-1">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                Bulk Upload Users
+            </ng-template>
+            <div class="row clearfix">
+                <div class="card">
+                    <div class="body">
+                        <div class="table-responsive mt-3">
+                            <ul>
+                                <li>
+                                    Use this excel template to fill users data and upload.
+                                </li>
+                                <li>
+                                    <button class="msr-2" color="default" mat-button (click)="getTemplate()"> <b>Template Download</b> </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="body">
+                            <form class="m-4">
+                                <div class="row">
+                                    <div class="col-xl-10 col-lg-10 col-md-8 col-sm-8 mb-3">
+                                        <mat-label>Upload Excel File</mat-label>
+
+                                        <app-file-upload (change)="onFileChange($event)" (change)="selectFile($event)">
+                                        </app-file-upload>
+                                    </div>
+                                    <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                                        <div class="container mt-4">
+                                            <div class="row align-items-center">
+                                                <div class="col"></div>
+                                                <div class="col">
+                                                    <div class="m-l-3 m-b-3">
+                                                        <button mat-flat-button color="primary" *ngIf="excelSelected"
+                                                            type="submit" class="msr-2 mb-2 mt-2" (click)="submit()"
+                                                            [class.auth-spinner]="loading" [disabled]="loading">
+                                                            <b>SUBMIT</b>
+                                                        </button>
+
+                                                        <button class="msr-2" mat-raised-button color="warn" mat-button
+                                                            (click)=" onCancel()"> <b>X</b> </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3" *ngIf="this.excelSelected">
+                                        <mat-label>Preview of The Excel Data</mat-label>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-3">
+                                            <div>
+                                                <div class="dt-responsive">
+                                                    <table
+                                                        class="table table-responsive table-striped table-bordered nowrap">
+                                                        <tbody [perfectScrollbar]>
+                                                            <tr *ngFor="let row of exceldata">
+                                                                <td *ngFor="let cell of row">
+                                                                    {{ cell }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

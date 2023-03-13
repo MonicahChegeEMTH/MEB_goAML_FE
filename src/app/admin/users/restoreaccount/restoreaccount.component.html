@@ -1,0 +1,18 @@
+<div class="container">
+    <div mat-dialog-content>
+        <div class="row">
+            <!--Gift Icon-->
+            <div class="col text-center">
+                <mat-icon color="primary">lock</mat-icon>
+            </div>
+            <!--Modal Text-->
+            <div class="col-12 text-center">
+                <h2>Are you sure you want to Restore this Account? </h2>
+                <h2>{{data.user.username}}</h2>
+            </div>
+        </div>
+        <mat-dialog-actions align="center" class="mb-1">
+            <button mat-raised-button (click)="onClick()" style="width: 40%;">Cancel</button>
+            <button mat-raised-button color="primary" (click)="onRestore()" [class.auth-spinner]="loading" style="width: 40%;">Restore</button>
+        </mat-dialog-actions>
+    </div>

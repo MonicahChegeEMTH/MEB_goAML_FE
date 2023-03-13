@@ -1,0 +1,57 @@
+<div class="row ">
+  <div class="col-xl-3 col-lg-6">
+    <div class="card l-bg-brown">
+      <div class="card-statistic-3">
+        <div class="card-content">
+          <h4 class="card-title">All Accounts</h4>
+          <span class="data-1">{{ allAccounts.length }}</span>
+          <mat-progress-bar mode="determinate"
+            class="progress-m progress-round progress-shadow l-green-progress mt-2 mb-2"
+            value={{allAccounts.length}}>
+          </mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-6">
+    <div class="card l-bg-brown">
+      <div class="card-statistic-3">
+        <div class="card-content">
+          <h4 class="card-title">Active Accounts</h4>
+          <span class="data-1">{{ activeAccounts.length}}</span>
+          <mat-progress-bar mode="determinate"
+            class="progress-m progress-round progress-shadow l-orange-progress mt-2 mb-2"
+            value={{activeAccounts.length}}>
+          </mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-6">
+    <div class="card l-bg-brown">
+      <div class="card-statistic-3">
+        <div class="card-content">
+          <h4 class="card-title">Locked Accounts</h4>
+          <span class="data-1">{{ lockedAccounts.length }}</span>
+          <mat-progress-bar mode="determinate"
+            class="progress-m progress-round progress-shadow l-purple-progress mt-2 mb-2"
+            value={{lockedAccounts.length}}>
+          </mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-6">
+    <div class="card l-bg-brown">
+      <div class="card-statistic-3">
+        <div class="card-content">
+          <h4 class="card-title">Deleted Accounts</h4>
+          <span class="data-1">{{ deletedAccounts.length }}</span>
+          <mat-progress-bar mode="determinate"
+            class="progress-m progress-round progress-shadow l-sky-progress mt-2 mb-2" value={{deletedAccounts.length}}>
+          </mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

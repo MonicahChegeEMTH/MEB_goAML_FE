@@ -1,0 +1,83 @@
+<section class="content">
+<div class="container-fluid content-block">
+    <div class="card">
+        <div class="header">
+            <h2>YOUR ACCOUNT INFO</h2>
+        </div>
+        <div class="body">
+            <div class="card">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-0">
+                        <p class="mt-3 mr-3 ml-3">Account Details For <b> {{userForm.value.username}}.</b></p>
+                        <p class="mt-3 mr-3 ml-3">Account Created On <b>{{userForm.value.createdOn | date}}</b></p>
+                        <p class="mt-3 mr-3 ml-3">Account Locked? <b>{{userForm.value.isAcctLocked}}</b></p>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-0">
+                        <p class="mt-3 mr-3 ml-3">Account Active? <b>{{userForm.value.isAcctActive}}</b></p>
+                        <p class="mt-3 mr-3 ml-3">Currently Logged In? <b>{{userForm.value.isLoggedIn}}</b></p>
+                        <p class="mt-3 mr-3 ml-3">Account Deleted? <b>{{userForm.value.deleteFlag}}</b></p>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="userForm" class="m-4" [class.auth-spinner]="loading">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>User name</mat-label>
+                            <input formControlName="username" matInput readonly />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>First name</mat-label>
+                            <input formControlName="firstname" matInput />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Last name</mat-label>
+                            <input formControlName="lastname" matInput readonly />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input formControlName="email" matInput />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Role</mat-label>
+                            <input matInput formControlName="role" readonly />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Phone Number</mat-label>
+                            <input matInput formControlName="phonenumber" readonly />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Your Department</mat-label>
+                            <input matInput formControlName="department" readonly />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-0">
+                        <mat-form-field class="example-full-width mb-0" appearance="outline">
+                            <mat-label>Reporting To</mat-label>
+                            <input matInput formControlName="reportingTo" readonly />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</section>

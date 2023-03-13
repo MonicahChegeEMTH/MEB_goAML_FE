@@ -1,0 +1,56 @@
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modal-about">
+                    <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
+                        Update User Department
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <form class="register-form m-4" [formGroup]="updateDepartmentForm">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" readonly required />
+                        <mat-error *ngIf="updateDepartmentForm.get('username').hasError('required')">
+                            User name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>New User Department</mat-label>
+                        <mat-icon matSuffix (click)="pickDepartmentDialog()">search</mat-icon>
+                        <input matInput formControlName="department" required readonly />
+                        <mat-error *ngIf="updateDepartmentForm.get('department').hasError('required')">
+                            Department is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                        <div class="example-button-row" align="end">
+                            <button mat-raised-button color="primary" [disabled]="!updateDepartmentForm.valid"
+                                (click)="onSubmit()">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                <b>SUBMIT</b>
+                            </button>
+                            <button mat-raised-button color="warn" (click)="onCancel()" tabindex="-1">
+                                CANCEL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
