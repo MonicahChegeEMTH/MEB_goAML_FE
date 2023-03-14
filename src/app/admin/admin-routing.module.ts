@@ -22,6 +22,29 @@ const routes: Routes = [
         (m) => m.UsersModule
       ),
   },
+
+  {
+    path: "counties",
+    loadChildren: () =>
+      import("./counties/counties.module").then(
+        (m) => m.CountiesModule
+      ),
+  },
+
+  {
+    path: "sub-counties",
+    loadChildren: () =>
+      import("./sub-counties/subcounties.module").then(
+        (m) => m.SubcountiesModule
+      ),
+  },
+  {
+    path: "business-profile",
+    loadChildren: () =>
+      import("./profile/profile.module").then(
+        (m) => m.ProfileModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -18,44 +18,56 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li class="nav-notification-icons pt-0 header-icon">
+          <span>Welcome, <b>{{ userName }}</b></span>
+        </li>
+
+        <!-- <li class="nav-notification-icons pt-0 header-icon">
+          <span>{{date | date}}</span>
+        </li> -->
+
         <!-- Full Screen Button -->
         <li class="fullscreen">
-          <button mat-icon-button (click)="callFullscreen()" class=" nav-notification-icons l-bg-brown">
+          <button mat-icon-button (click)="callFullscreen()" class=" nav-notification-icons primary">
             <app-feather-icons [icon]="'maximize'" [class]="'header-icon'"></app-feather-icons>
           </button>
         </li>
 
         <li class="nav-item user_profile btnUserDropdown" ngbDropdown>
           <div class="chip dropdown-toggle" ngbDropdownToggle class="nav-notification-icons pt-0">
-            <img src="{{userImg}}" class="user_img" width="32" height="32" alt="User">
-            <span>{{ userName }}</span>
-          </div>
-          <div ngbDropdownMenu class="notification-dropdown pullDown">
-            <div class="noti-list" style="position: relative; max-width: 600px; max-height: 300px;" [perfectScrollbar]>
-              <ul class="menu">
-                <li class="body">
-                  <ul class="user_dw_menu">
-                    <li>
-                      <a href="javascript:void(0);" (click)="toProfile()">
-                        <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
-                      </a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);" (click)="toSettings()">
-                        <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);" (click)="logout()">
-                        <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>Logout
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+            <button mat-icon-button>
+              <app-feather-icons [icon]="'more-vertical'" [class]="'header-icon'"></app-feather-icons>
+            </button>
+            <div ngbDropdownMenu class="notification-dropdown pullDown">
+              <div class="noti-list" style="position: relative; max-width: 600px; max-height: 300px;"
+                [perfectScrollbar]>
+                <ul class="menu">
+                  <li class="body">
+                    <ul class="user_dw_menu">
+                      <li>
+                        <a href="javascript:void(0);" (click)="toProfile()">
+                          <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0);" (click)="toSettings()">
+                          <app-feather-icons [icon]="'settings'"
+                            [class]="'user-menu-icons'"></app-feather-icons>Settings
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0);" (click)="logout()">
+                          <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </li>
+
         <!-- #END# Tasks -->
       </ul>
     </div>

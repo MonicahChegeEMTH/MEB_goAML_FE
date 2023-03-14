@@ -42,9 +42,9 @@ export const ROUTES: RouteInfo[] = [
     role: ["ROLE_ADMIN"],
     submenu: [
       {
-        path: "/admin/departments",
+        path: "/admin/business-profile",
         title: "Business Profile",
-        moduleName: "departments",
+        moduleName: "profile",
         iconType: "feather",
         icon: "layers",
         class: "",
@@ -68,9 +68,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/departments",
+        path: "/admin/counties",
         title: "Counties",
-        moduleName: "departments",
+        moduleName: "counties",
         iconType: "feather",
         icon: "layers",
         class: "",
@@ -81,9 +81,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/departments",
+        path: "/admin/sub-counties",
         title: "Sub Counties",
-        moduleName: "departments",
+        moduleName: "subcounties",
         iconType: "feather",
         icon: "layers",
         class: "",

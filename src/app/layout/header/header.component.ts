@@ -34,6 +34,7 @@ export class HeaderComponent
   defaultFlag: string;
   isOpenSidebar: boolean;
   userName: string;
+  date = new Date();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
