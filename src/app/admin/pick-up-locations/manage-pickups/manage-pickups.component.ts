@@ -98,7 +98,7 @@ export class ManagePickupsComponent implements OnInit {
     dialogConfig.autoFocus = true
     dialogConfig.width = "60%"
     dialogConfig.data = {
-      Location: Location
+      location: Location
     }
     this.dialog.open(EditPickupComponent, dialogConfig)
   }
@@ -110,7 +110,7 @@ export class ManagePickupsComponent implements OnInit {
     dialogConfig.autoFocus = true
     dialogConfig.width = "60%"
     dialogConfig.data = {
-      Location: Location
+      location: Location
     }
     this.dialog.open(ViewPickupComponent, dialogConfig)
   }

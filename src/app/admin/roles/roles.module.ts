@@ -15,13 +15,20 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { AddRolesComponent } from './add-roles/add-roles.component';
 import { DeleteRoleComponent } from './delete-role/delete-role.component';
 import { UpdateRoleComponent } from './update-role/update-role.component';
+import { PrivilegesLookupComponent } from './privileges-lookup/privileges-lookup.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ViewRoleComponent } from './view-role/view-role.component';
+import { EditRoleComponent } from './edit-role/edit-role.component';
 
 @NgModule({
   declarations: [
   SystemrolesComponent,
   AddRolesComponent,
   DeleteRoleComponent,
-  UpdateRoleComponent
+  UpdateRoleComponent,
+  PrivilegesLookupComponent,
+  ViewRoleComponent,
+  EditRoleComponent
   ],
   imports: [
     CommonModule,
@@ -29,8 +36,6 @@ import { UpdateRoleComponent } from './update-role/update-role.component';
     MatMenuModule,
     ComponentsModule,
     SharedModule,
-    // CdkAccordionModule,
-    // DragDropModule,
     MatSelectModule,
     MatDialogModule,
     MatPaginatorModule,
@@ -38,6 +43,7 @@ import { UpdateRoleComponent } from './update-role/update-role.component';
     MatSortModule,
     MatTableExporterModule,
     MatIconModule,
+    MatCheckboxModule
   ]
 })
 export class RolesModule { }

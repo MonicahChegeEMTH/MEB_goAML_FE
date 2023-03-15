@@ -80,8 +80,7 @@
                             <b>Add Milk Collectors</b>
                         </button>
                         <button mat-raised-button color="primary"
-                            [disabled]="!addLocationForm.valid || milkCollectors.length<=0"
-                            (click)="onSubmit()">
+                            [disabled]="!addLocationForm.valid || milkCollectors.length<=0" (click)="onSubmit()">
                             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                             <b>Submit</b>
                         </button>
@@ -105,14 +104,16 @@
                     <ng-container matColumnDef="id">
                         <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
                             mat-sort-header>#</mat-header-cell>
-                        <mat-cell class="table-img tbl-col-width-per-8" *matCellDef="let element; let i = index">{{i +
+                        <mat-cell class="table-img tbl-col-width-per-8" *matCellDef="let row; let i = index"
+                            [class.odd-row]="i % 2" [class.even-row]="!(i % 2)">{{i +
                             1}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="username">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>
                             Username
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row">
+                        <mat-cell *matCellDef="let row; let i = index" [class.odd-row]="i % 2"
+                            [class.even-row]="!(i % 2)">
                             {{ row.username }}
                         </mat-cell>
                     </ng-container>
@@ -127,6 +128,9 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns" [style.cursor]="'pointer'" matRipple>
                     </mat-row>
                 </mat-table>
+                <mat-paginator #paginator [pageIndex]="0" [pageSize]="2"
+                    [pageSizeOptions]="[3,5,7,10,15, 25,50,75, 100]">
+                </mat-paginator>
             </div>
         </form>
     </div>

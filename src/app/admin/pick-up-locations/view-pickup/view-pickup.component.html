@@ -1,1 +1,96 @@
-<p>view-pickup works!</p>
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modalHeader clearfix">
+                    <div class="modal-about">
+                        <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
+                            Milk Pickup Location Details
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <form class="register-form m-4" [formGroup]="addLocationForm">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Location Name</mat-label>
+                        <input matInput formControlName="name" readonly />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Land Mark</mat-label>
+                        <input matInput formControlName="landMark" readonly />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Sub County</mat-label>
+                        <input matInput formControlName="subCounty" readonly />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Ward</mat-label>
+                        <input matInput formControlName="wardName" readonly />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+
+                    <div class="example-button-row">
+
+                        <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <h6>Selected Milk Collectors</h6>
+                <mat-divider></mat-divider>
+                <br />
+                <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
+                    #exporter="matTableExporter">
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
+                            mat-sort-header>#</mat-header-cell>
+                        <mat-cell class="table-img tbl-col-width-per-8" *matCellDef="let row; let i = index"
+                            [class.odd-row]="i % 2" [class.even-row]="!(i % 2)">{{i +
+                            1}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="username">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Username
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row; let i = index" [class.odd-row]="i % 2"
+                            [class.even-row]="!(i % 2)">
+                            {{ row.username }}
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageIndex]="0" [pageSize]="2"
+                    [pageSizeOptions]="[3,5,7,10,15, 25,50,75, 100]">
+                </mat-paginator>
+            </div>
+        </form>
+    </div>
+</div>

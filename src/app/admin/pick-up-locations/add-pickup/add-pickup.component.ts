@@ -20,7 +20,6 @@ import { PickupService } from '../pickup.service';
 })
 export class AddPickupComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
-
   loading = false;
   addLocationForm: FormGroup;
   dialogData: any;
@@ -67,7 +66,6 @@ export class AddPickupComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    console.log(this.addLocationForm.value)
     this.subscription = this.service.addNewLocation(this.addLocationForm.value).subscribe(res => {
       this.loading = false;
       this.snackbar.showNotification("snackbar-success", "Successful!");
@@ -119,12 +117,8 @@ export class AddPickupComponent implements OnInit {
         this.addLocationForm.value.collectors = this.milkCollectors;
       }
     });
-  }
 
-  selectTeamLeader(data) {
-    this.addLocationForm.value.teamLead = data.username;
   }
-
 
   onClick() {
     this.dialogRef.close();

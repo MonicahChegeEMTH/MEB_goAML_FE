@@ -22,8 +22,8 @@ export class AddSubcountyComponent implements OnInit {
   loading = false;
   county: any;
   name: any;
-  items: Wards[] = [];
 
+  items: Wards[] = [];
   selection = new SelectionModel<any>(true, []);
   dialogData: any;
   wardsSelected = [];
@@ -85,7 +85,6 @@ export class AddSubcountyComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    console.log(this.addSubCountyForm.value)
     this.subscription = this.service.addNewSubCounty(this.addSubCountyForm.value).subscribe(res => {
       this.loading = false;
       this.snackbar.showNotification("snackbar-success", "Successful!");

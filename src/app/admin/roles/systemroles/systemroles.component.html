@@ -95,21 +95,44 @@
                                 </ng-container>
                                 <!-- ID Column -->
                                 <ng-container matColumnDef="id">
-                                    <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef mat-sort-header>#</mat-header-cell>
-                                    <mat-cell class="table-img tbl-col-width-per-8" *matCellDef="let element; let i = index"  [class.odd-row]="i % 2"
-                                    [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
+                                    <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
+                                        mat-sort-header>#</mat-header-cell>
+                                    <mat-cell class="table-img tbl-col-width-per-8"
+                                        *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Name</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">Name</mat-header-cell>
                                     <mat-cell *matCellDef="let role;let i = index" [class.odd-row]="i % 2"
-                  [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{role.name}}
                                     </mat-cell>
                                 </ng-container>
+
+                                <ng-container matColumnDef="privileges">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">No. Of
+                                        Privileges</mat-header-cell>
+                                    <mat-cell *matCellDef="let role;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{role.accessRights.length}}
+                                    </mat-cell>
+                                </ng-container>
+
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let role;let i = index" [class.odd-row]="i % 2"
-                  [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, role)">
+                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, role)">
+                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                            (click)="viewRoleCall(role)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="View Role Details"
+                                                [icon]="'eye'"></app-feather-icons>
+                                        </button>
+                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                            (click)="editRoleCall(role)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="Edit Role"
+                                                [icon]="'edit'"></app-feather-icons>
+                                        </button>
                                         <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
                                             (click)="deleteRoleCall(role)" class="tbl-action-btn">
                                             <app-feather-icons matTooltip="Delete Role" [icon]="'trash-2'"
@@ -169,7 +192,7 @@
                                     <span>Item 3</span>
                                 </button>
                             </mat-menu>
-                            <mat-paginator #paginator [pageIndex]="0" [pageSize]="10"
+                            <mat-paginator #paginator [pageIndex]="0" [pageSize]="3"
                                 [pageSizeOptions]="[5, 10, 25, 100]">
                             </mat-paginator>
                         </div>

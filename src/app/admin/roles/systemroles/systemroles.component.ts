@@ -10,6 +10,7 @@ import { AddRolesComponent } from '../add-roles/add-roles.component';
 import { DeleteRoleComponent } from '../delete-role/delete-role.component';
 import { RolesService } from '../roles.service';
 import { UpdateRoleComponent } from '../update-role/update-role.component';
+import { ViewRoleComponent } from '../view-role/view-role.component';
 
 @Component({
   selector: 'app-systemroles',
@@ -21,6 +22,7 @@ export class SystemrolesComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'name',
+    "privileges",
     'action',
   ];
 
@@ -69,7 +71,7 @@ export class SystemrolesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "500px"
+    dialogConfig.width = "60%"
     dialogConfig.data = {
       test: ""
     }
@@ -80,9 +82,9 @@ export class SystemrolesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "500px"
+    dialogConfig.width = "60%"
     dialogConfig.data = {
-      role: role
+      roles: role
     }
     this.dialog.open(UpdateRoleComponent, dialogConfig)
   }
@@ -91,11 +93,22 @@ export class SystemrolesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "500px"
+    dialogConfig.width = "60%"
     dialogConfig.data = {
       role: role
     }
     this.dialog.open(DeleteRoleComponent, dialogConfig)
+  }
+
+  viewRoleCall(role){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      roles: role
+    }
+    this.dialog.open(ViewRoleComponent, dialogConfig)
   }
 
 
