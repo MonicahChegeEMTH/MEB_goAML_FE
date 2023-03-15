@@ -94,9 +94,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/departments",
+        path: "/admin/pickup-locations",
         title: "Pick Up Locations",
-        moduleName: "departments",
+        moduleName: "pickup",
         iconType: "feather",
         icon: "layers",
         class: "",

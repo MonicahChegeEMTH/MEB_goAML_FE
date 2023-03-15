@@ -1,0 +1,133 @@
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modalHeader clearfix">
+                    <div class="modal-about">
+                        <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
+                            Add New Milk Pickup Location
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <form class="register-form m-4" [formGroup]="addLocationForm">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Location Name</mat-label>
+                        <input matInput formControlName="name" required />
+                        <mat-error *ngIf="addLocationForm.get('name').hasError('required')">
+                            Location Name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Land Mark</mat-label>
+                        <input matInput formControlName="landMark" required />
+                        <mat-error *ngIf="addLocationForm.get('landMark').hasError('required')">
+                            Land mark is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Sub County</mat-label>
+                        <input matInput formControlName="subCounty" required readonly />
+                        <mat-icon matSuffix (click)="pickSubCountyDialog()">search</mat-icon>
+                        <mat-error *ngIf="addLocationForm.get('subCounty').hasError('required')">
+                            Sub County name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Select Ward</mat-label>
+                        <mat-select formControlName="ward_fk" required>
+                            <mat-option *ngFor="let ward of wards" [value]="ward.id">
+                                {{ ward.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="addLocationForm.get('ward_fk').hasError('required')">
+                            Ward is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+
+                    <div class="example-button-row">
+
+                        <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
+                            Cancel
+                        </button>
+                        <button mat-raised-button [disabled]="loading == true"
+                            *ngIf="addLocationForm.value.subCounty != ''" color="primary"
+                            (click)="pickMilkCollectorsDialog(addLocationForm.value.subCounty)">
+                            <b>Add Milk Collectors</b>
+                        </button>
+                        <button mat-raised-button color="primary"
+                            [disabled]="!addLocationForm.valid || milkCollectors.length<=0"
+                            (click)="onSubmit()">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            <b>Submit</b>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <h6>Selected Milk Collectors</h6>
+                <mat-divider></mat-divider>
+                <br />
+                <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
+                    #exporter="matTableExporter">
+                    <ng-container matColumnDef="select">
+                        <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">Leader?
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
+                            <mat-radio-button (change)="selectTeamLeader(row)"></mat-radio-button>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
+                            mat-sort-header>#</mat-header-cell>
+                        <mat-cell class="table-img tbl-col-width-per-8" *matCellDef="let element; let i = index">{{i +
+                            1}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="username">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Username
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            {{ row.username }}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
+                        <mat-cell *matCellDef="let row; let i = index">
+                            <button mat-icon-button color="warn" (click)="removeUser(i)"
+                                class="tbl-action-btn"><mat-icon matTooltip="Remove Collector">delete</mat-icon>
+                            </button></mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                </mat-table>
+            </div>
+        </form>
+    </div>
+</div>

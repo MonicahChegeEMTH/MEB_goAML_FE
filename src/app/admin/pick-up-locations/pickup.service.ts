@@ -10,25 +10,29 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class CountiesService {
+export class PickupService {
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
-  url = `${environment.API}/api/v1/county/`;
+  url = `${environment.API}/api/v1/pickuplocations/`;
 
-  public getCounties(): Observable<any> {
-    return this.http.get<any>(this.url + 'get');
+  public getLocations(): Observable<any> {
+    return this.http.get<any>(this.url + 'fetch');
   }
 
-  addNewCounty(data: any): Observable<any> {
+  public getLocationById(id:any): Observable<any> {
+    return this.http.get<any>(this.url + id);
+  }
+
+  addNewLocation(data: any): Observable<any> {
     return this.http.post(this.url + 'add', data, httpOptions);
   }
 
-  updateCounty(data: any): Observable<any> {
+  updateLocation(data: any): Observable<any> {
     return this.http.put(this.url + 'update', data, httpOptions);
   }
 
-  deleteCounty(id: any): Observable<any> {
-    return this.http.delete(this.url + `delete/` + id, httpOptions);
+  deleteLocation(id: any): Observable<any> {
+    return this.http.delete(this.url + id, httpOptions);
   }
 }

@@ -14,12 +14,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { UseraccountsComponent } from './useraccounts/useraccounts.component';
 import { AdduserComponent } from './adduser/adduser.component';
 import { ViewuserComponent } from './viewuser/viewuser.component';
 import { UpdateuserComponent } from './updateuser/updateuser.component';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LookupuserComponent } from './lookupuser/lookupuser.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { UploadedusersComponent } from './uploadedusers/uploadedusers.component';
@@ -34,6 +35,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LookupMilkCollectorsComponent } from './lookup-milk-collectors/lookup-milk-collectors.component';
 
 
 @NgModule({
@@ -53,6 +55,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     UnlockaccountComponent,
     ProfileComponent,
     SettingsComponent,
+    LookupMilkCollectorsComponent,
 
   ],
   imports: [
@@ -76,8 +79,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatSnackBarModule,
     MatDialogModule,
     PerfectScrollbarModule,
-    ReactiveFormsModule
-    
+    ReactiveFormsModule,
+    MatCheckboxModule,
   ]
 })
 export class UsersModule { }

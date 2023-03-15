@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { SubcountiesRoutingModule } from './subcounties-routing.module';
+import { PickupRoutingModule } from './pickup-routing.module';
+import { AddPickupComponent } from './add-pickup/add-pickup.component';
+import { DeletePickupComponent } from './delete-pickup/delete-pickup.component';
+import { EditPickupComponent } from './edit-pickup/edit-pickup.component';
+import { ViewPickupComponent } from './view-pickup/view-pickup.component';
+import { ManagePickupsComponent } from './manage-pickups/manage-pickups.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,28 +17,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ManageSubCountiesComponent } from './manage-sub-counties/manage-sub-counties.component';
-import { DeleteSubcountyComponent } from './delete-subcounty/delete-subcounty.component';
-import { EditSubcountyComponent } from './edit-subcounty/edit-subcounty.component';
-import { AddSubcountyComponent } from './add-subcounty/add-subcounty.component';
-import { ViewSubcountyComponent } from './view-subcounty/view-subcounty.component';
-import { SubCountiesLookupComponent } from './sub-counties-lookup/sub-counties-lookup.component';
-import { WardsLookupComponent } from './wards-lookup/wards-lookup.component';
 
 
 @NgModule({
   declarations: [
-    ManageSubCountiesComponent,
-    DeleteSubcountyComponent,
-    EditSubcountyComponent,
-    AddSubcountyComponent,
-    ViewSubcountyComponent,
-    SubCountiesLookupComponent,
-    WardsLookupComponent
+    AddPickupComponent, DeletePickupComponent, ViewPickupComponent, EditPickupComponent, ManagePickupsComponent
   ],
   imports: [
     CommonModule,
-    SubcountiesRoutingModule,
+    PickupRoutingModule,
     MatMenuModule,
     ComponentsModule,
     SharedModule,
@@ -48,4 +39,4 @@ import { WardsLookupComponent } from './wards-lookup/wards-lookup.component';
     MatIconModule,
   ]
 })
-export class SubcountiesModule { }
+export class PickupModule { }

@@ -45,6 +45,22 @@ const routes: Routes = [
         (m) => m.ProfileModule
       ),
   },
+
+  {
+    path: "departments",
+    loadChildren: () =>
+      import("./departments/departments.module").then(
+        (m) => m.DepartmentsModule
+      ),
+  },
+
+  {
+    path: "pickup-locations",
+    loadChildren: () =>
+      import("./pick-up-locations/pickup.module").then(
+        (m) => m.PickupModule
+      ),
+  },
 ];
 
 @NgModule({
