@@ -32,6 +32,7 @@ import {
 } from "@angular/common/http";
 
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
+import { FooterComponent } from "./layout/footer/footer.component";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -51,6 +52,7 @@ export function createTranslateLoader(http: HttpClient): any {
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

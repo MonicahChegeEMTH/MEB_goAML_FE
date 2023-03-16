@@ -47,12 +47,12 @@ export class SigninComponent
       this.error = "Username and Password not valid !";
       return;
     } else {
+      console.log(this.authForm.value)
       this.authService.login(this.authForm.value).subscribe(res => {
+        console.log(res)
         this.tokenStorage.saveToken(res.accessToken);
         this.tokenStorage.saveUser(res);
-        
         const role = res.roles[0];
-
         if(role == Role.Admin){
           this.router.navigate(['/admin/dashboard'])
         }else if(role == Role.Secretary){
@@ -68,6 +68,7 @@ export class SigninComponent
 
       }, err => {
         this.error = err;
+        console.log(err)
         this.submitted = false;
         this.loading = false;
       })

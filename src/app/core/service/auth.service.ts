@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   login(user): Observable<any> {
-    const authUrl = `${environment.apiUrl}/api/v1/auth/signin`
+    const authUrl = `${environment.apiUrl}/api/v1/authentication/login`
     return this.http.post<any>(authUrl, user);
   }
 
@@ -179,7 +179,7 @@ export class AuthService {
   }
 
 
-  usersTemplateDownload(): Observable<any>{
+  usersTemplateDownload(): Observable<any> {
     let headers = new HttpHeaders();
     headers.append('Accept', 'application/octet-stream');
     let requestOptions: any = { headers: headers, responseType: 'blob', withCredentials: false };

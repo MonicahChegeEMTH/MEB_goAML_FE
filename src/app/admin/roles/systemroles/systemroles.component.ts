@@ -110,6 +110,4 @@ export class SystemrolesComponent implements OnInit {
     }
     this.dialog.open(ViewRoleComponent, dialogConfig)
   }
-
-
 }

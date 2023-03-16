@@ -110,7 +110,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.currentUser) {
       let userRole = this.currentUser.roles[0];
       this.userFullName = this.currentUser.username;
-      this.userImg = "assets/images/user/profile_img.png";
+      this.userImg = "assets/images/prof.png";
 
       this.sidebarItems = ROUTES.filter((x) => x.role.indexOf(userRole) !== -1);
       if (userRole == Role.Admin) {

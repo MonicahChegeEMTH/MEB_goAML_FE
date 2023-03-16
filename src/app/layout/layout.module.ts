@@ -4,6 +4,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatTabsModule } from "@angular/material/tabs";
 @NgModule({
   imports: [CommonModule, NgbModule, MatTabsModule],
-  declarations: [],
+  declarations: [
+    
+  ],
 })
 export class LayoutModule {}
