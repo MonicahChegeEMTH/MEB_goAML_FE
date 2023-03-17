@@ -28,8 +28,9 @@ export class UseraccountsComponent implements OnInit {
 
   displayedColumns: string[] = [
     "id",
+    "email",
+    "name",
     "username",
-    "department",
     "role",
     "actions",
   ];
