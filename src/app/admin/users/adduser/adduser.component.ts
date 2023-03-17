@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -9,6 +9,7 @@ import { RolesService } from '../../roles/roles.service';
 import { LookupuserComponent } from '../lookupuser/lookupuser.component';
 import { UseraccountsComponent } from '../useraccounts/useraccounts.component';
 import * as XLSX from "xlsx";
+import { LookupdepartmentsComponent } from '../../departments/lookupdepartments/lookupdepartments.component';
 
 @Component({
   selector: 'app-adduser',
@@ -20,10 +21,11 @@ export class AdduserComponent implements OnInit {
   userForm: FormGroup;
   roles: any;
   departments: any;
-  name:any;
-  code:any;
+  name: any;
+  code: any;
   senior: any;
   loading = false;
+  selected = '';
 
   constructor(
     private fb: FormBuilder,
@@ -43,13 +45,19 @@ export class AdduserComponent implements OnInit {
       username: ["", [Validators.required]],
       phonenumber: ["", [Validators.required]],
       email: ["", [Validators.required]],
-      reportingTo: ["", [Validators.required]],
-      role: ["", [Validators.required]],
+      roles: new FormArray([]),
+      role: [""],
       department: [""],
-      departmentCode: [""],
+      departmentId: [""],
     });
 
     this.getRoles();
+  }
+
+  bindRole()
+  {
+    this.userForm.value.roles.push(this.selected);
+    console.log(this.userForm.value.roles)
   }
 
   onCancel() {
@@ -58,10 +66,11 @@ export class AdduserComponent implements OnInit {
 
   addUser() {
     this.loading = true;
+    console.log(this.userForm.value)
     this.accountService.registerUser(this.userForm.value).subscribe(
       (res) => {
         this.loading = false;
-        this.snackbar.showNotification("snackbar-success", "SUCCESSFUL!");
+        this.snackbar.showNotification("snackbar-success", "Successful!");
         this.userForm.reset();
         this.dialogRef.close();
       },
@@ -86,58 +95,57 @@ export class AdduserComponent implements OnInit {
 
 
   //Dowload template
-  getTemplate(){
+  getTemplate() {
     this.accountService
-    .usersTemplateDownload()
-    .subscribe(
-      (response) => {
-        console.log(response)
-        const a = document.createElement("a");
-        document.body.appendChild(a);
-        const blob: any = new Blob([response.data], {
-          type: "octet/stream",
-        });
-        const url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = "UsersUploadTemplate.xlsx";
-        a.click();
-        window.URL.revokeObjectURL(url);
+      .usersTemplateDownload()
+      .subscribe(
+        (response) => {
+          console.log(response)
+          const a = document.createElement("a");
+          document.body.appendChild(a);
+          const blob: any = new Blob([response.data], {
+            type: "octet/stream",
+          });
+          const url = window.URL.createObjectURL(blob);
+          a.href = url;
+          a.download = "UsersUploadTemplate.xlsx";
+          a.click();
+          window.URL.revokeObjectURL(url);
 
-        this.loading = false;
+          this.loading = false;
 
 
-        this.snackbar.showNotification(
-          "Template downloaded successfully!", "snackbar-success",
-        );
-      },
-    )
+          this.snackbar.showNotification(
+            "Template downloaded successfully!", "snackbar-success",
+          );
+        },
+      )
   }
 
   pickDepartmentDialog(): void {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = "50%";
-    // dialogConfig.data = {
-    //   user: '',
-    // };
-    // const dialogRef = this.dialog.open(LookupdepartmentsComponent, dialogConfig);
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   this.departments = result;
-    //   this.name = this.departments.departmentName;
-    //   this.code = this.departments.departmentCode;
-    //   this.userForm.patchValue({
-    //     department: this.name,
-    //     departmentCode:this.code
-    //   });
-    // });
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "50%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupdepartmentsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.departments = result;
+      this.name = this.departments.departmentName;
+      this.userForm.patchValue({
+        department: this.name,
+        departmentId: this.departments.id
+      });
+    });
   }
 
   pickReportingToDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = "1000px";
+    dialogConfig.width = "55%";
     dialogConfig.data = {
       user: '',
     };
