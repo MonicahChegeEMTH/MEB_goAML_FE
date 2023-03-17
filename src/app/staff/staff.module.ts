@@ -5,7 +5,9 @@ import { StaffRoutingModule } from './staff-routing.module';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    
+  ],
   imports: [
     CommonModule,
     StaffRoutingModule

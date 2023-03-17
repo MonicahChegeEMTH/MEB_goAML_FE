@@ -205,7 +205,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: "/staff/dashboard/main",
+    path: "/staff/farmers/farmers",
     title: "Farmers",
     moduleName: "dashboard",
     iconType: "feather",
@@ -218,7 +218,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
    {
-    path: "/staff/dashboard/main",
+    path: "/staff/sales/sales",
     title: "Sales",
     moduleName: "dashboard",
     iconType: "feather",
