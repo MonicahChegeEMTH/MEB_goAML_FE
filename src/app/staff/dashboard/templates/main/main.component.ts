@@ -25,18 +25,18 @@ export class MainComponent implements OnInit {
   }
 
   getAnalysis() {
-    // this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
-    //   this.data = res;
-    //   if (this.data) {
-    //     this.loaded = true;
-    //     this.users = this.data.entity.users;
-    //     this.teams = this.data.entity.teams;
-    //     this.meetingCategories = this.data.entity.meetingCategeories;
-    //     this.departments = this.data.entity.departments;
-    //     this.actionTypes = this.data.entity.actionTypes;
-    //     this.subsidiaries = this.data.entity.subsidiaries;
-    //   }
-    // });
+    this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.loaded = true;
+        this.users = this.data.entity.users;
+        this.teams = this.data.entity.teams;
+        this.meetingCategories = this.data.entity.meetingCategeories;
+        this.departments = this.data.entity.departments;
+        this.actionTypes = this.data.entity.actionTypes;
+        this.subsidiaries = this.data.entity.subsidiaries;
+      }
+    });
   }
 
 
