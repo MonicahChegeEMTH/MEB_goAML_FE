@@ -190,5 +190,46 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
 
-  // Common Modules
+  // Staff Modules
+  {
+    path: "/staff/dashboard/main",
+    title: "Dashboard",
+    moduleName: "dashboard",
+    iconType: "feather",
+    icon: "monitor",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["ROLE_STAFF"],
+    submenu: [],
+  },
+  {
+    path: "/staff/dashboard/main",
+    title: "Farmers",
+    moduleName: "dashboard",
+    iconType: "feather",
+    icon: "monitor",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["ROLE_STAFF"],
+    submenu: [],
+  },
+   {
+    path: "/staff/dashboard/main",
+    title: "Sales",
+    moduleName: "dashboard",
+    iconType: "feather",
+    icon: "monitor",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["ROLE_STAFF"],
+    submenu: [],
+  },
 ];
+ 
+  
