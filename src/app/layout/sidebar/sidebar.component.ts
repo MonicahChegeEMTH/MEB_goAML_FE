@@ -108,7 +108,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const role = this.currentUser.roles[0];
 
     if (this.currentUser) {
-      let userRole = this.currentUser.roles[0];
+      let userRole = this.currentUser.roles[0].name;
       this.userFullName = this.currentUser.username;
       this.userImg = "assets/images/prof.png";
 
