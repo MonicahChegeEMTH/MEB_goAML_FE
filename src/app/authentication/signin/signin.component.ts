@@ -55,10 +55,10 @@ export class SigninComponent
         const role = res.roles[0];
         if(role == Role.Admin){
           this.router.navigate(['/admin/dashboard'])
-        }else if(role == Role.Secretary){
-          this.router.navigate(['/secretary/dashboard'])
-        }else if(role == Role.User){
-          this.router.navigate(['/user/dashboard'])
+        }else if(role == Role.Staff){
+          this.router.navigate(['/staff/dashboard'])
+        }else if(role == Role.Collector){
+          this.router.navigate(['sales/dashboard'])
         } else {
           this.error = "Invalid Login";
         }  

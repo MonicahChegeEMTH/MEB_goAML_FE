@@ -21,12 +21,22 @@ const routes: Routes = [
         loadChildren: () =>
           import("./admin/admin.module").then((m) => m.AdminModule),
       },
+      { path: "", redirectTo: "/authentication/signin", pathMatch: "full" },
+      {
+        path: "staff",
+        canActivate: [AuthGuard],
+        data: {
+          role: Role.Staff,
+        },
+        loadChildren: () =>
+          import("./staff/staff.module").then((m)=>m.StaffModule),
+      },
 
       {
         path: "user",
         canActivate: [AuthGuard],
         data: {
-          role: Role.User,
+          role: Role.Collector,
         },
         loadChildren: () =>
           import("./user/user.module").then((m) => m.UserModule),
