@@ -217,7 +217,20 @@ export const ROUTES: RouteInfo[] = [
     role: ["ROLE_STAFF"],
     submenu: [],
   },
-   {
+  {
+    path: "/staff/sales/collections",
+    title: "Collections",
+    moduleName: "sales",
+    iconType: "feather",
+    icon: "monitor",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["ROLE_STAFF"],
+    submenu: [],
+  },
+  {
     path: "/staff/sales/sales",
     title: "Sales",
     moduleName: "sales",
@@ -230,6 +243,7 @@ export const ROUTES: RouteInfo[] = [
     role: ["ROLE_STAFF"],
     submenu: [],
   },
+
 ];
- 
-  
+
+

@@ -9,7 +9,7 @@ import { DashboardService } from '../../services/dashboard.service';
 })
 export class MainComponent implements OnInit {
 
-  litres: any = 0;
+  quantity: any = 0;
   amount: any = 0;
   departments: any = 0;
   subsidiaries: any = 0;
@@ -30,12 +30,9 @@ export class MainComponent implements OnInit {
       if (this.data) {
         console.log(this.data)
         this.loaded = true;
-        this.litres = this.data.entity.quantity;
-        this.amount = this.data.entity.amount;
-        // this.meetingCategories = this.data.entity.meetingCategeories;
-        // this.departments = this.data.entity.departments;
-        // this.actionTypes = this.data.entity.actionTypes;
-        // this.subsidiaries = this.data.entity.subsidiaries;
+        this.quantity = this.data.entity[0].quantity;
+        this.amount = this.data.entity[0].amount;
+      
       }
     });
   }

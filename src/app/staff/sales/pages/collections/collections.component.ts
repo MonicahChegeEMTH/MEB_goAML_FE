@@ -9,28 +9,29 @@ import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
 
 @Component({
-  selector: 'app-sales-managenent',
-  templateUrl: './sales-managenent.component.html',
-  styleUrls: ['./sales-managenent.component.sass']
+  selector: 'app-collections',
+  templateUrl: './collections.component.html',
+  styleUrls: ['./collections.component.sass']
 })
-export class SalesManagenentComponent implements OnInit {
+export class CollectionsComponent implements OnInit {
 
 
   displayedColumns: string[] = [
     'id',
-    "memberCode",
-    'username',
-    "firstName",
-    "lastName",
-    "mobileNo",
-    'date',
+    "member",
+    "quantity",
+    "collectionDate",
+    "amount",
+    "collectorId",
+    "pickUpLocation",
+    "paymentStatus",
     'action',
   ];
 
   subscription!: Subscription;
   data: any;
   isdata: boolean = false;
-  isLoading:boolean = false;
+  isLoading: boolean = false;
   constructor(private router: Router, private dialog: MatDialog, private service: SalesService,) { }
 
   applyFilter(event: Event) {
@@ -65,7 +66,7 @@ export class SalesManagenentComponent implements OnInit {
 
   dataSource!: MatTableDataSource<any>;
 
-  
+
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -111,5 +112,3 @@ export class SalesManagenentComponent implements OnInit {
   //   this.dialog.open(DeleteCountyComponent, dialogConfig)
   // }
 }
-
-
