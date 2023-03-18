@@ -15,7 +15,7 @@ export class DepartmentsService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-  deptsUrl = `${environment.API}/api/v1/department/`;
+  deptsUrl = `${environment.apiUrl}/api/v1/department/`;
 
 
   public getDepartments(): Observable<any> {
