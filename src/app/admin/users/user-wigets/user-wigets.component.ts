@@ -18,53 +18,53 @@ export class UserWigetsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getActiveUserAccounts();
-    this.getLockedAccounts();
-    this.getAllAccounts();
-    this.getDeletedAccounts();
+    // this.getActiveUserAccounts();
+    // this.getLockedAccounts();
+    // this.getAllAccounts();
+    // this.getDeletedAccounts();
   }
 
   getActiveUserAccounts() {
     this.accountService.allActiveUsers().subscribe(
-        (res) => {
-          this.activeAccounts = res;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      (res) => {
+        this.activeAccounts = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   getLockedAccounts() {
     this.accountService.allLockedUserAccounts().subscribe(
-        (res) => {
-          this.lockedAccounts = res;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      (res) => {
+        this.lockedAccounts = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   getDeletedAccounts() {
     this.accountService.allDeletedUserAccounts().subscribe(
-        (res) => {
-          this.deletedAccounts = res;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      (res) => {
+        this.deletedAccounts = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   getAllAccounts() {
     this.accountService.allUsers().subscribe(
-        (res) => {
-          this.allAccounts = res;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      (res) => {
+        this.allAccounts = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }

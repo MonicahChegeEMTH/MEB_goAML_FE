@@ -15,10 +15,10 @@ export class RolesService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-  rolesUrl = `${environment.API}/api/v1/roles/`;
+  rolesUrl = `${environment.API}/admin/api/v1/roles/`;
 
   public getRoles(): Observable<any> {
-    return this.http.get<any>(this.rolesUrl + 'view');
+    return this.http.get<any>(this.rolesUrl + 'all-roles');
   }
 
   addNewRole(data: any): Observable<any> {
