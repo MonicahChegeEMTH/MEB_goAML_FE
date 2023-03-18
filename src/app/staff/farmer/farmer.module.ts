@@ -14,7 +14,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SharedModule } from 'src/app/shared/shared.module';
-
+import {MatSelectModule} from '@angular/material/select'; 
 
 @NgModule({
     declarations: [
@@ -33,7 +33,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
         MatPaginatorModule,
         MatSortModule,
         MatDialogModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        MatSelectModule
+        
     ]
 })
 export class FarmerModule { }

@@ -2,7 +2,7 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All Counties'" [items]="['Counties']" [active_item]="'All Counties'">
+            <app-breadcrumb [title]="'All farmers'" [items]="['Farmers']" [active_item]="'All Farmers'">
             </app-breadcrumb>
         </div>
 
@@ -101,20 +101,44 @@
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="code">
+                                <ng-container matColumnDef="memberCode">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">Code</mat-header-cell>
+                                        class="column-nowrap">memberCode</mat-header-cell>
                                     <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.code}}
+                                        {{county.memberCode}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="name">
+                                <ng-container matColumnDef="username">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">Name</mat-header-cell>
+                                        class="column-nowrap">username</mat-header-cell>
                                     <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.name}}
+                                        {{county.username}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="firstName">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">firstName</mat-header-cell>
+                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{county.firstName}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="lastName">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">lastName</mat-header-cell>
+                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{county.lastName}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="mobileNo">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">mobileNo</mat-header-cell>
+                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{county.mobileNo}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="date">

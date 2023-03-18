@@ -14,7 +14,7 @@ export class PickupService {
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
-  url = `${environment.API}/api/v1/pickuplocations/`;
+  url = `${environment.apiUrl}/api/v1/pickuplocations/`;
 
   public getLocations(): Observable<any> {
     return this.http.get<any>(this.url + 'fetch');

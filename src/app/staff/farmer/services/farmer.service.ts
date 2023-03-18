@@ -18,8 +18,19 @@ export class FarmerService {
 
 
   public getFarmers(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}` + 'api/v1/farmers');
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
+  }
+  registerFarmer(farmer:any){
+    return this.http.post(`${environment.apiUrl}/api/v1/farmer/add`,farmer);
   }
 
+
+  public getSubCounties(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/api/v1/Subcounty/fetch`);
+  }
+
+  public getSubCountyById(id:any): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/api/v1/Subcounty/` + id);
+  }
   
 }

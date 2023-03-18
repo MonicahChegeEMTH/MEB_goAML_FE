@@ -18,8 +18,11 @@ export class FarmerManagenentComponent implements OnInit {
 
   displayedColumns: string[] = [
     'id',
-    'code',
-    'name',
+    "memberCode",
+    'username',
+    "firstName",
+    "lastName",
+    "mobileNo",
     'date',
     'action',
   ];
@@ -44,6 +47,7 @@ export class FarmerManagenentComponent implements OnInit {
     this.isLoading = true;
     this.subscription = this.service.getFarmers().subscribe(res => {
       this.data = res;
+      console.log(this.data)
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
@@ -78,7 +82,7 @@ export class FarmerManagenentComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "500px"
+    dialogConfig.width = "70%"
     dialogConfig.data = {
       test: ""
     }
