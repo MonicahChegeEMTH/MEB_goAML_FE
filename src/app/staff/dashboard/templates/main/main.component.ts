@@ -9,8 +9,8 @@ import { DashboardService } from '../../services/dashboard.service';
 })
 export class MainComponent implements OnInit {
 
-  users: any = 0;
-  teams: any = 0;
+  litres: any = 0;
+  amount: any = 0;
   departments: any = 0;
   subsidiaries: any = 0;
   meetingCategories: any = 0;
@@ -24,24 +24,25 @@ export class MainComponent implements OnInit {
 
   }
 
-  getAnalysis() {
-    this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
+  getTodaysCollections() {
+    this.subscription = this.service.getTodaysCollections().subscribe(res => {
       this.data = res;
       if (this.data) {
+        console.log(this.data)
         this.loaded = true;
-        this.users = this.data.entity.users;
-        this.teams = this.data.entity.teams;
-        this.meetingCategories = this.data.entity.meetingCategeories;
-        this.departments = this.data.entity.departments;
-        this.actionTypes = this.data.entity.actionTypes;
-        this.subsidiaries = this.data.entity.subsidiaries;
+        this.litres = this.data.entity.quantity;
+        this.amount = this.data.entity.amount;
+        // this.meetingCategories = this.data.entity.meetingCategeories;
+        // this.departments = this.data.entity.departments;
+        // this.actionTypes = this.data.entity.actionTypes;
+        // this.subsidiaries = this.data.entity.subsidiaries;
       }
     });
   }
 
 
   ngOnInit() {
-    this.getAnalysis();
+    this.getTodaysCollections();
   }
 
 

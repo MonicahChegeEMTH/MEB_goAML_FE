@@ -14,7 +14,7 @@ export class SubcountiesService {
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
-  url = `${environment.API}/api/v1/Subcounty/`;
+  url = `${environment.apiUrl}/api/v1/Subcounty/`;
 
   public getSubCounties(): Observable<any> {
     return this.http.get<any>(this.url + 'fetch');

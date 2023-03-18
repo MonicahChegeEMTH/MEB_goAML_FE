@@ -14,27 +14,24 @@ export class DashboardService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-  deptsUrl = `${environment.apiUrl}/api/v1/department/`;
-  usersUrl = `${environment.apiUrl}/api/action-items/user/analytics/`;
 
 
-  public getDepartmentsPerSubsidiary(): Observable<any> {
-    return this.http.get(this.deptsUrl + 'departments/subsidiary');
+
+  public getTodaysCollections(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today`,httpOptions);
   }
 
-  public getUsersPerDepartment(): Observable<any> {
-    return this.http.get(this.usersUrl + 'user/department');
-  }
+  // public getUsersPerDepartment(): Observable<any> {
+  //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
+  // }
 
-  public getDashboardWigetsAnalytics(): Observable<any> {
-    return this.http.get(this.usersUrl + 'counts');
-  }
+  // public getDashboardWigetsAnalytics(): Observable<any> {
+  //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
+  // }
 
-  public getUsersPerRole(): Observable<any> {
-    return this.http.get(this.usersUrl + 'users/role');
-  }
+  // public getUsersPerRole(): Observable<any> {
+  //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
+  // }
 
-  public getMeetingsPerCategory(): Observable<any> {
-    return this.http.get(this.usersUrl + 'meetings/meetingcategory');
-  }
+ 
 }

@@ -14,7 +14,7 @@ export class CountiesService {
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
-  url = `${environment.API}/api/v1/county/`;
+  url = `${environment.apiUrl}/api/v1/county/`;
 
   public getCounties(): Observable<any> {
     return this.http.get<any>(this.url + 'get');
