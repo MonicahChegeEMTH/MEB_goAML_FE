@@ -190,6 +190,20 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
 
+  {
+    path: "/admin/configs",
+    title: "Products Configs",
+    moduleName: "users",
+    iconType: "feather",
+    icon: "slack",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["ROLE_ADMIN"],
+    submenu: [],
+  },
+
   // Staff Modules
   {
     path: "/staff/dashboard/main",
@@ -217,7 +231,7 @@ export const ROUTES: RouteInfo[] = [
     role: ["ROLE_STAFF"],
     submenu: [],
   },
-   {
+  {
     path: "/staff/sales/sales",
     title: "Sales",
     moduleName: "sales",
@@ -231,5 +245,3 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
 ];
- 
-  

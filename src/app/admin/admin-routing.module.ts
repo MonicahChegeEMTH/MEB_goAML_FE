@@ -61,6 +61,14 @@ const routes: Routes = [
         (m) => m.PickupModule
       ),
   },
+
+  {
+    path: "configs",
+    loadChildren: () =>
+      import("./stock/configs/configs.module").then(
+        (m) => m.ConfigsModule
+      ),
+  },
 ];
 
 @NgModule({

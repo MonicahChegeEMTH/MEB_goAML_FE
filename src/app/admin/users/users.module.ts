@@ -39,6 +39,7 @@ import { LookupMilkCollectorsComponent } from './lookup-milk-collectors/lookup-m
 import { ViewCollectorsComponent } from './view-collectors/view-collectors.component';
 import { ViewStaffComponent } from './view-staff/view-staff.component';
 import { ViewSalesPeopleComponent } from './view-sales-people/view-sales-people.component';
+import { MilkCollectorsDetailsComponent } from './milk-collectors-details/milk-collectors-details.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { ViewSalesPeopleComponent } from './view-sales-people/view-sales-people.
     ViewCollectorsComponent,
     ViewStaffComponent,
     ViewSalesPeopleComponent,
+    MilkCollectorsDetailsComponent,
 
   ],
   imports: [

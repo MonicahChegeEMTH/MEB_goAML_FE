@@ -72,7 +72,7 @@ export class LookupuserComponent implements OnInit {
     this.accountService.allUsers()
       .subscribe(
         (res) => {
-          this.users = res;
+          this.users = res.userData;
           if (this.users) {
             this.isLoading = false;
           }
