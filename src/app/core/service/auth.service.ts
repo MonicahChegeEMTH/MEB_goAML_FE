@@ -6,7 +6,7 @@ import { environment } from "src/environments/environment";
 import { Log } from "src/app/admin/users/models/log";
 
 const PASSWORD_RESET_API = `${environment.apiUrl}/api/v1/reset/`;
-const USERS_API = `${environment.apiUrl}/api/v1/users/`;
+const USERS_API = `${environment.apiUrl}/admin/api/v1/users/`;
 const AUTH_API = `${environment.apiUrl}/api/v1/auth/`;
 
 const httpOptions = {
@@ -46,19 +46,19 @@ export class AuthService {
   }
 
   allUsers(): Observable<any> {
-    return this.http.get(USERS_API + 'view', httpOptions);
+    return this.http.get(USERS_API + 'all-accounts', httpOptions);
   }
 
   allActiveUsers(): Observable<any> {
-    return this.http.get(USERS_API + 'active', httpOptions);
+    return this.http.get(USERS_API + 'active-accounts', httpOptions);
   }
 
   allDeletedUserAccounts(): Observable<any> {
-    return this.http.get(USERS_API + 'deletedaccounts', httpOptions);
+    return this.http.get(USERS_API + 'deleted-accounts', httpOptions);
   }
 
   allLockedUserAccounts(): Observable<any> {
-    return this.http.get(USERS_API + 'lockedaccounts', httpOptions);
+    return this.http.get(USERS_API + 'locked-accounts', httpOptions);
   }
 
   allInactiveUserAccounts(): Observable<any> {

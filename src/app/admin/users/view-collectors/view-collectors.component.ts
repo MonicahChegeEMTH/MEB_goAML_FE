@@ -22,6 +22,7 @@ export class ViewCollectorsComponent implements OnInit {
     "username",
     "email",
     "name",
+    "action"
   ];
 
   selected = 'all';
@@ -75,7 +76,7 @@ export class ViewCollectorsComponent implements OnInit {
     this.accountService.allUsers()
       .subscribe(
         (res) => {
-          this.users = res;
+          this.users = res.userData;
           if (this.users.length > 0) {
             this.isLoading = false;
             this.isdata = true;
@@ -160,8 +161,6 @@ export class ViewCollectorsComponent implements OnInit {
       }
     );
   }
-
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

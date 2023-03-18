@@ -86,7 +86,7 @@ export class UseraccountsComponent implements OnInit {
     this.accountService.allUsers()
       .subscribe(
         (res) => {
-          this.users = res;
+          this.users = res.userData;
           if (this.users.length > 0) {
             this.isLoading = false;
             this.isdata = true;
