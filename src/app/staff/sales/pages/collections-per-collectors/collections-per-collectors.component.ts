@@ -9,22 +9,19 @@ import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
 
 @Component({
-  selector: 'app-collections',
-  templateUrl: './collections.component.html',
-  styleUrls: ['./collections.component.sass']
+  selector: 'app-collections-per-collectors',
+  templateUrl: './collections-per-collectors.component.html',
+  styleUrls: ['./collections-per-collectors.component.sass']
 })
-export class CollectionsComponent implements OnInit {
+export class CollectionsPerCollectorsComponent implements OnInit {
+
 
 
   displayedColumns: string[] = [
     'id',
-    "member",
+    "username",
     "quantity",    
     "amount",
-    "collectorId",
-    "pickUpLocation",
-    "collectionDate",
-    "paymentStatus",
     'action',
   ];
 
@@ -46,7 +43,7 @@ export class CollectionsComponent implements OnInit {
 
   getData() {
     this.isLoading = true;
-    this.subscription = this.service.getCollections().subscribe(res => {
+    this.subscription = this.service.getTodayCollections().subscribe(res => {
       this.data = res;
       console.log(this.data)
       if (this.data.entity.length > 0) {
