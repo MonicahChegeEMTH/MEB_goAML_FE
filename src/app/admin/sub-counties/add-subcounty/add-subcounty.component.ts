@@ -75,7 +75,7 @@ export class AddSubcountyComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(CountiesLookupComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
-      this.county = result;
+      this.county = result.data;
       this.addSubCountyForm.patchValue({
         countyFk: this.county.id,
         countyName: this.county.name,

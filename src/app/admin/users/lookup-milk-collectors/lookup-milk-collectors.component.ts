@@ -18,7 +18,7 @@ export class LookupMilkCollectorsComponent implements OnInit {
   users: any;
   isLoading: boolean = true;
 
-  displayedColumns: string[] = ["select", "username", "phonenumber", "email"];
+  displayedColumns: string[] = ["select", "username", "email"];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -46,7 +46,7 @@ export class LookupMilkCollectorsComponent implements OnInit {
     this.accountService.allActiveUsers()
       .subscribe(
         (res) => {
-          this.users = res;
+          this.users = res.userData;
           if (this.users.length > 0) {
             this.isLoading = false;
             this.dataSource = new MatTableDataSource<any>(this.users);

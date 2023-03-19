@@ -16,7 +16,6 @@ export class CountiesLookupComponent implements OnInit {
   displayedColumns: string[] = [
     'code',
     'name',
-    'action',
   ];
   isdata: boolean = false;
 
@@ -74,5 +73,9 @@ export class CountiesLookupComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-  }
+ }
+
+ onSelectRow(data: any) {
+  this.dialogRef.close({data });
+}
 }
