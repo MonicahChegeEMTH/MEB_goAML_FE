@@ -2,7 +2,7 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All Collections'" [items]="['Collections']" [active_item]="'All Collections'">
+            <app-breadcrumb [title]="'Today Collections'" [items]="['Collections']" [active_item]="'All Collections'">
             </app-breadcrumb>
         </div>
 
@@ -95,12 +95,12 @@
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="member">
+                                <ng-container matColumnDef="username">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">member</mat-header-cell>
+                                        class="column-nowrap">Collector</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.member}}
+                                        {{response.username}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="quantity">
@@ -119,39 +119,7 @@
                                         {{response.amount}}
                                     </mat-cell>
                                 </ng-container>
-                               
-                                <ng-container matColumnDef="collectorId">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collectorId</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.collectorId}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="pickUpLocation">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">Pick-Up-Location</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.pickUpLocation}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="collectionDate">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collectionDate</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.collectionDate | date:'medium'}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="paymentStatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Payment Status
-                                        </mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.paymentStatus}}
-                                    </mat-cell>
-                                </ng-container>
+
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
