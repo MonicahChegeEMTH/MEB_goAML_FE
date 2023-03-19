@@ -22,11 +22,17 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ProductsConfigsComponent } from './products-configs/products-configs.component';
+import { AddProductConfigComponent } from './add-product-config/add-product-config.component';
+import { EditProductConfigComponent } from './edit-product-config/edit-product-config.component';
+import { DeleteProductConfigComponent } from './delete-product-config/delete-product-config.component';
 
 
 @NgModule({
   declarations: [
-    ProductsConfigsComponent
+    ProductsConfigsComponent,
+    AddProductConfigComponent,
+    EditProductConfigComponent,
+    DeleteProductConfigComponent
   ],
   imports: [
     CommonModule,

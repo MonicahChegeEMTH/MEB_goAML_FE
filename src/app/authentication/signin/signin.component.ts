@@ -15,8 +15,7 @@ const USER_KEY = 'auth-user';
 })
 export class SigninComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   authForm: FormGroup;
   submitted = false;
   loading = false;
@@ -54,30 +53,25 @@ export class SigninComponent
       this.error = "Username and Password not valid !";
       return;
     } else {
-      console.log(this.authForm.value)
       this.authService.login(this.authForm.value).subscribe(res => {
-        console.log(res)
-
         this.tokenStorage.saveToken(res.token);
         this.tokenStorage.saveUser(res);
         const role = res.roles[0].name;
-        console.log(role)
-        if(role == Role.Admin){
+        if (role == Role.Admin) {
           this.router.navigate(['/admin/dashboard'])
-        }else if(role == Role.Staff){
+        } else if (role == Role.Staff) {
           this.router.navigate(['/staff/dashboard'])
-        }else if(role == Role.Collector){
+        } else if (role == Role.Collector) {
           this.router.navigate(['sales/dashboard'])
         } else {
           this.error = "Invalid Login";
-        }  
+        }
 
         this.submitted = false;
         this.loading = false;
 
       }, err => {
         this.error = err;
-        console.log(err)
         this.submitted = false;
         this.loading = false;
       })
