@@ -27,7 +27,7 @@ export class AddPickupComponent implements OnInit {
   name: any;
   wards: any;
 
-  displayedColumns: string[] = ["id", "username","actions"];
+  displayedColumns: string[] = ["id", "username", "actions"];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

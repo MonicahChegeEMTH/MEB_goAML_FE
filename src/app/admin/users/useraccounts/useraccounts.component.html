@@ -111,31 +111,36 @@
                 </ng-container>
                 <ng-container matColumnDef="username">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="table-img tbl-col-width-per-12 column-nowrap">Username</mat-header-cell>
+                    class="column-nowrap">Username</mat-header-cell>
                   <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
-                  [class.even-row]="!(i % 2)" class="table-img tbl-col-width-per-12 column-nowrap">{{ user.username }}</mat-cell>
+                  [class.even-row]="!(i % 2)" class="column-nowrap">{{ user.username }}</mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="department">
+                <ng-container matColumnDef="email">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="table-img tbl-col-width-per-35 column-nowrap">Department</mat-header-cell>
+                    class="column-nowrap">Email Address</mat-header-cell>
                   <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
-                  [class.even-row]="!(i % 2)"
-                    class="table-img tbl-col-width-per-35 column-nowrap">
-                    {{ user.department }}
-                  </mat-cell>
+                  [class.even-row]="!(i % 2)" class="column-nowrap">{{ user.email }}</mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="column-nowrap">Name</mat-header-cell>
+                  <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
+                  [class.even-row]="!(i % 2)" class="column-nowrap">{{ user.firstname +" "+ user.lastname }}</mat-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="role">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-15 column-nowrap text-left">User Role</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap text-left">User Role</mat-header-cell>
                   <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
                   [class.even-row]="!(i % 2)"
-                    class="table-img tbl-col-width-per-15 column-nowrap">
+                    class="column-nowrap">
                     {{user.roles[0].name}}
                   </mat-cell>
                 </ng-container>
                 <!-- actions -->
                 <ng-container matColumnDef="actions">
-                  <mat-header-cell class="pr-0 tbl-col-width-per-20 column-nowrap" *matHeaderCellDef>Actions</mat-header-cell>
+                  <mat-header-cell class="pr-0 column-nowrap" *matHeaderCellDef>Actions</mat-header-cell>
                   <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
                   [class.even-row]="!(i % 2)" class="pr-0">
                   <button mat-icon-button color="primary" (click)="$event.stopPropagation()"

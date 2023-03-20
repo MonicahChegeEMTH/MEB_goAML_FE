@@ -14,7 +14,7 @@ export class ProfileService {
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
-  url = `${environment.API}/api/v1/profile/`;
+  url = `${environment.apiUrl}/api/v1/profile/`;
 
   public getProfile(): Observable<any> {
     return this.http.get<any>(this.url + 'fetch');

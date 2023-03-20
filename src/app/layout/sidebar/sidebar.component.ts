@@ -108,17 +108,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const role = this.currentUser.roles[0];
 
     if (this.currentUser) {
-      let userRole = this.currentUser.roles[0];
+      let userRole = this.currentUser.roles[0].name;
       this.userFullName = this.currentUser.username;
       this.userImg = "assets/images/prof.png";
 
       this.sidebarItems = ROUTES.filter((x) => x.role.indexOf(userRole) !== -1);
       if (userRole == Role.Admin) {
         this.userType = Role.Admin;
-      } else if (userRole == Role.Secretary) {
-        this.userType = Role.Secretary;
-      } else if (userRole == Role.User) {
-        this.userType = Role.User;
+      } else if (userRole == Role.Staff) {
+        this.userType = Role.Staff;
+      } else if (userRole == Role.Collector) {
+        this.userType = Role.Collector;
       }
 
     }

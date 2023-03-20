@@ -36,6 +36,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LookupMilkCollectorsComponent } from './lookup-milk-collectors/lookup-milk-collectors.component';
+import { ViewCollectorsComponent } from './view-collectors/view-collectors.component';
+import { ViewStaffComponent } from './view-staff/view-staff.component';
+import { ViewSalesPeopleComponent } from './view-sales-people/view-sales-people.component';
 
 
 @NgModule({
@@ -56,6 +59,9 @@ import { LookupMilkCollectorsComponent } from './lookup-milk-collectors/lookup-m
     ProfileComponent,
     SettingsComponent,
     LookupMilkCollectorsComponent,
+    ViewCollectorsComponent,
+    ViewStaffComponent,
+    ViewSalesPeopleComponent,
 
   ],
   imports: [

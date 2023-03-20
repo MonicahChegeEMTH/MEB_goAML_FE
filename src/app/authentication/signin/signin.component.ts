@@ -5,6 +5,9 @@ import { AuthService } from "src/app/core/service/auth.service";
 import { Role } from "src/app/core/models/role";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { TokenStorageService } from "src/app/core/service/token-storage.service";
+
+const TOKEN_KEY = 'auth-token';
+const USER_KEY = 'auth-user';
 @Component({
   selector: "app-signin",
   templateUrl: "./signin.component.html",
@@ -40,6 +43,10 @@ export class SigninComponent
   }
 
   onSubmit() {
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(USER_KEY)
+
+
     this.submitted = true;
     this.loading = true;
     this.error = "";
@@ -50,15 +57,17 @@ export class SigninComponent
       console.log(this.authForm.value)
       this.authService.login(this.authForm.value).subscribe(res => {
         console.log(res)
-        this.tokenStorage.saveToken(res.accessToken);
+
+        this.tokenStorage.saveToken(res.token);
         this.tokenStorage.saveUser(res);
-        const role = res.roles[0];
+        const role = res.roles[0].name;
+        console.log(role)
         if(role == Role.Admin){
           this.router.navigate(['/admin/dashboard'])
-        }else if(role == Role.Secretary){
-          this.router.navigate(['/secretary/dashboard'])
-        }else if(role == Role.User){
-          this.router.navigate(['/user/dashboard'])
+        }else if(role == Role.Staff){
+          this.router.navigate(['/staff/dashboard'])
+        }else if(role == Role.Collector){
+          this.router.navigate(['sales/dashboard'])
         } else {
           this.error = "Invalid Login";
         }  
