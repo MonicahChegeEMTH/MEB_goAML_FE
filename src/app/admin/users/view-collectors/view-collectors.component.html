@@ -129,8 +129,21 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="column-nowrap">Name</mat-header-cell>
                                     <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ user.firstname +" "+
-                                        user.lastname }}</mat-cell>
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ user.firstName +" "+
+                                        user.lastName }}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">Action</mat-header-cell>
+                                    <mat-cell *matCellDef="let user;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                            (click)="milkCollectorDetailsCall(user)" class="tbl-action-btn"
+                                            matTooltip="View Details">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </mat-cell>
                                 </ng-container>
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

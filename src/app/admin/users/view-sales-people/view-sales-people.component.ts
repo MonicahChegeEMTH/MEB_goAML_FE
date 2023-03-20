@@ -75,7 +75,7 @@ export class ViewSalesPeopleComponent implements OnInit {
     this.accountService.allUsers()
       .subscribe(
         (res) => {
-          this.users = res;
+          this.users = res.userData;
           if (this.users.length > 0) {
             this.isLoading = false;
             this.isdata = true;
@@ -96,7 +96,7 @@ export class ViewSalesPeopleComponent implements OnInit {
     this.isdata = false;
     this.accountService.allActiveUsers().subscribe(
       (res) => {
-        this.users = res;
+        this.users = res.userData;
         if (this.users.length > 0) {
           this.isLoading = false;
           this.isdata = true;
@@ -119,7 +119,7 @@ export class ViewSalesPeopleComponent implements OnInit {
     this.isdata = false;
     this.accountService.allLockedUserAccounts().subscribe(
       (res) => {
-        this.users = res;
+        this.users = res.userData;
         if (this.users.length > 0) {
           this.isLoading = false;
           this.isdata = true;
@@ -142,7 +142,7 @@ export class ViewSalesPeopleComponent implements OnInit {
     this.isdata = false;
     this.accountService.allDeletedUserAccounts().subscribe(
       (res) => {
-        this.users = res;
+        this.users = res.userData;
         if (this.users.length > 0) {
           this.isLoading = false;
           this.isdata = true;

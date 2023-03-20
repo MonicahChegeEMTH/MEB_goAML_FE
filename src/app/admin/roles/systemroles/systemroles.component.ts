@@ -42,7 +42,7 @@ export class SystemrolesComponent implements OnInit {
 
   getData() {
       this.subscription = this.service.getRoles().subscribe(res => {
-        this.data = res;
+        this.data = res.roleData;
         // Binding with the datasource
         this.dataSource = new MatTableDataSource(this.data);
         this.dataSource.paginator = this.paginator;
