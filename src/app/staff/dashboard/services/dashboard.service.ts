@@ -20,10 +20,9 @@ export class DashboardService {
   public getTodaysCollections(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today`,httpOptions);
   }
-
-  // public getUsersPerDepartment(): Observable<any> {
-  //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
-  // }
+  public getAllFarmers(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
+  }
 
   // public getDashboardWigetsAnalytics(): Observable<any> {
   //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);

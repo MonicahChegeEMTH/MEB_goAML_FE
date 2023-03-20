@@ -117,7 +117,7 @@
                     </mat-form-field>
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Number of Cows</mat-label>
-                        <input matInput formControlName="noOfCows" required />
+                        <input matInput formControlName="noOfCows" type="number" required />
                         <mat-error *ngIf="farmerRegirstartionForm.get('noOfCows').hasError('required')">
                             Input is required
                         </mat-error>

@@ -1,20 +1,20 @@
-import { formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
 
 @Component({
-  selector: 'app-collections',
-  templateUrl: './collections.component.html',
-  styleUrls: ['./collections.component.sass']
+  selector: 'app-collection-details',
+  templateUrl: './collection-details.component.html',
+  styleUrls: ['./collection-details.component.sass']
 })
-export class CollectionsComponent implements OnInit {
+export class CollectionDetailsComponent implements OnInit {
+
   today: Date = new Date();
   formattedDate: string = this.today.toISOString().slice(0,10); 
 
@@ -34,7 +34,8 @@ export class CollectionsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private dialog: MatDialog, private service: SalesService,) { }
+  farmerid:any
+  constructor(private route: ActivatedRoute, private dialog: MatDialog, private service: SalesService,) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -46,25 +47,6 @@ export class CollectionsComponent implements OnInit {
   }
 
 
-  getData(date:string) {
-    this.isLoading = true;
-    this.subscription = this.service.getCollections(date).subscribe(res => {
-      this.data = res;
-      console.log(this.data)
-      if (this.data.entity.length > 0) {
-        this.isLoading = false;
-        this.isdata = true;
-        // Binding with the datasource
-        this.dataSource = new MatTableDataSource(this.data.entity);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }
-      else {
-        this.isdata = false;
-        this.dataSource = new MatTableDataSource<any>(this.data);
-      }
-    })
-  }
 
   dataSource!: MatTableDataSource<any>;
 
@@ -79,15 +61,41 @@ export class CollectionsComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("New date fromat is ",this.formattedDate)
+    this.route.params.subscribe((params: Params) => {
+      this.farmerid = params['id'];
+      // Use the id parameter in your component logic
+    });
    
-    this.getData(this.formattedDate);
+    this.getFarmerCollections(this.farmerid)
+
   }
 
-  viewFarmerCollections(row) {
+
+
+  // getFarmerDetails(id){
+  //   this.service.
     
-      this.router.navigate(['/staff/sales/farmer', row.farmerId]);
-      
+  // }
+  getFarmerCollections(id){
+    this.service.getFarmerCollections(id).subscribe(res=>{
+      this.data=res
+      console.log("Farmer colections",this.data.entity)
+      if (this.data.entity.length > 0) {
+        this.isLoading = false;
+        this.isdata = true;
+        // Binding with the datasource
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.dataSource = new MatTableDataSource<any>(this.data);
+      }
+    })
+
   }
+
 
 
   editCountyCall(County) {
@@ -101,14 +109,5 @@ export class CollectionsComponent implements OnInit {
     // this.dialog.open(EditCountyComponent, dialogConfig)
   }
 
-  // deleteCountyCall(County) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "500px"
-  //   dialogConfig.data = {
-  //     county: County
-  //   }
-  //   this.dialog.open(DeleteCountyComponent, dialogConfig)
-  // }
+
 }

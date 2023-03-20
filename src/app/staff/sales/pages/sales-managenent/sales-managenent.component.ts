@@ -45,7 +45,7 @@ export class SalesManagenentComponent implements OnInit {
 
   getData() {
     this.isLoading = true;
-    this.subscription = this.service.getCollections().subscribe(res => {
+    this.subscription = this.service.getCollections("2023-03-20").subscribe(res => {
       this.data = res;
       console.log(this.data)
       if (this.data.entity.length > 0) {

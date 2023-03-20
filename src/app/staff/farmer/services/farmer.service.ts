@@ -20,6 +20,9 @@ export class FarmerService {
   public getFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
+  public getFarmersById(id:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/id`,httpOptions);
+  }
   registerFarmer(farmer:any){
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/add`,farmer);
   }

@@ -15,12 +15,20 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { CollectionsComponent } from './pages/collections/collections.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CollectionsPerCollectorsComponent } from './pages/collections-per-collectors/collections-per-collectors.component';
+import { CollectorsFloatAllocationsComponent } from './pages/collectors-float-allocations/collectors-float-allocations.component';
+import { FloatAllocationComponent } from './pages/float-allocation/float-allocation.component';
+import { CollectionDetailsComponent } from './pages/collection-details/collection-details.component';
 
 
 @NgModule({
     declarations: [
         SalesManagenentComponent,
-        CollectionsComponent
+        CollectionsComponent,
+        CollectionsPerCollectorsComponent,
+        CollectorsFloatAllocationsComponent,
+        FloatAllocationComponent,
+        CollectionDetailsComponent
     ],
     imports: [
         CommonModule,
