@@ -14,12 +14,14 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SharedModule } from 'src/app/shared/shared.module';
-import {MatSelectModule} from '@angular/material/select'; 
+import {MatSelectModule} from '@angular/material/select';
+import { FarmerDetailsComponent } from './pages/farmer-details/farmer-details.component'; 
 
 @NgModule({
     declarations: [
         FarmerManagenentComponent,
-        RegisterFarmerComponent
+        RegisterFarmerComponent,
+        FarmerDetailsComponent,
     ],
     imports: [
         CommonModule,
