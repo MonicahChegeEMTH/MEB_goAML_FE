@@ -1,48 +1,54 @@
 <section class="content">
-    <div class="content-block">
-      <div class="block-header">
-        <!-- breadcrumb -->
-        <!-- <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <!-- <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'">
         </app-breadcrumb> -->
-      </div>
-  
-      <!-- Widgets -->
-      <div class="row" *ngIf="loaded">
-        <div class="col-lg-3 col-sm-4">
-          <div class="info-box7 bg-c-brown order-info-box7" matTooltip="System Users" routerLink="/admin/users">
-            <div class="info-box7-block">
-              <h4 class="m-b-20">Quantity</h4>
-              <h2 class="text-end"><span class="float-start">{{quantity}}</span><i class="fas fa-th"></i></h2>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-4">
-          <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Teams Maintained" routerLink="/admin/teams">
-            <div class="info-box7-block">
-              <h4 class="m-b-20">Total Amount</h4>
-              <h2 class="text-end"><span class="float-start">{{amount}}</span><i class="fas fa-th"></i></h2>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-4">
-          <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Departments" routerLink="/admin/departments">
-            <div class="info-box7-block">
-              <h4 class="m-b-20">Departments</h4>
-              <h2 class="text-end"><span class="float-start">{{departments}}</span><i class="fas fa-th"></i></h2>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-4">
-          <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Subsidiaries"
-            routerLink="/admin/subsidiaries">
-            <div class="info-box7-block">
-              <h4 class="m-b-20">Subsidiaries</h4>
-              <h2 class="text-end"><span class="float-start">{{subsidiaries}}</span><i class="fas fa-th"></i></h2>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-  
     </div>
-  </section>
+
+    <!-- Widgets -->
+    <div class="row" *ngIf="loaded">
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="System Users"
+          routerLink="/staff/sales/collections">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Today:Quantity (litres)</h4>
+            <h2 class="text-end"><span class="float-start">{{quantity}}</span><i class="fas fa-th"></i></h2>
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Teams Maintained"
+          routerLink="/staff/sales/collections">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Today: Total Amount (KES)</h4>
+            <h2 class="text-end"><span class="float-start">{{amount}}</span><i class="fas fa-th"></i></h2>
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Departments"   routerLink="/staff/farmers/farmers">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Registered Farmers</h4>
+            <h2 class="text-end"><span class="float-start">{{farmers}}</span><i class="fas fa-th"></i></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Subsidiaries"
+        routerLink="/staff/sales/collections">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Today Collections</h4>
+            <h2 class="text-end"><span class="float-start">{{count}}</span><i class="fas fa-th"></i></h2>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

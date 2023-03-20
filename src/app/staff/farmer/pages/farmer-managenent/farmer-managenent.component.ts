@@ -89,16 +89,10 @@ export class FarmerManagenentComponent implements OnInit {
     this.dialog.open(RegisterFarmerComponent, dialogConfig)
   }
 
-  editCountyCall(County) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
-  }
+  viewFarmerCollections(row) {
+    
+    this.router.navigate(['/staff/sales/farmer', row.id]);
+}
 
   // deleteCountyCall(County) {
   //   const dialogConfig = new MatDialogConfig();
