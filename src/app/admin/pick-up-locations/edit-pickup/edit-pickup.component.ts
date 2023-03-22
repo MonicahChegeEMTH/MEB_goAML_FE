@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { RoutesLookupComponent } from '../../routes/routes-lookup/routes-lookup.component';
 import { SubCountiesLookupComponent } from '../../sub-counties/sub-counties-lookup/sub-counties-lookup.component';
 import { SubcountiesService } from '../../sub-counties/subcounties.service';
 import { LookupMilkCollectorsComponent } from '../../users/pages/milk-collectors/lookup-milk-collectors/lookup-milk-collectors.component';
@@ -48,6 +49,8 @@ export class EditPickupComponent implements OnInit {
       id: [this.data.location.id],
       name: [this.data.location.name, [Validators.required]],
       ward_fk: [""],
+      route_fk: [this.data.location.route_fk],
+      route: [this.data.location.route_fk],
       subCounty: [this.data.location.subcounty],
       subcounty_fk: [""],
       landMark: [this.data.location.landmark, [Validators.required]],
@@ -120,6 +123,23 @@ export class EditPickupComponent implements OnInit {
     });
   }
 
+  pickRoute(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(RoutesLookupComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+      this.addLocationForm.patchValue({
+        route: this.dialogData.data.route,
+        route_fk: this.dialogData.data.id
+      });
+    });
+  }
 
   pickMilkCollectorsDialog(department): void {
     const dialogConfig = new MatDialogConfig();
