@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, map, Observable, of } from "rxjs";
 import { User } from "../models/user";
 import { environment } from "src/environments/environment";
-import { Log } from "src/app/admin/users/models/log";
 
 const PASSWORD_RESET_API = `${environment.apiUrl}/api/v1/reset/`;
 const USERS_API = `${environment.apiUrl}/admin/api/v1/users/`;
@@ -156,14 +155,14 @@ export class AuthService {
     );
   }
 
-  public getAccountLogs(username): Observable<Log[]> {
+  public getAccountLogs(username): Observable<any> {
     const accountLogsUrl = `${environment.apiUrl}/p2p/audit/alllogs/${username}`;
-    return this.http.get<Log[]>(accountLogsUrl);
+    return this.http.get<any>(accountLogsUrl);
   }
 
-  public getDailyAccountLogs(uname, stime): Observable<Log[]> {
+  public getDailyAccountLogs(uname, stime): Observable<any> {
     const dailyAccountLogsUrl = `${environment.apiUrl}/p2p/audit/todaylogs`;
-    return this.http.get<Log[]>(dailyAccountLogsUrl, {
+    return this.http.get<any>(dailyAccountLogsUrl, {
       params: { uname, stime },
     });
   }

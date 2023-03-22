@@ -1,76 +1,78 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatTableExporterModule } from 'mat-table-exporter';
-import { UsersRoutingModule } from './users-routing.module';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { ComponentsModule } from 'src/app/shared/components/components.module';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { UseraccountsComponent } from './useraccounts/useraccounts.component';
-import { AdduserComponent } from './adduser/adduser.component';
-import { ViewuserComponent } from './viewuser/viewuser.component';
-import { UpdateuserComponent } from './updateuser/updateuser.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { LookupuserComponent } from './lookupuser/lookupuser.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { UploadedusersComponent } from './uploadedusers/uploadedusers.component';
-import { UserWigetsComponent } from './user-wigets/user-wigets.component';
-import { UpdatepasswordComponent } from './updatepassword/updatepassword.component';
-import { UpdatedepartmentComponent } from './updatedepartment/updatedepartment.component';
-import { DeleteaccountComponent } from './deleteaccount/deleteaccount.component';
-import { LockaccountComponent } from './lockaccount/lockaccount.component';
-import { RestoreaccountComponent } from './restoreaccount/restoreaccount.component';
-import { UnlockaccountComponent } from './unlockaccount/unlockaccount.component';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { ProfileComponent } from './profile/profile.component';
-import { SettingsComponent } from './settings/settings.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { LookupMilkCollectorsComponent } from './lookup-milk-collectors/lookup-milk-collectors.component';
-import { ViewCollectorsComponent } from './view-collectors/view-collectors.component';
-import { ViewStaffComponent } from './view-staff/view-staff.component';
-import { ViewSalesPeopleComponent } from './view-sales-people/view-sales-people.component';
-import { MilkCollectorsDetailsComponent } from './milk-collectors-details/milk-collectors-details.component';
+import { NgModule } from "@angular/core";
+import { CommonModule, DatePipe } from "@angular/common";
 
+import { UsersRoutingModule } from "./users-routing.module";
+import { ActiveAccountsComponent } from "./pages/active-accounts/active-accounts.component";
+import { LockedAccountsComponent } from "./pages/locked-accounts/locked-accounts.component";
+import { AddAccountComponent } from "./pages/add-account/add-account.component";
+import { ActivateAccountComponent } from "./pages/activate-account/activate-account.component";
+import { DeleteAccountComponent } from "./pages/delete-account/delete-account.component";
+import { DeletedAccountsComponent } from "./pages/deleted-accounts/deleted-accounts.component";
+import { InactiveAccountsComponent } from "./pages/inactive-accounts/inactive-accounts.component";
+import { UpdateAccountComponent } from "./pages/update-account/update-account.component";
+import { AccountDetailsComponent } from "./pages/account-details/account-details.component";
+import { MatTableModule } from "@angular/material/table";
+import { MatSortModule } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableExporterModule } from "mat-table-exporter";
+import { SharedModule } from "src/app/shared/shared.module";
+import { ComponentsModule } from "src/app/shared/components/components.module";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDialogModule } from "@angular/material/dialog";
+import { RestoreAccountComponent } from "./pages/restore-account/restore-account.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { ModifyAccountComponent } from "./pages/modify-account/modify-account.component";
+import { AccountLogsComponent } from "./pages/account-logs/account-logs.component";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { UserWidgetsComponent } from "./pages/user-widgets/user-widgets.component";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { UnlockAccountComponent } from './pages/unlock-account/unlock-account.component';
+import { LockAccountComponent } from './pages/lock-account/lock-account.component';
+import { PendingAccountsComponent } from './pages/pending-accounts/pending-accounts.component';
+import { RejectedAccountsComponent } from './pages/rejected-accounts/rejected-accounts.component';
+import { VerifyAccountComponent } from './pages/verify-account/verify-account.component';
+import { RolesLookupComponent } from './pages/dialogs/roles-lookup/roles-lookup.component';
+import { MatCardModule } from "@angular/material/card";
+import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
+import { UsersComponent } from "./pages/users/users.component";
+import { AdminUpdateUserPasswordComponent } from './pages/dialogs/admin-update-user-password/admin-update-user-password.component';
+import { LookupMilkCollectorsComponent } from "./pages/milk-collectors/lookup-milk-collectors/lookup-milk-collectors.component";
+import { ViewCollectorsComponent } from "./pages/milk-collectors/view-collectors/view-collectors.component";
 
 @NgModule({
   declarations: [
-    UseraccountsComponent,
-    AdduserComponent,
-    ViewuserComponent,
-    UpdateuserComponent,
-    LookupuserComponent,
-    UploadedusersComponent,
-    UserWigetsComponent,
-    UpdatepasswordComponent,
-    UpdatedepartmentComponent,
-    DeleteaccountComponent,
-    LockaccountComponent,
-    RestoreaccountComponent,
-    UnlockaccountComponent,
-    ProfileComponent,
-    SettingsComponent,
-    LookupMilkCollectorsComponent,
-    ViewCollectorsComponent,
-    ViewStaffComponent,
-    ViewSalesPeopleComponent,
-    MilkCollectorsDetailsComponent,
+    ActiveAccountsComponent,
+    LockedAccountsComponent,
+    AddAccountComponent,
+    ActivateAccountComponent,
+    DeleteAccountComponent,
+    DeletedAccountsComponent,
+    InactiveAccountsComponent,
+    UpdateAccountComponent,
+    AccountDetailsComponent,
+    RestoreAccountComponent,
+    ModifyAccountComponent,
+    UserWidgetsComponent,
+    AccountLogsComponent,
+    UnlockAccountComponent,
+    LockAccountComponent,
+    PendingAccountsComponent,
+    RejectedAccountsComponent,
+    VerifyAccountComponent,
+    RolesLookupComponent,
+    UsersComponent,
+    AdminUpdateUserPasswordComponent,
 
+    LookupMilkCollectorsComponent,
+    ViewCollectorsComponent
   ],
   imports: [
     CommonModule,
     UsersRoutingModule,
     MatTableModule,
-    MatTabsModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableExporterModule,
@@ -84,11 +86,11 @@ import { MilkCollectorsDetailsComponent } from './milk-collectors-details/milk-c
     MatDialogModule,
     MatDatepickerModule,
     MatProgressBarModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    PerfectScrollbarModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
+    MatCardModule,
+    PerfectScrollbarModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
-export class UsersModule { }
+export class UsersModule {}
