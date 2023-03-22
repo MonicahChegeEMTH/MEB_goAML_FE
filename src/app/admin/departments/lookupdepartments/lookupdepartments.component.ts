@@ -7,8 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AdduserComponent } from '../../users/adduser/adduser.component';
 import { DepartmentsService } from '../departments.service';
+import { ManageDepartmentsComponent } from '../manage-departments/manage-departments.component';
 
 @Component({
   selector: 'app-lookupdepartments',
@@ -36,7 +36,7 @@ export class LookupdepartmentsComponent implements OnInit {
     private service: DepartmentsService,
     public dialog: MatDialog,
     private router: Router,
-    public dialogRef: MatDialogRef<AdduserComponent>
+    public dialogRef: MatDialogRef<ManageDepartmentsComponent>
   ) {
   }
 
