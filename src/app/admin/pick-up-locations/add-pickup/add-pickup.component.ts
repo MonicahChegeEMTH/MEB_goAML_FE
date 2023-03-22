@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SubCountiesLookupComponent } from '../../sub-counties/sub-counties-lookup/sub-counties-lookup.component';
 import { SubcountiesService } from '../../sub-counties/subcounties.service';
-import { LookupMilkCollectorsComponent } from '../../users/lookup-milk-collectors/lookup-milk-collectors.component';
+import { LookupMilkCollectorsComponent } from '../../users/pages/milk-collectors/lookup-milk-collectors/lookup-milk-collectors.component';
 import { ManagePickupsComponent } from '../manage-pickups/manage-pickups.component';
 import { PickupService } from '../pickup.service';
 

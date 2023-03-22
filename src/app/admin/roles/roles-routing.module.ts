@@ -1,28 +1,26 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from 'src/app/core/guard/auth.guard';
-import { SystemrolesComponent } from './systemroles/systemroles.component';
-import { Page404Component } from 'src/app/authentication/page404/page404.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AddRoleComponent } from './pages/add-role/add-role.component';
+import { RolesComponent } from './pages/roles/roles.component';
 
 const routes: Routes = [
   {
-    path: "",
-    canActivate: [AuthGuard],
-    component: SystemrolesComponent,
+    path: "add",
+    component: AddRoleComponent,
+    // canActivate: [RoutePrivilegeGuard],
+    // data: { requiredPrivilege: ["Create role"] },
   },
-  { 
-    path: "**", component: Page404Component 
-  },
+  {
+    path: "view",
+    component: RolesComponent,
+    // canActivate: [RoutePrivilegeGuard],
+    // data: { requiredPrivilege: ["View roles"] },
+  }
 ];
 
-@NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
 
-  ],
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class RolesRoutingModule { }
