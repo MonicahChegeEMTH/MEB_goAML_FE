@@ -1,23 +1,17 @@
-import { HttpParams } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
-  Validators,
 } from "@angular/forms";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { element } from "protractor";
-import { from, Subscription, takeUntil } from "rxjs";
+import { takeUntil } from "rxjs";
 // import { PrivilegesTemplate } from "src/app/admin/data/types/privileges_template";
 import { TokenStorageService } from "src/app/core/service/token-storage.service";
 import { NotificationService } from "src/app/data/services/notification.service";
 import { RoleService } from "src/app/data/services/role.service";
 import { BaseComponent } from "src/app/shared/components/base/base.component";
 // import { RoleService } from "../../data/services/RoleService.service";
-import { RolesComponent } from "../roles/roles.component";
 
 const ACESS_RIGHTS = "access-rights";
 
