@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { RoutesLookupComponent } from '../../routes/routes-lookup/routes-lookup.component';
 import { SubCountiesLookupComponent } from '../../sub-counties/sub-counties-lookup/sub-counties-lookup.component';
 import { SubcountiesService } from '../../sub-counties/subcounties.service';
 import { LookupMilkCollectorsComponent } from '../../users/lookup-milk-collectors/lookup-milk-collectors.component';
@@ -48,6 +49,8 @@ export class AddPickupComponent implements OnInit {
       ward_fk: [""],
       subCounty: [""],
       subcounty_fk: [""],
+      route_fk: [""],
+      route: [""],
       landMark: ["", [Validators.required]],
       collectors: new FormArray([])
     });
@@ -95,6 +98,24 @@ export class AddPickupComponent implements OnInit {
       });
 
       this.getWards(this.dialogData.data.id);
+    });
+  }
+
+  pickRoute(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(RoutesLookupComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+      this.addLocationForm.patchValue({
+        route: this.dialogData.data.route,
+        route_fk: this.dialogData.data.id
+      });
     });
   }
 

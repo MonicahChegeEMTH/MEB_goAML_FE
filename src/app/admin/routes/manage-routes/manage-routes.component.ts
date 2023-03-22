@@ -6,33 +6,28 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FarmerService } from '../../services/farmer.service';
-import { DeleteFarmerComponent } from '../delete-farmer/delete-farmer.component';
-import { RegisterFarmerComponent } from '../register-farmer/register-farmer.component';
-import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component';
+import { AddRouteComponent } from '../add-route/add-route.component';
+import { DeleteRouteComponent } from '../delete-route/delete-route.component';
+import { EditRouteComponent } from '../edit-route/edit-route.component';
+import { RoutesService } from '../routes.service';
 
 @Component({
-  selector: 'app-farmer-managenent',
-  templateUrl: './farmer-managenent.component.html',
-  styleUrls: ['./farmer-managenent.component.sass']
+  selector: 'app-manage-routes',
+  templateUrl: './manage-routes.component.html',
+  styleUrls: ['./manage-routes.component.sass']
 })
-export class FarmerManagenentComponent implements OnInit {
-
+export class ManageRoutesComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    "memberCode",
-    "firstName",
-    "lastName",
-    "mobileNo",
-    'date',
+    'name',
+    'createdOn',
+    "pickLocations",
     'action',
   ];
 
+
   subscription!: Subscription;
   data: any;
-  isdata: boolean = false;
-  isLoading: boolean = false;
-  constructor(private router: Router, private dialog: MatDialog, private service: FarmerService,) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -45,25 +40,20 @@ export class FarmerManagenentComponent implements OnInit {
 
 
   getData() {
-    this.isLoading = true;
-    this.subscription = this.service.getFarmers().subscribe(res => {
-      this.data = res;
-      if (this.data.entity.length > 0) {
-        this.isLoading = false;
-        this.isdata = true;
+      this.subscription = this.service.getRoutes().subscribe(res => {
+        this.data = res.entity;
         // Binding with the datasource
-        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource = new MatTableDataSource(this.data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-      }
-      else {
-        this.isdata = false;
-        this.dataSource = new MatTableDataSource<any>(this.data);
-      }
-    })
+      })
   }
 
   dataSource!: MatTableDataSource<any>;
+  isLoading: boolean = true;
+
+  constructor(private router: Router, private dialog: MatDialog,    private service: RoutesService,) { }
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild("filter", { static: true }) filter: ElementRef;
@@ -75,41 +65,48 @@ export class FarmerManagenentComponent implements OnInit {
     this.getData();
   }
 
-  addCall() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false
-    dialogConfig.autoFocus = true
-    dialogConfig.width = "65%"
-    dialogConfig.data = {
-      test: ""
-    }
-    this.dialog.open(RegisterFarmerComponent, dialogConfig)
-  }
-
-  editCall(data: any) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false
-    dialogConfig.autoFocus = true
-    dialogConfig.width = "60%"
-    dialogConfig.data = {
-      farmer: data
-    }
-    this.dialog.open(UpdateFarmerComponent, dialogConfig)
-  }
-
-  deleteCall(data: any) {
+  addRouteCall(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
     dialogConfig.width = "40%"
     dialogConfig.data = {
-      farmer: data
+      test: ""
     }
-    this.dialog.open(DeleteFarmerComponent, dialogConfig)
+    this.dialog.open(AddRouteComponent, dialogConfig)
   }
 
-  viewFarmerCollections(row) {
-
-    this.router.navigate(['/staff/sales/farmer', row.id]);
+  editRouteCall(route){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      route: route
+    }
+    this.dialog.open(EditRouteComponent, dialogConfig)
   }
+
+  deleteRouteCall(route){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      route: route
+    }
+    this.dialog.open(DeleteRouteComponent, dialogConfig)
+  }
+
+  // viewRoleCall(role){
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = false
+  //   dialogConfig.autoFocus = true
+  //   dialogConfig.width = "40%"
+  //   dialogConfig.data = {
+  //     roles: role
+  //   }
+  //   this.dialog.open(ViewRoleComponent, dialogConfig)
+  // }
+
 }

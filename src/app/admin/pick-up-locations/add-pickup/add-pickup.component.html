@@ -67,6 +67,19 @@
             </div>
 
             <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Select Route</mat-label>
+                        <input matInput formControlName="route" required readonly />
+                        <mat-icon matSuffix (click)="pickRoute()">search</mat-icon>
+                        <mat-error *ngIf="addLocationForm.get('route').hasError('required')">
+                            Route is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
 
                     <div class="example-button-row">
