@@ -19,6 +19,9 @@ import { CollectionsPerCollectorsComponent } from './pages/collections-per-colle
 import { CollectorsFloatAllocationsComponent } from './pages/collectors-float-allocations/collectors-float-allocations.component';
 import { FloatAllocationComponent } from './pages/float-allocation/float-allocation.component';
 import { CollectionDetailsComponent } from './pages/collection-details/collection-details.component';
+import { EditFloatAllocationComponent } from './pages/edit-float-allocation/edit-float-allocation.component';
+import { DeleteFloatAllocationComponent } from './pages/delete-float-allocation/delete-float-allocation.component';
+import { LookupOneMilkcollectorComponent } from './pages/lookup-one-milkcollector/lookup-one-milkcollector.component';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { CollectionDetailsComponent } from './pages/collection-details/collectio
         CollectionsPerCollectorsComponent,
         CollectorsFloatAllocationsComponent,
         FloatAllocationComponent,
-        CollectionDetailsComponent
+        CollectionDetailsComponent,
+        EditFloatAllocationComponent,
+        DeleteFloatAllocationComponent,
+        LookupOneMilkcollectorComponent
     ],
     imports: [
         CommonModule,

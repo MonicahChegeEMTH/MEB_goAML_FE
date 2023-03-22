@@ -1,5 +1,6 @@
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 const httpOptions = {
@@ -14,31 +15,48 @@ export class SalesService {
   constructor(private http: HttpClient) { }
 
 
-  getCollections(date:string){
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=`+date,httpOptions);
-
-
+  getCollections(date: string) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=` + date, httpOptions);
   }
-  getTodayCollections(){
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`,httpOptions);
+
+  getAllCollections() {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/all`, httpOptions);
+  }
+
+  getTodayCollections() {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
 
   }
   // getTodayCollectionsPerCollector(){
   //   return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`,httpOptions);
 
   // }
-  
-  allocateFloat(){
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`,httpOptions);
+
+  allocateFloat() {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
+  }
+
+  getCollectorAllocations() {
+    return this.http.get(`${environment.apiUrl}/api/v1/float/get/allocations`, httpOptions);
 
   }
-  getCollectorAllocations(){
-    return this.http.get(`${environment.apiUrl}/api/v1/float/get/allocations`,httpOptions);
-
+  getFarmerCollections(id: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` + id, httpOptions);
   }
-  getFarmerCollections(id:any){
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=`+id,httpOptions);
 
+  getFarmerDetails(id: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmers/details?farmerId=` + id, httpOptions);
+  }
 
+  deleteFarmerDetails(id: any): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/api/v1/farmer/delete/` + id, httpOptions);
+  }
+
+  allocateFloatToCollector(data: any) {
+    return this.http.post(`${environment.apiUrl}/api/v1/float/allocate`, data, httpOptions);
+  }
+
+  milkCollectionsPerCollectorInPerYear(year: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/year?year=` + year, httpOptions);
   }
 }

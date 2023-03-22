@@ -15,9 +15,9 @@ export class RegisterFarmerComponent implements OnInit {
 
   farmerRegirstartionForm: FormGroup;
   loading = false;
-  isLoading:Boolean
-  isdata:Boolean
-  subcounties :any[]=[]
+  isLoading: Boolean
+  isdata: Boolean
+  subcounties: any[] = []
   wards: any;
 
   constructor(public dialogRef: MatDialogRef<FarmerManagenentComponent>,
@@ -31,7 +31,6 @@ export class RegisterFarmerComponent implements OnInit {
   ngOnInit(): void {
     this.farmerRegirstartionForm = this.fb.group({
       username: ["", [Validators.required]],
-      memberCode: ["", [Validators.required]],
       firstName: ["", [Validators.required]],
       lastName: ["", [Validators.required]],
       bankAccountNo: ["", [Validators.required]],
@@ -40,19 +39,18 @@ export class RegisterFarmerComponent implements OnInit {
       address: ["", [Validators.required]],
       subcounty_fk: ["", [Validators.required]],
       wardFk: ["", [Validators.required]],
-      memberType:["", [Validators.required]],
-      alternativeMobileNo:["", [Validators.required]],
-      noOfCows:["", [Validators.required]],
+      memberType: ["", [Validators.required]],
+      alternativeMobileNo: ["", [Validators.required]],
+      noOfCows: ["", [Validators.required]],
     })
 
     this.getSubcounties()
-;  }
+      ;
+  }
 
   onSubmit() {
     this.loading = true;
-    console.log(this.farmerRegirstartionForm.value)
     this.subscription = this.service.registerFarmer(this.farmerRegirstartionForm.value).subscribe(res => {
-      console.log(res)
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.loading = false;
       this.farmerRegirstartionForm.reset();
@@ -72,29 +70,24 @@ export class RegisterFarmerComponent implements OnInit {
     this.isLoading = true;
     this.subscription = this.service.getSubCounties().subscribe(res => {
       this.data = res;
-      console.log(this.data)
       if (this.data.entity.length > 0) {
-        this.subcounties=this.data.entity
-
-       
-
+        this.subcounties = this.data.entity
       }
       else {
-       
+
       }
     })
   }
 
-  getWards(data) {
-    console.log(data.value)
-    // this.subscription = this.service.getSubCountyById(id).subscribe(res => {
-    //   this.data = res;
-    //   if (this.data.entity.wards.length > 0) {
-    //     this.wards = this.data.entity.wards;
-    //   }
-    //   else {
-    //   }
-    // })
+  getWards(id: any) {
+    this.subscription = this.service.getSubCountyById(id.value).subscribe(res => {
+      this.data = res;
+      if (this.data.entity.wards.length > 0) {
+        this.wards = this.data.entity.wards;
+      }
+      else {
+      }
+    })
   }
 
 }

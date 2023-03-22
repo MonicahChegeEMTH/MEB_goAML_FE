@@ -62,13 +62,6 @@ const routes: Routes = [
       ),
   },
 
-  {
-    path: "configs",
-    loadChildren: () =>
-      import("./stock/configs/configs.module").then(
-        (m) => m.ConfigsModule
-      ),
-  },
 ];
 
 @NgModule({

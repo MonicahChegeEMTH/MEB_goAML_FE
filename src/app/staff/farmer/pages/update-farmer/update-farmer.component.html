@@ -1,0 +1,167 @@
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modalHeader clearfix">
+                    <div class="modal-about">
+                        <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
+                            Update Farmer Details
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <form class="register-form m-4" [formGroup]="farmerRegirstartionForm">
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" readonly />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('username').hasError('required')">
+                            Username is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('firstName').hasError('required')">
+                            firstName name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('lastName').hasError('required')">
+                            lastName name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Number of Cows</mat-label>
+                        <input matInput formControlName="noOfCows" type="number" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('noOfCows').hasError('required')">
+                            Input is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>idNumber</mat-label>
+                        <input matInput formControlName="idNumber" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('idNumber').hasError('required')">
+                            idNumber name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>mobileNo</mat-label>
+                        <input matInput formControlName="mobileNo" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('mobileNo').hasError('required')">
+                            mobileNo name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Bank AccountNo</mat-label>
+                        <input matInput formControlName="bankAccountNo" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('bankAccountNo').hasError('required')">
+                            bankAccountNo name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Alternative MobileNo</mat-label>
+                        <input matInput formControlName="alternativeMobileNo" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('alternativeMobileNo').hasError('required')">
+                            alternativeMobileNo name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Select Farmer Category</mat-label>
+                        <mat-select formControlName="memberType" required>
+                            <mat-option value="Individual">Individual</mat-option>
+                            <mat-option value="Group">Farmers Group</mat-option>
+                            <mat-option value="Co-Operative">Co-Operative Society</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="farmerRegirstartionForm.get('memberType').hasError('required')">
+                            Farmer Category Is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>address</mat-label>
+                        <input matInput formControlName="address" required />
+                        <mat-error *ngIf="farmerRegirstartionForm.get('address').hasError('required')">
+                            address name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Select Subcounty</mat-label>
+                        <mat-select formControlName="subcounty_fk" (selectionChange)="getWards($event)" required>
+                            <mat-option *ngFor="let subcounty of subcounties" [value]="subcounty.id">
+                                {{ subcounty.subcounty }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="farmerRegirstartionForm.get('subcounty_fk').hasError('required')">
+                            subcounty name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Select Ward</mat-label>
+                        <mat-select formControlName="wardFk" required>
+                            <mat-option *ngFor="let ward of wards" [value]="ward.id">
+                                {{ ward.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="farmerRegirstartionForm.get('wardFk').hasError('required')">
+                            Ward is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="example-button-row">
+                        <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
+                            Cancel
+                        </button>
+                        <button mat-raised-button color="primary" [disabled]="!farmerRegirstartionForm.valid"
+                            (click)="onSubmit()">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            <b>Submit</b>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

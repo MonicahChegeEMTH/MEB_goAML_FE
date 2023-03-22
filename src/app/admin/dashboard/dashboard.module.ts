@@ -11,9 +11,12 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ComponentsModule } from "src/app/shared/components/components.module";
 import { SharedModule } from "./../../shared/shared.module";
+import { CollectionsPerUserComponent } from './collections-per-user/collections-per-user.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CollectionsPerUserComponent
+  ],
   imports: [
     CommonModule,
     DashboardRoutingModule,

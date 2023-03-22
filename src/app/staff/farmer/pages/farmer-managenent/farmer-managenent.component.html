@@ -16,7 +16,7 @@
                                     <div class="col-8">
                                         <ul class="header-buttons-left ms-0">
                                             <li class="dropdown">
-                                                <h2>Farmers</h2>
+                                                <h2>Registered Farmers</h2>
                                             </li>
                                             <li class="dropdown m-l-20">
                                                 <label for="search-input"><i
@@ -27,7 +27,7 @@
                                             </li>
                                             <li>
                                                 <div class="m-l-10" matTooltip="Add">
-                                                    <button mat-mini-fab color="primary" (click)="addCountyCall()">
+                                                    <button mat-mini-fab color="primary" (click)="addCall()">
                                                         <mat-icon class="col-white">add</mat-icon>
                                                     </button>
                                                 </div>
@@ -102,79 +102,71 @@
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="memberCode">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">memberCode</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
+                                        Number</mat-header-cell>
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.memberCode}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="username">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">username</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.username}}
+                                        {{farmer.memberCode}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="firstName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">firstName</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">First
+                                        Name</mat-header-cell>
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.firstName}}
+                                        {{farmer.firstName}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="lastName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">lastName</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Last
+                                        Name</mat-header-cell>
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.lastName}}
+                                        {{farmer.lastName}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="mobileNo">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">mobileNo</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Mobile
+                                        No</mat-header-cell>
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.mobileNo}}
+                                        {{farmer.mobileNo}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="date">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Created
                                         On</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.createdAt | date}}
+                                        {{farmer.createdAt | date}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, county)">
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, farmer)">
                                         <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="editCountyCall(county)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Edit County"
+                                            (click)="editCall(farmer)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="Edit farmer"
                                                 [icon]="'edit'"></app-feather-icons>
                                         </button>
                                         <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteCountyCall(county)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Delete county" [icon]="'trash-2'"
+                                            (click)="deleteCall(farmer)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="Delete farmer" [icon]="'trash-2'"
                                                 [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                        (click)="viewFarmerCollections(county)" class="tbl-action-btn">
-                                        <app-feather-icons matTooltip="View Farmer Details" [icon]="'eye'"
-                                            [class]="'tbl-fav-eye'"></app-feather-icons>
-                                    </button>
+                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                            (click)="viewFarmerCollections(farmer)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="View Farmer Details" [icon]="'eye'"
+                                                [class]="'tbl-fav-eye'"></app-feather-icons>
+                                        </button>
                                     </mat-cell>
                                 </ng-container>
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
                                 <mat-row *matRowDef="let row; columns: displayedColumns"
-                                    (click)="countyDetailsCall(county)" [style.cursor]="'pointer'" matRipple>
+                                    (click)="farmerDetailsCall(farmer)" [style.cursor]="'pointer'" matRipple>
                                 </mat-row>
                                 <mat-cell *matNoDataRow colspan="4">
                                     No data matching the filter "{{ input.value }}"</mat-cell>

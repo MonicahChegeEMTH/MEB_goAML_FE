@@ -117,7 +117,6 @@ export class AddPickupComponent implements OnInit {
         this.addLocationForm.value.collectors = this.milkCollectors;
       }
     });
-
   }
 
   onClick() {

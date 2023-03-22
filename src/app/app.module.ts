@@ -16,7 +16,7 @@ import { MainLayoutComponent } from "./layout/app-layout/main-layout/main-layout
 import { fakeBackendProvider } from "./core/interceptor/fake-backend";
 import { ErrorInterceptor } from "./core/interceptor/error.interceptor";
 import { JwtInterceptor } from "./core/interceptor/jwt.interceptor";
-import { LocationStrategy, HashLocationStrategy } from "@angular/common";
+import { LocationStrategy, HashLocationStrategy, DatePipe } from "@angular/common";
 import {
   PerfectScrollbarModule,
   PERFECT_SCROLLBAR_CONFIG,
@@ -33,6 +33,7 @@ import {
 
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
 import { FooterComponent } from "./layout/footer/footer.component";
+import { NgApexchartsModule } from "ng-apexcharts";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -61,6 +62,7 @@ export function createTranslateLoader(http: HttpClient): any {
     HttpClientModule,
     PerfectScrollbarModule,
     ClickOutsideModule,
+    NgApexchartsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -84,6 +86,7 @@ export function createTranslateLoader(http: HttpClient): any {
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     fakeBackendProvider,
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })
