@@ -7,6 +7,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
+import { DeleteFloatAllocationComponent } from '../delete-float-allocation/delete-float-allocation.component';
+import { EditFloatAllocationComponent } from '../edit-float-allocation/edit-float-allocation.component';
 import { FloatAllocationComponent } from '../float-allocation/float-allocation.component';
 
 @Component({
@@ -21,8 +23,8 @@ export class CollectorsFloatAllocationsComponent implements OnInit {
     'id',
     "collector",
     'floatAmount',
+    'amountSpent',
     "balance",
-    "allocatedBy",
     'date',
     'action',
   ];
@@ -30,7 +32,7 @@ export class CollectorsFloatAllocationsComponent implements OnInit {
   subscription!: Subscription;
   data: any;
   isdata: boolean = false;
-  isLoading:boolean = false;
+  isLoading: boolean = false;
   constructor(private router: Router, private dialog: MatDialog, private service: SalesService,) { }
 
   applyFilter(event: Event) {
@@ -42,13 +44,7 @@ export class CollectorsFloatAllocationsComponent implements OnInit {
     }
   }
 
-
-
-
   dataSource!: MatTableDataSource<any>;
-
-  
-
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild("filter", { static: true }) filter: ElementRef;
@@ -61,9 +57,8 @@ export class CollectorsFloatAllocationsComponent implements OnInit {
   }
   getData() {
     this.isLoading = true;
-   this.service.getCollectorAllocations().subscribe(res => {
+    this.service.getCollectorAllocations().subscribe(res => {
       this.data = res;
-      console.log("Allocations",this.data.entity)
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
@@ -74,41 +69,41 @@ export class CollectorsFloatAllocationsComponent implements OnInit {
       }
       else {
         this.isdata = false;
-        this.dataSource = new MatTableDataSource<any>(this.data);
+        this.dataSource = new MatTableDataSource<any>(null);
       }
     })
   }
 
-  addCountyCall() {
+  addCall() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "70%"
+    dialogConfig.width = "40%"
     dialogConfig.data = {
       test: ""
     }
     this.dialog.open(FloatAllocationComponent, dialogConfig)
   }
 
-  editCountyCall(row) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
+  editCall(row) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      float: row
+    }
+    this.dialog.open(EditFloatAllocationComponent, dialogConfig)
   }
 
-  // deleteCountyCall(County) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "500px"
-  //   dialogConfig.data = {
-  //     county: County
-  //   }
-  //   this.dialog.open(DeleteCountyComponent, dialogConfig)
-  // }
+  deleteCall(row) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      float: row
+    }
+    this.dialog.open(DeleteFloatAllocationComponent, dialogConfig)
+  }
 }

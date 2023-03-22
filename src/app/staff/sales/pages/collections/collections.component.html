@@ -16,7 +16,16 @@
                                     <div class="col-8">
                                         <ul class="header-buttons-left ms-0">
                                             <li class="dropdown">
-                                                <h2>Milk Collections</h2>
+                                                <form [formGroup]="form">
+                                                    <mat-form-field>
+                                                        <input matInput [matDatepicker]="picker1"
+                                                            (dateChange)="filterByDate()" placeholder="Choose a date"
+                                                            formControlName="date">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="picker1"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker1></mat-datepicker>
+                                                    </mat-form-field>
+                                                </form>
                                             </li>
                                             <li class="dropdown m-l-20">
                                                 <label for="search-input"><i
@@ -28,7 +37,7 @@
 
                                             <li>
                                                 <div class="m-l-10" matTooltip="Refresh">
-                                                    <button mat-mini-fab color="primary" (click)="getData(formattedDate)">
+                                                    <button mat-mini-fab color="primary" (click)="getData()">
                                                         <mat-icon class="col-white">refresh</mat-icon>
                                                     </button>
                                                 </div>
@@ -97,7 +106,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="farmer">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">farmer</mat-header-cell>
+                                        class="column-nowrap">Farmer</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.farmer}}
@@ -105,7 +114,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="quantity">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">quantity</mat-header-cell>
+                                        class="column-nowrap">Qtty</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.quantity}}
@@ -113,40 +122,33 @@
                                 </ng-container>
                                 <ng-container matColumnDef="amount">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">amount</mat-header-cell>
+                                        class="column-nowrap">Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.amount}}
                                     </mat-cell>
                                 </ng-container>
-                               
+
                                 <ng-container matColumnDef="collector">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collector</mat-header-cell>
+                                        class="column-nowrap">Collector</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.collector}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="pickUpLocation">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">pickUpLocation</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.pickUpLocation}}
-                                    </mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="collection_date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collectionDate</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Collection
+                                        Date</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.collection_date | date:'medium'}}
+                                        {{response.collection_date | date}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="paymentStatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Payment Status
-                                        </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Payment
+                                        Status
+                                    </mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.paymentStatus}}
@@ -157,20 +159,10 @@
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, response)">
                                         <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="editresponseCall(response)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Edit response"
-                                                [icon]="'edit'"></app-feather-icons>
+                                            (click)="viewFarmerCollections(response)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="View Farmer Collections" [icon]="'eye'"
+                                                [class]="'tbl-fav-eye'"></app-feather-icons>
                                         </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteresponseCall(response)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Delete county" [icon]="'trash-2'"
-                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                        (click)="viewFarmerCollections(response)" class="tbl-action-btn">
-                                        <app-feather-icons matTooltip="View Farmer Collections" [icon]="'eye'"
-                                            [class]="'tbl-fav-eye'"></app-feather-icons>
-                                    </button>
                                     </mat-cell>
                                 </ng-container>
 

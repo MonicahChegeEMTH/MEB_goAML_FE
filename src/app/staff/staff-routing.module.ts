@@ -17,7 +17,14 @@ const routes: Routes = [
     loadChildren: () =>
     import("./sales/sales.module").then((m)=>m.SalesModule)
   },
-
+  
+  {
+    path: "configs",
+    loadChildren: () =>
+      import("./stock/configs/configs.module").then(
+        (m) => m.ConfigsModule
+      ),
+  },
 
 ];
 

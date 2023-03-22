@@ -2,24 +2,60 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Farmer'" [items]="['Collections']" [active_item]="'Farmer'">
+            <app-breadcrumb [title]="'Milk Collection Statements'" [items]="['Collections']" [active_item]="'Farmer'">
             </app-breadcrumb>
         </div>
-
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="body">
-
+                    <div class="body p-2">
                         <mat-card>
-                            <mat-card-header>
-                                <mat-card-title>Farmer details</mat-card-title>
-                            </mat-card-header>
+                            <div class="row">
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="Farmer Name">
+                                        <mat-icon class="align">supervised_user_circle</mat-icon>
+                                        <div class="p-1"><b>{{farmer.first_name +" "+ farmer.last_name}}</b></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="Farmer Number">
+                                        <mat-icon class="align">dialpad</mat-icon>
+                                        <div class="p-1"><b>{{farmer.member_code }}</b></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="ID Number">
+                                        <mat-icon class="align">contacts</mat-icon>
+                                        <div class="p-1"><b>{{farmer.id_number}}</b></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="County & Subcounty">
+                                        <mat-icon class="align">location_on</mat-icon>
+                                        <div class="p-1"><b>{{farmer.county +" County - "+farmer.subcounty+"
+                                                Subcounty"}}</b></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="Phone Number">
+                                        <mat-icon class="align">contact_phone</mat-icon>
+                                        <div class="p-1"><b>{{farmer.mobile_no+" / "+farmer.alternative_mobile_no}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2" *ngIf="present==true">
+                                    <div style="display: flex; align-items: center;" matTooltip="# Of Cows">
+                                        <mat-icon class="align">pie_chart</mat-icon>
+                                        <div class="p-1"><b>{{farmer.no_of_cows +" Cows"}}</b></div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </mat-card>
-
-
-
-
                         <div class="table-responsive">
                             <div class="materialTableHeader">
                                 <div class="row">
@@ -38,7 +74,8 @@
 
                                             <li>
                                                 <div class="m-l-10" matTooltip="Refresh">
-                                                    <button mat-mini-fab color="primary" (click)="getFarmerCollections(farmerid)">
+                                                    <button mat-mini-fab color="primary"
+                                                        (click)="getFarmerCollections(farmerid)">
                                                         <mat-icon class="col-white">refresh</mat-icon>
                                                     </button>
                                                 </div>
@@ -105,17 +142,9 @@
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="farmer">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">farmer</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.farmer}}
-                                    </mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="quantity">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">quantity</mat-header-cell>
+                                        class="column-nowrap">Quantity</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.quantity}}
@@ -123,62 +152,49 @@
                                 </ng-container>
                                 <ng-container matColumnDef="amount">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">amount</mat-header-cell>
+                                        class="column-nowrap">Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.amount}}
                                     </mat-cell>
                                 </ng-container>
-                               
+
                                 <ng-container matColumnDef="collector">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collector</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Collected
+                                        By</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.collector}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="pickUpLocation">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">pickUpLocation</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp
+                                        Location</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{response.pickUpLocation}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="collection_date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">collectionDate</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Collection
+                                        Date</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.collection_date | date:'medium'}}
+                                        {{response.collection_date | date}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="paymentStatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Payment Status
-                                        </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Payment
+                                        Status
+                                    </mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.paymentStatus}}
+                                        <span *ngIf="response.paymentStatus == 'N'"
+                                            class="label label-danger"><b>No</b></span>
+                                        <span *ngIf="response.paymentStatus == 'Y'"
+                                            class="label label-success"><b>Yes</b></span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, response)">
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="editresponseCall(response)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Edit response"
-                                                [icon]="'edit'"></app-feather-icons>
-                                        </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteresponseCall(response)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Delete county" [icon]="'trash-2'"
-                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
-                                    </mat-cell>
-                                </ng-container>
-
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
                                 <mat-row *matRowDef="let row; columns: displayedColumns"
@@ -194,9 +210,9 @@
                                 </mat-progress-spinner>
                             </div>
 
-                            <div class="tbl-spinner" *ngIf="isdata==false && !isLoading">
+                            <!-- <div class="tbl-spinner" *ngIf="!isdata && !isLoading">
                                 <h4>0 Records Found</h4>
-                            </div>
+                            </div> -->
 
                             <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
                                 [pageSizeOptions]="[5, 10, 25, 100]">

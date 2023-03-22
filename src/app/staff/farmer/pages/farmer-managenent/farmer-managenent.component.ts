@@ -7,7 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FarmerService } from '../../services/farmer.service';
+import { DeleteFarmerComponent } from '../delete-farmer/delete-farmer.component';
 import { RegisterFarmerComponent } from '../register-farmer/register-farmer.component';
+import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component';
 
 @Component({
   selector: 'app-farmer-managenent',
@@ -19,7 +21,6 @@ export class FarmerManagenentComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     "memberCode",
-    'username',
     "firstName",
     "lastName",
     "mobileNo",
@@ -30,7 +31,7 @@ export class FarmerManagenentComponent implements OnInit {
   subscription!: Subscription;
   data: any;
   isdata: boolean = false;
-  isLoading:boolean = false;
+  isLoading: boolean = false;
   constructor(private router: Router, private dialog: MatDialog, private service: FarmerService,) { }
 
   applyFilter(event: Event) {
@@ -65,7 +66,7 @@ export class FarmerManagenentComponent implements OnInit {
 
   dataSource!: MatTableDataSource<any>;
 
-  
+
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -78,30 +79,41 @@ export class FarmerManagenentComponent implements OnInit {
     this.getData();
   }
 
-  addCountyCall() {
+  addCall() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "70%"
+    dialogConfig.width = "60%"
     dialogConfig.data = {
       test: ""
     }
     this.dialog.open(RegisterFarmerComponent, dialogConfig)
   }
 
-  viewFarmerCollections(row) {
-    
-    this.router.navigate(['/staff/sales/farmer', row.id]);
-}
+  editCall(data: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "60%"
+    dialogConfig.data = {
+      farmer: data
+    }
+    this.dialog.open(UpdateFarmerComponent, dialogConfig)
+  }
 
-  // deleteCountyCall(County) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "500px"
-  //   dialogConfig.data = {
-  //     county: County
-  //   }
-  //   this.dialog.open(DeleteCountyComponent, dialogConfig)
-  // }
+  deleteCall(data: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      farmer: data
+    }
+    this.dialog.open(DeleteFarmerComponent, dialogConfig)
+  }
+
+  viewFarmerCollections(row) {
+
+    this.router.navigate(['/staff/sales/farmer', row.id]);
+  }
 }

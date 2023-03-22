@@ -7,12 +7,11 @@
     </div>
 
     <!-- Widgets -->
-    <div class="row" *ngIf="loaded">
+    <div class="row"  *ngIf="loaded">
       <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="System Users"
-          routerLink="/staff/sales/collections">
+        <div class="info-box7 bg1 order-info-box7" matTooltip="System Users" routerLink="/staff/sales/collections">
           <div class="info-box7-block">
-            <h4 class="m-b-20">Today:Quantity (litres)</h4>
+            <h4 class="m-b-20">Quantity (litres)</h4>
             <h2 class="text-end"><span class="float-start">{{quantity}}</span><i class="fas fa-th"></i></h2>
 
           </div>
@@ -20,10 +19,10 @@
         </div>
       </div>
       <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Teams Maintained"
+        <div class="info-box7 bg1 order-info-box7" matTooltip="All Teams Maintained"
           routerLink="/staff/sales/collections">
           <div class="info-box7-block">
-            <h4 class="m-b-20">Today: Total Amount (KES)</h4>
+            <h4 class="m-b-20">Total Amount (KES)</h4>
             <h2 class="text-end"><span class="float-start">{{amount}}</span><i class="fas fa-th"></i></h2>
 
           </div>
@@ -31,7 +30,7 @@
         </div>
       </div>
       <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Departments"   routerLink="/staff/farmers/farmers">
+        <div class="info-box7 bg1 order-info-box7" matTooltip="All Departments" routerLink="/staff/farmers/farmers">
           <div class="info-box7-block">
             <h4 class="m-b-20">Registered Farmers</h4>
             <h2 class="text-end"><span class="float-start">{{farmers}}</span><i class="fas fa-th"></i></h2>
@@ -39,8 +38,7 @@
         </div>
       </div>
       <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg-c-brown order-info-box7" matTooltip="All Subsidiaries"
-        routerLink="/staff/sales/collections">
+        <div class="info-box7 bg1 order-info-box7" matTooltip="All Subsidiaries" routerLink="/staff/sales/collections">
           <div class="info-box7-block">
             <h4 class="m-b-20">Today Collections</h4>
             <h2 class="text-end"><span class="float-start">{{count}}</span><i class="fas fa-th"></i></h2>
@@ -48,6 +46,27 @@
         </div>
       </div>
 
+    </div>
+
+    <!--Milk Collections Analysis Per Collector-->
+    <div class="row">
+      <div class="col-6">
+        <app-collections-per-collector></app-collections-per-collector>
+      </div>
+
+      <div class="col-6">
+        <app-farmers-per-pickup-location></app-farmers-per-pickup-location>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <app-pickup-locations-per-ward></app-pickup-locations-per-ward>
+      </div>
+
+      <div class="col-6">
+        <app-milk-collections-per-ward></app-milk-collections-per-ward>
+      </div>
     </div>
 
   </div>

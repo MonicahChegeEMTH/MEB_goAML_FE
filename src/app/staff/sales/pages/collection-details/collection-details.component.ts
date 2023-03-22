@@ -11,7 +11,7 @@ import { SalesService } from '../../services/sales.service';
 @Component({
   selector: 'app-collection-details',
   templateUrl: './collection-details.component.html',
-  styleUrls: ['./collection-details.component.sass']
+  styleUrls: ['./collection-details.component.scss']
 })
 export class CollectionDetailsComponent implements OnInit {
 
@@ -20,14 +20,12 @@ export class CollectionDetailsComponent implements OnInit {
 
   displayedColumns: string[] = [
     'id',
-    "farmer",
     "quantity",    
     "amount",
     "collector",
     "pickUpLocation",
     "collection_date",
     "paymentStatus",
-    'action',
   ];
 
   subscription!: Subscription;
@@ -40,17 +38,12 @@ export class CollectionDetailsComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-
-
   dataSource!: MatTableDataSource<any>;
-
-
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -60,26 +53,36 @@ export class CollectionDetailsComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
-    console.log("New date fromat is ",this.formattedDate)
     this.route.params.subscribe((params: Params) => {
       this.farmerid = params['id'];
       // Use the id parameter in your component logic
     });
    
+    this.getFarmerDetails(this.farmerid)
     this.getFarmerCollections(this.farmerid)
-
   }
 
 
+  farmer:any;
+  present:boolean=false;
 
-  // getFarmerDetails(id){
-  //   this.service.
-    
-  // }
+
+  getFarmerDetails(id){
+    this.service.getFarmerDetails(id).subscribe(res=>{
+      this.farmer = res.entity
+      if (this.farmer.username != null || this.farmer.username != undefined) {
+        this.present=true;
+      }
+      else {
+        this.present=false;
+      }
+    })
+  }
+
   getFarmerCollections(id){
+    this.isLoading =true;
     this.service.getFarmerCollections(id).subscribe(res=>{
       this.data=res
-      console.log("Farmer colections",this.data.entity)
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
@@ -90,6 +93,7 @@ export class CollectionDetailsComponent implements OnInit {
       }
       else {
         this.isdata = false;
+        this.isLoading = false;
         this.dataSource = new MatTableDataSource<any>(this.data);
       }
     })
