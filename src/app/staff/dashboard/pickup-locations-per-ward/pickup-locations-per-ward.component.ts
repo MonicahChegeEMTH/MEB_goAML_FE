@@ -59,6 +59,10 @@ export class PickupLocationsPerWardComponent implements OnInit {
         }
       },
       xaxis: {
+        labels:{
+          rotateAlways:true,
+          trim:true,
+        },
         categories: [
           "Ward A",
           "Ward B",
