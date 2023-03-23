@@ -43,6 +43,15 @@ const routes: Routes = [
       ),
   },
 
+
+  {
+    path: "cans",
+    loadChildren: () =>
+      import("./milk-cans/milk-cans.module").then(
+        (m) => m.MilkCansModule
+      ),
+  },
+
   {
     path: "inventory",
     loadChildren: () =>

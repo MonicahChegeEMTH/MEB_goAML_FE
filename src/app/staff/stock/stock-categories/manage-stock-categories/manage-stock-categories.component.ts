@@ -113,15 +113,4 @@ export class ManageStockCategoriesComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  updateStatus(row) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = "500px";
-    dialogConfig.data = {
-      data: row,
-    };
-  }
-
 }

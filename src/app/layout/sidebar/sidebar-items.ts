@@ -434,6 +434,20 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
+    path: '/staff/cans',
+    title: 'Milk Cans',
+    moduleName: 'milk-cans',
+    iconType: 'feather',
+    icon: 'thermometer',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['ROLE_STAFF'],
+    submenu: [],
+  },
+
+  {
     path: '/staff/stock-categories',
     title: 'Stock Categories',
     moduleName: 'stock-categories',
