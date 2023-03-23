@@ -22,8 +22,7 @@ const document: any = window.document;
 })
 export class HeaderComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   public config: any = {};
   userImg: string;
   homePage: string;
@@ -239,14 +238,16 @@ export class HeaderComponent
     this.router.navigate(["/authentication/signin"]);
   }
 
-  toSettings()
-  {
+  toSettings() {
     this.router.navigate(["/admin/users/settings"]);
   }
 
-  toProfile()
-  {
+  toProfile() {
     this.router.navigate(["/admin/users/profile"]);
   }
- 
+
+  toSMSManagement() {
+    this.router.navigate(["/staff/sms"]);
+  }
+
 }

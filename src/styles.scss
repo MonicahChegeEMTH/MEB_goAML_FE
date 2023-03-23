@@ -47,3 +47,11 @@ body {
   color: #fafafa;
   font-weight: bolder;
 }
+
+
+.trow
+{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

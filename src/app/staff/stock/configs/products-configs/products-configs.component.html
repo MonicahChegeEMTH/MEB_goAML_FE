@@ -159,7 +159,7 @@
                                         *matHeaderCellDef>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="pr-0">
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                        <button mat-icon-button color="primary"
                                             (click)="edit(configs)" class="tbl-action-btn"
                                             matTooltip="Update Details">
                                             <mat-icon>launch</mat-icon>

@@ -41,6 +41,7 @@ import { UsersComponent } from "./pages/users/users.component";
 import { AdminUpdateUserPasswordComponent } from './pages/dialogs/admin-update-user-password/admin-update-user-password.component';
 import { LookupMilkCollectorsComponent } from "./pages/milk-collectors/lookup-milk-collectors/lookup-milk-collectors.component";
 import { ViewCollectorsComponent } from "./pages/milk-collectors/view-collectors/view-collectors.component";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ViewCollectorsComponent } from "./pages/milk-collectors/view-collectors
     MatDatepickerModule,
     MatProgressBarModule,
     MatCardModule,
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    MatCheckboxModule
   ],
   providers: [
     DatePipe
