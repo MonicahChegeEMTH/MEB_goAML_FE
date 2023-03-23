@@ -16,13 +16,19 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="nav-notification-icons pt-0 header-icon">
+        <li class="nav-notification-icons pt-0 mr-2 header-icon">
           <span>Welcome, <b>{{ userName }}</b></span>
+        </li>
+
+        <li>
+          <button mat-icon-button (click)="toSMSManagement()" class="nav-notification-icons" matTooltip="Manage SMS">
+            <app-feather-icons [icon]="'message-square'" [class]="'header-icon'"></app-feather-icons>
+          </button>
         </li>
 
         <!-- Full Screen Button -->
         <li class="fullscreen">
-          <button mat-icon-button (click)="callFullscreen()" class=" nav-notification-icons">
+          <button mat-icon-button (click)="callFullscreen()" class="nav-notification-icons" matTooltip="Fullscreen">
             <app-feather-icons [icon]="'maximize'" [class]="'header-icon'"></app-feather-icons>
           </button>
         </li>

@@ -13,21 +13,9 @@
                         <div class="table-responsive">
                             <div class="materialTableHeader">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-10">
                                         <ul class="header-buttons-left ms-0">
                                             <li class="dropdown">
-                                                <form [formGroup]="form">
-                                                    <mat-form-field>
-                                                        <input matInput [matDatepicker]="picker1"
-                                                            (dateChange)="filterByDate()" placeholder="Choose a date"
-                                                            formControlName="date">
-                                                        <mat-datepicker-toggle matSuffix
-                                                            [for]="picker1"></mat-datepicker-toggle>
-                                                        <mat-datepicker #picker1></mat-datepicker>
-                                                    </mat-form-field>
-                                                </form>
-                                            </li>
-                                            <li class="dropdown m-l-20">
                                                 <label for="search-input"><i
                                                         class="material-icons search-icon">search</i></label>
                                                 <input placeholder="Search" type="text"
@@ -42,9 +30,45 @@
                                                     </button>
                                                 </div>
                                             </li>
+                                            <li class="dropdown m-l-5">
+                                                <mat-form-field>
+                                                    <mat-label>Filter By </mat-label>
+                                                    <mat-select [(value)]="selected">
+                                                        <mat-option value="sd"><b>Specific Date</b></mat-option>
+                                                        <mat-option value="dr"><b>Date Range</b></mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </li>
+                                            <li class="dropdown">
+                                                <form [formGroup]="form">
+                                                    <mat-form-field class="m-l-5" *ngIf="selected == 'sd'">
+                                                        <input matInput [matDatepicker]="picker1"
+                                                            (dateChange)="filterByDate()" placeholder="Choose a date"
+                                                            formControlName="date">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="picker1"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker1></mat-datepicker>
+                                                    </mat-form-field>
+
+                                                    <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
+                                                        <input matInput [matDatepicker]="picker2"
+                                                            placeholder="From Date" formControlName="fromDate">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="picker2"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker2></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
+                                                        <input matInput [matDatepicker]="picker3" (dateChange)="filterByDate()" placeholder="To Date"
+                                                            formControlName="toDate">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="picker3"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker3></mat-datepicker>
+                                                    </mat-form-field>
+                                                </form>
+                                            </li>
                                         </ul>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-2">
                                         <ul class="header-buttons">
                                             <li>
                                                 <div class="export-button m-l-10" matTooltip="XLSX">
@@ -54,24 +78,6 @@
                                   sheet: 'sheet1'
                                 })
                               " />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                        (click)="exporter.exportTable('csv')" />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="JSON">
-                                                    <img src="assets/images/icons/json.png" alt=""
-                                                        (click)="exporter.exportTable('json')" />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                        (click)="exporter.exportTable('txt')" />
                                                 </div>
                                             </li>
                                         </ul>
@@ -151,7 +157,9 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.paymentStatus}}
+                                        <span *ngIf="response.paymentStatus=='N'"
+                                            class="label label-danger">No</span><span
+                                            *ngIf="response.paymentStatus=='Y'" class="label label-success">Yes</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="action">

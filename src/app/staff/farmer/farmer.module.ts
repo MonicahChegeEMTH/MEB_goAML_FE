@@ -41,7 +41,6 @@ import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.compo
         MatDialogModule,
         MatDatepickerModule,
         MatSelectModule
-        
     ]
 })
 export class FarmerModule { }

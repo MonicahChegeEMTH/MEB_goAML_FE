@@ -17,14 +17,17 @@ import { SalesService } from '../../services/sales.service';
 })
 export class CollectionsComponent implements OnInit {
   today: Date = new Date();
-  formattedDate: string = this.today.toISOString().slice(0,10); 
-  date:any;
+  formattedDate: string = this.today.toISOString().slice(0, 10);
+  date: any;
+  fromDate: any;
+  toDate: any;
   form: FormGroup;
+  selected = "";
 
   displayedColumns: string[] = [
     'id',
     "farmer",
-    "quantity",    
+    "quantity",
     "amount",
     "collector",
     "collection_date",
@@ -36,7 +39,7 @@ export class CollectionsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router,private datePipe: DatePipe,private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,) { }
+  constructor(private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -48,28 +51,57 @@ export class CollectionsComponent implements OnInit {
   }
 
   filterByDate() {
-    this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
-    this.isLoading = true;
-    this.subscription = this.service.getCollections(this.date).subscribe(res => {
-      this.data = res;
-      if (this.data.entity.length > 0) {
-        this.isLoading = false;
-        this.isdata = true;
-        // Binding with the datasource
-        this.dataSource = new MatTableDataSource(this.data.entity);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    if (this.selected == 'dr') {
+      this.fromDate = this.datePipe.transform(this.form.value.fromDate, 'yyyy-MM-dd');
+      this.toDate = this.datePipe.transform(this.form.value.toDate, 'yyyy-MM-dd');
+      if (this.fromDate != null && this.fromDate != undefined && this.toDate != null && this.toDate != undefined) {
+        this.isLoading = true;
+        this.subscription = this.service.getCollectionsDateRange(this.fromDate,this.toDate).subscribe(res => {
+          this.data = res;
+          if (this.data.entity.length > 0) {
+            this.isLoading = false;
+            this.isdata = true;
+            // Binding with the datasource
+            this.dataSource = new MatTableDataSource(this.data.entity);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }
+          else {
+            this.isdata = false;
+            this.isLoading = false;
+            this.dataSource = new MatTableDataSource(null);
+          }
+        })
       }
-      else {
-        this.isdata = false;
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(null);
-      }
-    })
+    }
+    else if(this.selected == 'sd'){
+      this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+      this.isLoading = true;
+      this.subscription = this.service.getCollections(this.date).subscribe(res => {
+        this.data = res;
+        if (this.data.entity.length > 0) {
+          this.isLoading = false;
+          this.isdata = true;
+          // Binding with the datasource
+          this.dataSource = new MatTableDataSource(this.data.entity);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+        else {
+          this.isdata = false;
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource(null);
+        }
+      })
+    }
+    else{
+      this.getData();
+    }
   }
 
 
   getData() {
+    this.selected = "";
     this.isLoading = true;
     this.subscription = this.service.getAllCollections().subscribe(res => {
       this.data = res;
@@ -99,36 +131,15 @@ export class CollectionsComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
-      this.getData();
-      this.form = this.fb.group({
-        date: [""],
-      })
+    this.getData();
+    this.form = this.fb.group({
+      date: [""],
+      fromDate: [""],
+      toDate: [""],
+    })
   }
 
   viewFarmerCollections(row) {
-      this.router.navigate(['/staff/sales/farmer', row.farmerId]);    
+    this.router.navigate(['/staff/sales/farmer', row.farmerId]);
   }
-
-
-  editCountyCall(County) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
-  }
-
-  // deleteCountyCall(County) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "500px"
-  //   dialogConfig.data = {
-  //     county: County
-  //   }
-  //   this.dialog.open(DeleteCountyComponent, dialogConfig)
-  // }
 }

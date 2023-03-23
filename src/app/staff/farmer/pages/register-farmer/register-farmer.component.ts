@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CountiesService } from 'src/app/admin/counties/counties.service';
-import { RoutesService } from 'src/app/admin/routes/routes.service';
+import { PickupService } from 'src/app/admin/pick-up-locations/pickup.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FarmerService } from '../../services/farmer.service';
 import { FarmerManagenentComponent } from '../farmer-managenent/farmer-managenent.component';
@@ -31,7 +31,7 @@ export class RegisterFarmerComponent implements OnInit {
     private fb: FormBuilder,
     private snackbar: SnackbarService,
     private countiesService: CountiesService,
-    private routesService:RoutesService,
+    private routesService:PickupService,
     private service: FarmerService) { }
   subscription!: Subscription;
 
@@ -67,12 +67,12 @@ export class RegisterFarmerComponent implements OnInit {
       paymentFreequency: [""],
       paymentDate: [""],
       gender: [""],
-      routeFk:[""]
+      pickupLocation:[""]
     })
 
     this.getSubcounties();
     this.getCounties();
-    this.getRoutes();
+    this.getPickUpLocations();
   }
 
   onSubmit() {
@@ -118,8 +118,8 @@ export class RegisterFarmerComponent implements OnInit {
     })
   }
 
-  getRoutes() {
-    this.subscription = this.routesService.getRoutes().subscribe(res => {
+  getPickUpLocations() {
+    this.subscription = this.routesService.getLocations().subscribe(res => {
       if (res.entity.length > 0) {
         this.routes = res.entity;
       }

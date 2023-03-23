@@ -197,18 +197,20 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-                                <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                    <mat-label>Select Route</mat-label>
-                                    <mat-select formControlName="routeFk" required>
-                                        <mat-option *ngFor="let route of routes" [value]="route.id">
-                                            {{ route.route }}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="farmerRegirstartionForm.get('routeFk').hasError('required')">
-                                        Route is required
-                                    </mat-error>
-                                </mat-form-field>
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                                    <mat-form-field class="example-full-width mb-1" appearance="outline">
+                                        <mat-label>Select Milk Pickup Location</mat-label>
+                                        <mat-select formControlName="pickupLocation" required>
+                                            <mat-option *ngFor="let route of routes" [value]="route.id">
+                                                {{ route.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="farmerRegirstartionForm.get('pickupLocation').hasError('required')">
+                                            Pick Up location is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
                             </div>
                         </div>
                     </mat-card-content>

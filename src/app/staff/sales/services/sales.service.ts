@@ -27,10 +27,9 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
 
   }
-  // getTodayCollectionsPerCollector(){
-  //   return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`,httpOptions);
-
-  // }
+  getCollectionsDateRange(fromDate:any,toDate:any){
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/date/range?fromdate=${fromDate}&toDate=${toDate}`,httpOptions);
+  }
 
   allocateFloat() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
