@@ -18,6 +18,7 @@ export class LookupMilkCollectorsComponent implements OnInit {
   users: any;
   isLoading: boolean = true;
 
+  
   displayedColumns: string[] = ["select", "username", "email"];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
