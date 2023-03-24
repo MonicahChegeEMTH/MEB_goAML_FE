@@ -20,8 +20,8 @@
 
                                 <div class="col-2" *ngIf="present==true">
                                     <div style="display: flex; align-items: center;" matTooltip="Farmer Number">
-                                        <mat-icon class="align">dialpad</mat-icon>
-                                        <div class="p-1"><b>{{farmer.member_code }}</b></div>
+                                        <mat-icon class="align">credit_card</mat-icon>
+                                        <div class="p-1"><b>{{farmer.member_code}}</b></div>
                                     </div>
                                 </div>
 
@@ -33,17 +33,16 @@
                                 </div>
 
                                 <div class="col-2" *ngIf="present==true">
-                                    <div style="display: flex; align-items: center;" matTooltip="County & Subcounty">
+                                    <div style="display: flex; align-items: center;" matTooltip="Subcounty">
                                         <mat-icon class="align">location_on</mat-icon>
-                                        <div class="p-1"><b>{{farmer.county +" County - "+farmer.subcounty+"
-                                                Subcounty"}}</b></div>
+                                        <div class="p-1"><b>{{farmer.subcounty}}</b></div>
                                     </div>
                                 </div>
 
                                 <div class="col-2" *ngIf="present==true">
                                     <div style="display: flex; align-items: center;" matTooltip="Phone Number">
                                         <mat-icon class="align">contact_phone</mat-icon>
-                                        <div class="p-1"><b>{{farmer.mobile_no+" / "+farmer.alternative_mobile_no}}</b>
+                                        <div class="p-1"><b>{{farmer.mobile_no}}</b>
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +82,8 @@
                                             </li>
 
                                             <li class="m-l-10" *ngIf="found">
-                                                <p style="color:green">Total Amount :<b>{{accruals.amount | currency:'KES'}}</b></p>
+                                                <p style="color:green">Total Amount :<b>{{accruals.amount |
+                                                        currency:'KES'}}</b></p>
                                             </li>
                                         </ul>
                                     </div>

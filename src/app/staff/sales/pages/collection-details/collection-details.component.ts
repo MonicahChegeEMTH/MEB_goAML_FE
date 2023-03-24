@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -19,7 +20,7 @@ export class CollectionDetailsComponent implements OnInit {
   formattedDate: string = this.today.toISOString().slice(0,10); 
 
   displayedColumns: string[] = [
-    'id',
+    'select',
     "quantity",    
     "amount",
     "collector",
@@ -67,7 +68,7 @@ export class CollectionDetailsComponent implements OnInit {
   farmer:any;
   present:boolean=false;
   found:boolean=false;
-
+  selection = new SelectionModel<any>(true, []);
 
   getFarmerDetails(id){
     this.service.getFarmerDetails(id).subscribe(res=>{
@@ -115,14 +116,20 @@ export class CollectionDetailsComponent implements OnInit {
     })
   }
 
-  editCountyCall(County) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
   }
 }
