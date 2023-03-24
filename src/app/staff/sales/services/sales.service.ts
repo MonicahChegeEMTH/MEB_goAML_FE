@@ -58,4 +58,8 @@ export class SalesService {
   milkCollectionsPerCollectorInPerYear(year: any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/year?year=` + year, httpOptions);
   }
+
+  getFarmerAccruals(farmerId: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId, httpOptions);
+  }
 }

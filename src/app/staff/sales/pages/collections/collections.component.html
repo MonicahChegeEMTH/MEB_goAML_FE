@@ -58,7 +58,8 @@
                                                         <mat-datepicker #picker2></mat-datepicker>
                                                     </mat-form-field>
                                                     <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
-                                                        <input matInput [matDatepicker]="picker3" (dateChange)="filterByDate()" placeholder="To Date"
+                                                        <input matInput [matDatepicker]="picker3"
+                                                            (dateChange)="filterByDate()" placeholder="To Date"
                                                             formControlName="toDate">
                                                         <mat-datepicker-toggle matSuffix
                                                             [for]="picker3"></mat-datepicker-toggle>
@@ -131,7 +132,7 @@
                                         class="column-nowrap">Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.amount}}
+                                        {{response.amount | currency:'KES':'symbol':'4.2-2'}}
                                     </mat-cell>
                                 </ng-container>
 
@@ -158,8 +159,9 @@
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         <span *ngIf="response.paymentStatus=='N'"
-                                            class="label label-danger">No</span><span
-                                            *ngIf="response.paymentStatus=='Y'" class="label label-success">Yes</span>
+                                            class="badge badge-pill badge-primary col-red">No</span><span
+                                            *ngIf="response.paymentStatus=='Y'"
+                                            class="badge badge-pill badge-primary col-success">Yes</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="action">
