@@ -58,13 +58,15 @@ export class CollectionDetailsComponent implements OnInit {
       // Use the id parameter in your component logic
     });
    
-    this.getFarmerDetails(this.farmerid)
-    this.getFarmerCollections(this.farmerid)
+    this.getFarmerDetails(this.farmerid);
+    this.getFarmerCollections(this.farmerid);
+    this.getAccruals();
   }
 
 
   farmer:any;
   present:boolean=false;
+  found:boolean=false;
 
 
   getFarmerDetails(id){
@@ -101,6 +103,17 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
 
+  accruals:any;
+  getAccruals()
+  {
+    this.service.getFarmerAccruals(this.farmerid).subscribe(res=>{
+      this.accruals = res.entity;
+      if(this.accruals != null)
+      {
+        this.found = true;
+      }
+    })
+  }
 
   editCountyCall(County) {
     // const dialogConfig = new MatDialogConfig();
@@ -112,6 +125,4 @@ export class CollectionDetailsComponent implements OnInit {
     // }
     // this.dialog.open(EditCountyComponent, dialogConfig)
   }
-
-
 }

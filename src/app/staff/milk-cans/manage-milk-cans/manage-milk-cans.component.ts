@@ -6,25 +6,24 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SnackbarService } from 'src/app/shared/snackbar.service';
-import { SendSmsComponent } from '../send-sms/send-sms.component';
-import { SmsService } from '../sms.service';
+import { AddMilkCanComponent } from '../add-milk-can/add-milk-can.component';
+import { DeleteMilkCanComponent } from '../delete-milk-can/delete-milk-can.component';
+import { EditMilkCanComponent } from '../edit-milk-can/edit-milk-can.component';
+import { MilkCansService } from '../milk-cans.service';
 
 @Component({
-  selector: 'app-sms-management',
-  templateUrl: './sms-management.component.html',
-  styleUrls: ['./sms-management.component.sass']
+  selector: 'app-manage-milk-cans',
+  templateUrl: './manage-milk-cans.component.html',
+  styleUrls: ['./manage-milk-cans.component.sass']
 })
-export class SmsManagementComponent implements OnInit {
-
+export class ManageMilkCansComponent implements OnInit {
   displayedColumns: string[] = [
     "id",
-    "messageId",
-    "phoneNumber",
-    "sentDate",
-    "status",
-    "statusReason",
-    "message",
+    "canNo",
+    "canName",
+    "weight",
+    "deductionWeight",
+    "actions",
   ];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -41,8 +40,7 @@ export class SmsManagementComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private router: Router,
-    private snackbar:SnackbarService,
-    private service: SmsService,
+    private service: MilkCansService,
   ) { }
 
   ngOnInit(): void {
@@ -55,7 +53,7 @@ export class SmsManagementComponent implements OnInit {
 
   getData() {
 
-    this.service.getAllSMS().subscribe(
+    this.service.getAllCans().subscribe(
       (res) => {
         this.data = res.entity;
         if (this.data != null) {
@@ -71,9 +69,39 @@ export class SmsManagementComponent implements OnInit {
     );
   }
 
-  readMessage(message)
-  {
-    this.snackbar.showNotification("snackbar-success", message);
+  hasAccess: boolean;
+
+  addCall() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "50%"
+    dialogConfig.data = {
+      test: ""
+    }
+    this.dialog.open(AddMilkCanComponent, dialogConfig)
+  }
+
+  editCall(data: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "50%"
+    dialogConfig.data = {
+      cans: data
+    }
+    this.dialog.open(EditMilkCanComponent, dialogConfig)
+  }
+
+  deleteCall(data: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "40%"
+    dialogConfig.data = {
+      cans: data
+    }
+    this.dialog.open(DeleteMilkCanComponent, dialogConfig)
   }
 
 
@@ -84,16 +112,4 @@ export class SmsManagementComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  addCall() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false
-    dialogConfig.autoFocus = true
-    dialogConfig.width = "40%"
-    dialogConfig.data = {
-      test: ""
-    }
-    this.dialog.open(SendSmsComponent, dialogConfig)
-  }
-
 }

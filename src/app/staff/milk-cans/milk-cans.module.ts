@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SmsRoutingModule } from './sms-routing.module';
-import { SmsManagementComponent } from './sms-management/sms-management.component';
+import { MilkCansRoutingModule } from './milk-cans-routing.module';
+import { ManageMilkCansComponent } from './manage-milk-cans/manage-milk-cans.component';
+import { AddMilkCanComponent } from './add-milk-can/add-milk-can.component';
+import { EditMilkCanComponent } from './edit-milk-can/edit-milk-can.component';
+import { DeleteMilkCanComponent } from './delete-milk-can/delete-milk-can.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,17 +17,18 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { SendSmsComponent } from './send-sms/send-sms.component';
 
 
 @NgModule({
   declarations: [
-    SmsManagementComponent,
-    SendSmsComponent
+    ManageMilkCansComponent,
+    AddMilkCanComponent,
+    EditMilkCanComponent,
+    DeleteMilkCanComponent
   ],
   imports: [
     CommonModule,
-    SmsRoutingModule,
+    MilkCansRoutingModule,
     SharedModule,
     ComponentsModule,
     MatIconModule,
@@ -38,4 +42,4 @@ import { SendSmsComponent } from './send-sms/send-sms.component';
     MatSelectModule
   ]
 })
-export class SmsModule { }
+export class MilkCansModule { }
