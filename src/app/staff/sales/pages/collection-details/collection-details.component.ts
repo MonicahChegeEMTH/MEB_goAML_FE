@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -19,7 +20,7 @@ export class CollectionDetailsComponent implements OnInit {
   formattedDate: string = this.today.toISOString().slice(0,10); 
 
   displayedColumns: string[] = [
-    'id',
+    'select',
     "quantity",    
     "amount",
     "collector",
@@ -58,14 +59,16 @@ export class CollectionDetailsComponent implements OnInit {
       // Use the id parameter in your component logic
     });
    
-    this.getFarmerDetails(this.farmerid)
-    this.getFarmerCollections(this.farmerid)
+    this.getFarmerDetails(this.farmerid);
+    this.getFarmerCollections(this.farmerid);
+    this.getAccruals();
   }
 
 
   farmer:any;
   present:boolean=false;
-
+  found:boolean=false;
+  selection = new SelectionModel<any>(true, []);
 
   getFarmerDetails(id){
     this.service.getFarmerDetails(id).subscribe(res=>{
@@ -101,17 +104,32 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
 
-
-  editCountyCall(County) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
+  accruals:any;
+  getAccruals()
+  {
+    this.service.getFarmerAccruals(this.farmerid).subscribe(res=>{
+      this.accruals = res.entity;
+      if(this.accruals != null)
+      {
+        this.found = true;
+      }
+    })
   }
 
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
 
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
 }

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FarmerService } from '../../services/farmer.service';
 import { DeleteFarmerComponent } from '../delete-farmer/delete-farmer.component';
+import { FarmerDetailsComponent } from '../farmer-details/farmer-details.component';
 import { RegisterFarmerComponent } from '../register-farmer/register-farmer.component';
 import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component';
 
@@ -86,11 +87,22 @@ export class FarmerManagenentComponent implements OnInit {
     this.dialog.open(RegisterFarmerComponent, dialogConfig)
   }
 
+  viewFarmerDetails(data:any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "65%"
+    dialogConfig.data = {
+      farmer: data
+    }
+    this.dialog.open(FarmerDetailsComponent, dialogConfig)
+  }
+
   editCall(data: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "60%"
+    dialogConfig.width = "65%"
     dialogConfig.data = {
       farmer: data
     }

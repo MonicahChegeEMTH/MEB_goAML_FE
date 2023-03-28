@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UseraccountsComponent } from 'src/app/admin/users/useraccounts/useraccounts.component';
+// import { UseraccountsComponent } from 'src/app/admin/users/useraccounts/useraccounts.component';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { ConfigsService } from '../configs.service';
+import { ProductsConfigsComponent } from '../products-configs/products-configs.component';
 
 @Component({
   selector: 'app-edit-product-config',
@@ -19,7 +20,7 @@ export class EditProductConfigComponent implements OnInit {
     private fb: FormBuilder,
     private service: ConfigsService,
     private snackbar: SnackbarService,
-    public dialogRef: MatDialogRef<UseraccountsComponent>,
+    public dialogRef: MatDialogRef<ProductsConfigsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 

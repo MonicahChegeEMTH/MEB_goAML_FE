@@ -1,49 +1,69 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatMenuModule } from '@angular/material/menu';
-import { ComponentsModule } from 'src/app/shared/components/components.module';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { RolesRoutingModule } from './roles-routing.module';
-import { SystemrolesComponent } from './systemroles/systemroles.component';
-import { MatSelectModule } from "@angular/material/select";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableExporterModule } from "mat-table-exporter";
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
+import { RolesRoutingModule } from "./roles-routing.module";
+import { RoleComponent } from "./pages/role/role.component";
+import { AddRoleComponent } from "./pages/add-role/add-role.component";
+import { UpdateRoleComponent } from "./pages/update-role/update-role.component";
+import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatTableModule } from "@angular/material/table";
 import { MatSortModule } from "@angular/material/sort";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import { AddRolesComponent } from './add-roles/add-roles.component';
-import { DeleteRoleComponent } from './delete-role/delete-role.component';
-import { UpdateRoleComponent } from './update-role/update-role.component';
-import { PrivilegesLookupComponent } from './privileges-lookup/privileges-lookup.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ViewRoleComponent } from './view-role/view-role.component';
-import { EditRoleComponent } from './edit-role/edit-role.component';
+import { MatTableExporterModule } from "mat-table-exporter";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { ComponentsModule } from "src/app/shared/components/components.module";
+import { SharedModule } from "src/app/shared/shared.module";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MatDialogModule } from "@angular/material/dialog";
+import { DeleteRoleComponent } from './pages/delete-role/delete-role.component';
+import { MatSelectModule } from "@angular/material/select";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from "@angular/material/list";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { CdkColumnDef } from "@angular/cdk/table";
+import { RolesComponent } from "./pages/roles/roles.component";
 
 @NgModule({
   declarations: [
-  SystemrolesComponent,
-  AddRolesComponent,
-  DeleteRoleComponent,
-  UpdateRoleComponent,
-  PrivilegesLookupComponent,
-  ViewRoleComponent,
-  EditRoleComponent
+    RolesComponent,
+    RoleComponent,
+    AddRoleComponent,
+    UpdateRoleComponent,
+    DeleteRoleComponent,
   ],
   imports: [
     CommonModule,
     RolesRoutingModule,
-    MatMenuModule,
-    ComponentsModule,
-    SharedModule,
-    MatSelectModule,
-    MatDialogModule,
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
     MatTableExporterModule,
     MatIconModule,
-    MatCheckboxModule
-  ]
+    MatMenuModule,
+    ComponentsModule,
+    SharedModule,
+    CdkAccordionModule,
+    DragDropModule,
+    MatSelectModule,
+    MatDialogModule,
+
+    MatCardModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatInputModule,
+    MatListModule,
+    MatRadioModule,
+    MatProgressSpinnerModule
+  ],
+  providers:[CdkColumnDef]
 })
-export class RolesModule { }
+export class RolesModule {}

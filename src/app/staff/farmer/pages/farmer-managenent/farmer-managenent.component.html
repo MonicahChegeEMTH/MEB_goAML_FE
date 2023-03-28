@@ -2,7 +2,7 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All farmers'" [items]="['Farmers']" [active_item]="'All Farmers'">
+            <app-breadcrumb [title]="'All farmers / Milk Suppliers'" [items]="['Farmers']" [active_item]="'All Farmers'">
             </app-breadcrumb>
         </div>
 
@@ -156,8 +156,13 @@
                                                 [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                         <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="viewFarmerCollections(farmer)" class="tbl-action-btn">
+                                            (click)="viewFarmerDetails(farmer)" class="tbl-action-btn">
                                             <app-feather-icons matTooltip="View Farmer Details" [icon]="'eye'"
+                                                [class]="'tbl-fav-eye'"></app-feather-icons>
+                                        </button>
+                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                            (click)="viewFarmerCollections(farmer)" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="View Delivery Statements" [icon]="'book'"
                                                 [class]="'tbl-fav-eye'"></app-feather-icons>
                                         </button>
                                     </mat-cell>

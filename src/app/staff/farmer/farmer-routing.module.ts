@@ -4,7 +4,6 @@ import { FarmerDetailsComponent } from './pages/farmer-details/farmer-details.co
 import { FarmerManagenentComponent } from './pages/farmer-managenent/farmer-managenent.component';
 
 const routes: Routes = [
-
   {
     path: "farmers",
     component: FarmerManagenentComponent,

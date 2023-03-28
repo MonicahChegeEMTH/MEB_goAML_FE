@@ -30,6 +30,10 @@ body {
   background: linear-gradient(to right, #046307, #fafafa);
 }
 
+.down {
+  background: linear-gradient(to bottom, #c5f7c6, #fafafa);
+}
+
 .fg {
   color: #046307;
   font-weight: bolder;
@@ -46,4 +50,12 @@ body {
 .wbg {
   color: #fafafa;
   font-weight: bolder;
+}
+
+
+.trow
+{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

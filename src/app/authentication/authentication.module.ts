@@ -14,6 +14,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { MatRadioModule } from "@angular/material/radio";
+import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 @NgModule({
   declarations: [
     Page500Component,
@@ -22,6 +24,7 @@ import { MatCardModule } from "@angular/material/card";
     SignupComponent,
     LockedComponent,
     ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +36,7 @@ import { MatCardModule } from "@angular/material/card";
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    MatRadioModule
   ],
 })
 export class AuthenticationModule {}

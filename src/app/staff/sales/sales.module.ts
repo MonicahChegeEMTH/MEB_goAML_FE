@@ -22,6 +22,11 @@ import { CollectionDetailsComponent } from './pages/collection-details/collectio
 import { EditFloatAllocationComponent } from './pages/edit-float-allocation/edit-float-allocation.component';
 import { DeleteFloatAllocationComponent } from './pages/delete-float-allocation/delete-float-allocation.component';
 import { LookupOneMilkcollectorComponent } from './pages/lookup-one-milkcollector/lookup-one-milkcollector.component';
+import { ProductsAllocationComponent } from './pages/products-allocation/products-allocation.component';
+import { AddAllocationComponent } from './pages/add-allocation/add-allocation.component';
+import { AgmCoreModule } from '@agm/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -34,12 +39,17 @@ import { LookupOneMilkcollectorComponent } from './pages/lookup-one-milkcollecto
         CollectionDetailsComponent,
         EditFloatAllocationComponent,
         DeleteFloatAllocationComponent,
-        LookupOneMilkcollectorComponent
+        LookupOneMilkcollectorComponent,
+        ProductsAllocationComponent,
+        AddAllocationComponent
     ],
     imports: [
         CommonModule,
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyCtDO1QdXGeEnX5LA1qOQlpuChPkZJJb1I'
+        }),
         SalesRoutingModule,
-       SharedModule,
+        SharedModule,
         ComponentsModule,
         MatIconModule,
         MatCardModule,
@@ -49,7 +59,9 @@ import { LookupOneMilkcollectorComponent } from './pages/lookup-one-milkcollecto
         MatSortModule,
         MatDialogModule,
         MatDatepickerModule,
-        MatSelectModule
+        MatSelectModule,
+        MatTabsModule,
+        MatCheckboxModule
     ]
 })
 export class SalesModule { }

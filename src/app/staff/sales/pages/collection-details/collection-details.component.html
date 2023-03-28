@@ -20,8 +20,8 @@
 
                                 <div class="col-2" *ngIf="present==true">
                                     <div style="display: flex; align-items: center;" matTooltip="Farmer Number">
-                                        <mat-icon class="align">dialpad</mat-icon>
-                                        <div class="p-1"><b>{{farmer.member_code }}</b></div>
+                                        <mat-icon class="align">credit_card</mat-icon>
+                                        <div class="p-1"><b>{{farmer.member_code}}</b></div>
                                     </div>
                                 </div>
 
@@ -33,17 +33,16 @@
                                 </div>
 
                                 <div class="col-2" *ngIf="present==true">
-                                    <div style="display: flex; align-items: center;" matTooltip="County & Subcounty">
+                                    <div style="display: flex; align-items: center;" matTooltip="Subcounty">
                                         <mat-icon class="align">location_on</mat-icon>
-                                        <div class="p-1"><b>{{farmer.county +" County - "+farmer.subcounty+"
-                                                Subcounty"}}</b></div>
+                                        <div class="p-1"><b>{{farmer.subcounty}}</b></div>
                                     </div>
                                 </div>
 
                                 <div class="col-2" *ngIf="present==true">
                                     <div style="display: flex; align-items: center;" matTooltip="Phone Number">
                                         <mat-icon class="align">contact_phone</mat-icon>
-                                        <div class="p-1"><b>{{farmer.mobile_no+" / "+farmer.alternative_mobile_no}}</b>
+                                        <div class="p-1"><b>{{farmer.mobile_no}}</b>
                                         </div>
                                     </div>
                                 </div>
@@ -59,12 +58,9 @@
                         <div class="table-responsive">
                             <div class="materialTableHeader">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-10">
                                         <ul class="header-buttons-left ms-0">
                                             <li class="dropdown">
-                                                <h2>Milk Collections</h2>
-                                            </li>
-                                            <li class="dropdown m-l-20">
                                                 <label for="search-input"><i
                                                         class="material-icons search-icon">search</i></label>
                                                 <input placeholder="Search" type="text"
@@ -80,36 +76,33 @@
                                                     </button>
                                                 </div>
                                             </li>
+
+                                            <li class="dropdown m-l-5" *ngIf="found">
+                                                <p style="color:green">Total Qtty : <b> {{accruals.quantity}}</b></p>
+                                            </li>
+
+                                            <li class="m-l-10" *ngIf="found">
+                                                <p style="color:green">Total Amount :<b>{{accruals.amount |
+                                                        currency:'KES'}}</b></p>
+                                            </li>
                                         </ul>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-2">
                                         <ul class="header-buttons">
                                             <li>
                                                 <div class="export-button m-l-10" matTooltip="XLSX">
                                                     <img src="assets/images/icons/xlsx.png" alt="" (click)="
                                 exporter.exportTable('xlsx', {
-                                  fileName: 'all-counties',
+                                  fileName: 'collections',
                                   sheet: 'sheet1'
                                 })
                               " />
                                                 </div>
                                             </li>
                                             <li>
-                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                        (click)="exporter.exportTable('csv')" />
-                                                </div>
-                                            </li>
-                                            <li>
                                                 <div class="export-button m-l-10" matTooltip="JSON">
                                                     <img src="assets/images/icons/json.png" alt=""
                                                         (click)="exporter.exportTable('json')" />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                        (click)="exporter.exportTable('txt')" />
                                                 </div>
                                             </li>
                                         </ul>
@@ -155,7 +148,7 @@
                                         class="column-nowrap">Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.amount}}
+                                        {{response.amount | currency:'KES':'symbol':'4.2-2'}}
                                     </mat-cell>
                                 </ng-container>
 
@@ -180,7 +173,7 @@
                                         Date</mat-header-cell>
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{response.collection_date | date}}
+                                        {{response.collection_date | date:'medium'}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="paymentStatus">
@@ -190,9 +183,9 @@
                                     <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         <span *ngIf="response.paymentStatus == 'N'"
-                                            class="label label-danger"><b>No</b></span>
+                                            class="badge badge-pill badge-primary col-red"><b>No</b></span>
                                         <span *ngIf="response.paymentStatus == 'Y'"
-                                            class="label label-success"><b>Yes</b></span>
+                                            class="badge badge-pill badge-primary col-green"><b>Yes</b></span>
                                     </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

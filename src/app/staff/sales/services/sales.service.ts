@@ -27,10 +27,9 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
 
   }
-  // getTodayCollectionsPerCollector(){
-  //   return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`,httpOptions);
-
-  // }
+  getCollectionsDateRange(fromDate: any, toDate: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/date/range?fromdate=${fromDate}&toDate=${toDate}`, httpOptions);
+  }
 
   allocateFloat() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
@@ -58,5 +57,36 @@ export class SalesService {
 
   milkCollectionsPerCollectorInPerYear(year: any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/year?year=` + year, httpOptions);
+  }
+
+  getFarmerAccruals(farmerId: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId, httpOptions);
+  }
+
+  getAllCollectors(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/roleUsers?roleId=2`, httpOptions);
+  }
+
+  getCollectorLocationsByDate(collectorId: any, date: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/collector/routes?collectorId=${collectorId}&date=${date}`, httpOptions);
+  }
+
+
+  getSales(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/get`, httpOptions);
+  }
+
+  addAllocation(data: any) {
+    return this.http.post(`${environment.apiUrl}/api/v1/farmers/allocation/add`, data, httpOptions);
+  }
+
+
+  getAllFarmers(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`, httpOptions);
+  }
+
+
+  getAllProducts(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
   }
 }

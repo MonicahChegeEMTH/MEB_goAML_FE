@@ -4,6 +4,7 @@ import { CollectionDetailsComponent } from './pages/collection-details/collectio
 import { CollectionsPerCollectorsComponent } from './pages/collections-per-collectors/collections-per-collectors.component';
 import { CollectionsComponent } from './pages/collections/collections.component';
 import { CollectorsFloatAllocationsComponent } from './pages/collectors-float-allocations/collectors-float-allocations.component';
+import { ProductsAllocationComponent } from './pages/products-allocation/products-allocation.component';
 import { SalesManagenentComponent } from './pages/sales-managenent/sales-managenent.component';
 
 const routes: Routes = [
@@ -27,9 +28,10 @@ const routes: Routes = [
     path: "farmer/:id",
     component: CollectionDetailsComponent,
   },
-
-
-
+  {
+    path: "products/sales",
+    component: ProductsAllocationComponent,
+  },
 ];
 
 @NgModule({
