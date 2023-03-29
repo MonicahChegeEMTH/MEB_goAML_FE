@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -19,7 +20,9 @@ import {
 } from 'ng-apexcharts';
 import { takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/data/services/analytics.service';
+import { UserService } from 'src/app/data/services/user.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { CollectorsLookupsComponent } from '../../look-ups/collectors-lookups/collectors-lookups.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -50,20 +53,20 @@ export class CollectorCollectionsInQuantityPerSessionComponent extends BaseCompo
 {
   public barChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = ["Year-wise", "Month-wise"];
+  chartDispType: any = [2020, 2022, 2023, 2024, 2025];
   monthsArray: any = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "Novembar",
-    "December",
+    { name: "January", value: 1 },
+    { name: "February", value : 2 },
+    { name: "March", value: 3 },
+    { name: "April", value: 4 },
+    { name: "May", value: 5 },
+    { name: "June", value: 6 },
+    { name: "July", value: 7 },
+    { name: "August", value: 8 },
+    { name: "September", value: 9 },
+    { name: "October", value: 10 },
+    { name: "Novembar", value: 11  },
+    { name: "December", value: 12 },
   ];
 
   isLoading: boolean = true;
@@ -102,15 +105,62 @@ export class CollectorCollectionsInQuantityPerSessionComponent extends BaseCompo
   sessionOne:number = 0;
   sessionTwo: number = 0;
   sessionThree: number = 0;
+  collectors: any[] = [];
   
   constructor(
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private userService: UserService
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.getCollectorSessionData();
+    this.getAllUsers();
+
+    this.chartParametersForm = this.createChartParamtersForm();
+
+  }
+
+  createChartParamtersForm() {
+    return this.fb.group({
+      year: [this.currentYear],
+      month: [this.currentMonth.value],
+      collectorId: [""]
+    });
+  }
+
+
+  onSelectYear(event: any){
+    this.getCollectorSessionData()
+  }
+
+  onSelectMonth(event: any){
+    this.getCollectorSessionData()
+  }
+
+
+  collectorsLookup(){
+    const dialogRef = this.dialog.open(CollectorsLookupsComponent, {
+      width: "600px",
+      data: {
+        action: "Meeting Categories Lookup",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+        this.chartParametersForm.patchValue({
+          collectorId: result.data.id,
+        });
+
+        this.getCollectorSessionData()
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
 
   }
 
@@ -124,9 +174,9 @@ export class CollectorCollectionsInQuantityPerSessionComponent extends BaseCompo
     // this.currentMeeting = this.chartParametersForm.controls.meetingid.value;
 
     let params = new HttpParams()
-    .set("year", 2023)
-    .set("month", 3)
-    .set("collectorId", 4)
+    .set("year", this.chartParametersForm.value.year)
+    .set("month", this.chartParametersForm.value.month)
+    .set("collectorId", this.chartParametersForm.value.collectorId)
 
     this.analyticsService
       .getCollectorSessionData(params)
@@ -178,5 +228,30 @@ export class CollectorCollectionsInQuantityPerSessionComponent extends BaseCompo
           console.log(err);
         }
       );
+  }
+
+  getAllUsers(){
+    this.userService.fetchAllActiveAccounts().pipe(takeUntil(this.subject)).subscribe(res => {
+      let users = res.userData;
+
+      users.forEach(user => {
+        console.log(user)
+        if(user.roles[0].name == "ROLE_COLLECTOR"){
+          this.collectors.push(user);
+        }
+      })
+
+      console.log("COLLECTORS ", this.collectors)
+
+      if(this.collectors.length > 0){
+        this.chartParametersForm.patchValue({
+          collectorId: this.collectors[0].id
+        })
+
+        this.getCollectorSessionData();
+      }
+    }, err => {
+      console.log(err)
+    })
   }
 }

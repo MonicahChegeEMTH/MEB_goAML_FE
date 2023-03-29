@@ -1,5 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -18,6 +20,7 @@ import {
 } from 'ng-apexcharts';
 import { takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/data/services/analytics.service';
+import { UserService } from 'src/app/data/services/user.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 
 export type ChartOptions = {
@@ -48,7 +51,7 @@ export class MilkCollectionQuantityAgainstPriceComponent extends BaseComponent i
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = ["Year-wise", "Month-wise"];
+  chartDispType: any = [2020, 2022, 2023, 2024, 2025];
   monthsArray: any = [
     { name: "January", value: 1 },
     { name: "February", value : 2 },
@@ -66,15 +69,38 @@ export class MilkCollectionQuantityAgainstPriceComponent extends BaseComponent i
   isLoading: boolean;
   currentYear = new Date().getFullYear();
   currentMonth = this.monthsArray[new Date().getMonth()];
+  chartParametersForm: FormGroup;
 
   constructor(
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private userService: UserService
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.chartParametersForm = this.createChartParamtersForm();
+    
     this.getCollectorCollectionSPerMonth();
+  }
+
+  createChartParamtersForm() {
+    return this.fb.group({
+      year: [this.currentYear],
+      month: [this.currentMonth.value],
+      collectorId: [""]
+    });
+  }
+
+
+  onSelectYear(event: any){
+    this.getCollectorCollectionSPerMonth()
+  }
+
+  onSelectMonth(event: any){
+    this.getCollectorCollectionSPerMonth()
   }
 
   getCollectorCollectionSPerMonth(){
@@ -86,8 +112,8 @@ export class MilkCollectionQuantityAgainstPriceComponent extends BaseComponent i
     let params;
 
     params = new HttpParams()
-    .set('year', this.currentYear)
-    .set("month", this.currentMonth.value)
+    .set('year', this.chartParametersForm.value.year)
+    .set("month", this.chartParametersForm.value.month)
    
     this.analyticsService.getCollectorCollectionSPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
