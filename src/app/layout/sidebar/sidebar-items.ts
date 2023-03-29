@@ -487,4 +487,17 @@ export const ROUTES: RouteInfo[] = [
     role: ['ROLE_STAFF'],
     submenu: [],
   },
+  {
+    path: '/reports/main',
+    title: 'Reports',
+    moduleName: 'reports',
+    iconType: 'feather',
+    icon: 'file-text',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['ROLE_STAFF'],
+    submenu: [],
+  },
 ];

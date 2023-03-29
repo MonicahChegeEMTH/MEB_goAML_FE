@@ -41,6 +41,15 @@ const routes: Routes = [
         loadChildren: () =>
           import("./user/user.module").then((m) => m.UserModule),
       },
+      {
+        path: "reports",
+        canActivate: [AuthGuard],
+        data: {
+          role: Role.Staff,
+        },
+        loadChildren: () =>
+          import("./reports/reports.module").then((m)=>m.ReportsModule),
+      },
     ],
   },
   {

@@ -12,7 +12,7 @@
         <div class="info-box7 bg1 order-info-box7" matTooltip="System Users" routerLink="/staff/sales/collections">
           <div class="info-box7-block">
             <h4 class="m-b-20">Milk Quantity</h4>
-            <h2 class="text-end"><span class="float-start">{{quantity}}</span><i class="fas fa-th"></i></h2>
+            <h2 class="text-end"><span class="float-start">{{quantity | number : '1.2-2' }}</span><i class="fas fa-th"></i></h2>
 
           </div>
 
@@ -23,7 +23,7 @@
           routerLink="/staff/sales/collections">
           <div class="info-box7-block">
             <h4 class="m-b-20">Total Amount (KES)</h4>
-            <h2 class="text-end"><span class="float-start">{{amount}}</span><i class="fas fa-th"></i></h2>
+            <h2 class="text-end"><span class="float-start">{{amount | number : '1.2-2' }}</span><i class="fas fa-th"></i></h2>
 
           </div>
 

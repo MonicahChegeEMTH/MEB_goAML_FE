@@ -19,6 +19,7 @@ import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component'
 })
 export class FarmerManagenentComponent implements OnInit {
 
+
   displayedColumns: string[] = [
     'id',
     "memberCode",
