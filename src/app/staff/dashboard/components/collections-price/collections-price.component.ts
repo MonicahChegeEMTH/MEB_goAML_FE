@@ -52,7 +52,7 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = [2020, 2022, 2023, 2024, 2025];
+  chartDispType: number[] = [2020, 2022, 2023, 2024, 2025];
   monthsArray: any = [
     { name: "January", value: 1 },
     { name: "February", value : 2 },
@@ -67,13 +67,14 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
     { name: "Novembar", value: 11  },
     { name: "December", value: 12 },
   ];
-  isLoading: boolean;
+  isLoading: boolean = true;
   currentYear = new Date().getFullYear();
   currentMonth = this.monthsArray[new Date().getMonth()];
  
   chartParametersForm: FormGroup;
   quantityChartSelected: boolean = false;
   priceChartSelected: boolean = true;
+  collectors: any[] = [];
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -85,10 +86,10 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllUsers();
     this.chartParametersForm = this.createChartParamtersForm();
-    console.log("Current Month ", this.currentMonth)
-    this.getCollectorCollectionSPerMonth();
+   
+    this.getAllUsers();   
+    
   }
 
   createChartParamtersForm() {
@@ -96,6 +97,10 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
       year: [this.currentYear],
       collectorId: [""]
     });
+  }
+
+  onSelectYear(event: any){
+    this.getCollectorCollectionSPerMonth()
   }
 
   collectorsLookup(){
@@ -111,6 +116,8 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
         this.chartParametersForm.patchValue({
           collectorId: result.data.id,
         });
+
+        this.getCollectorCollectionSPerMonth()
       },
       (err) => {
         console.log(err);
@@ -127,8 +134,8 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
     let params;
 
     params = new HttpParams()
-    .set('year', this.currentYear)
-    .set("collectorId", 4)
+    .set('year', this.chartParametersForm.value.year)
+    .set("collectorId", this.chartParametersForm.value.collectorId)
    
     this.analyticsService.getCollectionsPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
@@ -209,7 +216,26 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
 
   getAllUsers(){
     this.userService.fetchAllActiveAccounts().pipe(takeUntil(this.subject)).subscribe(res => {
-      console.log("USERS ", res)
+      let users = res.userData;
+
+      users.forEach(user => {
+        console.log(user)
+        if(user.roles[0].name == "ROLE_COLLECTOR"){
+          this.collectors.push(user);
+        }
+      })
+
+      console.log("COLLECTORS ", this.collectors)
+
+      if(this.collectors.length > 0){
+        this.chartParametersForm.patchValue({
+          collectorId: this.collectors[0].id
+        })
+
+        this.getCollectorCollectionSPerMonth();
+      }
+    }, err => {
+      console.log(err)
     })
   }
 }

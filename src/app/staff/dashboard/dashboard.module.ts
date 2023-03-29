@@ -29,6 +29,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { CollectorsLookupsComponent } from './look-ups/collectors-lookups/collectors-lookups.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatTableExporterModule } from 'mat-table-exporter';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -62,7 +67,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCardModule,
+    MatTableModule,
+    MatTableExporterModule,
+    MatSortModule,
+    MatPaginatorModule
   ],
   providers: [DatePipe]
 })

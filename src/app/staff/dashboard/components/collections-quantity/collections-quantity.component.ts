@@ -1,5 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -18,7 +20,9 @@ import {
 } from 'ng-apexcharts';
 import { takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/data/services/analytics.service';
+import { UserService } from 'src/app/data/services/user.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { CollectorsLookupsComponent } from '../../look-ups/collectors-lookups/collectors-lookups.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -51,7 +55,8 @@ export class CollectionsQuantityComponent
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = ["Year-wise", "Month-wise"];
+  chartDispType: number[] = [2020, 2022, 2023, 2024, 2025];
+  
   monthsArray: any = [
     { name: "January", value: 1 },
     { name: "February", value : 2 },
@@ -70,15 +75,59 @@ export class CollectionsQuantityComponent
   currentYear = new Date().getFullYear();
   currentMonth = this.monthsArray[new Date().getMonth()];
 
+  chartParametersForm: FormGroup;
+  quantityChartSelected: boolean = false;
+  priceChartSelected: boolean = true;
+  collectors: any[] = [];
+
+
   constructor(
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private userService: UserService
   ) {
     super()
   }
 
   ngOnInit(): void {
-    console.log("Current Month ", this.currentMonth)
-    this.getCollectorCollectionSPerMonth();
+    this.chartParametersForm = this.createChartParamtersForm();
+    
+    this.getAllUsers();
+  }
+
+  createChartParamtersForm() {
+    return this.fb.group({
+      year: [this.currentYear],
+      collectorId: [""]
+    });
+  }
+
+  onSelectYear(event: any){
+    this.getCollectorCollectionSPerMonth()
+  }
+
+  collectorsLookup(){
+    const dialogRef = this.dialog.open(CollectorsLookupsComponent, {
+      width: "600px",
+      data: {
+        action: "Meeting Categories Lookup",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+        this.chartParametersForm.patchValue({
+          collectorId: result.data.id,
+        });
+
+        this.getCollectorCollectionSPerMonth()
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
   }
 
   getCollectorCollectionSPerMonth(){
@@ -89,8 +138,8 @@ export class CollectionsQuantityComponent
     let params;
 
     params = new HttpParams()
-    .set('year', this.currentYear)
-    .set("collectorId", 4)
+    .set('year', this.chartParametersForm.value.year)
+    .set("collectorId", this.chartParametersForm.value.collectorId)
    
     this.analyticsService.getCollectionsPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
@@ -164,6 +213,31 @@ export class CollectionsQuantityComponent
       };
 
       this.isLoading = false;
+    }, err => {
+      console.log(err)
+    })
+  }
+
+  getAllUsers(){
+    this.userService.fetchAllActiveAccounts().pipe(takeUntil(this.subject)).subscribe(res => {
+      let users = res.userData;
+
+      users.forEach(user => {
+        console.log(user)
+        if(user.roles[0].name == "ROLE_COLLECTOR"){
+          this.collectors.push(user);
+        }
+      })
+
+      console.log("COLLECTORS ", this.collectors)
+
+      if(this.collectors.length > 0){
+        this.chartParametersForm.patchValue({
+          collectorId: this.collectors[0].id
+        })
+
+        this.getCollectorCollectionSPerMonth();
+      }
     }, err => {
       console.log(err)
     })

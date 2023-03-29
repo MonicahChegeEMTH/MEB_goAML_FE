@@ -2,48 +2,28 @@
   <div class="header">
     <h2>Collector's Amount Spent On Milk Collected</h2>
   </div>
-  <!-- <div class="row p-3">
-    <div class="col-md-4">
-      <form [formGroup]="chartParametersForm">
-        <mat-form-field appearance="legacy">
-          <mat-label>Select Chart Period</mat-label>
-          <mat-select (selectionChange)="onSelectPeriod($event)" formControlName="period">
-            <mat-option *ngFor="let item of chartDispType" value="{{ item }}">{{ item }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-    </div>
-    <div class="col-md-8">
-      <form [formGroup]="chartParametersForm" *ngIf="this.needYear">
-        <mat-form-field appearance="legacy">
-          <mat-label>Select Year</mat-label>
-          <mat-select (selectionChange)="getMeetingsPercategoryYearwise($event)" formControlName="year">
-            <mat-option *ngFor="let item of this.meetingYears" value="{{ item.year }}">{{ item.year }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-      <form [formGroup]="chartParametersForm" *ngIf="this.needMonth">
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field appearance="legacy">
-              <mat-label>Select Year</mat-label>
-              <mat-select (selectionChange)="getMeetingsPercategoryMonthwise($event)" formControlName="year">
-                <mat-option *ngFor="let item of this.meetingYears" value="{{ item.year }}">{{ item.year }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field appearance="legacy">
-              <mat-label>Select Month</mat-label>
-              <mat-select (selectionChange)="getMeetingsPercategoryMonthwise($event)" formControlName="month">
-                <mat-option *ngFor="let item of monthsArray" value="{{ item }}">{{ item }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+  <div class="row p-3">
+    <form [formGroup]="chartParametersForm">
+      <div class="row mx-3">
+        <div class="col-4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Select year</mat-label>
+            <mat-select (selectionChange)="onSelectYear($event)" formControlName="year">
+              <mat-option *ngFor="let item of chartDispType" [value]="item">{{ item }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-      </form>
-    </div>
-  </div> -->
+        <div class="col-4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Select month</mat-label>
+            <mat-select (selectionChange)="onSelectMonth($event)" formControlName="month">
+              <mat-option *ngFor="let item of monthsArray" [value]="item.value">{{ item.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+</div>
   <div class="body" *ngIf="!isLoading">
     <apx-chart [series]="barChartOptions.series" [chart]="barChartOptions.chart"
       [dataLabels]="barChartOptions.dataLabels" [plotOptions]="barChartOptions.plotOptions"
