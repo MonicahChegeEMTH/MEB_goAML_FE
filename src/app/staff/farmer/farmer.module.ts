@@ -18,7 +18,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { FarmerDetailsComponent } from './pages/farmer-details/farmer-details.component';
 import { UpdateFarmerComponent } from './pages/update-farmer/update-farmer.component';
 import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.component'; 
-
+import { FarmerLookupComponent } from './pages/farmer-lookup/farmer-lookup.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar'; 
 @NgModule({
     declarations: [
         FarmerManagenentComponent,
@@ -26,6 +27,7 @@ import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.compo
         FarmerDetailsComponent,
         UpdateFarmerComponent,
         DeleteFarmerComponent,
+        FarmerLookupComponent
     ],
     imports: [
         CommonModule,
@@ -40,7 +42,8 @@ import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.compo
         MatSortModule,
         MatDialogModule,
         MatDatepickerModule,
-        MatSelectModule
+        MatSelectModule,
+        MatProgressBarModule
     ]
 })
 export class FarmerModule { }
