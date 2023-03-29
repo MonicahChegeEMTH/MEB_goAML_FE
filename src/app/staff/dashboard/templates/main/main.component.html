@@ -23,7 +23,7 @@
           routerLink="/staff/sales/collections">
           <div class="info-box7-block">
             <h4 class="m-b-20">Total Amount (KES)</h4>
-            <h2 class="text-end"><span class="float-start">{{amount}}</span><i class="fas fa-th"></i></h2>
+            <h2 class="text-end"><span class="float-start">{{amount | currency: "KES"}}</span><i class="fas fa-th"></i></h2>
 
           </div>
 
@@ -50,6 +50,48 @@
 
     <!--Milk Collections Analysis Per Collector-->
     <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections></app-collector-collections>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections-milk-price></app-collector-collections-milk-price>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-milk-collection-quantity-against-price></app-milk-collection-quantity-against-price>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections-count></app-collector-collections-count>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections-in-quantity-per-session></app-collector-collections-in-quantity-per-session>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections-in-price-per-session></app-collector-collections-in-price-per-session>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-milk-qauntity-per-location></app-milk-qauntity-per-location>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collections-quantity></app-collections-quantity>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collections-price></app-collections-price>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <app-collector-collections-per-date></app-collector-collections-per-date>
+      </div>
+    </div>
+
+
+    <!-- <div class="row">
       <div class="col-6">
         <app-collections-per-collector></app-collections-per-collector>
       </div>
@@ -67,7 +109,7 @@
       <div class="col-6">
         <app-milk-collections-per-ward></app-milk-collections-per-ward>
       </div>
-    </div>
+    </div> -->
 
   </div>
 </section>
