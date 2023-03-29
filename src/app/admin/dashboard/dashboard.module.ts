@@ -12,10 +12,16 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { ComponentsModule } from "src/app/shared/components/components.module";
 import { SharedModule } from "./../../shared/shared.module";
 import { CollectionsPerUserComponent } from './collections-per-user/collections-per-user.component';
+import { MainComponent } from "./main/main.component";
+import { UsersPerDepartmentComponent } from "./users-per-department/users-per-department.component";
+import { UsersPerRoleComponent } from "./users-per-role/users-per-role.component";
 
 @NgModule({
   declarations: [
-    CollectionsPerUserComponent
+    MainComponent,
+    CollectionsPerUserComponent,
+    UsersPerDepartmentComponent,
+    UsersPerRoleComponent
   ],
   imports: [
     CommonModule,
