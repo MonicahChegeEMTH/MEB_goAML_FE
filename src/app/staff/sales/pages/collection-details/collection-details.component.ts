@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ReportsService } from 'src/app/reports/services/reports.service';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SalesService } from '../../services/sales.service';
 
 @Component({
@@ -34,7 +36,13 @@ export class CollectionDetailsComponent implements OnInit {
   isdata: boolean = false;
   isLoading: boolean = false;
   farmerid:any
-  constructor(private route: ActivatedRoute, private dialog: MatDialog, private service: SalesService,) { }
+  constructor(private route: ActivatedRoute,
+     private dialog: MatDialog, 
+     private service: SalesService,
+     private reportservice:ReportsService,
+     private snackbar:SnackbarService,
+
+     ) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -103,6 +111,52 @@ export class CollectionDetailsComponent implements OnInit {
 
   }
 
+
+  generateSTatement(farmerId:any){
+    this.reportservice.generatefarmerStatement(farmerId)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isLoading = false;
+
+         
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isLoading = false;
+
+        
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+
+
+
+  }
 
   accruals:any;
   getAccruals()

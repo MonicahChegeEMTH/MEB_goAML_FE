@@ -36,6 +36,7 @@ export class AddAllocationComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.allocateform.value)
     this.loading = true;
     this.subscription = this.service.addAllocation(this.allocateform.value).subscribe(res => {
       this.snackbar.showNotification("snackbar-success", "Successful!");
