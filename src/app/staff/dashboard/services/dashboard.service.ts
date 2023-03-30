@@ -23,6 +23,11 @@ export class DashboardService {
   public getAllFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
+  public getDateCollections(date:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions);
+  }
+
+  
 
   // public getDashboardWigetsAnalytics(): Observable<any> {
   //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);

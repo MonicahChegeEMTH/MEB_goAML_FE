@@ -77,7 +77,7 @@ export class SalesService {
   }
 
   addAllocation(data: any) {
-    return this.http.post(`${environment.apiUrl}/api/v1/farmers/allocation/add`, data, httpOptions);
+    return this.http.post(`${environment.apiUrl}/api/v1/farmer/allocations/add`, data, httpOptions);
   }
 
 

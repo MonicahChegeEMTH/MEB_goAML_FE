@@ -72,7 +72,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTableModule,
     MatTableExporterModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+   
   ],
   providers: [DatePipe]
 })
