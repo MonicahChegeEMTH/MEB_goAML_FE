@@ -75,6 +75,23 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatPaginatorModule,
    
   ],
+  exports: [
+    CollectionsPerCollectorComponent,
+    FarmersPerPickupLocationComponent,
+    PickupLocationsPerWardComponent,
+    MilkCollectionsPerWardComponent,
+    MilkQauntityPerLocationComponent,
+    CollectorCollectionsComponent,
+    CollectorCollectionsMilkPriceComponent,
+    MilkCollectionQuantityAgainstPriceComponent,
+    CollectorCollectionsInQuantityPerSessionComponent,
+    CollectorCollectionsInPricePerSessionComponent,
+    CollectorCollectionsCountComponent,
+    CollectionsQuantityComponent,
+    CollectionsPriceComponent,
+    CollectorCollectionsPerDateComponent,
+    CollectorsLookupsComponent,
+  ],
   providers: [DatePipe]
 })
 export class DashboardModule { }

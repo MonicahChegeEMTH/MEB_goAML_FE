@@ -89,4 +89,20 @@ export class SalesService {
   getAllProducts(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
   }
+
+  getAllocationsByDate(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocations(farmerId): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/farmer?farmerId=` + farmerId, httpOptions);
+  }
+
+  getFarmerAllocationsByDate(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocationsPerPaymentStatus(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
 }

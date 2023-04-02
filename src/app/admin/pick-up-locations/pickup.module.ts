@@ -17,11 +17,17 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatStepperModule } from "@angular/material/stepper";
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MilkCollectorsLookupComponent } from './dialogs/milk-collectors-lookup/milk-collectors-lookup.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
   declarations: [
-    AddPickupComponent, DeletePickupComponent, ViewPickupComponent, EditPickupComponent, ManagePickupsComponent
+    AddPickupComponent, DeletePickupComponent, ViewPickupComponent, EditPickupComponent, ManagePickupsComponent, MilkCollectorsLookupComponent
   ],
   imports: [
     CommonModule,
@@ -37,6 +43,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatTableExporterModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatStepperModule,
+    MatRadioModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatTabsModule
   ]
 })
 export class PickupModule { }

@@ -82,14 +82,30 @@ export class ManagePickupsComponent implements OnInit {
   }
 
   addLocationCall() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false
-    dialogConfig.autoFocus = true
-    dialogConfig.width = "60%"
-    dialogConfig.data = {
-      test: ""
-    }
-    this.dialog.open(AddPickupComponent, dialogConfig)
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = false
+    // dialogConfig.autoFocus = true
+    // dialogConfig.width = "60%"
+    // dialogConfig.data = {
+    //   test: ""
+    // }
+    // this.dialog.open(AddPickupComponent, dialogConfig)
+
+    const dialogRef = this.dialog.open(AddPickupComponent, {
+      width: "60%",
+      data: {
+        action: "Meeting Categories Lookup",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+       this.getData();
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   editLocationCall(Location) {
@@ -108,7 +124,7 @@ export class ManagePickupsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
-    dialogConfig.width = "60%"
+    dialogConfig.width = "800px"
     dialogConfig.data = {
       location: Location
     }
