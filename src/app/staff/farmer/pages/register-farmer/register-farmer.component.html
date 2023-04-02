@@ -199,13 +199,13 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                    <mat-label>Select Milk Pickup Location</mat-label>
-                                    <mat-select formControlName="pickupLocation" required>
+                                    <mat-label>Route</mat-label>
+                                    <mat-select formControlName="routeFk" required>
                                         <mat-option *ngFor="let route of routes" [value]="route.id">
-                                            {{ route.name }}
+                                            {{ route.route }}
                                         </mat-option>
                                     </mat-select>
-                                    <mat-error *ngIf="farmerRegirstartionForm.get('pickupLocation').hasError('required')">
+                                    <mat-error *ngIf="farmerRegirstartionForm.get('routeFk').hasError('required')">
                                         Pick Up location is required
                                     </mat-error>
                                 </mat-form-field>

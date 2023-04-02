@@ -15,6 +15,7 @@ import { CollectionsPerUserComponent } from './collections-per-user/collections-
 import { MainComponent } from "./main/main.component";
 import { UsersPerDepartmentComponent } from "./users-per-department/users-per-department.component";
 import { UsersPerRoleComponent } from "./users-per-role/users-per-role.component";
+import { DashboardModule } from "src/app/staff/dashboard/dashboard.module";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,8 @@ import { UsersPerRoleComponent } from "./users-per-role/users-per-role.component
     MatProgressBarModule,
     ComponentsModule,
     SharedModule,
+    DashboardModule
+    
   ],
 })
-export class DashboardModule {}
+export class AdminDashboardModule {}

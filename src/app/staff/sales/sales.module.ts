@@ -27,6 +27,8 @@ import { AddAllocationComponent } from './pages/add-allocation/add-allocation.co
 import { AgmCoreModule } from '@agm/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 
 @NgModule({
@@ -61,7 +63,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatDatepickerModule,
         MatSelectModule,
         MatTabsModule,
-        MatCheckboxModule
-    ]
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+    ],
+    providers: [CdkColumnDef]
 })
 export class SalesModule { }
