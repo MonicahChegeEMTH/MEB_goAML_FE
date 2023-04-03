@@ -14,17 +14,40 @@ export class ReportsService {
 
 
 
-  generatefarmerStatement(id: any): Observable<any> {
+  generatefarmerCollections(farmerN0: any): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", "application/pdf");
 
     let requestOptions: any = {
-      params: id,
+      params: farmerN0,
       headers: headers,
       responseType: "blob",
       withCredentials: false,
     };
-    let API_URL = `${environment.apiUrl}/api/v1/reports/farmer/statement?farmerid=` + id;
+    let API_URL = `${environment.apiUrl}/api/v1/reports/farmer/collections?farmerNo=` + farmerN0;
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        return {
+          filename: "FarmerCollections",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  generatefarmerStatement(farmerNo: any,from:any,to:any): Observable<any> {
+    console.log("Calling api  ....")
+    let headers = new HttpHeaders();
+    headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      params: farmerNo,from,to,
+      headers: headers,
+      responseType: "blob",
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/farmer/statement?farmerNo=`+farmerNo+`&from=`+from+`&to=`+to;
+    console.log("API== "+API_URL)
 
     return this.http.get(API_URL, requestOptions).pipe(
       map((response) => {

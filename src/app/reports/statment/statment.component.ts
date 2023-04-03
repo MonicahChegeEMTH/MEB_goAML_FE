@@ -1,24 +1,26 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/farmer-lookup.component';
-import { FarmerService } from 'src/app/staff/farmer/services/farmer.service';
-import { MainComponent } from '../main/main.component';
 import { ReportsService } from '../services/reports.service';
+import { MainComponent } from '../main/main.component';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { DatePipe } from '@angular/common';
+import { from } from 'rxjs';
 
 @Component({
-  selector: 'app-farmer-statement',
-  templateUrl: './farmer-statement.component.html',
-  styleUrls: ['./farmer-statement.component.sass']
+  selector: 'app-statment',
+  templateUrl: './statment.component.html',
+  styleUrls: ['./statment.component.sass']
 })
-export class FarmerStatementComponent implements OnInit {
- 
-  farmerCollectionsForm: FormGroup
+export class StatmentComponent implements OnInit {
+  farmerstatementForm: FormGroup
 
   dialogData: any;
   loading: boolean
   title: any
+  from:any
+  to:any
   
   constructor(
     public dialogRef: MatDialogRef<MainComponent>,
@@ -26,21 +28,23 @@ export class FarmerStatementComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
-    private service: ReportsService
+    private service: ReportsService,
+    private datePipe: DatePipe,
 
   ) {
-    // this.title = data.data;
-    // console.log("Title == ", this.title)
+    this.title = data.data;
+    console.log("Title == ", this.title)
   }
 
   ngOnInit(): void {
 
-    this.farmerCollectionsForm = this.fb.group({
+
+    this.farmerstatementForm = this.fb.group({
       username: ["", [Validators.required]],
       farmerNo: ["", [Validators.required]],
-
+      from: ["", [Validators.required]],
+      to: ["", [Validators.required]]
     })
-   
   }
 
   selectFarmer() {
@@ -54,16 +58,21 @@ export class FarmerStatementComponent implements OnInit {
     const dialogRef = this.dialog.open(FarmerLookupComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
-      this.farmerCollectionsForm.patchValue({
+      this.farmerstatementForm.patchValue({
         username: this.dialogData.data.username,
         farmerNo: this.dialogData.data.farmerNo
       });
     });
   }
-  onSubmit() {
 
-    console.log("Form data " + this.farmerCollectionsForm.controls.farmerNo.value)
-    this.service.generatefarmerCollections(this.farmerCollectionsForm.controls.farmerNo.value)
+  generateStatement() {
+    console.log("Form data " + this.farmerstatementForm.controls.farmerNo.value)
+    this.from = this.datePipe.transform(this.farmerstatementForm.value.from, 'yyyy-MM-dd');
+    this.to = this.datePipe.transform(this.farmerstatementForm.value.to, 'yyyy-MM-dd');
+    this.service.generatefarmerStatement(this.farmerstatementForm.controls.farmerNo.value,
+      this.from,
+      this.to
+    )
       .subscribe(
         (response) => {
           console.log(response)
@@ -105,7 +114,6 @@ export class FarmerStatementComponent implements OnInit {
       );
 
   }
- 
   onClick() {
 
   }
