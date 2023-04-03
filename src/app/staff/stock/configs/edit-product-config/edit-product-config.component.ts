@@ -5,16 +5,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { ConfigsService } from '../configs.service';
 import { ProductsConfigsComponent } from '../products-configs/products-configs.component';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-edit-product-config',
   templateUrl: './edit-product-config.component.html',
   styleUrls: ['./edit-product-config.component.sass']
 })
-export class EditProductConfigComponent implements OnInit {
+export class EditProductConfigComponent extends BaseComponent implements OnInit {
 
   configsForm: FormGroup;
   loading = false;
+  routes: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -22,7 +25,9 @@ export class EditProductConfigComponent implements OnInit {
     private snackbar: SnackbarService,
     public dialogRef: MatDialogRef<ProductsConfigsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+  ) {
+    super()
+   }
 
   ngOnInit(): void {
     this.configsForm = this.fb.group({
@@ -33,9 +38,26 @@ export class EditProductConfigComponent implements OnInit {
       unitMeasurement: [this.data.configs.unitMeasurement, [Validators.required]],
       quantity: [this.data.configs.quantity, [Validators.required]],
       effectiveFrom: [this.data.configs.effectiveFrom, [Validators.required]],
+      routeFk: [this.data.configs.routeFk, [Validators.required]]
     });
 
+    this.getRoutes();
+
   }
+
+  getRoutes(){
+    this.service.getRoutes().pipe(takeUntil(this.subject)).subscribe(res => {
+      let routes = res.entity;
+
+      if(routes.length > 0){
+        this.routes = routes;
+      }
+    }, err => {
+      console.log(err)
+    })
+  }
+
+
 
 
   onCancel() {
@@ -58,3 +80,4 @@ export class EditProductConfigComponent implements OnInit {
     );
   }
 }
+

@@ -26,7 +26,7 @@ export class CollectionDetailsComponent implements OnInit {
     'quantity',
     'amount',
     'collector',
-    'pickUpLocation',
+    // 'pickUpLocation',
     'collection_date',
     'paymentStatus',
   ];
@@ -82,6 +82,12 @@ export class CollectionDetailsComponent implements OnInit {
   allocationsNotAdded: boolean = true;
   allocationsIndex: any;
   updateCollectorsSelected: boolean = false;
+  payedAccruals: number = 0;
+  notPayedAccruals: number = 0;
+  amountOnAllocatedItems: number = 0;
+  totalAmountOnMilkDelivered: number = 0;
+  amountPayedOnCollections: number = 0;
+  amountNotPayedOnCollections: number = 0;
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -92,7 +98,10 @@ export class CollectionDetailsComponent implements OnInit {
     this.getFarmerDetails(this.farmerid);
     this.getFarmerCollections(this.farmerid);
     this.getFarmerAllocations(this.farmerid);
-    this.getAccruals();
+    this.getPayedFarmerAccruals(this.farmerid);
+    this.getNonPayedFarmerAccruals(this.farmerid);
+    this.getFarmerAmountOnNotPayedCollections(this.farmerid);
+    this.getFarmerAmountOnPayedCollections(this.farmerid)
   }
 
   farmer: any;
@@ -119,6 +128,8 @@ export class CollectionDetailsComponent implements OnInit {
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
+
+      
         // Binding with the datasource
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
@@ -133,12 +144,14 @@ export class CollectionDetailsComponent implements OnInit {
 
   getFarmerAllocations(id) {
     this.service.getFarmerAllocations(id).subscribe((res) => {
-      console.log('Allocations ', res);
-
       this.allocationsArray = res.entity;
 
       if (this.allocationsArray.length > 0) {
         this.allocationsNotAdded = false;
+
+        this.allocationsArray.forEach(allocation => {
+          this.amountOnAllocatedItems = this.amountOnAllocatedItems + allocation.amount;
+        })
      
         this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
         this.allocationsDataSource.paginator = this.allocationsPaginator;
@@ -193,15 +206,71 @@ export class CollectionDetailsComponent implements OnInit {
     );
   }
 
-  accruals: any;
-  getAccruals() {
-    this.service.getFarmerAccruals(this.farmerid).subscribe((res) => {
-      this.accruals = res.entity;
-      if (this.accruals != null) {
-        this.found = true;
-      }
-    });
+  // accruals: any;
+  // getAccruals() {
+  //   this.service.getFarmerAccruals(this.farmerid).subscribe((res) => {
+  //     this.accruals = res.entity;
+  //     if (this.accruals != null) {
+  //       this.found = true;
+  //     }
+  //   });
+  // }
+
+  getPayedFarmerAccruals(id){
+    this.service.getFarmerAllocationAccruals(id, "Y").subscribe((res) => {
+          this.payedAccruals = res.entity.accruedamount;
+
+          if(res.entity.accruedamount != null){
+            this.payedAccruals = res.entity.accruedamount;
+          }else {
+            this.payedAccruals = 0;
+          }
+
+          console.log("Payed Accruals", res)
+          // if (this.accruals != null) {
+          //   this.found = true;
+          // }
+        });    
   }
+
+  getNonPayedFarmerAccruals(id){
+    this.service.getFarmerAllocationAccruals(id, "N").subscribe((res) => {
+
+      if(res.entity.accruedamount != null){
+        this.notPayedAccruals = res.entity.accruedamount;
+      }else {
+        this.notPayedAccruals = 0;
+      }
+      
+    });  
+  }
+
+  getFarmerAmountOnPayedCollections(id){
+    this.service.getFarmerPayments(id, "Y").subscribe((res) => {
+
+      if(res.entity != null){
+        this.amountPayedOnCollections = res.entity;
+      }else {
+        this.amountPayedOnCollections = 0;
+      }
+      
+    });  
+  }
+
+
+  getFarmerAmountOnNotPayedCollections(id){
+    this.service.getFarmerPayments(id, "N").subscribe((res) => {
+
+      if(res.entity != null){
+        this.amountNotPayedOnCollections = res.entity;
+      }else {
+        this.amountNotPayedOnCollections = 0;
+      }
+      
+    });  
+  }
+
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
