@@ -23,8 +23,11 @@ export class FarmerManagenentComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     "memberCode",
-    "firstName",
-    "lastName",
+    // "firstName",
+    // "lastName",
+    "username",
+    "routeFk",
+    "idNumber",
     "mobileNo",
     'date',
     'action',

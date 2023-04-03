@@ -36,6 +36,15 @@ export class CollectionsComponent implements OnInit {
   longitude = 37.9083264;
   zoom = 8;
   markers: any;
+  restriction = {
+    latLngBounds: {
+      east: 37.995213, // Longitude of the east border of UK
+      north: 0.1768696, // Latitude of the north border of UK
+      south:  -4.181611, // Latitude of the south border of UK
+      west: 34.470610 // Longitude of the west border of UK
+    },
+    strictBounds: false
+  };
 
 
   displayedColumns: string[] = [
