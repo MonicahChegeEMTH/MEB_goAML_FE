@@ -5,7 +5,7 @@
                 <div class="modalHeader clearfix">
                     <div class="modal-about">
                         <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
-                            Generate report
+                            Generate Farmer Statement report
                         </div>
                     </div>
                 </div>
@@ -16,26 +16,39 @@
         </button>
     </div>
     <div mat-dialog-content>
-        <form class="register-form m-4" [formGroup]="farmerCollectionsForm">
+
+        <form class="register-form m-4" [formGroup]="farmerstatementForm">
             <div class="row">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Select Farmer</mat-label>
                     <input matInput formControlName="username" required readonly />
                     <mat-icon matSuffix (click)="selectFarmer()">search</mat-icon>
-                    <mat-error *ngIf="farmerCollectionsForm.get('username').hasError('required')">
+                    <mat-error *ngIf="farmerstatementForm.get('username').hasError('required')">
                         Farmer is required
                     </mat-error>
                 </mat-form-field>
-                
-                  
-         
+
+
+                <mat-form-field class="m-l-5">
+                    <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="from">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="m-l-5">
+                    <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="to">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="example-button-row">
                         <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
                             Cancel
                         </button>
-                        <button mat-raised-button color="primary" [disabled]="!farmerCollectionsForm.valid"
-                            (click)="onSubmit()">
+                        <button mat-raised-button color="primary" [disabled]="!farmerstatementForm.valid"
+                            (click)="generateStatement()">
                             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                             <b>Submit</b>
                         </button>
@@ -44,6 +57,5 @@
             </div>
 
         </form>
-       
     </div>
 </div>

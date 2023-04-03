@@ -17,12 +17,14 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { FarmerStatementComponent } from './farmer-statement/farmer-statement.component'; 
-import {MatRippleModule} from '@angular/material/core'; 
+import {MatRippleModule} from '@angular/material/core';
+import { StatmentComponent } from './statment/statment.component'; 
 
 @NgModule({
     declarations: [
         MainComponent,
-        FarmerStatementComponent
+        FarmerStatementComponent,
+        StatmentComponent
     ],
     imports: [
         CommonModule,

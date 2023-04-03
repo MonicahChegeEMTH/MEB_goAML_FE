@@ -7,6 +7,7 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/farmer-lookup.component';
 import { FarmerStatementComponent } from '../farmer-statement/farmer-statement.component';
 import { ReportsService } from '../services/reports.service';
+import { StatmentComponent } from '../statment/statment.component';
 
 @Component({
   selector: 'app-main',
@@ -191,6 +192,19 @@ export class MainComponent implements OnInit {
 
 
 
+  farmerCollectionsReport() {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "500px"
+    dialogConfig.data = {
+      data: ""
+    }
+    this.dialog.open(FarmerStatementComponent, dialogConfig)
+
+
+  }
   farmerStatement() {
 
     const dialogConfig = new MatDialogConfig();
@@ -198,9 +212,9 @@ export class MainComponent implements OnInit {
     dialogConfig.autoFocus = true
     dialogConfig.width = "500px"
     dialogConfig.data = {
-      test: ""
+      data: ""
     }
-    this.dialog.open(FarmerStatementComponent, dialogConfig)
+    this.dialog.open(StatmentComponent, dialogConfig)
 
 
   }
