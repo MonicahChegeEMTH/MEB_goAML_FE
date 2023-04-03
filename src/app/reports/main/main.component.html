@@ -147,7 +147,7 @@
                           <div class="example-button-row">
 
                             <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
-                              (click)="generateCollectionsPerLocations()" (click)="accordion.closeAll()">
+                              (click)="generateCollectionsPerLocations()" >
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
                             </button>
@@ -171,12 +171,26 @@
         <div class="card">
           <br>
           <div class="header">
-            <h2>Farmer statement Report</h2>
+            <h2>Farmer  Reports</h2>
           </div>
           <div class="body">
             <div class="doc-file-type">
               <ul class="list-unstyled" style="position: relative; height: 350px;">
 
+                <li (click)="farmerCollectionsReport()" class="d-flex mb-3">
+                  <span class="msr-3 align-self-center img-icon info-rgba text-info"><i
+                      class="far fa-file-archive"></i></span>
+
+                  <div class="set-flex">
+                    <h5 class="font-16 mb-1">Farmers Collections report</h5>
+                    <p>Collections report for specific farmer</p>
+                  </div>
+                  <div class="ms-auto">
+                    <td>
+                      <i class="far fa-arrow-alt-circle-down"></i>
+                    </td>
+                  </div>
+                </li>
                 <li (click)="farmerStatement()" class="d-flex mb-3">
                   <span class="msr-3 align-self-center img-icon info-rgba text-info"><i
                       class="far fa-file-archive"></i></span>
