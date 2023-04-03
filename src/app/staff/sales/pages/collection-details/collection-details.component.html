@@ -231,94 +231,94 @@
                         <h2>Farmer Details</h2>
                     </div>
                     <div class="body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="card">
+                                <div class="chat">
+                                    <div class="chat-header clearfix">
+                                        <div class="row mt-2">
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Lastname </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Member code </div>
+                                                    <div class="chat-num-messages">{{farmer.farmerNo }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Subcounty" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">ID number </div>
+                                                    <div class="chat-num-messages">{{farmer.id_number}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Subcounty" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">Subcounty</div>
+                                                    <div class="chat-num-messages">{{farmer.subcounty}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Lastname </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">No of cows </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card project_widget">
+                                <div class="header">
+                                </div>
+                                <div class="body">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ amountNotPayedOnCollections | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Pending Accrued Payment On Collections
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ amountPayedOnCollections | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Amount Paid On Accrued Collections
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{  notPayedAccruals | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Amount Not Paid On Allocated Items</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ (payedAccruals) | currency: "KES" }}</h3>
+                                                <div class="text font-15 m-b-5">Amount Paid On allocated Items</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                         <mat-tab-group>
                             <mat-tab label="Farmer Collections">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="card">
-                                        <div class="chat">
-                                            <div class="chat-header clearfix">
-                                                <div class="row mt-2">
-                                                    <div class="col-lg-2 col-sm-6">
-                                                        <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                            <div class="chat-with">Lastname </div>
-                                                            <div class="chat-num-messages">{{farmer.last_name}}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-sm-6">
-                                                        <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                            <div class="chat-with">Member code </div>
-                                                            <div class="chat-num-messages">{{farmer.member_code}}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-sm-6">
-                                                        <div matTooltip="Subcounty" class="chat-about"
-                                                            *ngIf="present==true">
-                                                            <div class="chat-with">ID number </div>
-                                                            <div class="chat-num-messages">{{farmer.id_number}}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-sm-6">
-                                                        <div matTooltip="Subcounty" class="chat-about"
-                                                            *ngIf="present==true">
-                                                            <div class="chat-with">Subcounty</div>
-                                                            <div class="chat-num-messages">{{farmer.subcounty}}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-sm-6">
-
-                                                        <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                            <div class="chat-with">Lastname </div>
-                                                            <div class="chat-num-messages">{{farmer.last_name}}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-sm-6">
-                                                        <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                            <div class="chat-with">No of cows </div>
-                                                            <div class="chat-num-messages">{{farmer.last_name}}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <div class="card project_widget">
-                                        <div class="header">
-                                        </div>
-                                        <div class="body">
-                                            <div class="row">
-                                                <div class="col-lg-3 col-sm-6">
-                                                    <div class="text-center m-b-20">
-                                                        <h3 class="m-b-10 col-green">10, 000 KES</h3>
-                                                        <div class="text font-15 m-b-5">Total Amount On Milk Delivered
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-6">
-                                                    <div class="text-center m-b-20">
-                                                        <h3 class="m-b-10 col-green">5, 000 KES</h3>
-                                                        <div class="text font-15 m-b-5">Total Amount On Items Allocated
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-6">
-                                                    <div class="text-center m-b-20">
-                                                        <h3 class="m-b-10 col-green">3, 000 KES</h3>
-                                                        <div class="text font-15 m-b-5">Total Amount Paid</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-6">
-                                                    <div class="text-center m-b-20">
-                                                        <h3 class="m-b-10 col-green">2, 000 KES</h3>
-                                                        <div class="text font-15 m-b-5">Pending Amount To be Paid</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="card pt-3">
                                         <div class="header">

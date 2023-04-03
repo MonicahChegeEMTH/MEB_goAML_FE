@@ -32,4 +32,8 @@ export class ConfigsService {
   deleteConfiguration(id: any): Observable<any> {
     return this.http.delete(this.rolesUrl + `delete/` + id, httpOptions);
   }
+
+  getRoutes(): Observable<any> {
+    return this.http.get<any>(`${environment.API}/api/v1/routes/get`, httpOptions);
+  }
 }

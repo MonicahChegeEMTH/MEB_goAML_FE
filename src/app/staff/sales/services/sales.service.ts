@@ -59,8 +59,8 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/year?year=` + year, httpOptions);
   }
 
-  getFarmerAccruals(farmerId: any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId, httpOptions);
+  getFarmerAccruals(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId + `&paymentStatus=` + paymentStatus, httpOptions);
   }
 
   getAllCollectors(): Observable<any> {
@@ -104,5 +104,13 @@ export class SalesService {
 
   getFarmerAllocationsPerPaymentStatus(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocationAccruals(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/farmer/accruals?farmerId=` + farmerId + `&paymentStatus=` + paymentStatus, httpOptions);
+  }
+
+  getFarmerPayments(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/amount?farmerNo=` + farmerId + `&paymentFlag=` + paymentStatus, httpOptions);
   }
 }
