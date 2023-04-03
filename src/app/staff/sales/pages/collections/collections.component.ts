@@ -132,6 +132,7 @@ export class CollectionsComponent implements OnInit {
   getCoordinates() {
     this.subscription = this.service.getCollectorLocationsByDate(this.mapForm.value.collectorId, this.datePipe.transform(this.mapForm.value.date, 'yyyy-MM-dd')).subscribe(res => {
       this.locations = res;
+      console.log(this.locations)
       if (this.locations.entity.length > 0) {
         this.isCoordinates = true;
         this.markers = this.locations.entity;

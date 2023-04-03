@@ -33,7 +33,7 @@ export class AddProductConfigComponent extends BaseComponent implements OnInit {
     this.getRoutes();
     
     this.configsForm = this.fb.group({
-      productName: ["", [Validators.required]],
+      productName:["Fresh Milk", [Validators.required]],
       buyingPrice: ["", [Validators.required]],
       sellingPrice: ["", [Validators.required]],
       unitMeasurement: ["", [Validators.required]],
