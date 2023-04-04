@@ -131,11 +131,17 @@ export class CollectorCollectionsPerDateComponent
         (res) => {
           console.log('Response', res);
 
-          res.entity.forEach((item) => {
-            collectors.push(item.collector);
+          if(res.entity.length > 0){
+            res.entity.forEach((item) => {
+              collectors.push(item.collector);
+  
+              amounts.push(item.amount);
+            });
+          }else {
+            collectors = [];
 
-            amounts.push(item.amount);
-          });
+            amounts = [];
+          }
 
           this.barChartOptions = {
             series: [

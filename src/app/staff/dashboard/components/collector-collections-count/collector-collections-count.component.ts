@@ -146,11 +146,18 @@ export class CollectorCollectionsCountComponent
         (res) => {
           console.log('Response', res);
 
+          if(res.entity.length > 0){
           res.entity.forEach((item) => {
             months.push(item.month);
 
             collections.push(item.colectionsCount);
           });
+          }else {
+            months = [];
+
+            collections = [];
+          }
+
 
           this.lineChartOptions = {
             series: [

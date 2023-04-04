@@ -140,13 +140,19 @@ export class CollectionsPriceComponent extends BaseComponent implements OnInit {
     this.analyticsService.getCollectionsPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
 
-      res.entity.forEach(item => {
-        months.push(item.month);
+      if(res.entity.length > 0){
+        res.entity.forEach(item => {
+          months.push(item.month);
+  
+          
+  
+          amounts.push(item.amount);
+        })
+      }else{
+        amounts = [];
 
-        
-
-        amounts.push(item.amount);
-      })
+        months = [];
+      }
 
       this.barChartOptions = {
         series: [
