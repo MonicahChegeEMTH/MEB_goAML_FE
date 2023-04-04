@@ -28,6 +28,7 @@ export class MainComponent implements OnInit {
     this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
       this.data = res;
       if (this.data) {
+        
         this.loaded = true;
         this.users = this.data.entity.users;
         this.teams = this.data.entity.teams;
