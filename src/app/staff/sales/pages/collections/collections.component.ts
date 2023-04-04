@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
+import { DashboardService } from 'src/app/staff/dashboard/services/dashboard.service';
 
 @Component({
   selector: 'app-collections',
@@ -25,6 +26,15 @@ export class CollectionsComponent implements OnInit {
   form: FormGroup;
   mapForm: FormGroup;
   selected = "";
+  count: any = 0
+  dcount: any = 0
+  dquantity: any = 0.0;
+  damount: any = 0.0;
+  farmers:any=0
+
+  public cardChart2: any;
+  public cardChart2Data: any;
+  public cardChart2Label: any;
 
   @ViewChild('map') map: AgmMap;
   ngAfterViewInit() {
@@ -62,7 +72,7 @@ export class CollectionsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,) { }
+  constructor(private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,  private dashboard: DashboardService) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -99,6 +109,7 @@ export class CollectionsComponent implements OnInit {
     }
     else if (this.selected == 'sd') {
       this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+      this.getDateSummary()
       this.isLoading = true;
       this.subscription = this.service.getCollections(this.date).subscribe(res => {
         this.data = res;
@@ -184,6 +195,7 @@ export class CollectionsComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
+    this.smallChart2()
     this.getData();
     this.getMilkCollectors();
     this.form = this.fb.group({
@@ -200,5 +212,93 @@ export class CollectionsComponent implements OnInit {
 
   viewFarmerCollections(row) {
     this.router.navigate(['/staff/sales/farmer', row.farmerId]);
+  }
+  getDateSummary() {
+    this.isLoading = true
+    this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+    console.log("Formated date is ", this.date)
+    this.subscription = this.dashboard.getDateCollections(this.date).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+    
+  }
+  private smallChart2() {
+    this.cardChart2 = {
+      responsive: true,
+      tooltips: {
+        enabled: false,
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              beginAtZero: true,
+              display: false,
+            },
+          },
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              display: false,
+            },
+            ticks: {
+              display: false,
+            },
+          },
+        ],
+      },
+      title: {
+        display: false,
+      },
+    };
+    this.cardChart2Data = [
+      {
+        label: "New Clients",
+        data: [50, 61, 80, 50, 40, 93, 63, 50, 62, 72, 52, 60, 41, 30, 45, 70],
+        borderWidth: 4,
+        pointStyle: "circle",
+        pointRadius: 4,
+        borderColor: "rgba(253,126,20,.7)",
+        pointBackgroundColor: "rgba(253,126,20,.2)",
+        backgroundColor: "rgba(253,126,20,.2)",
+        pointBorderColor: "transparent",
+      },
+    ];
+    this.cardChart2Label = [
+      "16-07-2018",
+      "17-07-2018",
+      "18-07-2018",
+      "19-07-2018",
+      "20-07-2018",
+      "21-07-2018",
+      "22-07-2018",
+      "23-07-2018",
+      "24-07-2018",
+      "25-07-2018",
+      "26-07-2018",
+      "27-07-2018",
+      "28-07-2018",
+      "29-07-2018",
+      "30-07-2018",
+      "31-07-2018",
+    ];
   }
 }

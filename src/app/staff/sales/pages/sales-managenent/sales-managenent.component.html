@@ -2,7 +2,7 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All farmers'" [items]="['Farmers']" [active_item]="'All Farmers'">
+            <app-breadcrumb [title]="'Payment Records'" [items]="['Payments']" [active_item]="'Payment Records'">
             </app-breadcrumb>
         </div>
 
@@ -25,7 +25,7 @@
                                                     style="text-transform: capitalize;" (keyup)="applyFilter($event)"
                                                     class="browser-default search-field" aria-label="Search box" />
                                             </li>
-                                           
+
                                             <li>
                                                 <div class="m-l-10" matTooltip="Refresh">
                                                     <button mat-mini-fab color="primary" (click)="getData()">
@@ -95,75 +95,91 @@
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="memberCode">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">memberCode</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                <ng-container matColumnDef="farmer_no">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
+                                        No</mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.memberCode}}
+                                        {{request.farmer_no}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="username">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="column-nowrap">username</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.username}}
+                                        {{request.username}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="firstName">
+                                <ng-container matColumnDef="payment_mode">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">firstName</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                        class="column-nowrap">payment_mode</mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.firstName}}
+                                        {{request.payment_mode}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="lastName">
+                                <ng-container matColumnDef="freequency">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">lastName</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                        class="column-nowrap">freequency</mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.lastName}}
+                                        {{request.freequency}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="mobileNo">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="column-nowrap">mobileNo</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.mobileNo}}
+                                        {{request.mobileNo}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Created
-                                        On</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
+                                <ng-container matColumnDef="allocationAmount">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Expenses
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{county.createdAt | date}}
+                                        {{request.allocationAmount}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="collectionAmount">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Income
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{request.collectionAmount}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="netPay">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Net Pay
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{request.netPay}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let county;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, county)">
+                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, request)">
                                         <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="editCountyCall(county)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Edit County"
-                                                [icon]="'edit'"></app-feather-icons>
+                                            (click)="pay()" class="tbl-action-btn">
+                                            <app-feather-icons matTooltip="Pay"
+                                                [icon]="'send'"></app-feather-icons>
                                         </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteCountyCall(county)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Delete county" [icon]="'trash-2'"
-                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
+                                        <!-- <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                                            <mat-icon>payment</mat-icon>
+                                          </button>
+                                         -->
                                     </mat-cell>
                                 </ng-container>
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
                                 <mat-row *matRowDef="let row; columns: displayedColumns"
-                                    (click)="countyDetailsCall(county)" [style.cursor]="'pointer'" matRipple>
+                                    (click)="requestDetailsCall(request)" [style.cursor]="'pointer'" matRipple>
                                 </mat-row>
                                 <mat-cell *matNoDataRow colspan="4">
                                     No data matching the filter "{{ input.value }}"</mat-cell>
