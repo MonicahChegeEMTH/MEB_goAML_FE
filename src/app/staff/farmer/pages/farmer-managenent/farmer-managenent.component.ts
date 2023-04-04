@@ -22,11 +22,20 @@ export class FarmerManagenentComponent implements OnInit {
 
   displayedColumns: string[] = [
     'id',
-    "memberCode",
-    "firstName",
-    "lastName",
-    "mobileNo",
-    'date',
+    "username",
+    "farmer_no",
+    'mobile_no',
+    'id_number',
+    'account_number',
+    "route",
+    "pickUpLocation",
+    
+  //  'member_type',
+   
+  //  'account_name',
+  //  'created_at',
+  //  'payment_mode',
+  //  'payment_freequency',
     'action',
   ];
 
@@ -50,6 +59,7 @@ export class FarmerManagenentComponent implements OnInit {
     this.isLoading = true;
     this.subscription = this.service.getFarmers().subscribe(res => {
       this.data = res;
+      console.log(this.data)
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;

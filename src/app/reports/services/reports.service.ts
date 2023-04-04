@@ -121,5 +121,28 @@ export class ReportsService {
       })
     );
   }
+  getPaymentFile(month: any,mode:any): Observable<any> {
+    console.log("..Calling api  ....")
+    let headers = new HttpHeaders();
+    headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      params: month,mode,
+      headers: headers,
+      responseType: "blob",
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/paymentfile?month=`+month+`&paymentMode=` + mode;
+    console.log(API_URL)
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        return {
+          filename: month+"-PaymentFile",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
   
 }
