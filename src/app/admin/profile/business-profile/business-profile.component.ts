@@ -25,7 +25,7 @@ export class BusinessProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.createForm();
+    // this.createForm();
     this.getProfile();
   }
 
@@ -66,33 +66,38 @@ export class BusinessProfileComponent implements OnInit {
 
   data:any;
   getProfile() {
+    this.createForm();
     this.loading = true;
     this.subscription = this.service.getProfile().subscribe(res => {
       this.data = res;
       this.profile = this.data.entity[0].logo;
       console.log(this.profile)
-      if(this.profile == undefined)
+        this.loading = false;
+      if(this.profile == undefined || this.profile==null || this.profile=="")
       {
-        this.state = false;
+        this.state = false;        
+
       }
       else
       {
+    
         this.state = true;
+        this.userForm.patchValue({
+          companyEmail: this.data.entity[0].companyEmail,
+          companyName: this.data.entity[0].companyName,
+          phone: this.data.entity[0].phone,
+          location: this.data.entity[0].location,
+          physicalAddress: this.data.entity[0].physicalAddress,
+          regNo: this.data.entity[0].regNo,
+          website: this.data.entity[0].website,
+          createdOn:this.data.entity[0].createdAt
+        })
       }
 
 
-      this.userForm.patchValue({
-        companyEmail: this.data.entity[0].companyEmail,
-        companyName: this.data.entity[0].companyName,
-        phone: this.data.entity[0].phone,
-        location: this.data.entity[0].location,
-        physicalAddress: this.data.entity[0].physicalAddress,
-        regNo: this.data.entity[0].regNo,
-        website: this.data.entity[0].website,
-        createdOn:this.data.entity[0].createdAt
-      })
+     
 
-      this.loading = false;
+     
     }, err => {
       this.loading = false;
     });

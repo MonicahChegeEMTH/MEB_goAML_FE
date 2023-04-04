@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { ProfileService } from '../profile.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-create-business-profile',
@@ -14,18 +15,20 @@ export class CreateBusinessProfileComponent implements OnInit {
   loading = false;
   profileForm!: FormGroup;
   state:boolean = false;
+  data:any
 
   constructor(
     private fb: FormBuilder,
     private snackbar: SnackbarService,
     private service: ProfileService,
+    private location:Location,
   ) {
 
   }
 
 
   ngOnInit(): void {
-    this.createForm();
+    this.getProfile();
   }
 
   createForm() {
@@ -76,4 +79,61 @@ export class CreateBusinessProfileComponent implements OnInit {
     })
   }
 
+
+  getProfile() {
+    this.createForm();
+    this.loading = true;
+    this.subscription = this.service.getProfile().subscribe(res => {
+      this.data = res;
+      this.profile = this.data.entity[0].logo;
+      console.log(this.profile)
+        this.loading = false;
+      if(this.profile == undefined || this.profile==null || this.profile=="")
+      {
+        this.state = false;        
+
+      }
+      else
+      {
+    
+        this.state = true;
+        this.profileForm.patchValue({
+          companyEmail: this.data.entity[0].companyEmail,
+          companyName: this.data.entity[0].companyName,
+          phone: this.data.entity[0].phone,
+          location: this.data.entity[0].location,
+          physicalAddress: this.data.entity[0].physicalAddress,
+          regNo: this.data.entity[0].regNo,
+          website: this.data.entity[0].website,
+          createdOn:this.data.entity[0].createdAt
+        })
+      }
+
+
+     
+
+     
+    }, err => {
+      this.loading = false;
+    });
+  }
+
+  update() {
+    this.loading = true;
+    this.subscription = this.service.updateProfile(this.profileForm.value).subscribe(res => {
+      this.snackbar.showNotification("snackbar-success", "Successful!");
+      this.loading = false;
+      // this.profileForm.reset();
+      this.getProfile();
+    }, err => {
+      this.loading = false;
+      this.snackbar.showNotification("snackbar-danger", err);
+    })
+
+  }
+
+  onCancel(){
+    this.location.back();
+
+  }
 }

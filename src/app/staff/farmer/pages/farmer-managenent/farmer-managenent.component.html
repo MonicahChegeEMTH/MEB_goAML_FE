@@ -101,44 +101,44 @@
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="memberCode">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
-                                        number</mat-header-cell>
+                                <ng-container matColumnDef="farmer_no">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer No.
+                                        </mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.username}}
+                                        {{farmer.farmer_no}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="username">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">User name</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer Name</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.username}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="idNumber">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">ID no.</mat-header-cell>
+                                <ng-container matColumnDef="mobile_no">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Phone.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.idNumber}}
+                                        {{farmer.mobile_no}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="routeFk">
+                                <ng-container matColumnDef="account_number">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Ac.No</mat-header-cell>
+                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        {{farmer.account_number}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="route">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Route</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.routeFk}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="mobileNo">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Mobile no.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.route }}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Created
+                                <ng-container matColumnDef="pickUpLocation">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp Location
                                         on</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
