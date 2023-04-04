@@ -14,7 +14,7 @@ export class EditBusinessProfileComponent implements OnInit {
   loading = false;
   profileForm!: FormGroup;
   state: boolean = false;
-  data:any;
+  data: any;
   profilePhoto: any
   imageSrc: string;
   profile: string | ArrayBuffer;
@@ -35,7 +35,7 @@ export class EditBusinessProfileComponent implements OnInit {
 
   createForm() {
     this.profileForm = this.fb.group({
-      id:'',
+      id: '',
       companyEmail: '',
       companyName: '',
       phone: '',
@@ -56,30 +56,31 @@ export class EditBusinessProfileComponent implements OnInit {
       this.data = res;
       this.profile = this.data.entity[0].logo;
       console.log(this.profile)
-      if(this.profile == undefined)
-      {
+      if (this.profile == undefined) {
         this.state = false;
       }
-      else
-      {
+      else {
+        this.loading = false;
         this.state = true;
+
+        this.profileForm.controls.logo.setValue(this.data.entity[0].logo);
+
+        this.profileForm.patchValue({
+          id: this.data.entity[0].id,
+          companyEmail: this.data.entity[0].companyEmail,
+          companyName: this.data.entity[0].companyName,
+          phone: this.data.entity[0].phone,
+          location: this.data.entity[0].location,
+          physicalAddress: this.data.entity[0].physicalAddress,
+          regNo: this.data.entity[0].regNo,
+          website: this.data.entity[0].website,
+          createdOn: this.data.entity[0].createdAt
+        })
       }
 
-      this.profileForm.controls.logo.setValue(this.data.entity[0].logo);
 
-      this.profileForm.patchValue({
-        id:this.data.entity[0].id,
-        companyEmail: this.data.entity[0].companyEmail,
-        companyName: this.data.entity[0].companyName,
-        phone: this.data.entity[0].phone,
-        location: this.data.entity[0].location,
-        physicalAddress: this.data.entity[0].physicalAddress,
-        regNo: this.data.entity[0].regNo,
-        website: this.data.entity[0].website,
-        createdOn:this.data.entity[0].createdAt
-      })
 
-      this.loading = false;
+
     }, err => {
       this.loading = false;
     });

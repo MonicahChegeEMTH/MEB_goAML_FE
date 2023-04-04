@@ -42,7 +42,7 @@ export const ROUTES: RouteInfo[] = [
     role: ['ROLE_ADMIN'],
     submenu: [
       {
-        path: '/admin/business-profile',
+        path: '/admin/business-profile/create',
         title: 'Business Profile',
         moduleName: 'profile',
         iconType: 'feather',

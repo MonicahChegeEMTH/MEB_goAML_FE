@@ -50,8 +50,7 @@ export type ChartOptions = {
 })
 export class CollectorCollectionsCountComponent
   extends BaseComponent
-  implements OnInit
-{
+  implements OnInit {
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
@@ -145,7 +144,11 @@ export class CollectorCollectionsCountComponent
       .subscribe(
         (res) => {
           console.log('Response', res);
+          if (res.entity.length > 0) {
 
+
+            res.entity.forEach((item) => {
+              months.push(item.month);
           if(res.entity.length > 0){
           res.entity.forEach((item) => {
             months.push(item.month);
@@ -159,73 +162,77 @@ export class CollectorCollectionsCountComponent
           }
 
 
-          this.lineChartOptions = {
-            series: [
-              {
-                name: 'Collections Count',
-                data: collections,
-              },
-            ],
-            chart: {
-              height: 350,
-              type: 'line',
-              foreColor: '#9aa0ac',
-              dropShadow: {
-                enabled: true,
-                color: '#000',
-                top: 18,
-                left: 7,
-                blur: 10,
-                opacity: 0.2,
-              },
-              toolbar: {
-                show: false,
-              },
-            },
-            colors: ['#177147', '#397157', '#2D7152', '#22714D'],
-            stroke: {
-              curve: 'smooth',
-            },
-            grid: {
-              row: {
-                colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.5,
-              },
-            },
-            markers: {
-              size: 3,
-            },
-            xaxis: {
-              categories: months,
-              title: {
-                text: 'Months',
-              },
-            },
-            yaxis: {
-              // opposite: true,
-              title: {
-                text: 'Collections Count',
-              },
-            },
-            legend: {
-              position: 'top',
-              horizontalAlign: 'right',
-              floating: true,
-              offsetY: -25,
-              offsetX: -5,
-            },
-            tooltip: {
-              theme: 'dark',
-              marker: {
-                show: true,
-              },
-              x: {
-                show: true,
-              },
-            },
-          };
+              collections.push(item.colectionsCount);
+            });
 
-          this.isLoading = false;
+            this.lineChartOptions = {
+              series: [
+                {
+                  name: 'Collections Count',
+                  data: collections,
+                },
+              ],
+              chart: {
+                height: 350,
+                type: 'line',
+                foreColor: '#9aa0ac',
+                dropShadow: {
+                  enabled: true,
+                  color: '#000',
+                  top: 18,
+                  left: 7,
+                  blur: 10,
+                  opacity: 0.2,
+                },
+                toolbar: {
+                  show: false,
+                },
+              },
+              colors: ['#177147', '#397157', '#2D7152', '#22714D'],
+              stroke: {
+                curve: 'smooth',
+              },
+              grid: {
+                row: {
+                  colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5,
+                },
+              },
+              markers: {
+                size: 3,
+              },
+              xaxis: {
+                categories: months,
+                title: {
+                  text: 'Months',
+                },
+              },
+              yaxis: {
+                // opposite: true,
+                title: {
+                  text: 'Collections Count',
+                },
+              },
+              legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5,
+              },
+              tooltip: {
+                theme: 'dark',
+                marker: {
+                  show: true,
+                },
+                x: {
+                  show: true,
+                },
+              },
+            };
+
+            this.isLoading = false;
+          }
         },
         (err) => {
           console.log(err);
