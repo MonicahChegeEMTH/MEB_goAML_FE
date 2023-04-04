@@ -391,7 +391,6 @@ export class RegisterFarmerComponent implements OnInit {
       subLocation: [''],
       village: [''],
       paymentFreequency: [''],
-      paymentDate: [''],
       gender: [''],
       routeFk: [''],
       paymentMode: [''],
