@@ -19,13 +19,13 @@ import { EditProductConfigComponent } from '../edit-product-config/edit-product-
 export class ProductsConfigsComponent implements OnInit {
   displayedColumns: string[] = [
     "id",
-    "productName",
-    "buyingPrice",
-    "sellingPrice",
-    "unitMeasurement",
+    "product_name",
+    "buying_price",
+    "selling_price",
     "quantity",
-    "effectiveFrom",
-    "createdDate",
+    "unit_measurement",
+    "route",
+    "effective_from",
     "actions"
   ];
 
@@ -62,7 +62,7 @@ export class ProductsConfigsComponent implements OnInit {
     this.service.getConfigs()
       .subscribe(
         (res) => {
-          this.configs = res.entity;
+          this.configs = res.entity
           if (this.configs.length > 0) {
             this.isLoading = false;
             this.isdata = true;

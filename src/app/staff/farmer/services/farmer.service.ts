@@ -18,10 +18,12 @@ export class FarmerService {
 
 
   public getFarmers(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/all`,httpOptions);
   }
   public getFarmersById(id:any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/id`,httpOptions);
+    console.log("Calling api ...")
+    console.log(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id)
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id,httpOptions);
   }
   registerFarmer(farmer:any){
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/add`,farmer);

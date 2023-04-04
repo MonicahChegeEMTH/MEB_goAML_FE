@@ -19,6 +19,9 @@ export class PickupService {
   public getLocations(): Observable<any> {
     return this.http.get<any>(this.url + 'fetch');
   }
+  public getRoutes(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/api/v1/routes/get` );
+  }
 
   public getLocationById(id:any): Observable<any> {
     return this.http.get<any>(this.url + id);
