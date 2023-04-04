@@ -20,6 +20,7 @@
             <!--Supplier Details-->
             <div class="row">
                 <mat-card>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
                     <mat-card-title style="font-size: x-small;">Supplier/Farmer Details</mat-card-title>
                     <mat-card-content>
                         <div class="row">
@@ -200,14 +201,14 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                     <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                        <mat-label>Select Milk Pickup Location</mat-label>
-                                        <mat-select formControlName="pickupLocation" required>
+                                        <mat-label>Collections Routes</mat-label>
+                                        <mat-select formControlName="routeFk" required>
                                             <mat-option *ngFor="let route of routes" [value]="route.id">
-                                                {{ route.name }}
+                                                {{ route.route }}
                                             </mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="farmerRegirstartionForm.get('pickupLocation').hasError('required')">
-                                            Pick Up location is required
+                                        <mat-error *ngIf="farmerRegirstartionForm.get('route').hasError('required')">
+                                           Route is required
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
@@ -279,26 +280,27 @@
                                     </mat-form-field>
                                 </div>
 
-                                <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                     <mat-form-field class="example-full-width mb-1" appearance="outline">
                                         <mat-label>Select Alternative Means Of Payment</mat-label>
-                                        <mat-select formControlName="otherMeans">
+                                        <mat-select formControlName="paymentMode">
                                             <mat-option value="Mpesa">M-Pesa</mat-option>
+                                            <mat-option value="Bank">Bank</mat-option>
                                             <mat-option value="Pesalink">Pesalink</mat-option>
                                             <mat-option value="Cash">Cash</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div> -->
-                                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-                                    <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                        <mat-label>Other Means Of Payment</mat-label>
-                                        <mat-select formControlName="otherMeans">
-                                            <mat-option value="Mpesa">M-Pesa Payments</mat-option>
-                                            <mat-option value="Pesalink">Sacco Payments</mat-option>
-                                            <!-- <mat-option value="Cash">Bank payments</mat-option> -->
-                                        </mat-select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-0">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Other Payment Means Details</mat-label>
+                                        <input matInput formControlName="otherMeansDetails" />
                                     </mat-form-field>
                                 </div>
+                        
                             </div>
 
                             <div class="row">
