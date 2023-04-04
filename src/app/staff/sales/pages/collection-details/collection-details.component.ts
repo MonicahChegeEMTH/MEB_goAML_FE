@@ -168,8 +168,8 @@ export class CollectionDetailsComponent implements OnInit {
 
 
 
-  generateSTatement(farmerNo: any) {
-    this.reportservice.generatefarmerCollections(farmerNo).subscribe(
+  generateSTatement(farmerId: any) {
+    this.reportservice.generatefarmerCollections(farmerId).subscribe(
       (response) => {
         console.log(response);
         let url = window.URL.createObjectURL(response.data);

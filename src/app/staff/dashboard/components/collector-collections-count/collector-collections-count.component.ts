@@ -149,6 +149,18 @@ export class CollectorCollectionsCountComponent
 
             res.entity.forEach((item) => {
               months.push(item.month);
+          if(res.entity.length > 0){
+          res.entity.forEach((item) => {
+            months.push(item.month);
+
+            collections.push(item.colectionsCount);
+          });
+          }else {
+            months = [];
+
+            collections = [];
+          }
+
 
               collections.push(item.colectionsCount);
             });
