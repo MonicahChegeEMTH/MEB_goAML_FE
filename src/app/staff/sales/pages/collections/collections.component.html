@@ -241,12 +241,12 @@
                     </div>
                 </form>
                 <div class="row body">
-                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="isCoordinates">
+                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"  [restriction]="restriction" *ngIf="isCoordinates">
                         <agm-marker *ngFor="let marker of markers" [latitude]="marker.latitude"
                             [longitude]="marker.longitude" [label]="marker.route+' - '+marker.quantity"></agm-marker>
                     </agm-map>
 
-                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="!isCoordinates">
+                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"  [restriction]="restriction" *ngIf="!isCoordinates">
                     </agm-map>
                 </div>
             </mat-tab>

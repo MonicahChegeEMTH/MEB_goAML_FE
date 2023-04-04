@@ -118,6 +118,8 @@ export class CollectorCollectionsMilkPriceComponent extends BaseComponent implem
     this.analyticsService.getCollectorCollectionSPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
 
+      if(res.entity.length > 0){
+
       res.entity.forEach(item => {
         collectors.push(item.collector);
 
@@ -125,6 +127,12 @@ export class CollectorCollectionsMilkPriceComponent extends BaseComponent implem
 
         amounts.push(item.amount);
       })
+
+      }else {
+        collectors = [];
+        quanties = [];
+        amounts = [];
+      }
 
       this.barChartOptions = {
         series: [

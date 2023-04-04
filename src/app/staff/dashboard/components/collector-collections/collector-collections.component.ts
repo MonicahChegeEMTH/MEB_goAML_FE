@@ -121,13 +121,21 @@ export class CollectorCollectionsComponent extends BaseComponent implements OnIn
     this.analyticsService.getCollectorCollectionSPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
       console.log("Response", res);
 
-      res.entity.forEach(item => {
-        collectors.push(item.collector);
+      if(res.entity.length > 0){
+        res.entity.forEach(item => {
+          collectors.push(item.collector);
+  
+          quanties.push(item.quantity);
+  
+          amounts.push(item.amount);
+        })
+      }else {
+        quanties = [];
 
-        quanties.push(item.quantity);
+        collectors = [];
 
-        amounts.push(item.amount);
-      })
+        amounts = [];
+      }
 
       this.barChartOptions = {
         series: [

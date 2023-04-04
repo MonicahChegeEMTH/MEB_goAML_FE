@@ -97,12 +97,20 @@ export class MilkQauntityPerLocationComponent
         (res) => {
           console.log('Response', res);
 
-          res.entity.forEach((item) => {
-            locations.push(item.location);
+          if(res.entity.length){
+            res.entity.forEach((item) => {
+              locations.push(item.location);
+  
+              quantities.push(item.quantity);
+  
+            });
+          }else {
+            locations = [];
 
-            quantities.push(item.quantity);
+            quantities = [];
+          }
 
-          });
+         
 
           this.barChartOptions = {
             series: [
