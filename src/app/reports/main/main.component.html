@@ -99,7 +99,7 @@
                           <div class="example-button-row">
 
                             <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
-                              (click)="generateCollectionsPerCollector()" (click)="accordion.closeAll()">
+                              (click)="generateCollectionsPerCollector()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
                             </button>
@@ -181,7 +181,6 @@
                 <li (click)="farmerCollectionsReport()" class="d-flex mb-3">
                   <span class="msr-3 align-self-center img-icon info-rgba text-info"><i
                       class="far fa-file-archive"></i></span>
-
                   <div class="set-flex">
                     <h5 class="font-16 mb-1">Farmers Collections report</h5>
                     <p>Collections report for specific farmer</p>

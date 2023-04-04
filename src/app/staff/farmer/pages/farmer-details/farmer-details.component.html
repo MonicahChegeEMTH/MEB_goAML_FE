@@ -20,6 +20,8 @@
             <!--Supplier Details-->
             <div class="row">
                 <mat-card>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+
                     <mat-card-title style="font-size: x-small;">Supplier/Farmer Details</mat-card-title>
                     <mat-card-content>
                         <div class="row">
