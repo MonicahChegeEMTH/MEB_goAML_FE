@@ -41,7 +41,7 @@ export class FarmerDetailsComponent implements OnInit {
     this.isLoading = true;
     this.service.getFarmersById(this.data.farmer.id).subscribe(res => {
       this.data = res;
-     
+      this.isLoading = false;
       this.farmer = this.data.entity 
       console.log("Farmer details ", this.farmer)
 
