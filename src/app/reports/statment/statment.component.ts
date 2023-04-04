@@ -60,7 +60,7 @@ export class StatmentComponent implements OnInit {
       this.dialogData = result;
       this.farmerstatementForm.patchValue({
         username: this.dialogData.data.username,
-        farmerNo: this.dialogData.data.farmerNo
+        farmerNo: this.dialogData.data.farmer_no
       });
     });
   }
