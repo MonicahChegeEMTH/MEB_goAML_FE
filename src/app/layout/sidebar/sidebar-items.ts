@@ -407,7 +407,7 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: '/staff/sales/sales',
-    title: 'Sales',
+    title: 'Payment Records',
     moduleName: 'sales',
     iconType: 'feather',
     icon: 'shopping-cart',

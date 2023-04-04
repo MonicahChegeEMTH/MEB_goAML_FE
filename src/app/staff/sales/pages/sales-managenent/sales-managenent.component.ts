@@ -18,12 +18,13 @@ export class SalesManagenentComponent implements OnInit {
 
   displayedColumns: string[] = [
     'id',
-    "memberCode",
+    "farmer_no",
     'username',
-    "firstName",
-    "lastName",
-    "mobileNo",
-    'date',
+    'payment_mode',
+    'freequency',
+    "allocationAmount",
+    "collectionAmount",
+    "netPay",
     'action',
   ];
 
@@ -45,7 +46,7 @@ export class SalesManagenentComponent implements OnInit {
 
   getData() {
     this.isLoading = true;
-    this.subscription = this.service.getCollections("2023-03-20").subscribe(res => {
+    this.subscription = this.service.getFarmersPaymentRecords().subscribe(res => {
       this.data = res;
       console.log(this.data)
       if (this.data.entity.length > 0) {
@@ -78,38 +79,14 @@ export class SalesManagenentComponent implements OnInit {
     this.getData();
   }
 
-  // addCountyCall() {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "70%"
-  //   dialogConfig.data = {
-  //     test: ""
-  //   }
-  //   this.dialog.open(RegisterFarmerComponent, dialogConfig)
-  // }
-
-  editCountyCall(County) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = false
-    // dialogConfig.autoFocus = true
-    // dialogConfig.width = "500px"
-    // dialogConfig.data = {
-    //   county: County
-    // }
-    // this.dialog.open(EditCountyComponent, dialogConfig)
+  pay(){
+    
   }
 
-  // deleteCountyCall(County) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = false
-  //   dialogConfig.autoFocus = true
-  //   dialogConfig.width = "500px"
-  //   dialogConfig.data = {
-  //     county: County
-  //   }
-  //   this.dialog.open(DeleteCountyComponent, dialogConfig)
-  // }
+
+ 
+
+
 }
 
 

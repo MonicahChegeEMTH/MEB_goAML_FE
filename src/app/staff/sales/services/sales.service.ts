@@ -113,4 +113,10 @@ export class SalesService {
   getFarmerPayments(farmerId: any, paymentStatus: any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/amount?farmerNo=` + farmerId + `&paymentFlag=` + paymentStatus, httpOptions);
   }
+
+
+  getFarmersPaymentRecords(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/payments/records`, httpOptions);
+  }
+
 }

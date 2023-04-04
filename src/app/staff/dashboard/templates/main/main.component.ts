@@ -77,25 +77,7 @@ export class MainComponent implements OnInit {
 
 
 
-  getDateSummary() {
-    this.isloading = true
-    console.log(this.collectionSummaryForm.value)
-    this.date = this.datePipe.transform(this.collectionSummaryForm.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", this.date)
-    this.subscription = this.service.getDateCollections(this.date).subscribe(res => {
-      this.data = res;
-      if (this.data) {
-        this.isloading = false
-        console.log(this.data)
-        this.loaded = true;
-        this.dquantity = this.data.entity[0].quantity;
-        this.damount = this.data.entity[0].amount;
-        this.dcount = this.data.entity[0].count
-      }
-    });
 
-    
-  }
 
   ngOnInit() {
     this.collectionSummaryForm = this.fb.group(

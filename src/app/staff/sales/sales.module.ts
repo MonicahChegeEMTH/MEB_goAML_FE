@@ -29,6 +29,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CdkColumnDef } from '@angular/cdk/table';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartsModule as chartjsModule } from "ng2-charts";
 
 
 @NgModule({
@@ -52,7 +54,9 @@ import { CdkColumnDef } from '@angular/cdk/table';
         }),
         SalesRoutingModule,
         SharedModule,
+        NgApexchartsModule,
         ComponentsModule,
+        chartjsModule,
         MatIconModule,
         MatCardModule,
         MatTableModule,
