@@ -8,7 +8,20 @@ import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/
 import { FarmerStatementComponent } from '../farmer-statement/farmer-statement.component';
 import { ReportsService } from '../services/reports.service';
 import { StatmentComponent } from '../statment/statment.component';
-
+const MONTHS = [
+  {value: 'JANUARY', name: 'JANUARY'},
+  {value: 'FEBRUARY', name: 'FEBRUARY'},
+  {value: 'MARCH', name: 'MARCH'},
+  {value: 'APRIL', name: 'APRIL'},
+  {value: 'MAY', name: 'MAY'},
+  {value: 'JUNE', name: 'JUNE'},
+  {value: 'JULY', name: 'JULY'},
+  {value: 'AUGUST', name: 'AUGUST'},
+  {value: 'SEPTEMBER', name: 'SEPTEMBER'},
+  {value: 'OCTOBER', name: 'OCTOBER'},
+  {value: 'NOVEMBER', name: 'NOVEMBER'},
+  {value: 'DECEMBER', name: 'DECEMBER'}
+];
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -17,8 +30,10 @@ import { StatmentComponent } from '../statment/statment.component';
 export class MainComponent implements OnInit {
   reportCollectionForm: FormGroup;
   farmerstatementForm: FormGroup
+  paymentFileForm:FormGroup
   isloading: boolean
   collectors: any
+  months:any
 
   centered = false;
   // radius: number;
@@ -45,6 +60,15 @@ export class MainComponent implements OnInit {
       // collector: ["", [Validators.required]]
 
     })
+
+    this.months=MONTHS
+    
+    this.paymentFileForm=this.fb.group(
+      {
+        month: ["", [Validators.required]],
+        mode: ["", [Validators.required]],
+      }
+    )
 
   }
   generateStatement() {
@@ -148,6 +172,49 @@ export class MainComponent implements OnInit {
     console.log("Formated date is ", this.date)
     this.isloading = true
     this.service.collectionsPerLocationrByDate(this.date)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+
+  }
+  generatePaymentFile() {
+      console.log(this.paymentFileForm.value)
+    this.isloading = true
+    this.service.getPaymentFile(this.paymentFileForm.value.month,this.paymentFileForm.value.mode)
       .subscribe(
         (response) => {
           console.log(response)

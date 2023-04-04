@@ -41,7 +41,7 @@ export class StatmentComponent implements OnInit {
 
     this.farmerstatementForm = this.fb.group({
       username: ["", [Validators.required]],
-      farmerNo: ["", [Validators.required]],
+      farmerNo: [""],
       from: ["", [Validators.required]],
       to: ["", [Validators.required]]
     })

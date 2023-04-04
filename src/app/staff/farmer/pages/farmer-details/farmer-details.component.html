@@ -20,6 +20,8 @@
             <!--Supplier Details-->
             <div class="row">
                 <mat-card>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+
                     <mat-card-title style="font-size: x-small;">Supplier/Farmer Details</mat-card-title>
                     <mat-card-content>
                         <div class="row">
@@ -200,14 +202,14 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                     <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                        <mat-label>Milk Pickup Location</mat-label>
-                                        <mat-select formControlName="pickupLocation" required>
+                                        <mat-label>Collections Routes</mat-label>
+                                        <mat-select formControlName="routeFk" required>
                                             <mat-option *ngFor="let route of routes" [value]="route.id">
-                                                {{ route.name }}
+                                                {{ route.route }}
                                             </mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="farmerRegirstartionForm.get('pickupLocation').hasError('required')">
-                                            Pick Up location is required
+                                        <mat-error *ngIf="farmerRegirstartionForm.get('route').hasError('required')">
+                                           Route is required
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
@@ -282,8 +284,9 @@
                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                     <mat-form-field class="example-full-width mb-1" appearance="outline">
                                         <mat-label>Select Alternative Means Of Payment</mat-label>
-                                        <mat-select formControlName="otherMeans">
+                                        <mat-select formControlName="paymentMode">
                                             <mat-option value="Mpesa">M-Pesa</mat-option>
+                                            <mat-option value="Bank">Bank</mat-option>
                                             <mat-option value="Pesalink">Pesalink</mat-option>
                                             <mat-option value="Cash">Cash</mat-option>
                                         </mat-select>
@@ -345,6 +348,24 @@
                                         Means of transportation is required
                                     </mat-error>
                                 </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="row">
+                <mat-card>
+                    <mat-card-content>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-0">
+                            <div class="example-button-row">
+                                <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
+                                    Cancel
+                                </button>
+                                <button mat-raised-button color="primary" [disabled]="!farmerRegirstartionForm.valid"
+                                    (click)="onSubmit()">
+                                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                    <b>Submit</b>
+                                </button>
                             </div>
                         </div>
                     </mat-card-content>

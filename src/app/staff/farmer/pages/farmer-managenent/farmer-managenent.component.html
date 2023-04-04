@@ -106,7 +106,7 @@
                                         number</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.farmerNo}}
+                                        {{farmer.username}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="username">
@@ -134,7 +134,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Mobile no.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.mobileNo}}
+                                        {{farmer.route }}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="date">
@@ -142,9 +142,10 @@
                                         on</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.createdAt | date}}
+                                        {{farmer.pickUpLocation }}
                                     </mat-cell>
                                 </ng-container>
+                               
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
