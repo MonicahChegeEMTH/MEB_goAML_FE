@@ -31,6 +31,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChartsModule as chartjsModule } from "ng2-charts";
+import { EditCollectionComponent } from './pages/edit-collection/edit-collection.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ChartsModule as chartjsModule } from "ng2-charts";
         DeleteFloatAllocationComponent,
         LookupOneMilkcollectorComponent,
         ProductsAllocationComponent,
-        AddAllocationComponent
+        AddAllocationComponent,
+        EditCollectionComponent
     ],
     imports: [
         CommonModule,

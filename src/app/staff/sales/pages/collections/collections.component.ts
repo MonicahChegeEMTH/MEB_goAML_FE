@@ -2,7 +2,7 @@ import { AgmMap } from '@agm/core';
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
 import { DashboardService } from 'src/app/staff/dashboard/services/dashboard.service';
+import { EditCollectionComponent } from '../edit-collection/edit-collection.component';
 
 @Component({
   selector: 'app-collections',
@@ -59,12 +60,13 @@ export class CollectionsComponent implements OnInit {
 
   displayedColumns: string[] = [
     'id',
-    "farmer",
+    "farmer_no",
+    'farmer',
     "quantity",
     "amount",
-    "collector",
-    "collection_date",
-    "paymentStatus",
+    "collection_date",  
+    "route",
+    "pickUpLocation",
     'action',
   ];
 
@@ -170,6 +172,7 @@ export class CollectionsComponent implements OnInit {
     this.subscription = this.service.getAllCollections().subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
+        console.log(this.data.entity)
         this.isLoading = false;
         this.isdata = true;
         // Binding with the datasource
@@ -230,6 +233,18 @@ export class CollectionsComponent implements OnInit {
     });
 
     
+  }
+
+
+  edit(collection){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "60%"
+    dialogConfig.data = {
+      collection: collection
+    }
+    this.dialog.open(EditCollectionComponent, dialogConfig)
   }
   private smallChart2() {
     this.cardChart2 = {

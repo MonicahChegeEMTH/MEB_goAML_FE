@@ -56,7 +56,7 @@ export class FarmerStatementComponent implements OnInit {
       this.dialogData = result;
       this.farmerCollectionsForm.patchValue({
         username: this.dialogData.data.username,
-        farmerNo: this.dialogData.data.farmerNo
+        farmerNo: this.dialogData.data.farmer_no
       });
     });
   }
