@@ -79,6 +79,9 @@ export class SalesService {
   addAllocation(data: any) {
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/allocations/add`, data, httpOptions);
   }
+  updateCollections(data: any) {
+    return this.http.post(`${environment.apiUrl}/api/v1/collections/update`, data, httpOptions);
+  }
 
 
   getAllFarmers(): Observable<any> {
