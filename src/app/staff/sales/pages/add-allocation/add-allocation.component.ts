@@ -28,7 +28,7 @@ export class AddAllocationComponent implements OnInit {
     this.allocateform = this.fb.group({
       productId: ["", [Validators.required]],
       quantity: ["", [Validators.required]],
-      farmerId: ["", [Validators.required]],
+      farmerNo: ["", [Validators.required]],
     })
 
     this.getFarmers();
