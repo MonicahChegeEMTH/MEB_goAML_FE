@@ -32,6 +32,7 @@ export class FloatAllocationComponent implements OnInit {
       allocateBy: [this.tokenService.getUser().username],
       collectorId: [""],
       collectorName: [""],
+      mode: ["", [Validators.required]],
       allocationAmount: ["", [Validators.required]],
     })
   }
