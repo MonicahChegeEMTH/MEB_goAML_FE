@@ -91,7 +91,8 @@ export class UpdateFarmerComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.farmerRegirstartionForm.value.bankDetails = this.bankDetailsForm.value;
-    this.subscription = this.service.registerFarmer(this.farmerRegirstartionForm.value).subscribe(res => {
+    this.farmerRegirstartionForm.value.id=this.data.farmer.id
+    this.subscription = this.service.updateFarmer(this.farmerRegirstartionForm.value).subscribe(res => {
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.loading = false;
       this.farmerRegirstartionForm.reset();

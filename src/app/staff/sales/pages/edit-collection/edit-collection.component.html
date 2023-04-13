@@ -8,7 +8,7 @@
                             <div class="modalHeader clearfix">
                                 <div class="modal-about">
                                     <div class="font-weight-bold p-t-5 font-17">
-                                        Sale New Item
+                                       Update collection
                                     </div>
                                 </div>
                             </div>
@@ -19,31 +19,47 @@
                     </button>
                 </div>
                 <div mat-dialog-content>
-                    <form class="register-form m-4" [formGroup]="allocateform">
+                    <form class="register-form m-4" [formGroup]="editForm">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Delivery No.</mat-label>
+                                        <input matInput formControlName="collectionNo" required readonly/>
+                                        <mat-error *ngIf="editForm.get('collectionNo').hasError('required')">
+                                            collectionNo is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Farmer No.</mat-label>
+                                        <input matInput formControlName="farmer_no" required readonly/>
+                                        <mat-error *ngIf="editForm.get('farmer_no').hasError('required')">
+                                            farmer_no is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
                                 <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Select Product</mat-label>
-                                    <mat-select formControlName="productId" required>
-                                        <mat-option *ngFor="let collector of products" [value]="collector.id">
-                                            {{ collector.name }}
+                                    <mat-label>Select can</mat-label>
+                                    <mat-select formControlName="canNo" required>
+                                        <mat-option *ngFor="let can of cans" [value]="can.canNo">
+                                            {{ can.canName  }} - {{can.canNo}}
                                         </mat-option>
                                     </mat-select>
-                                    <mat-error *ngIf="allocateform.get('productId').hasError('required')">
-                                        Product is required
+                                    <mat-error *ngIf="editForm.get('canNo').hasError('required')">
+                                        Can is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Select Farmer</mat-label>
-                                    <mat-select formControlName="farmerNo" required>
-                                        <mat-option *ngFor="let collector of farmers" [value]="collector.farmerNo">
-                                            {{ collector.username }}
+                                    <mat-label>Select Route</mat-label>
+                                    <mat-select formControlName="routeFk" required>
+                                        <mat-option *ngFor="let route of routes" [value]="route.id">
+                                            {{ route.route }}
                                         </mat-option>
                                     </mat-select>
-                                    <mat-error *ngIf="allocateform.get('farmerNo').hasError('required')">
-                                        Farmer is required
+                                    <mat-error *ngIf="editForm.get('routeFk').hasError('required')">
+                                        Route is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -51,8 +67,8 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Quantity</mat-label>
-                                    <input matInput formControlName="quantity" required />
-                                    <mat-error *ngIf="allocateform.get('quantity').hasError('required')">
+                                    <input matInput formControlName="quantity" required readonly/>
+                                    <mat-error *ngIf="editForm.get('quantity').hasError('required')">
                                         Quantity is required
                                     </mat-error>
                                 </mat-form-field>
@@ -64,7 +80,7 @@
                                         <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
                                             Cancel
                                         </button>
-                                        <button mat-raised-button color="primary" [disabled]="!allocateform.valid"
+                                        <button mat-raised-button color="primary" [disabled]="!editForm.valid"
                                             (click)="onSubmit()">
                                             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                                             <b>Submit</b>
