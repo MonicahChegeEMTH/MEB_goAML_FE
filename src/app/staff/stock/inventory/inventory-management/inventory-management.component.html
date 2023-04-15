@@ -144,20 +144,12 @@
                                             </mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="deleted">
+                                        <ng-container matColumnDef="Stock">
                                             <mat-header-cell *matHeaderCellDef
-                                                mat-sort-header>Deleted?</mat-header-cell>
+                                                mat-sort-header>Stock</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                <div *ngIf="row.deleted == 1">
-                                                    <span class="badge badge-pill badge-primary col-green">
-                                                        {{"Yes"}}</span>
-                                                </div>
-                                                <div *ngIf="row.deleted == 0">
-                                                    <span class="badge badge-pill badge-primary col-red">
-                                                        {{"No"}}</span>
-                                                </div>
-                                            </mat-cell>
+                                                {{ row.stock  }}</mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="creationDate">
