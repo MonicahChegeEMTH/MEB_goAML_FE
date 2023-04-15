@@ -25,7 +25,7 @@ export class InventoryManagementComponent implements OnInit {
     "profit",
     "discounted",
     "discount",
-    "deleted",
+    "Stock",
     "creationDate",
     "actions",
   ];
