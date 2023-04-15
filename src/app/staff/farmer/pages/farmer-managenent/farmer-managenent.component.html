@@ -123,11 +123,11 @@
                                         {{farmer.mobile_no}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="account_number">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Ac.No</mat-header-cell>
+                                <ng-container matColumnDef="ID No.">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">ID No.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.account_number}}
+                                        {{farmer.id_number}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="route">
