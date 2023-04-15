@@ -111,10 +111,10 @@
                 </ng-container>
                 <ng-container matColumnDef="department">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-10">Department</mat-header-cell>
+                    class="column-nowrap psl-3 tbl-col-width-per-10">Pick Up Location</mat-header-cell>
                   <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-10">
-                    {{ user.department }}
+                    {{ user.pickUpLocation }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="phonenumber">
