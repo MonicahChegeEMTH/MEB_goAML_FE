@@ -22,6 +22,15 @@ export class SalesService {
   getAllCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/all`, httpOptions);
   }
+  getCollectionsPerPickUpLocation(id:any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id, httpOptions);
+  }
+  getCollectionsPerPRoute(id:any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/route?routeId=`+id, httpOptions);
+  }
+
+  
+  
 
   getTodayCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
@@ -75,7 +84,12 @@ export class SalesService {
   getSales(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/get`, httpOptions);
   }
+  getSalesPerType(type:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/type?type=`+type, httpOptions);
+  }
 
+
+  
   addAllocation(data: any) {
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/allocations/add`, data, httpOptions);
   }

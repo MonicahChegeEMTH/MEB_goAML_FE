@@ -122,7 +122,10 @@
                                                             <mat-select [(value)]="selected">
                                                                 <mat-option value="sd"><b>Specific Date</b></mat-option>
                                                                 <mat-option value="dr"><b>Date Range</b>
-                                                                </mat-option><mat-option value="pul"><b>Pick-Up Location</b></mat-option>
+                                                                </mat-option><mat-option value="pul"><b>Pick-Up
+                                                                        Location</b></mat-option>
+                                                                <mat-option value="route"><b>Route
+                                                                    </b></mat-option>
                                                             </mat-select>
                                                         </mat-form-field>
                                                     </li>
@@ -151,6 +154,20 @@
                                                                 <mat-datepicker-toggle matSuffix
                                                                     [for]="picker3"></mat-datepicker-toggle>
                                                                 <mat-datepicker #picker3></mat-datepicker>
+                                                            </mat-form-field>
+                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'pul'">
+                                                                <input matInput (dateChange)="filterByDate()"
+                                                                    placeholder="select pick up location"
+                                                                    formControlName="pickuplocation">
+                                                                <mat-icon matSuffix
+                                                                    (click)="selectpickUpLocation()">search
+                                                                </mat-icon>
+                                                            </mat-form-field>
+                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'route'">
+                                                                <input matInput placeholder="select route"
+                                                                    formControlName="route">
+                                                                <mat-icon matSuffix (click)="selectRoute()">search
+                                                                </mat-icon>
                                                             </mat-form-field>
                                                         </form>
                                                     </li>
@@ -222,12 +239,12 @@
                                                 {{response.quantity}}
                                             </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="amount">
+                                        <ng-container matColumnDef="session">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-10">Amount</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-8">Session</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
-                                                {{response.amount | currency:'KES':'symbol':'4.2-2'}}
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                {{response.session}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="collection_date">
@@ -241,9 +258,9 @@
                                         </ng-container>
                                         <ng-container matColumnDef="route">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-8">Route</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-15">Route</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
                                                 {{response.route}}
                                             </mat-cell>
                                         </ng-container>
@@ -257,19 +274,7 @@
                                             </mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="paymentStatus">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Payment
-                                                Status
-                                            </mat-header-cell>
-                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                <span *ngIf="response.paymentStatus=='N'"
-                                                    class="badge badge-pill badge-primary col-red">No</span><span
-                                                    *ngIf="response.paymentStatus=='Y'"
-                                                    class="badge badge-pill badge-primary col-success">Yes</span>
-                                            </mat-cell>
-                                        </ng-container>
+
                                         <ng-container matColumnDef="action">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
@@ -282,11 +287,11 @@
                                                         [icon]="'eye'" [class]="'tbl-fav-eye'"></app-feather-icons>
                                                 </button>
                                                 <button mat-icon-button color="primary"
-                                                    (click)="$event.stopPropagation()"
-                                                    (click)="edit(response)" class="tbl-action-btn">
-                                                    <app-feather-icons matTooltip="Edit Collections"
-                                                        [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
-                                                </button> 
+                                                    (click)="$event.stopPropagation()" (click)="edit(response)"
+                                                    class="tbl-action-btn">
+                                                    <app-feather-icons matTooltip="Edit Collections" [icon]="'edit'"
+                                                        [class]="'tbl-fav-edit'"></app-feather-icons>
+                                                </button>
                                             </mat-cell>
                                         </ng-container>
 

@@ -26,9 +26,12 @@ export class AddAllocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.allocateform = this.fb.group({
+      type:["",[Validators.required]],
       productId: ["", [Validators.required]],
-      quantity: ["", [Validators.required]],
+      quantity: [""],
       farmerNo: ["", [Validators.required]],
+      heatStartDate: [""],
+      noOfCows: ["" ],
     })
 
     this.getFarmers();

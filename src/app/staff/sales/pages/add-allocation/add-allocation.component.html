@@ -22,6 +22,19 @@
                     <form class="register-form m-4" [formGroup]="allocateform">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+
+                                <mat-form-field class="example-full-width mb-1" appearance="outline">
+                                    <mat-label>Select Product Type</mat-label>
+                                    <mat-select formControlName="type" required>
+                                        <mat-option value="Good">Good</mat-option>
+                                        <mat-option value="Service">Service</mat-option> </mat-select>
+                                    <mat-error *ngIf="allocateform.get('type').hasError('required')">
+                                        Type Is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Select Product</mat-label>
                                     <mat-select formControlName="productId" required>

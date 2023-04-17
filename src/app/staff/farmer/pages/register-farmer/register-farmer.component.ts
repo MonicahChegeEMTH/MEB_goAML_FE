@@ -364,9 +364,7 @@ export class RegisterFarmerComponent implements OnInit {
     this.getRoutes();
 
     this.bankDetailsForm = this.fb.group({
-      alternativeMethod: [''],
-      otherMeansDetails: ['', [Validators.required]],
-      otherMeans: ['', [Validators.required]],
+     
       branch: ['', [Validators.required]],
       bankName: ['', [Validators.required]],
       accountNumber: ['', [Validators.required]],

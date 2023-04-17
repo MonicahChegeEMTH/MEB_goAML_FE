@@ -12,6 +12,9 @@ import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
 import { DashboardService } from 'src/app/staff/dashboard/services/dashboard.service';
 import { EditCollectionComponent } from '../edit-collection/edit-collection.component';
+import { LookupPickUpLocationsComponent } from '../lookup-pick-up-locations/lookup-pick-up-locations.component';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { RoutesLookUpComponent } from '../routes-look-up/routes-look-up.component';
 
 @Component({
   selector: 'app-collections',
@@ -31,7 +34,7 @@ export class CollectionsComponent implements OnInit {
   dcount: any = 0
   dquantity: any = 0.0;
   damount: any = 0.0;
-  farmers:any=0
+  farmers: any = 0
 
   public cardChart2: any;
   public cardChart2Data: any;
@@ -51,7 +54,7 @@ export class CollectionsComponent implements OnInit {
     latLngBounds: {
       east: 37.995213, // Longitude of the east border of UK
       north: 0.4667, // Latitude of the north border of UK
-      south:  -4.181611, // Latitude of the south border of UK
+      south: -4.181611, // Latitude of the south border of UK
       west: 34.287807 // Longitude of the west border of UK
     },
     strictBounds: true
@@ -63,8 +66,8 @@ export class CollectionsComponent implements OnInit {
     "farmer_no",
     'farmer',
     "quantity",
-    "amount",
-    "collection_date",  
+    "session",
+    "collection_date",
     "route",
     "pickUpLocation",
     'action',
@@ -74,7 +77,11 @@ export class CollectionsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,  private dashboard: DashboardService) { }
+  constructor(
+    // public dialogRef: MatDialogRef<MainComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: any,
+    private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService, private dashboard: DashboardService,
+    private snackbar: SnackbarService) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -129,6 +136,15 @@ export class CollectionsComponent implements OnInit {
           this.dataSource = new MatTableDataSource(null);
         }
       })
+    } else if (this.selected == 'pul') {
+      console.log("Filter by  pick up location")
+      
+
+    }else if(this.selected=="route"){
+      console.log("Filter by  route")
+      
+
+      
     }
     else {
       this.getData();
@@ -205,6 +221,10 @@ export class CollectionsComponent implements OnInit {
       date: [""],
       fromDate: [""],
       toDate: [""],
+      pickuplocation: [""],
+      pickuplocationId: [""],
+      route:[""],
+      routeId:[""]
     });
 
     this.mapForm = this.fb.group({
@@ -232,11 +252,101 @@ export class CollectionsComponent implements OnInit {
       }
     });
 
-    
+
+  }
+  dialogData: any;
+
+  selectpickUpLocation() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      data: "",
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      // console.log(result)
+      this.dialogData = result;
+      this.form.patchValue({
+        pickuplocation: this.dialogData.data.name,
+        pickuplocationId:this.dialogData.data.id
+      });
+      let pid=this.form.value.pickuplocationId
+       this.filterByPickUpLoction(pid) 
+
+    });
+  }
+  selectRoute() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      data: "",
+    };
+    const dialogRef = this.dialog.open(RoutesLookUpComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log("Routes",result)
+      this.dialogData = result;
+      this.form.patchValue({
+        route: this.dialogData.data.route,
+        routeId:this.dialogData.data.id
+      });
+      let rid=this.form.value.routeId
+       this.filterByRoute(rid) 
+
+    });
+  }
+  filterByPickUpLoction(id:any) {
+    this.isLoading = true;
+    console.log("Filter Function called! ")
+
+    // let pickUpLocationId = this.form.value.pickUpLocationId
+    console.log("Passed Id is ",id)
+
+    this.subscription = this.service.getCollectionsPerPickUpLocation(id).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.dataSource = new MatTableDataSource(null);
+      }
+    })
+  }
+  filterByRoute(id:any) {
+    this.isLoading = true;
+    console.log("Filter Function called! ")
+
+    // let pickUpLocationId = this.form.value.pickUpLocationId
+    console.log("Passed Id is ",id)
+
+    this.subscription = this.service.getCollectionsPerPRoute(id).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.dataSource = new MatTableDataSource(null);
+      }
+    })
   }
 
 
-  edit(collection){
+  edit(collection) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
