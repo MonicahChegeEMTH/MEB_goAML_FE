@@ -15,6 +15,7 @@ export class AddAllocationComponent implements OnInit {
 
   allocateform: FormGroup;
   loading = false;
+  selected="";
 
   constructor(public dialogRef: MatDialogRef<ProductsAllocationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,

@@ -46,7 +46,7 @@ export class AddSubcountyComponent implements OnInit {
     this.addSubCountyForm = this.fb.group({
       name: ["", [Validators.required]],
       countyName: ["", [Validators.required]],
-      countyFk: [""],
+      countyFk: ["", [Validators.required]],
       wardName: [""],
       wards: new FormArray([])
     })
@@ -85,6 +85,7 @@ export class AddSubcountyComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
+    console.log(this.addSubCountyForm.value)
     this.subscription = this.service.addNewSubCounty(this.addSubCountyForm.value).subscribe(res => {
       this.loading = false;
       this.snackbar.showNotification("snackbar-success", "Successful!");

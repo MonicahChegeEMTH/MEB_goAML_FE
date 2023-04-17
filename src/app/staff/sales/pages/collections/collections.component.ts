@@ -30,6 +30,7 @@ export class CollectionsComponent implements OnInit {
   form: FormGroup;
   mapForm: FormGroup;
   selected = "";
+  selectedvalue="";
   count: any = 0
   dcount: any = 0
   dquantity: any = 0.0;
