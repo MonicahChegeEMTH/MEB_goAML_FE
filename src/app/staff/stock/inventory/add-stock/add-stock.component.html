@@ -25,6 +25,22 @@
                                         Description is required
                                     </mat-error>
                                 </mat-form-field>
+                              
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+
+
+                                <mat-form-field class="example-full-width mb-1" appearance="outline">
+                                    <mat-label>Select Product Type</mat-label>
+                                    <mat-select formControlName="type" required>
+                                      <mat-option value="Good">Good</mat-option>
+                                      <mat-option value="Service">Service</mat-option>                                    </mat-select>
+                                    <mat-error *ngIf="productsForm.get('type').hasError('required')">
+                                     Type Is required
+                                    </mat-error>
+                                  </mat-form-field>
+
+                           
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width" appearance="outline">
@@ -37,7 +53,13 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                    <mat-label>Number Of Items</mat-label>
+                                    <input matInput formControlName="stock"  />
+                                    
+                                </mat-form-field>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
@@ -59,15 +81,7 @@
                                 </mat-form-field>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
-                                <mat-form-field class="example-full-width mb-3" appearance="outline">
-                                    <mat-label>Number Of Items</mat-label>
-                                    <input matInput formControlName="stock" required />
-                                    <mat-error *ngIf="productsForm.get('stock').hasError('required')">
-                                        Quantity is required
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
+                           
                         </div>
 
                         <div class="row">

@@ -115,13 +115,13 @@
                                         }}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="selling_price">
+                                <!-- <ng-container matColumnDef="selling_price">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Selling
                                         Price</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.selling_price
                                         }}</mat-cell>
-                                </ng-container>
+                                </ng-container> -->
 
                                 <ng-container matColumnDef="quantity">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
@@ -140,12 +140,8 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="route">
-<<<<<<< HEAD
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Route</mat-header-cell>
-=======
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Route
-                                        </mat-header-cell>
->>>>>>> f99e20e9c12c4972b499d9c7925b6c90b80c7118
+                            
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.route
                             }}</mat-cell>
