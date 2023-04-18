@@ -99,7 +99,8 @@ export class EditSubcountyComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    this.subscription = this.service.addNewSubCounty(this.editSubCountyForm.value).subscribe(res => {
+    console.log(this.editSubCountyForm.value)
+    this.subscription = this.service.updateSubCounty(this.editSubCountyForm.value).subscribe(res => {
       this.loading = false;
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.editSubCountyForm.reset();
