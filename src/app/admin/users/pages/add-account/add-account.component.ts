@@ -53,7 +53,7 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
     this.router.navigate([`/admin/user-accounts/all`]);
   }
 
-  roleLookup(){
+  roleLookup() {
     const dialogRef = this.dialog.open(RolesLookupComponent, {
       width: "800px",
       data: {
@@ -78,23 +78,13 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
     this.loading = true;
 
     this.userService.createUserAccounts(this.userForm.value)
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          this.loading = false;
+      .subscribe(res => {
+        this.loading = false;
+        console.log("Response : " + res)
+        this.snackbar.showNotification("snackbar-success", res.message);
+        this.userForm.reset();
 
-          console.log(res);
-
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
-
-             this.router.navigate([`/admin/user-accounts/all`]);
-          }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
-
-            this.loading = false;
-          }
-        },
+      },
         (err) => {
           this.snackbar.showNotification("snackbar-danger", err.error.error);
           console.log(err);
