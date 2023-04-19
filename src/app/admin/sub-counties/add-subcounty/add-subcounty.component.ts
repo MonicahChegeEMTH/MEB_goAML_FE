@@ -88,7 +88,8 @@ export class AddSubcountyComponent implements OnInit {
     console.log(this.addSubCountyForm.value)
     this.subscription = this.service.addNewSubCounty(this.addSubCountyForm.value).subscribe(res => {
       this.loading = false;
-      this.snackbar.showNotification("snackbar-success", "Successful!");
+      console.log("Response : "+ res)
+      this.snackbar.showNotification("snackbar-success", res.message);
       this.addSubCountyForm.reset();
       this.dialogRef.close();
     }, err => {
