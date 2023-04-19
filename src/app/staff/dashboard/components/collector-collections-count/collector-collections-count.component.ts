@@ -50,7 +50,8 @@ export type ChartOptions = {
 })
 export class CollectorCollectionsCountComponent
   extends BaseComponent
-  implements OnInit {
+  implements OnInit
+{
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
@@ -145,22 +146,19 @@ export class CollectorCollectionsCountComponent
         (res) => {
           console.log('Response', res);
           if (res.entity.length > 0) {
-
-
             res.entity.forEach((item) => {
               months.push(item.month);
-          if(res.entity.length > 0){
-          res.entity.forEach((item) => {
-            months.push(item.month);
+              if (res.entity.length > 0) {
+                res.entity.forEach((item) => {
+                  months.push(item.month);
 
-            collections.push(item.colectionsCount);
-          });
-          }else {
-            months = [];
+                  collections.push(item.colectionsCount);
+                });
+              } else {
+                months = [];
 
-            collections = [];
-          }
-
+                collections = [];
+              }
 
               collections.push(item.colectionsCount);
             });
@@ -232,6 +230,10 @@ export class CollectorCollectionsCountComponent
             };
 
             this.isLoading = false;
+          }else {
+
+            this.isLoading = true;
+
           }
         },
         (err) => {
@@ -263,6 +265,8 @@ export class CollectorCollectionsCountComponent
             });
 
             this.getCollectorCountPerMonth();
+          }else {
+            this.isLoading = true
           }
         },
         (err) => {

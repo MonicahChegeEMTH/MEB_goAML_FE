@@ -69,7 +69,7 @@ export class CollectorCollectionsInQuantityPerSessionComponent extends BaseCompo
     { name: "December", value: 12 },
   ];
 
-  isLoading: boolean = true;
+  isLoading: boolean;
   chartParametersForm: FormGroup;
   needYear = false;
   needMonth = false;

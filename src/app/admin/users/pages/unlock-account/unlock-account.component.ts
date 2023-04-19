@@ -44,18 +44,18 @@ export class UnlockAccountComponent extends BaseComponent implements OnInit {
         (res) => {
 
           if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
+            this.snackbar.showNotification(res.message, "snackbar-success");
 
              this.dialogRef.close();
           }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
+            this.snackbar.showNotification(res.message, "snackbar-danger")
 
             this.loading = false;
           }
 
         },
         (err) => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error);
+          this.snackbar.showNotification(err.error.error, "snackbar-danger");
           console.log(err);
           this.loading = false;
         }
