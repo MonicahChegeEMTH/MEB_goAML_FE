@@ -34,6 +34,7 @@ import { ChartsModule as chartjsModule } from "ng2-charts";
 import { EditCollectionComponent } from './pages/edit-collection/edit-collection.component';
 import { LookupPickUpLocationsComponent } from './pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 import { RoutesLookUpComponent } from './pages/routes-look-up/routes-look-up.component';
+import { VerifyproductAllocationsComponent } from './verifyproduct-allocations/verifyproduct-allocations.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { RoutesLookUpComponent } from './pages/routes-look-up/routes-look-up.com
         AddAllocationComponent,
         EditCollectionComponent,
         LookupPickUpLocationsComponent,
-        RoutesLookUpComponent
+        RoutesLookUpComponent,
+        VerifyproductAllocationsComponent
     ],
     imports: [
         CommonModule,
