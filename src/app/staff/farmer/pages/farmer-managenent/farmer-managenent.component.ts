@@ -64,6 +64,9 @@ export class FarmerManagenentComponent implements OnInit {
         this.isdata = false;
         this.dataSource = new MatTableDataSource<any>(this.data);
       }
+    },error => {
+      console.log('An error occurred:', error)
+      
     })
   }
 

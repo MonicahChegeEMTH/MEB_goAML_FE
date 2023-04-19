@@ -52,7 +52,7 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
     this.router.navigate([`/admin/user-accounts/all`]);
   }
 
-  roleLookup(){
+  roleLookup() {
     const dialogRef = this.dialog.open(RolesLookupComponent, {
       width: "800px",
       data: {

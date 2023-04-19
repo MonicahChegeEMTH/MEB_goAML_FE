@@ -396,6 +396,7 @@ export class AddPickupComponent extends BaseComponent implements OnInit {
     this.collectorsDataSource = new MatTableDataSource(collectorsArray);
     this.collectorsDataSource.paginator = this.collectorsPaginator;
   }
+  
   /** Milk Collectors Ends */
 
 
@@ -414,20 +415,16 @@ export class AddPickupComponent extends BaseComponent implements OnInit {
 
     console.log('Collection Center Form ', this.pickupLocationForm.value);
 
+
+
     this.collectionCenterService.addNewLocation(this.pickupLocationForm.value)
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          console.log(res);
-
-          this.btnLoading = false;
-
-          this.snackbar.showNotification(
-            "snackbar-success",
-            "Collection center added successfully !"
-          );
-
-          this.dialogRef.close();
+    .subscribe(res => {
+      this.btnLoading = false;
+      console.log("Response : "+ res)
+      this.snackbar.showNotification("snackbar-success", res.message);
+      this.pickupLocationForm.reset();
+      this.dialogRef.close();
+     
         },
         (err) => {
           console.log(err);
