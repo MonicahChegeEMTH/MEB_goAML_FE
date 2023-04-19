@@ -10,6 +10,8 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SendSmsComponent } from 'src/app/staff/sms/send-sms/send-sms.component';
 import { SalesService } from '../../services/sales.service';
 import { AddAllocationComponent } from '../add-allocation/add-allocation.component';
+import { VerifyAccountComponent } from 'src/app/admin/users/pages/verify-account/verify-account.component';
+import { VerifyproductAllocationsComponent } from '../../verifyproduct-allocations/verifyproduct-allocations.component';
 
 @Component({
   selector: 'app-products-allocation',
@@ -124,14 +126,15 @@ export class ProductsAllocationComponent implements OnInit {
   }
 
   verify(row) {
+    console.log(row)
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
     dialogConfig.width = "40%"
     dialogConfig.data = {
-      data: row
+      row: row
     }
-    this.dialog.open(AddAllocationComponent, dialogConfig)
+    this.dialog.open(VerifyproductAllocationsComponent, dialogConfig)
   }
 
 }
