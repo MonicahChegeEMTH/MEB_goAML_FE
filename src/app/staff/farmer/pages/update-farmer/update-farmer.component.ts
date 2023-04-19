@@ -48,9 +48,7 @@ export class UpdateFarmerComponent implements OnInit {
 
 
       this.bankDetailsForm = this.fb.group({
-        alternativeMethod: [""],
-        otherMeansDetails: [this.farmer.bankDetails.otherMeansDetails, [Validators.required]],
-        otherMeans: [this.farmer.bankDetails.otherMeans, [Validators.required]],
+        
         branch: [this.farmer.bankDetails.branch, [Validators.required]],
         bankName: [this.farmer.bankDetails.bankName, [Validators.required]],
         accountNumber: [this.farmer.bankDetails.accountNumber, [Validators.required]],

@@ -21,7 +21,7 @@ export class ProductsConfigsComponent implements OnInit {
     "id",
     "product_name",
     "buying_price",
-    "selling_price",
+    // "selling_price",
     "quantity",
     "unit_measurement",
     "route",

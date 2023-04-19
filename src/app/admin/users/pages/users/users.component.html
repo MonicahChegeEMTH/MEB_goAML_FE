@@ -109,12 +109,20 @@
                     {{ user.lastName }}
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="department">
+                <!-- <ng-container matColumnDef="department">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
                     class="column-nowrap psl-3 tbl-col-width-per-10">Department</mat-header-cell>
                   <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-10">
                     {{ user.department }}
+                  </mat-cell>
+                </ng-container> -->
+                <ng-container matColumnDef="PickupLocation">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-10">Pick Up Location</mat-header-cell>
+                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-10">
+                    {{ user.pickUpLocation }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="phonenumber">
@@ -124,13 +132,7 @@
                     class="column-nowrap psl-3 tbl-col-width-per-15">
                     {{ user.mobile }}</mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="email">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-50">Email</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-50">
-                    {{ user.email }}</mat-cell>
-                </ng-container>
+               
                 <ng-container matColumnDef="status">
                   <mat-header-cell *matHeaderCellDef mat-sort-header class="psl-3 tbl-col-width-per-8">Status
                   </mat-header-cell>

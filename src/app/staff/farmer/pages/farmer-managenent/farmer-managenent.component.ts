@@ -25,7 +25,7 @@ export class FarmerManagenentComponent implements OnInit {
     "farmer_no",
     "username",
     "mobile_no",
-    "account_number",
+    "ID No.",
     "route",
     'pickUpLocation',
     'action',

@@ -32,6 +32,8 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChartsModule as chartjsModule } from "ng2-charts";
 import { EditCollectionComponent } from './pages/edit-collection/edit-collection.component';
+import { LookupPickUpLocationsComponent } from './pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
+import { RoutesLookUpComponent } from './pages/routes-look-up/routes-look-up.component';
 
 
 @NgModule({
@@ -47,7 +49,9 @@ import { EditCollectionComponent } from './pages/edit-collection/edit-collection
         LookupOneMilkcollectorComponent,
         ProductsAllocationComponent,
         AddAllocationComponent,
-        EditCollectionComponent
+        EditCollectionComponent,
+        LookupPickUpLocationsComponent,
+        RoutesLookUpComponent
     ],
     imports: [
         CommonModule,
