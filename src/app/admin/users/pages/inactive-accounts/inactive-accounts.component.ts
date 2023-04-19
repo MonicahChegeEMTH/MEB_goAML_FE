@@ -87,9 +87,12 @@ export class InactiveAccountsComponent extends BaseComponent implements OnInit {
     dialogConfig.data = {
       user
     }
-    this.dialog.open(ActivateAccountComponent, dialogConfig)
+    const dialogRef = this.dialog.open(ActivateAccountComponent, dialogConfig)
 
-    //console.log(user)
+    dialogRef.afterClosed().subscribe((result) => {
+      this.getInActiveAccounts();
+    });
+  
   }
 
   detailsCall(account){

@@ -37,7 +37,7 @@ export class ActivateAccountComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          this.snackbar.showNotification("snackbar-success", res.message);
+          this.snackbar.showNotification(res.message, "snackbar-success");
           this.dialogRef.close();
          // console.log(res);
         },
@@ -54,7 +54,7 @@ export class ActivateAccountComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          this.snackbar.showNotification("snackbar-success", res.message);
+          this.snackbar.showNotification(res.message, "snackbar-success");
           this.dialogRef.close();
           console.log(res);
         },

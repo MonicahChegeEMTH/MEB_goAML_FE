@@ -129,13 +129,17 @@ export class UsersComponent extends BaseComponent implements OnInit {
   }
 
   detailsCall(account) {
-    this.dialog.open(AccountDetailsComponent, {
+   const dialogRef =  this.dialog.open(AccountDetailsComponent, {
       data: {
         account: account,
         action: "details",
       },
       width: "800px",
     });
+
+    dialogRef.afterClosed().subscribe(res => {
+      this.getAllUsers();
+    })
   }
 
   lockAccountCall(account){

@@ -39,7 +39,7 @@ export class AccountDetailsComponent extends BaseComponent implements OnInit {
       .logoutUser({username: this.account.username})
       .pipe(takeUntil(this.subject))
       .subscribe((res) => {
-        this.snackbar.showNotification("snackbar-success", res.message);
+        this.snackbar.showNotification(res.message, "snackbar-success");
         this.dialogRef.close();
       }, err => {
         console.log(err)

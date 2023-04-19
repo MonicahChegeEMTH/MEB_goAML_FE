@@ -1,25 +1,25 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { takeUntil } from "rxjs";
-import { UserService } from "src/app/data/services/user.service";
-import { BaseComponent } from "src/app/shared/components/base/base.component";
-import { SnackbarService } from "src/app/shared/services/snackbar.service";
-import { ActiveAccountsComponent } from "../active-accounts/active-accounts.component";
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs';
+import { UserService } from 'src/app/data/services/user.service';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { ActiveAccountsComponent } from '../active-accounts/active-accounts.component';
 
 @Component({
-  selector: "app-update-account",
-  templateUrl: "./update-account.component.html",
-  styleUrls: ["./update-account.component.sass"],
+  selector: 'app-update-account',
+  templateUrl: './update-account.component.html',
+  styleUrls: ['./update-account.component.sass'],
 })
 export class UpdateAccountComponent extends BaseComponent implements OnInit {
-  user: any
+  user: any;
   userId: any;
   loading: boolean;
   accountForm: FormGroup;
-  
+
   constructor(
     public dialogRef: MatDialogRef<ActiveAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -37,14 +37,11 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("User Data", this.data)
+    console.log('User Data', this.data);
     console.log(this.data.user.roles[0].name);
     this.updateAccountForm();
     // this.getRoles();
-    
   }
-
-  
 
   updateAccountForm() {
     this.accountForm = this.fb.group({
@@ -63,24 +60,23 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
         (res) => {
           // this.updateDepartment();
 
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
+          if (res.statusCode == 200 || res.statusCode == 201) {
+            this.snackbar.showNotification(res.message, 'snackbar-success');
 
-             this.dialogRef.close();
-          }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
+            this.dialogRef.close();
+          } else {
+            this.snackbar.showNotification(res.message, 'snackbar-danger');
 
             this.loading = false;
           }
         },
         (err) => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error);
+          this.snackbar.showNotification(err.error.error, 'snackbar-danger');
           console.log(err);
           this.loading = false;
         }
       );
   }
- 
 
   onNoClick() {
     this.dialogRef.close();

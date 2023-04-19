@@ -137,6 +137,12 @@ export class CollectorCollectionsComponent extends BaseComponent implements OnIn
         amounts = [];
       }
 
+      console.log("QUANTITIES ", quanties);
+
+      console.log("COLLECTORS ", collectors);
+
+      console.log("AMOUNTS ", amounts)
+
       this.barChartOptions = {
         series: [
           {

@@ -56,20 +56,20 @@ export class CollectionsQuantityComponent
   public lineChartOptions: Partial<ChartOptions>;
 
   chartDispType: number[] = [2020, 2022, 2023, 2024, 2025];
-  
+
   monthsArray: any = [
-    { name: "January", value: 1 },
-    { name: "February", value : 2 },
-    { name: "March", value: 3 },
-    { name: "April", value: 4 },
-    { name: "May", value: 5 },
-    { name: "June", value: 6 },
-    { name: "July", value: 7 },
-    { name: "August", value: 8 },
-    { name: "September", value: 9 },
-    { name: "October", value: 10 },
-    { name: "Novembar", value: 11  },
-    { name: "December", value: 12 },
+    { name: 'January', value: 1 },
+    { name: 'February', value: 2 },
+    { name: 'March', value: 3 },
+    { name: 'April', value: 4 },
+    { name: 'May', value: 5 },
+    { name: 'June', value: 6 },
+    { name: 'July', value: 7 },
+    { name: 'August', value: 8 },
+    { name: 'September', value: 9 },
+    { name: 'October', value: 10 },
+    { name: 'Novembar', value: 11 },
+    { name: 'December', value: 12 },
   ];
   isLoading: boolean;
   currentYear = new Date().getFullYear();
@@ -80,38 +80,37 @@ export class CollectionsQuantityComponent
   priceChartSelected: boolean = true;
   collectors: any[] = [];
 
-
   constructor(
     private analyticsService: AnalyticsService,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private userService: UserService
   ) {
-    super()
+    super();
   }
 
   ngOnInit(): void {
     this.chartParametersForm = this.createChartParamtersForm();
-    
+
     this.getAllUsers();
   }
 
   createChartParamtersForm() {
     return this.fb.group({
       year: [this.currentYear],
-      collectorId: [""]
+      collectorId: [''],
     });
   }
 
-  onSelectYear(event: any){
-    this.getCollectorCollectionSPerMonth()
+  onSelectYear(event: any) {
+    this.getCollectorCollectionSPerMonth();
   }
 
-  collectorsLookup(){
+  collectorsLookup() {
     const dialogRef = this.dialog.open(CollectorsLookupsComponent, {
-      width: "600px",
+      width: '600px',
       data: {
-        action: "Meeting Categories Lookup",
+        action: 'Meeting Categories Lookup',
       },
     });
 
@@ -121,131 +120,144 @@ export class CollectionsQuantityComponent
           collectorId: result.data.id,
         });
 
-        this.getCollectorCollectionSPerMonth()
+        this.getCollectorCollectionSPerMonth();
       },
       (err) => {
         console.log(err);
       }
     );
-
   }
 
-  getCollectorCollectionSPerMonth(){
+  getCollectorCollectionSPerMonth() {
     this.isLoading = true;
 
     let months: any[] = [];
-    let quantities: any[] = []
+    let quantities: any[] = [];
     let params;
 
     params = new HttpParams()
-    .set('year', this.chartParametersForm.value.year)
-    .set("collectorId", this.chartParametersForm.value.collectorId)
-   
-    this.analyticsService.getCollectionsPerMonth(params).pipe(takeUntil(this.subject)).subscribe(res => {
-      console.log("Response", res);
+      .set('year', this.chartParametersForm.value.year)
+      .set('collectorId', this.chartParametersForm.value.collectorId);
 
-      if(res.entity.length > 0){
-        res.entity.forEach(item => {
-          months.push(item.month);
-  
-          
-  
-          quantities.push(item.quantity);
-        })
-      }else {
-        months = [];
+    this.analyticsService
+      .getCollectionsPerMonth(params)
+      .pipe(takeUntil(this.subject))
+      .subscribe(
+        (res) => {
+          console.log('Response', res);
 
-        quantities = [];
-      }
+          if (res.entity.length > 0) {
+            res.entity.forEach((item) => {
+              months.push(item.month);
 
-      this.barChartOptions = {
-        series: [
-          {
-            name: "Price (KES)",
-            data: quantities,
-          },
-          
-        ],
-        chart: {
-          type: "bar",
-          height: 350,
-          foreColor: "#9aa0ac",
-          stacked: false,
-          toolbar: {
-            show: false,
-          },
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: "bottom",
-                offsetX: -10,
-                offsetY: 0,
+              quantities.push(item.quantity);
+
+            });
+
+            this.barChartOptions = {
+              series: [
+                {
+                  name: 'Price (KES)',
+                  data: quantities,
+                },
+              ],
+              chart: {
+                type: 'bar',
+                height: 350,
+                foreColor: '#9aa0ac',
+                stacked: false,
+                toolbar: {
+                  show: false,
+                },
               },
-            },
-          },
-        ],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "30%",
-          },
-        },
-        // dataLabels: {
-        //   enabled: false,
-        // },
-        xaxis: {
-          type: "category",
-          categories: months,
-        },
-        legend: {
-          show: false,
-        },
-        fill: {
-          opacity: 1,
-          colors: ["#177147", "#397157", "#2D7152", "#22714D"],
-        },
-        tooltip: {
-          theme: "dark",
-          marker: {
-            show: true,
-          },
-          x: {
-            show: true,
-          },
-        },
-      };
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0,
+                    },
+                  },
+                },
+              ],
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  columnWidth: '30%',
+                },
+              },
+              // dataLabels: {
+              //   enabled: false,
+              // },
+              xaxis: {
+                type: 'category',
+                categories: months,
+              },
+              legend: {
+                show: false,
+              },
+              fill: {
+                opacity: 1,
+                colors: ['#177147', '#397157', '#2D7152', '#22714D'],
+              },
+              tooltip: {
+                theme: 'dark',
+                marker: {
+                  show: true,
+                },
+                x: {
+                  show: true,
+                },
+              },
+            };
 
-      this.isLoading = false;
-    }, err => {
-      console.log(err)
-    })
+            this.isLoading = false;
+          } else {
+            months = [];
+
+            quantities = [];
+
+            this.isLoading = true;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
-  getAllUsers(){
-    this.userService.fetchAllActiveAccounts().pipe(takeUntil(this.subject)).subscribe(res => {
-      let users = res.userData;
+  getAllUsers() {
+    this.userService
+      .fetchAllActiveAccounts()
+      .pipe(takeUntil(this.subject))
+      .subscribe(
+        (res) => {
+          let users = res.userData;
 
-      users.forEach(user => {
-        console.log(user)
-        if(user.roles[0].name == "ROLE_COLLECTOR"){
-          this.collectors.push(user);
+          users.forEach((user) => {
+            console.log(user);
+            if (user.roles[0].name == 'ROLE_COLLECTOR') {
+              this.collectors.push(user);
+            }
+          });
+
+          console.log('COLLECTORS ', this.collectors);
+
+          if (this.collectors.length > 0) {
+            this.chartParametersForm.patchValue({
+              collectorId: this.collectors[0].id,
+            });
+
+            this.getCollectorCollectionSPerMonth();
+          }else {
+            this.isLoading = true;
+          }
+        },
+        (err) => {
+          console.log(err);
         }
-      })
-
-      console.log("COLLECTORS ", this.collectors)
-
-      if(this.collectors.length > 0){
-        this.chartParametersForm.patchValue({
-          collectorId: this.collectors[0].id
-        })
-
-        this.getCollectorCollectionSPerMonth();
-      }
-    }, err => {
-      console.log(err)
-    })
+      );
   }
 }
