@@ -8,7 +8,10 @@
                             <div class="modalHeader clearfix">
                                 <div class="modal-about">
                                     <div class="font-weight-bold p-t-5 font-17">
-                                       Update collection
+                                        Edit collection for {{farmer}}
+                                    </div>
+                                    <div class="font-weight-bold p-t-6 font-17">
+                                        Farmer Number - {{farmerNo}}
                                     </div>
                                 </div>
                             </div>
@@ -21,74 +24,94 @@
                 <div mat-dialog-content>
                     <form class="register-form m-4" [formGroup]="editForm">
                         <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Delivery No.</mat-label>
-                                        <input matInput formControlName="collectionNo" required readonly/>
-                                        <mat-error *ngIf="editForm.get('collectionNo').hasError('required')">
-                                            collectionNo is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Farmer No.</mat-label>
-                                        <input matInput formControlName="farmer_no" required readonly/>
-                                        <mat-error *ngIf="editForm.get('farmer_no').hasError('required')">
-                                            farmer_no is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-0">
+
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Colelction Session</mat-label>
+                                    <input matInput formControlName="session" required readonly />
+
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-0">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Delivery No.</mat-label>
+                                    <input matInput formControlName="collectionNumber" required readonly />
+                                    <mat-error *ngIf="editForm.get('collectionNumber').hasError('required')">
+                                        Delivery Number is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                         
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-0">
+
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Collection Session</mat-label>
+                                    <input matInput formControlName="canNo" required readonly />
+
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Quantity</mat-label>
+                                    <input matInput formControlName="originalQuantity" required />
+                                    <mat-error *ngIf="editForm.get('originalQuantity').hasError('required')">
+                                        Quantity is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Select can</mat-label>
-                                    <mat-select formControlName="canNo" required>
+                                    <mat-select formControlName="canNo" readonly>
                                         <mat-option *ngFor="let can of cans" [value]="can.canNo">
-                                            {{ can.canName  }} - {{can.canNo}}
+                                            {{ can.canName }} - {{can.canNo}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="editForm.get('canNo').hasError('required')">
                                         Can is required
                                     </mat-error>
                                 </mat-form-field>
-                            </div>
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                            </div> -->
+                        </div>
+                        <div class="row">
+
+                            <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Select Route</mat-label>
-                                    <mat-select formControlName="routeFk" required>
-                                        <mat-option *ngFor="let route of routes" [value]="route.id">
+                                    <mat-select formControlName="route" placeholder="Choose an option" [disabled]>
+                                        <mat-option *ngFor="let route of routes" [value]="route.route">
                                             {{ route.route }}
                                         </mat-option>
                                     </mat-select>
-                                    <mat-error *ngIf="editForm.get('routeFk').hasError('required')">
+                                    <mat-error *ngIf="editForm.get('route').hasError('required')">
                                         Route is required
                                     </mat-error>
                                 </mat-form-field>
-                            </div>
+                            </div> -->
 
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Quantity</mat-label>
-                                    <input matInput formControlName="quantity" required readonly/>
-                                    <mat-error *ngIf="editForm.get('quantity').hasError('required')">
-                                        Quantity is required
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
+                            
+                        </div>
 
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <div class="example-button-row">
-                                        <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
-                                            Cancel
-                                        </button>
-                                        <button mat-raised-button color="primary" [disabled]="!editForm.valid"
-                                            (click)="onSubmit()">
-                                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                                            <b>Submit</b>
-                                        </button>
-                                    </div>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                <div class="example-button-row">
+                                    <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
+                                        Cancel
+                                    </button>
+                                    <button mat-raised-button color="primary" [disabled]="!editForm.valid"
+                                        (click)="onSubmit()">
+                                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                        <b>Submit</b>
+                                    </button>
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
