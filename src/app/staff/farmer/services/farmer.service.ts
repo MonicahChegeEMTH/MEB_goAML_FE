@@ -20,6 +20,9 @@ export class FarmerService {
   public getFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/all`,httpOptions);
   }
+  public getByFarmersByFarmerNo(farmer_no:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/membernumber?farmer_number=`+farmer_no,httpOptions);
+  }
   public getFarmersById(id:any): Observable<any> {
     console.log("Calling api ...")
     console.log(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id)

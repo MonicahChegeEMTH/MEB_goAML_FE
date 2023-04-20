@@ -45,7 +45,7 @@ export class FarmerDetailsComponent implements OnInit {
       this.farmer = this.data.entity 
       console.log("Farmer details ", this.farmer)
 
-
+      this.getWards(this.farmer.subcounty_fk)
 
 
       this.bankDetailsForm = this.fb.group({
@@ -63,6 +63,7 @@ export class FarmerDetailsComponent implements OnInit {
         bankDetails: [""],
         transportMeans: [this.farmer.transportMeans],
         firstName: [this.farmer.firstName, [Validators.required]],
+        // middleName: [this.farmer.firstName, [Validators.required]],
         lastName: [this.farmer.lastName, [Validators.required]],
         idNumber: [this.farmer.idNumber, [Validators.required]],
         mobileNo: [this.farmer.mobileNo, [Validators.required]],
@@ -70,7 +71,7 @@ export class FarmerDetailsComponent implements OnInit {
         subcounty_fk: [this.farmer.subcounty_fk, [Validators.required]],
         wardFk: [this.farmer.wardFk, [Validators.required]],
         memberType: [this.farmer.memberType, [Validators.required]],
-        alternativeMobileNo: [this.farmer.alternativeMobileNo, [Validators.required]],
+        alternativeMobileNo: [this.farmer.alternativeMobileNo],
         noOfCows: [this.farmer.noOfCows, [Validators.required]],
         county_fk: [this.farmer.county_fk],
         location: [this.farmer.location],
@@ -149,7 +150,7 @@ export class FarmerDetailsComponent implements OnInit {
   }
 
   getWards(id: any) {
-    this.subscription = this.service.getSubCountyById(id.value).subscribe(res => {
+    this.subscription = this.service.getSubCountyById(id).subscribe(res => {
       this.data = res;
       if (this.data.entity.wards.length > 0) {
         this.wards = this.data.entity.wards;
