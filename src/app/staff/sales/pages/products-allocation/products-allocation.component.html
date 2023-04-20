@@ -185,17 +185,17 @@
                                             </mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="statusReason">
+                                        <!-- <ng-container matColumnDef="statusReason">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Delivery
                                                 Status</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
                                                 {{ row.statusReason}}
                                             </mat-cell>
-                                        </ng-container>
+                                        </ng-container> -->
                                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                         <mat-row *matRowDef="let row; columns: displayedColumns"
-                                            (click)="viewRoleCall(row)" [style.cursor]="'pointer'" matRipple>
+                                             [style.cursor]="'pointer'" matRipple>
                                         </mat-row>
                                         <mat-cell *matNoDataRow colspan="4">
                                             No data matching the filter "{{ input.value }}"</mat-cell>
@@ -385,7 +385,7 @@
                                                         (contextmenu)="onContextMenu($event, response)">
                                                       
                                                         <button mat-icon-button color="primary"
-                                                            (click)="$event.stopPropagation()" (click)="verify(row)"
+                                                            (click)="$event.stopPropagation()" (click)="verify(response)"
                                                             class="tbl-action-btn">
                                                             <app-feather-icons matTooltip="Verify" [icon]="'check'"
                                                                 [class]="'tbl-fav-check'"></app-feather-icons>
@@ -393,17 +393,17 @@
                                                     </mat-cell>
                                                 </ng-container>
         
-                                                <ng-container matColumnDef="statusReason">
+                                                <!-- <ng-container matColumnDef="statusReason">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Delivery
                                                         Status</mat-header-cell>
                                                     <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                         [class.even-row]="!(i % 2)">
                                                         {{ row.statusReason}}
                                                     </mat-cell>
-                                                </ng-container>
+                                                </ng-container> -->
                                                 <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns1"
-                                                    (click)="viewRoleCall(row)" [style.cursor]="'pointer'" matRipple>
+                                                    [style.cursor]="'pointer'" matRipple>
                                                 </mat-row>
                                                 <mat-cell *matNoDataRow colspan="4">
                                                     No data matching the filter "{{ input.value }}"</mat-cell>

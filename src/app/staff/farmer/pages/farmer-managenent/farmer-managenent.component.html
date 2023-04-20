@@ -2,7 +2,8 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All farmers / Milk Suppliers'" [items]="['Farmers']" [active_item]="'All Farmers'">
+            <app-breadcrumb [title]="'All farmers / Milk Suppliers'" [items]="['Farmers']"
+                [active_item]="'All Farmers'">
             </app-breadcrumb>
         </div>
 
@@ -13,10 +14,10 @@
                         <div class="table-responsive">
                             <div class="materialTableHeader">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-10">
                                         <ul class="header-buttons-left ms-0">
                                             <li class="dropdown">
-                                                <h2>Registered Farmers</h2>
+                                                <h2>Farmers</h2>
                                             </li>
                                             <li class="dropdown m-l-20">
                                                 <label for="search-input"><i
@@ -39,9 +40,31 @@
                                                     </button>
                                                 </div>
                                             </li>
+                                            <li class="dropdown m-l-5">
+                                                <mat-form-field>
+                                                    <mat-label>Filter By </mat-label>
+                                                    <mat-select [(value)]="selected">
+                                                        <mat-option value="fn"><b>Farmer Number</b></mat-option>
+
+
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </li>
+                                            <li class="dropdown">
+                                                <form [formGroup]="filterform">
+                                                    <mat-form-field class="m-l-3" *ngIf="selected == 'fn'">
+                                                        <input matInput (dateChange)="filterFarmers()"
+                                                            placeholder="Enter Farmer Number"
+                                                            formControlName="farmer_no">
+                                                        <mat-icon matSuffix (click)="getFarmerByFarmerNo()">search
+                                                        </mat-icon>
+                                                    </mat-form-field>
+
+                                                </form>
+                                            </li>
                                         </ul>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-2">
                                         <ul class="header-buttons">
                                             <li>
                                                 <div class="export-button m-l-10" matTooltip="XLSX">
@@ -59,18 +82,18 @@
                                                         (click)="exporter.exportTable('csv')" />
                                                 </div>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                                 <div class="export-button m-l-10" matTooltip="JSON">
                                                     <img src="assets/images/icons/json.png" alt=""
                                                         (click)="exporter.exportTable('json')" />
                                                 </div>
-                                            </li>
-                                            <li>
+                                            </li> -->
+                                            <!-- <li>
                                                 <div class="export-button m-l-10" matTooltip="TXT">
                                                     <img src="assets/images/icons/txt.png" alt=""
                                                         (click)="exporter.exportTable('txt')" />
                                                 </div>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </div>
                                 </div>
@@ -103,49 +126,54 @@
                                 </ng-container>
                                 <ng-container matColumnDef="farmer_no">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer No.
-                                        </mat-header-cell>
+                                    </mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.farmer_no}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="username">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer Name</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
+                                        Name</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.username}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="mobile_no">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Phone.</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">Phone.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.mobile_no}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ID No.">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">ID No.</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">ID
+                                        No.</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.id_number}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="route">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Route</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="column-nowrap">Route</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.route }}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="pickUpLocation">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp Location
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp
+                                        Location
                                         on</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.pickUpLocation }}
                                     </mat-cell>
                                 </ng-container>
-                               
+
                                 <ng-container matColumnDef="action">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"

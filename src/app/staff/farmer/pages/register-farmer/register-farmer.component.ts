@@ -378,20 +378,20 @@ export class RegisterFarmerComponent implements OnInit {
       lastName: ['', [Validators.required]],
       idNumber: ['', [Validators.required]],
       mobileNo: ['', [Validators.required]],
-      address: [''],
       subcounty_fk: ['', [Validators.required]],
       wardFk: ['', [Validators.required]],
       memberType: ['', [Validators.required]],
-      alternativeMobileNo: ['', [Validators.required]],
+      alternativeMobileNo: [''],
       noOfCows: ['', [Validators.required]],
+      paymentMode:['',[Validators.required]],
       county_fk: [''],
       location: [''],
       subLocation: [''],
       village: [''],
-      paymentFreequency: [''],
+      paymentFreequency: ['',[Validators.required]],
       gender: [''],
       routeFk: [''],
-      paymentMode: [''],
+      
     });
   }
 

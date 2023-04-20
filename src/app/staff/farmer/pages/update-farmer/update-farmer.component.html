@@ -24,6 +24,7 @@
                     <mat-card-title style="font-size: x-small;">Supplier/Farmer Details</mat-card-title>
                     <mat-card-content>
                         <div class="row">
+                           
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>First Name</mat-label>
@@ -270,18 +271,7 @@
                                     </mat-form-field>
                                 </div>
 
-                                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-                                    <mat-form-field class="example-full-width mb-1" appearance="outline">
-                                        <mat-label>Select Payment Mode</mat-label>
-                                        <mat-select formControlName="paymentMode">
-                                            <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
-                                            <mat-option value="Bank">Bank</mat-option>
-                                            <mat-option value="Cash">Cash</mat-option>
-                                            <mat-option value="Pesalink">Pesalink</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-
+                               
 
                         
                             </div>
@@ -303,7 +293,8 @@
                                     <mat-label>Select Payment Frequency</mat-label>
                                     <mat-select formControlName="paymentFreequency">
                                         <mat-option value="Monthly">Monthly</mat-option>
-                                        <mat-option value="Monthly">After Two Weeks</mat-option>
+                                        <mat-option value="Weekly">Weekly</mat-option>
+                                        <mat-option value="2Weeks">Two Weeks</mat-option>
                                     </mat-select>
                                     <mat-error
                                         *ngIf="farmerRegirstartionForm.get('paymentFreequency').hasError('required')">
@@ -311,7 +302,19 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                          
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                                <mat-form-field class="example-full-width mb-1" appearance="outline">
+                                    <mat-label>Select Payment Mode</mat-label>
+                                     <mat-select formControlName="paymentMode" required>
+                                    <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
+                                    <mat-option value="Bank">Bank</mat-option>
+                                    <mat-option value="Cash">Cash</mat-option>
+                                    <mat-option value="Pesalink">Pesalink</mat-option>
+                                    <mat-option value="cooperative saccos">Cooperative Saccos</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            </div>
+
 
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width mb-1" appearance="outline">

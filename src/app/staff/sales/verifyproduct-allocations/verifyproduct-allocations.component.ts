@@ -40,6 +40,7 @@ export class VerifyproductAllocationsComponent implements OnInit {
     console.log(this.verifyallocationform.value)
     this.loading = true;
     this.subscription = this.service.verifyAllocatins(this.verifyallocationform.value.id,this.verifyallocationform.value.status).subscribe(res => {
+      console.log(res)
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.loading = false;
       this.verifyallocationform.reset();
