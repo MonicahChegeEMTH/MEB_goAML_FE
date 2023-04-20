@@ -54,7 +54,7 @@
                                                 <form [formGroup]="filterform">
                                                     <mat-form-field class="m-l-3" *ngIf="selected == 'fn'">
                                                         <input matInput (dateChange)="filterFarmers()"
-                                                            placeholder="Farmer Number"
+                                                            placeholder="Enter Farmer Number"
                                                             formControlName="farmer_no">
                                                         <mat-icon matSuffix (click)="getFarmerByFarmerNo()">search
                                                         </mat-icon>
