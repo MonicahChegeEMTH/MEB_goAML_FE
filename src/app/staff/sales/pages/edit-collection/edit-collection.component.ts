@@ -29,20 +29,27 @@ export class EditCollectionComponent implements OnInit {
     private pservice: PickupService ,
     ) { }
   subscription!: Subscription;
-
+farmer:any
+farmerNo:any
 
   ngOnInit(): void {
+    
     this.collection=this.data.collection
+    this.farmer=this.collection.farmer
+    this.farmerNo=this.collection.farmer_no
+    
     console.log(this.collection=this.data.collection)
+    console.log(this.collection.canNo)
     this.getCans();
     this.getRoutes();
     this.editForm = this.fb.group({
-      collectionNo:this.collection.collectionCode,
-      routeFk:[""],
+      session:[this.collection.session,[Validators.required]],
+      collectionNumber:[this.collection.collectionCode,[Validators.required]],
+      route:[this.collection.route,[Validators.required]],
       // route:[""],
-      canNo: [""],
-      quantity:this.collection.quantity,
-      farmer_no:this.collection.farmer_no
+      canNo: [this.collection.canNo,[Validators.required]],
+      originalQuantity:[this.collection.originalQuantity,[Validators.required]],
+      farmer_no:[this.collection.farmer_no,[Validators.required]]
       
     })
 
@@ -52,16 +59,20 @@ export class EditCollectionComponent implements OnInit {
   onSubmit() {
     console.log(this.editForm.value)
     this.loading = true;
-    // this.subscription = this.service.updateCollections(this.editForm.value).subscribe(res => {
-    //   this.snackbar.showNotification("snackbar-success", "Successful!");
-    //   this.loading = false;
-    //   this.editForm.reset();
-    //   this.dialogRef.close();
-    // }, err => {
-    //   this.loading = false;
-    //   this.dialogRef.close();
-    // })
+    this.subscription = this.service.updateCollections(this.editForm.value).subscribe(res => {
+      this.snackbar.showNotification("snackbar-success", "Successful!");
+      this.loading = false;
+      this.editForm.reset();
+      this.dialogRef.close();
+    }, err => {
+      this.loading = false;
+      this.snackbar.showNotification("snackbar-success", err.message);
+      this.dialogRef.close();
+    })
   }
+
+ 
+
 
   onClick() {
     this.dialogRef.close();

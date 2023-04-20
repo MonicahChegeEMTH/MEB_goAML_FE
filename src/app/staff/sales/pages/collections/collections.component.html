@@ -42,8 +42,7 @@
                                                         <h5 class="float-end">Amount(KES)</h5>
                                                     </div>
                                                     <div class="m-r-10 m-l-10">
-                                                        <h3 class="font-weight-bold float-end mb-0">{{damount | number :
-                                                            '1.2-2' }}</h3>
+                                                        <h3 class="font-weight-bold float-end mb-0">{{damount   }}</h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,7 +234,7 @@
                                                 class="column-nowrap tbl-col-width-per-5">Qtty</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-5">
-                                                {{response.quantity}}
+                                                {{response.quantity | number :'1.2-2'}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="session">

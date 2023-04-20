@@ -99,7 +99,7 @@ export class SalesService {
 
   }
   updateCollections(data: any) {
-    return this.http.post(`${environment.apiUrl}/api/v1/collections/update`, data, httpOptions);
+    return this.http.put(`${environment.apiUrl}/api/v1/collections/update`, data, httpOptions);
   }
 
 
