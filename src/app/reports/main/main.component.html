@@ -160,6 +160,62 @@
 
 
                 </li>
+                <li (click)="collectionsPerLocation('Report For Single User Action Items')" class="d-flex mb-3">
+
+
+                  <!-- <div class="example-action-buttons">
+                            <button mat-button (click)="accordion.openAll()">Expand All</button>
+                            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+                          </div> -->
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isloading"></mat-progress-bar>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          Collection per Pick-Up Location for specific date report
+                        </mat-panel-title>
+                        <!-- <mat-panel-description>
+                                Inform the date you wish to travel
+                                <mat-icon>date_range</mat-icon>
+                              </mat-panel-description> -->
+                      </mat-expansion-panel-header>
+
+                      <form class="register-form" [formGroup]="reportCollectionForm">
+                        <div class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Select PickUpLocation</mat-label>
+                            <input matInput formControlName="pul" required readonly />
+                            <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
+                            <mat-error *ngIf="reportCollectionForm.get('pul').hasError('required')">
+                                Pick-Up Location is required
+                            </mat-error>
+                        </mat-form-field>
+                          <mat-form-field class="m-l-5">
+                            <input matInput [matDatepicker]="picker4" placeholder="Choose a date"
+                              formControlName="date">
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker #picker4></mat-datepicker>
+                          </mat-form-field>
+
+
+                          <div class="example-button-row">
+
+                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
+                              (click)="generateCollectionsPerPickUpLocations()">
+                              <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
+                              <b>Generate</b>
+                            </button>
+                          </div>
+
+                        </div>
+                      </form>
+
+                    </mat-expansion-panel>
+                  </mat-accordion>
+
+
+                </li>
+
 
 
 
@@ -205,6 +261,21 @@
                     </td>
                   </div>
                 </li>
+                <li (click)="farmerProductReport()" class="d-flex mb-3">
+                  <span class="msr-3 align-self-center img-icon info-rgba text-info"><i
+                      class="far fa-file-archive"></i></span>
+
+                  <div class="set-flex">
+                    <h5 class="font-16 mb-1">Farmers Product Allocation report</h5>
+                    <p> Report for specific farmer</p>
+                  </div>
+                  <div class="ms-auto">
+                    <td>
+                      <i class="far fa-arrow-alt-circle-down"></i>
+                    </td>
+                  </div>
+                </li>
+               
               </ul>
             </div>
           </div>

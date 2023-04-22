@@ -7,7 +7,9 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/farmer-lookup.component';
 import { FarmerStatementComponent } from '../farmer-statement/farmer-statement.component';
 import { ReportsService } from '../services/reports.service';
-import { StatmentComponent } from '../statment/statment.component';
+import { StatmentComponent } from '../pages/statment/statment.component';
+import { FarmerProductsReportComponent } from '../pages/farmer-products-report/farmer-products-report.component';
+import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 const MONTHS = [
   {value: 'JANUARY', name: 'JANUARY'},
   {value: 'FEBRUARY', name: 'FEBRUARY'},
@@ -58,6 +60,9 @@ export class MainComponent implements OnInit {
 
       date: ["", [Validators.required]],
       // collector: ["", [Validators.required]]
+    
+      pul: ["", [Validators.required]],
+      locationId: ["", [Validators.required]],
 
     })
 
@@ -211,6 +216,24 @@ export class MainComponent implements OnInit {
       );
 
   }
+
+  selectPickUpLocation() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+      this.reportCollectionForm.patchValue({
+        pul: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      });
+    });
+  }
   generatePaymentFile() {
       console.log(this.paymentFileForm.value)
     this.isloading = true
@@ -254,7 +277,51 @@ export class MainComponent implements OnInit {
       );
 
   }
+  generateCollectionsPerPickUpLocations(){
+    this.isloading = true
+    // console.log(this.reportCollectionForm.value)
+    this.date = this.datePipe.transform(this.reportCollectionForm.value.date, 'yyyy-MM-dd');
+    console.log("Formated date is ", this.date)
 
+    this.service.collectionsPerPulByDate(1,this.date)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+  }
 
 
 
@@ -269,6 +336,19 @@ export class MainComponent implements OnInit {
       data: ""
     }
     this.dialog.open(FarmerStatementComponent, dialogConfig)
+
+
+  }
+  farmerProductReport() {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "500px"
+    dialogConfig.data = {
+      data: ""
+    }
+    this.dialog.open(FarmerProductsReportComponent, dialogConfig)
 
 
   }

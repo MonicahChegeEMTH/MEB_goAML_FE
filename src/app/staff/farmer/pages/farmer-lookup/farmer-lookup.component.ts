@@ -16,7 +16,7 @@ import { FarmerService } from '../../services/farmer.service';
 })
 export class FarmerLookupComponent implements OnInit {
   displayedColumns: string[] = [
-    "memberCode",
+    "farmerNo",
     "username",
     "memberType",
     "mobileNo"
