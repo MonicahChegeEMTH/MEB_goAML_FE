@@ -18,13 +18,15 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { FarmerStatementComponent } from './farmer-statement/farmer-statement.component'; 
 import {MatRippleModule} from '@angular/material/core';
-import { StatmentComponent } from './statment/statment.component'; 
+import { StatmentComponent } from './pages/statment/statment.component';
+import { FarmerProductsReportComponent } from './pages/farmer-products-report/farmer-products-report.component'; 
 
 @NgModule({
     declarations: [
         MainComponent,
         FarmerStatementComponent,
-        StatmentComponent
+        StatmentComponent,
+        FarmerProductsReportComponent
     ],
     imports: [
         CommonModule,
