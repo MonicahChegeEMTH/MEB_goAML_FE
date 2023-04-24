@@ -5,7 +5,7 @@
                 <div class="modalHeader clearfix">
                     <div class="modal-about">
                         <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
-                            Farmer / Milk Supplier Details Update
+                            Farmer Details Update
                         </div>
                     </div>
                 </div>
@@ -21,10 +21,10 @@
             <div class="row">
                 <mat-card>
                     <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
-                    <mat-card-title style="font-size: x-small;">Supplier/Farmer Details</mat-card-title>
+                    <mat-card-title style="font-size: x-small;">Farmer Details</mat-card-title>
                     <mat-card-content>
                         <div class="row">
-                           
+
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>First Name</mat-label>
@@ -45,10 +45,10 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>idNumber</mat-label>
+                                    <mat-label>Id Number</mat-label>
                                     <input matInput formControlName="idNumber" required />
                                     <mat-error *ngIf="farmerRegirstartionForm.get('idNumber').hasError('required')">
-                                        idNumber name is required
+                                        ID Number name is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -57,10 +57,10 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>mobileNo</mat-label>
+                                    <mat-label>mobile Number</mat-label>
                                     <input matInput formControlName="mobileNo" required />
                                     <mat-error *ngIf="farmerRegirstartionForm.get('mobileNo').hasError('required')">
-                                        mobileNo name is required
+                                        Mobile Number name is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -69,10 +69,7 @@
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Alternative MobileNo</mat-label>
                                     <input matInput formControlName="alternativeMobileNo" required />
-                                    <mat-error
-                                        *ngIf="farmerRegirstartionForm.get('alternativeMobileNo').hasError('required')">
-                                        alternativeMobileNo name is required
-                                    </mat-error>
+
                                 </mat-form-field>
                             </div>
 
@@ -271,9 +268,9 @@
                                     </mat-form-field>
                                 </div>
 
-                               
 
-                        
+
+
                             </div>
 
 
@@ -305,13 +302,13 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width mb-1" appearance="outline">
                                     <mat-label>Select Payment Mode</mat-label>
-                                     <mat-select formControlName="paymentMode" required>
-                                    <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
-                                    <mat-option value="Bank">Bank</mat-option>
-                                    <mat-option value="Cash">Cash</mat-option>
-                                    <mat-option value="Pesalink">Pesalink</mat-option>
-                                    <mat-option value="cooperative saccos">Cooperative Saccos</mat-option>
-                                </mat-select>
+                                    <mat-select formControlName="paymentMode" required>
+                                        <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
+                                        <mat-option value="Bank">Bank</mat-option>
+                                        <mat-option value="Cash">Cash</mat-option>
+                                        <mat-option value="Pesalink">Pesalink</mat-option>
+                                        <mat-option value="cooperative saccos">Cooperative Saccos</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
 
