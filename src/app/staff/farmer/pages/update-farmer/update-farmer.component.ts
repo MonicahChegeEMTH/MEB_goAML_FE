@@ -16,7 +16,7 @@ import { FarmerManagenentComponent } from '../farmer-managenent/farmer-managenen
 })
 export class UpdateFarmerComponent implements OnInit {
 
-  farmerRegirstartionForm: FormGroup;
+  farmerEditForm: FormGroup;
   bankDetailsForm: FormGroup;
   farmer: any
   loading = false;
@@ -57,7 +57,7 @@ export class UpdateFarmerComponent implements OnInit {
         accountName: [this.farmer.bankDetails.accountName, [Validators.required]],
       });
 
-      this.farmerRegirstartionForm = this.fb.group({
+      this.farmerEditForm = this.fb.group({
         id: [this.farmer.id],
         bankDetails: [""],
         transportMeans: [this.farmer.transportMeans],
@@ -90,12 +90,12 @@ export class UpdateFarmerComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    this.farmerRegirstartionForm.value.bankDetails = this.bankDetailsForm.value;
-    console.log("Farmer updated details "+ this.farmerRegirstartionForm.value)
-    this.subscription = this.service.updateFarmer(this.farmerRegirstartionForm.value).subscribe(res => {
+    this.farmerEditForm.value.bankDetails = this.bankDetailsForm.value;
+    console.log("Farmer updated details "+ this.farmerEditForm.value)
+    this.subscription = this.service.updateFarmer(this.farmerEditForm.value).subscribe(res => {
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.loading = false;
-      this.farmerRegirstartionForm.reset();
+      this.farmerEditForm.reset();
       this.dialogRef.close();
     }, err => {
       this.loading = false;
