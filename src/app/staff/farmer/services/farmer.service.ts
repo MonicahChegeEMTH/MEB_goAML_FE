@@ -32,7 +32,7 @@ export class FarmerService {
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/add`,farmer);
   }
   updateFarmer(farmer:any){
-    return this.http.put(`${environment.apiUrl}/api/v1/farmer//update`,farmer);
+    return this.http.put(`${environment.apiUrl}/api/v1/farmer/update`,farmer);
   }
 
 

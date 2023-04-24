@@ -143,11 +143,12 @@ export class FarmerManagenentComponent implements OnInit {
   //   }
   // }
   getFarmerByFarmerNo(){
+    this.isLoading = true;
     let farmerNo=this.filterform.value.farmer_no
     console.log(this.filterform.value.farmer_no)
       
     if (farmerNo != null && farmerNo != undefined ) {
-      this.isLoading = true;
+  
       this.subscription = this.service.getByFarmersByFarmerNo(farmerNo).subscribe(res => {
         this.data = res;
         console.log(this.data.entity)
