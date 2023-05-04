@@ -18,4 +18,46 @@ export class SmsService {
     const url = `${environment.apiUrl}/api/v1/sms/sendSMS?message=${message}&phone=${phoneNo}`;
     return this.http.post<any>(url, {})
   }
+
+  //sms templates
+  createTemplate(data:any): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/smsTemplates/add`;
+    return this.http.post<any>(url, data,{})
+  }
+
+  editTemplate(data:any): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/smsTemplates/edit`;
+    return this.http.put<any>(url, data,{})
+  }
+
+  getAllTemplates(): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/smsTemplates/all`;
+    return this.http.get<any>(url)
+  }
+
+  deleteTemplate(id:any): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/smsTemplates/delete/`+id;
+    return this.http.delete<any>(url)
+  }
+
+  getAllBulkSMS(): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/bulkSMS/all/bulk`;
+    return this.http.get<any>(url)
+  }
+
+  getBulkProcessingCodes(): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/bulkSMS/bulkCodes`;
+    return this.http.get<any>(url)
+  }
+
+  getBulkSMSByCode(code:any): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/bulkSMS/findBy?code=`+code;
+    return this.http.get<any>(url)
+  }
+
+  sendBulkSMS(data:any)
+  {
+    const url = `${environment.apiUrl}/api/v1/bulkSMS/bulk`;
+    return this.http.post<any>(url, data,{})    
+  }
 }
