@@ -2,7 +2,7 @@ import { AgmMap } from '@agm/core';
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +10,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SalesService } from '../../services/sales.service';
+import { DashboardService } from 'src/app/staff/dashboard/services/dashboard.service';
+import { EditCollectionComponent } from '../edit-collection/edit-collection.component';
+import { LookupPickUpLocationsComponent } from '../lookup-pick-up-locations/lookup-pick-up-locations.component';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { RoutesLookUpComponent } from '../routes-look-up/routes-look-up.component';
 
 @Component({
   selector: 'app-collections',
@@ -25,6 +30,16 @@ export class CollectionsComponent implements OnInit {
   form: FormGroup;
   mapForm: FormGroup;
   selected = "";
+  selectedvalue="";
+  count: any = 0
+  dcount: any = 0
+  dquantity: any = 0.0;
+  damount: any = 0.0;
+  farmers: any = 0
+
+  public cardChart2: any;
+  public cardChart2Data: any;
+  public cardChart2Label: any;
 
   @ViewChild('map') map: AgmMap;
   ngAfterViewInit() {
@@ -36,16 +51,26 @@ export class CollectionsComponent implements OnInit {
   longitude = 37.9083264;
   zoom = 8;
   markers: any;
+  restriction = {
+    latLngBounds: {
+      east: 37.995213, // Longitude of the east border of UK
+      north: 0.4667, // Latitude of the north border of UK
+      south: -4.181611, // Latitude of the south border of UK
+      west: 34.287807 // Longitude of the west border of UK
+    },
+    strictBounds: true
+  };
 
 
   displayedColumns: string[] = [
     'id',
-    "farmer",
+    "farmer_no",
+    'farmer',
     "quantity",
-    "amount",
-    "collector",
+    "session",
     "collection_date",
-    "paymentStatus",
+    "route",
+    "pickUpLocation",
     'action',
   ];
 
@@ -53,7 +78,11 @@ export class CollectionsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService,) { }
+  constructor(
+    // public dialogRef: MatDialogRef<MainComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: any,
+    private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService, private dashboard: DashboardService,
+    private snackbar: SnackbarService) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -90,6 +119,7 @@ export class CollectionsComponent implements OnInit {
     }
     else if (this.selected == 'sd') {
       this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+      this.getDateSummary()
       this.isLoading = true;
       this.subscription = this.service.getCollections(this.date).subscribe(res => {
         this.data = res;
@@ -107,6 +137,15 @@ export class CollectionsComponent implements OnInit {
           this.dataSource = new MatTableDataSource(null);
         }
       })
+    } else if (this.selected == 'pul') {
+      console.log("Filter by  pick up location")
+      
+
+    }else if(this.selected=="route"){
+      console.log("Filter by  route")
+      
+
+      
     }
     else {
       this.getData();
@@ -132,6 +171,7 @@ export class CollectionsComponent implements OnInit {
   getCoordinates() {
     this.subscription = this.service.getCollectorLocationsByDate(this.mapForm.value.collectorId, this.datePipe.transform(this.mapForm.value.date, 'yyyy-MM-dd')).subscribe(res => {
       this.locations = res;
+      console.log(this.locations)
       if (this.locations.entity.length > 0) {
         this.isCoordinates = true;
         this.markers = this.locations.entity;
@@ -149,6 +189,7 @@ export class CollectionsComponent implements OnInit {
     this.subscription = this.service.getAllCollections().subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
+        console.log(this.data.entity)
         this.isLoading = false;
         this.isdata = true;
         // Binding with the datasource
@@ -174,12 +215,17 @@ export class CollectionsComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
+    this.smallChart2()
     this.getData();
     this.getMilkCollectors();
     this.form = this.fb.group({
       date: [""],
       fromDate: [""],
       toDate: [""],
+      pickuplocation: [""],
+      pickuplocationId: [""],
+      route:[""],
+      routeId:[""]
     });
 
     this.mapForm = this.fb.group({
@@ -190,5 +236,195 @@ export class CollectionsComponent implements OnInit {
 
   viewFarmerCollections(row) {
     this.router.navigate(['/staff/sales/farmer', row.farmerId]);
+  }
+  getDateSummary() {
+    this.isLoading = true
+    this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+    console.log("Formated date is ", this.date)
+    this.subscription = this.dashboard.getDateCollections(this.date).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+
+  }
+  dialogData: any;
+
+  selectpickUpLocation() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      data: "",
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      // console.log(result)
+      this.dialogData = result;
+      this.form.patchValue({
+        pickuplocation: this.dialogData.data.name,
+        pickuplocationId:this.dialogData.data.id
+      });
+      let pid=this.form.value.pickuplocationId
+       this.filterByPickUpLoction(pid) 
+
+    });
+  }
+  selectRoute() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      data: "",
+    };
+    const dialogRef = this.dialog.open(RoutesLookUpComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log("Routes",result)
+      this.dialogData = result;
+      this.form.patchValue({
+        route: this.dialogData.data.route,
+        routeId:this.dialogData.data.id
+      });
+      let rid=this.form.value.routeId
+       this.filterByRoute(rid) 
+
+    });
+  }
+  filterByPickUpLoction(id:any) {
+    this.isLoading = true;
+    console.log("Filter Function called! ")
+
+    // let pickUpLocationId = this.form.value.pickUpLocationId
+    console.log("Passed Id is ",id)
+
+    this.subscription = this.service.getCollectionsPerPickUpLocation(id).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.dataSource = new MatTableDataSource(null);
+      }
+    })
+  }
+  filterByRoute(id:any) {
+    this.isLoading = true;
+    console.log("Filter Function called! ")
+
+    // let pickUpLocationId = this.form.value.pickUpLocationId
+    console.log("Passed Id is ",id)
+
+    this.subscription = this.service.getCollectionsPerPRoute(id).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.dataSource = new MatTableDataSource(null);
+      }
+    })
+  }
+
+
+  edit(collection) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "60%"
+    dialogConfig.data = {
+      collection: collection
+    }
+    this.dialog.open(EditCollectionComponent, dialogConfig)
+  }
+  private smallChart2() {
+    this.cardChart2 = {
+      responsive: true,
+      tooltips: {
+        enabled: false,
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              beginAtZero: true,
+              display: false,
+            },
+          },
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              display: false,
+            },
+            ticks: {
+              display: false,
+            },
+          },
+        ],
+      },
+      title: {
+        display: false,
+      },
+    };
+    this.cardChart2Data = [
+      {
+        label: "New Clients",
+        data: [50, 61, 80, 50, 40, 93, 63, 50, 62, 72, 52, 60, 41, 30, 45, 70],
+        borderWidth: 4,
+        pointStyle: "circle",
+        pointRadius: 4,
+        borderColor: "rgba(253,126,20,.7)",
+        pointBackgroundColor: "rgba(253,126,20,.2)",
+        backgroundColor: "rgba(253,126,20,.2)",
+        pointBorderColor: "transparent",
+      },
+    ];
+    this.cardChart2Label = [
+      "16-07-2018",
+      "17-07-2018",
+      "18-07-2018",
+      "19-07-2018",
+      "20-07-2018",
+      "21-07-2018",
+      "22-07-2018",
+      "23-07-2018",
+      "24-07-2018",
+      "25-07-2018",
+      "26-07-2018",
+      "27-07-2018",
+      "28-07-2018",
+      "29-07-2018",
+      "30-07-2018",
+      "31-07-2018",
+    ];
   }
 }

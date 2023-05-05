@@ -16,8 +16,9 @@ import { FarmerManagenentComponent } from '../farmer-managenent/farmer-managenen
 })
 export class UpdateFarmerComponent implements OnInit {
 
-  farmerRegirstartionForm: FormGroup;
+  farmerEditForm: FormGroup;
   bankDetailsForm: FormGroup;
+  farmer: any
   loading = false;
   isLoading: Boolean
   isdata: Boolean
@@ -37,52 +38,64 @@ export class UpdateFarmerComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.bankDetailsForm = this.fb.group({
-      alternativeMethod: [""],
-      otherMeansDetails: [this.data.farmer.bankDetails.otherMeansDetails, [Validators.required]],
-      otherMeans: [this.data.farmer.bankDetails.otherMeans, [Validators.required]],
-      branch: [this.data.farmer.bankDetails.branch, [Validators.required]],
-      bankName: [this.data.farmer.bankDetails.bankName, [Validators.required]],
-      accountNumber: [this.data.farmer.bankDetails.accountNumber, [Validators.required]],
-      accountName: [this.data.farmer.bankDetails.accountName, [Validators.required]],
-    });
+    console.log("Farmer id " + this.data.farmer.id)
+    this.isLoading = true;
+    this.service.getFarmersById(this.data.farmer.id).subscribe(res => {
+      this.data = res;
+      this.isLoading = false;
+      this.farmer = this.data.entity
+      console.log("Farmer details ", this.farmer)
+      console.log("Farmer Name ", this.farmer.firstName)
 
-    this.farmerRegirstartionForm = this.fb.group({
-      id: [this.data.farmer.id],
-      bankDetails: [""],
-      transportMeans: [this.data.farmer.transportMeans],
-      firstName: [this.data.farmer.firstName, [Validators.required]],
-      lastName: [this.data.farmer.lastName, [Validators.required]],
-      idNumber: [this.data.farmer.idNumber, [Validators.required]],
-      mobileNo: [this.data.farmer.mobileNo, [Validators.required]],
-      address: [""],
-      subcounty_fk: [this.data.farmer.subcounty_fk, [Validators.required]],
-      wardFk: [this.data.farmer.wardFk, [Validators.required]],
-      memberType: [this.data.farmer.memberType, [Validators.required]],
-      alternativeMobileNo: [this.data.farmer.alternativeMobileNo, [Validators.required]],
-      noOfCows: [this.data.farmer.noOfCows, [Validators.required]],
-      county_fk: [this.data.farmer.county_fk],
-      location: [this.data.farmer.location],
-      subLocation: [this.data.farmer.subLocation],
-      village: [this.data.farmer.village],
-      paymentFreequency: [this.data.farmer.paymentFreequency],
-      paymentDate: [this.data.farmer.paymentDate],
-      gender: [this.data.farmer.gender],
-      pickupLocation: [this.data.farmer.pickupLocation]
+      this.getWards(this.farmer.subcounty_fk)
+
+      this.bankDetailsForm = this.fb.group({
+        
+        branch: [this.farmer.bankDetails.branch, [Validators.required]],
+        bankName: [this.farmer.bankDetails.bankName, [Validators.required]],
+        accountNumber: [this.farmer.bankDetails.accountNumber, [Validators.required]],
+        accountName: [this.farmer.bankDetails.accountName, [Validators.required]],
+      });
+
+      this.farmerEditForm = this.fb.group({
+        id: [this.farmer.id],
+        bankDetails: [""],
+        transportMeans: [this.farmer.transportMeans],
+        firstName: [this.farmer.firstName, [Validators.required]],
+        lastName: [this.farmer.lastName, [Validators.required]],
+        idNumber: [this.farmer.idNumber, [Validators.required]],
+        mobileNo: [this.farmer.mobileNo, [Validators.required]],
+        address: [""],
+        subcounty_fk: [this.farmer.subcounty_fk, [Validators.required]],
+        wardFk: [this.farmer.wardFk, [Validators.required]],
+        memberType: [this.farmer.memberType, [Validators.required]],
+        alternativeMobileNo: [this.farmer.alternativeMobileNo],
+        noOfCows: [this.farmer.noOfCows, [Validators.required]],
+        county_fk: [this.farmer.county_fk],
+        location: [this.farmer.location],
+        subLocation: [this.farmer.subLocation],
+        village: [this.farmer.village],
+        paymentFreequency: [this.farmer.paymentFreequency],
+        paymentMode: [this.farmer.paymentMode],
+        gender: [this.farmer.gender],
+        route: [this.farmer.routeFk],
+        routeFk: [this.farmer.routeFk]
+      })
+
     })
-
     this.getSubcounties();
     this.getCounties();
-    this.getPickUpLocations();
+    this.getRoutes();
   }
 
   onSubmit() {
     this.loading = true;
-    this.farmerRegirstartionForm.value.bankDetails = this.bankDetailsForm.value;
-    this.subscription = this.service.registerFarmer(this.farmerRegirstartionForm.value).subscribe(res => {
+    this.farmerEditForm.value.bankDetails = this.bankDetailsForm.value;
+    console.log("Farmer updated details "+ this.farmerEditForm.value)
+    this.subscription = this.service.updateFarmer(this.farmerEditForm.value).subscribe(res => {
       this.snackbar.showNotification("snackbar-success", "Successful!");
       this.loading = false;
-      this.farmerRegirstartionForm.reset();
+      this.farmerEditForm.reset();
       this.dialogRef.close();
     }, err => {
       this.loading = false;
@@ -119,8 +132,8 @@ export class UpdateFarmerComponent implements OnInit {
     })
   }
 
-  getPickUpLocations() {
-    this.subscription = this.routesService.getLocations().subscribe(res => {
+  getRoutes() {
+    this.subscription = this.routesService.getRoutes().subscribe(res => {
       if (res.entity.length > 0) {
         this.routes = res.entity;
       }
@@ -131,7 +144,8 @@ export class UpdateFarmerComponent implements OnInit {
   }
 
   getWards(id: any) {
-    this.subscription = this.service.getSubCountyById(id.value).subscribe(res => {
+    console.log("Getting wards  from subcounty id ...",id)
+    this.subscription = this.service.getSubCountyById(id).subscribe(res => {
       this.data = res;
       if (this.data.entity.wards.length > 0) {
         this.wards = this.data.entity.wards;

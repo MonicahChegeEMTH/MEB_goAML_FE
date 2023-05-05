@@ -10,6 +10,8 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SendSmsComponent } from 'src/app/staff/sms/send-sms/send-sms.component';
 import { SalesService } from '../../services/sales.service';
 import { AddAllocationComponent } from '../add-allocation/add-allocation.component';
+import { VerifyAccountComponent } from 'src/app/admin/users/pages/verify-account/verify-account.component';
+import { VerifyproductAllocationsComponent } from '../../verifyproduct-allocations/verifyproduct-allocations.component';
 
 @Component({
   selector: 'app-products-allocation',
@@ -25,17 +27,33 @@ export class ProductsAllocationComponent implements OnInit {
     "quantity",
     "amount",
     "allocationDate",
-    "time",
+    "type",
+    "status",
     "paymentStatus",
+    "Actions",
+  ];
+  displayedColumns1: string[] = [
+    "id",
+    "username",
+    "product",
+    "quantity",
+    "amount",
+    "allocationDate",
+    "type",
+    "status",
+    "paymentStatus",
+    "Actions",
   ];
   dataSource!: MatTableDataSource<any>;
+  dataSource1!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: "0px", y: "0px" };
 
   selection = new SelectionModel<any>(true, []);
-  data: any;
+  goods: any;
+  services: any;
   error: any;
   isLoading: boolean = true;
   currentUser: any;
@@ -48,20 +66,23 @@ export class ProductsAllocationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getData();
+    this.getGoods("Good");
+    this.getallcataionPerType("Service");
   }
 
   refresh() {
-    this.getData();
+    this.getGoods("Good");
   }
 
-  getData() {
-    this.service.getSales().subscribe(
+  
+  getGoods(type) {
+    this.service.getSalesPerType(type).subscribe(
       (res) => {
-        this.data = res.entity;
-        if (this.data != null) {
+        this.goods = res.entity;
+        console.log("Goods"+ res.entity)
+        if (this.goods != null) {
           this.isLoading = false;
-          this.dataSource = new MatTableDataSource<any>(this.data);
+          this.dataSource = new MatTableDataSource<any>(this.goods);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }
@@ -71,6 +92,25 @@ export class ProductsAllocationComponent implements OnInit {
       }
     );
   }
+  getallcataionPerType(type:any) {
+    this.service.getSalesPerType(type).subscribe(
+      (res) => {
+        this.services = res.entity;
+        console.log("services"+ this.service)
+        if (this.services != null) {
+          this.isLoading = false;
+          this.dataSource1 = new MatTableDataSource<any>(this.services);
+          this.dataSource1.paginator = this.paginator;
+          this.dataSource1.sort = this.sort;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+
 
   readMessage(message) {
     this.snackbar.showNotification("snackbar-success", message);
@@ -85,15 +125,16 @@ export class ProductsAllocationComponent implements OnInit {
     }
   }
 
-  addCall() {
+  verify(row) {
+    console.log(row)
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
     dialogConfig.width = "40%"
     dialogConfig.data = {
-      test: ""
+      row: row
     }
-    this.dialog.open(AddAllocationComponent, dialogConfig)
+    this.dialog.open(VerifyproductAllocationsComponent, dialogConfig)
   }
 
 }

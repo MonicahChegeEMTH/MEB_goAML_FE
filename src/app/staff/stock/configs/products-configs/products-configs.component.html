@@ -99,59 +99,59 @@
                                         [class.even-row]="!(i % 2)">{{i +
                                         1}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="productName">
+                                <ng-container matColumnDef="product_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Product
                                         Name</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.productName
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.product_name
                                         }}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="buyingPrice">
+                                <ng-container matColumnDef="buying_price">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Buying
                                         Price</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.buyingPrice
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.buying_price
                                         }}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="sellingPrice">
+                                <!-- <ng-container matColumnDef="selling_price">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Selling
                                         Price</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.sellingPrice
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.selling_price
                                         }}</mat-cell>
-                                </ng-container>
+                                </ng-container> -->
 
-                                <ng-container matColumnDef="unitMeasurement">
+                                <ng-container matColumnDef="quantity">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="column-nowrap">Unit</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.unitMeasurement
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.quantity
                                         }}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="quantity">
+                                <ng-container matColumnDef="unit_measurement">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="column-nowrap">Qtty</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">{{
-                                        configs.quantity}}</mat-cell>
+                                        configs.unit_measurement}}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="effectiveFrom">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Effective
-                                        From</mat-header-cell>
+                                <ng-container matColumnDef="route">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Route</mat-header-cell>
+                            
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.effectiveFrom |
-                                        date}}</mat-cell>
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.route
+                            }}</mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="createdDate">
+                                <ng-container matColumnDef="effective_from">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Created
                                         On</mat-header-cell>
                                     <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.createdDate
+                                        [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.effective_from
                                         |date}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">

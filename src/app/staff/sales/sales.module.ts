@@ -27,6 +27,14 @@ import { AddAllocationComponent } from './pages/add-allocation/add-allocation.co
 import { AgmCoreModule } from '@agm/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CdkColumnDef } from '@angular/cdk/table';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartsModule as chartjsModule } from "ng2-charts";
+import { EditCollectionComponent } from './pages/edit-collection/edit-collection.component';
+import { LookupPickUpLocationsComponent } from './pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
+import { RoutesLookUpComponent } from './pages/routes-look-up/routes-look-up.component';
+import { VerifyproductAllocationsComponent } from './verifyproduct-allocations/verifyproduct-allocations.component';
 
 
 @NgModule({
@@ -41,7 +49,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         DeleteFloatAllocationComponent,
         LookupOneMilkcollectorComponent,
         ProductsAllocationComponent,
-        AddAllocationComponent
+        AddAllocationComponent,
+        EditCollectionComponent,
+        LookupPickUpLocationsComponent,
+        RoutesLookUpComponent,
+        VerifyproductAllocationsComponent
     ],
     imports: [
         CommonModule,
@@ -50,7 +62,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         }),
         SalesRoutingModule,
         SharedModule,
+        NgApexchartsModule,
         ComponentsModule,
+        chartjsModule,
         MatIconModule,
         MatCardModule,
         MatTableModule,
@@ -61,7 +75,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatDatepickerModule,
         MatSelectModule,
         MatTabsModule,
-        MatCheckboxModule
-    ]
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+    ],
+    providers: [CdkColumnDef]
 })
 export class SalesModule { }

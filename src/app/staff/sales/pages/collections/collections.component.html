@@ -10,7 +10,89 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">
+
                             <div class="body">
+                                <div class="row">
+
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                        <div class="card card-statistic-2">
+                                            <div class="clearfix">
+                                                <div class="card-right">
+                                                    <div>
+                                                        <h5 class="float-end">Quantity (Kgs)</h5>
+                                                    </div>
+                                                    <div class="m-r-10 m-l-10">
+                                                        <h3 class="font-weight-bold float-end mb-0">{{dquantity | number
+                                                            : '1.2-2' }}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-chart">
+                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
+                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                        <div class="card card-statistic-2">
+                                            <div class="clearfix">
+                                                <div class="card-right">
+                                                    <div>
+                                                        <h5 class="float-end">Amount(KES)</h5>
+                                                    </div>
+                                                    <div class="m-r-10 m-l-10">
+                                                        <h3 class="font-weight-bold float-end mb-0">{{damount | number :'1.2-2'  }}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-chart">
+                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
+                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                        <div class="card card-statistic-2">
+                                            <div class="clearfix">
+                                                <div class="card-right">
+                                                    <div>
+                                                        <h5 class="float-end">Farmers</h5>
+                                                    </div>
+                                                    <div class="m-r-10 m-l-10">
+                                                        <h3 class="font-weight-bold float-end mb-0">{{farmers}}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-chart">
+                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
+                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                        <div class="card card-statistic-2">
+                                            <div class="clearfix">
+                                                <div class="card-right">
+                                                    <div>
+                                                        <h5 class="float-end">Collections Count</h5>
+                                                    </div>
+                                                    <div class="m-r-10 m-l-10">
+                                                        <h3 class="font-weight-bold float-end mb-0">{{dcount}}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-chart">
+                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
+                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="table-responsive">
                                     <div class="materialTableHeader">
                                         <div class="row">
@@ -38,7 +120,11 @@
                                                             <mat-label>Filter By </mat-label>
                                                             <mat-select [(value)]="selected">
                                                                 <mat-option value="sd"><b>Specific Date</b></mat-option>
-                                                                <mat-option value="dr"><b>Date Range</b></mat-option>
+                                                                <mat-option value="dr"><b>Date Range</b>
+                                                                </mat-option><mat-option value="pul"><b>Pick-Up
+                                                                        Location</b></mat-option>
+                                                                <mat-option value="route"><b>Route
+                                                                    </b></mat-option>
                                                             </mat-select>
                                                         </mat-form-field>
                                                     </li>
@@ -68,6 +154,20 @@
                                                                     [for]="picker3"></mat-datepicker-toggle>
                                                                 <mat-datepicker #picker3></mat-datepicker>
                                                             </mat-form-field>
+                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'pul'">
+                                                                <input matInput (dateChange)="filterByDate()"
+                                                                    placeholder="select pick up location"
+                                                                    formControlName="pickuplocation">
+                                                                <mat-icon matSuffix
+                                                                    (click)="selectpickUpLocation()">search
+                                                                </mat-icon>
+                                                            </mat-form-field>
+                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'route'">
+                                                                <input matInput placeholder="select route"
+                                                                    formControlName="route">
+                                                                <mat-icon matSuffix (click)="selectRoute()">search
+                                                                </mat-icon>
+                                                            </mat-form-field>
                                                         </form>
                                                     </li>
                                                 </ul>
@@ -77,11 +177,10 @@
                                                     <li>
                                                         <div class="export-button m-l-10" matTooltip="XLSX">
                                                             <img src="assets/images/icons/xlsx.png" alt="" (click)="
-                                        exporter.exportTable('xlsx', {
-                                          fileName: 'all-counties',
-                                          sheet: 'sheet1'
-                                        })
-                                      " />
+                                                                exporter.exportTable('xlsx', {
+                                                                fileName: 'all-counties',
+                                                                sheet: 'sheet1'
+                                                                })" />
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -114,6 +213,14 @@
                                                 *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                         </ng-container>
+                                        <ng-container matColumnDef="farmer_no">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                class="column-nowrap tbl-col-width-per-8">Farmer No.</mat-header-cell>
+                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                {{response.farmer_no}}
+                                            </mat-cell>
+                                        </ng-container>
                                         <ng-container matColumnDef="farmer">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
                                                 class="column-nowrap">Farmer</mat-header-cell>
@@ -124,51 +231,48 @@
                                         </ng-container>
                                         <ng-container matColumnDef="quantity">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Qtty</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-5">Qtty</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                {{response.quantity}}
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-5">
+                                                {{response.quantity | number :'1.2-2'}}
                                             </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="amount">
+                                        <ng-container matColumnDef="session">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Amount</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-8">Session</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                {{response.amount | currency:'KES':'symbol':'4.2-2'}}
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="collector">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Collector</mat-header-cell>
-                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                {{response.collector}}
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                {{response.session}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="collection_date">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Collection
-                                                Date</mat-header-cell>
-                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                {{response.collection_date | date}}
-                                            </mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef="paymentStatus">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Payment
-                                                Status
+                                                class="column-nowrap">collection_date
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap">
-                                                <span *ngIf="response.paymentStatus=='N'"
-                                                    class="badge badge-pill badge-primary col-red">No</span><span
-                                                    *ngIf="response.paymentStatus=='Y'"
-                                                    class="badge badge-pill badge-primary col-success">Yes</span>
+                                                {{response.collection_date |date }}
                                             </mat-cell>
                                         </ng-container>
+                                        <ng-container matColumnDef="route">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                class="column-nowrap tbl-col-width-per-15">Route</mat-header-cell>
+                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
+                                                {{response.route}}
+                                            </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="pickUpLocation">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                class="column-nowrap tbl-col-width-per-20">pickUpLocation
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-20">
+                                                {{response.pickUpLocation }}
+                                            </mat-cell>
+                                        </ng-container>
+
+
                                         <ng-container matColumnDef="action">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
@@ -179,6 +283,12 @@
                                                     (click)="viewFarmerCollections(response)" class="tbl-action-btn">
                                                     <app-feather-icons matTooltip="View Farmer Collections"
                                                         [icon]="'eye'" [class]="'tbl-fav-eye'"></app-feather-icons>
+                                                </button>
+                                                <button mat-icon-button color="primary"
+                                                    (click)="$event.stopPropagation()" (click)="edit(response)"
+                                                    class="tbl-action-btn">
+                                                    <app-feather-icons matTooltip="Edit Collections" [icon]="'edit'"
+                                                        [class]="'tbl-fav-edit'"></app-feather-icons>
                                                 </button>
                                             </mat-cell>
                                         </ng-container>
@@ -241,12 +351,14 @@
                     </div>
                 </form>
                 <div class="row body">
-                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="isCoordinates">
+                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+                        [restriction]="restriction" *ngIf="isCoordinates">
                         <agm-marker *ngFor="let marker of markers" [latitude]="marker.latitude"
-                            [longitude]="marker.longitude" [label]="marker.location+' - '+marker.time"></agm-marker>
+                            [longitude]="marker.longitude" [label]="marker.route+' - '+marker.quantity"></agm-marker>
                     </agm-map>
 
-                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="!isCoordinates">
+                    <agm-map #map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+                        [restriction]="restriction" *ngIf="!isCoordinates">
                     </agm-map>
                 </div>
             </mat-tab>

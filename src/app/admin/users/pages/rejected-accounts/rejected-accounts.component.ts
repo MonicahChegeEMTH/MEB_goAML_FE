@@ -19,19 +19,19 @@ import { UpdateAccountComponent } from '../update-account/update-account.compone
 @Component({
   selector: 'app-rejected-accounts',
   templateUrl: './rejected-accounts.component.html',
-  styleUrls: ['./rejected-accounts.component.sass']
+  styleUrls: ['./rejected-accounts.component.sass'],
 })
 export class RejectedAccountsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
-    "id",
-    "username",
-    "firstname",
-    "lastname",
-    "department",
-    "email",
-    "phonenumber",
-    "status",
-    "actions",
+    'id',
+    'username',
+    'firstname',
+    'lastname',
+    'department',
+    'email',
+    'phonenumber',
+    'status',
+    'actions',
   ];
   users: any[] = [];
   dataSource!: MatTableDataSource<any>;
@@ -51,10 +51,10 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild("filter", { static: true }) filter: ElementRef;
+  @ViewChild('filter', { static: true }) filter: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -79,8 +79,6 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
           }
-
-         
         },
         (err) => {
           console.log(err);
@@ -92,7 +90,7 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = "500px";
+    dialogConfig.width = '500px';
     dialogConfig.data = {
       user,
     };
@@ -105,19 +103,19 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
     this.dialog.open(AccountDetailsComponent, {
       data: {
         account: account,
-        action: "details",
+        action: 'details',
       },
-      width: "500px",
+      width: '500px',
     });
   }
 
-  lockAccountCall(account){
+  lockAccountCall(account) {
     this.dialog.open(LockAccountComponent, {
       data: {
         account: account,
-        action: "details",
+        action: 'details',
       },
-      width: "500px",
+      width: '500px',
     });
   }
 
@@ -125,37 +123,40 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = "500px";
+    dialogConfig.width = '500px';
     dialogConfig.data = {
       account,
     };
     this.dialog.open(DeleteAccountComponent, dialogConfig);
   }
 
-  generateAccountsReports(){
-    const params = new HttpParams().set("status", "Rejected");
+  generateAccountsReports() {
+    const params = new HttpParams().set('status', 'Rejected');
 
-    this.accountService.generateAccountReportsPerStatus(params).pipe(takeUntil(this.subject)).subscribe(result => {
-      let url = window.URL.createObjectURL(result.data);
+    this.accountService
+      .generateAccountReportsPerStatus(params)
+      .pipe(takeUntil(this.subject))
+      .subscribe((result) => {
+        let url = window.URL.createObjectURL(result.data);
 
-      // if you want to open PDF in new tab
-      window.open(url);
+        // if you want to open PDF in new tab
+        window.open(url);
 
-      let a = document.createElement("a");
-      document.body.appendChild(a);
-      a.setAttribute("style", "display: none");
-      a.setAttribute("target", "blank");
-      a.href = url;
-      a.download = result.filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.setAttribute('target', 'blank');
+        a.href = url;
+        a.download = result.filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
 
-      this.snackbar.showNotification(
-        "snackbar-success",
-        "Purchase Order generated successfully"
-      );
-    })
+        this.snackbar.showNotification(
+          'Purchase Order generated successfully',
+          'snackbar-success'
+        );
+      });
   }
 
   updateUser(userId) {
@@ -167,7 +168,7 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
   }
 
   addNew() {
-    this.router.navigate(["/admin/user-accounts/add-account"]);
+    this.router.navigate(['/admin/user-accounts/add-account']);
   }
 
   applyFilter(event: Event) {
@@ -181,10 +182,10 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
   // context menu
   onContextMenu(event: MouseEvent, item: any) {
     event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + "px";
-    this.contextMenuPosition.y = event.clientY + "px";
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = { item: item };
-    this.contextMenu.menu.focusFirstItem("mouse");
+    this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
 }

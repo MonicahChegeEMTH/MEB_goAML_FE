@@ -15,6 +15,7 @@ export class AddAllocationComponent implements OnInit {
 
   allocateform: FormGroup;
   loading = false;
+  selected="";
 
   constructor(public dialogRef: MatDialogRef<ProductsAllocationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -26,9 +27,12 @@ export class AddAllocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.allocateform = this.fb.group({
+      type:["",[Validators.required]],
       productId: ["", [Validators.required]],
-      quantity: ["", [Validators.required]],
-      farmerId: ["", [Validators.required]],
+      quantity: [""],
+      farmerNo: ["", [Validators.required]],
+      heatStartDate: [""],
+      noOfCows: ["" ],
     })
 
     this.getFarmers();
@@ -36,6 +40,7 @@ export class AddAllocationComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.allocateform.value)
     this.loading = true;
     this.subscription = this.service.addAllocation(this.allocateform.value).subscribe(res => {
       this.snackbar.showNotification("snackbar-success", "Successful!");

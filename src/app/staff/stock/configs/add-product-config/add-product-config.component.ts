@@ -5,16 +5,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { ConfigsService } from '../configs.service';
 import { ProductsConfigsComponent } from '../products-configs/products-configs.component';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-add-product-config',
   templateUrl: './add-product-config.component.html',
   styleUrls: ['./add-product-config.component.sass']
 })
-export class AddProductConfigComponent implements OnInit {
+export class AddProductConfigComponent extends BaseComponent implements OnInit {
 
   configsForm: FormGroup;
   loading = false;
+  routes: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -22,18 +25,35 @@ export class AddProductConfigComponent implements OnInit {
     private snackbar: SnackbarService,
     public dialogRef: MatDialogRef<ProductsConfigsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+  ) {
+    super()
+   }
 
   ngOnInit(): void {
+    this.getRoutes();
+    
     this.configsForm = this.fb.group({
-      productName: ["", [Validators.required]],
+      productName:["Fresh Milk", [Validators.required]],
       buyingPrice: ["", [Validators.required]],
       sellingPrice: ["", [Validators.required]],
       unitMeasurement: ["", [Validators.required]],
       quantity: ["", [Validators.required]],
       effectiveFrom: [""],
+      routeFk: ["", [Validators.required]]
     });
 
+  }
+
+  getRoutes(){
+    this.service.getRoutes().pipe(takeUntil(this.subject)).subscribe(res => {
+      let routes = res.entity;
+
+      if(routes.length > 0){
+        this.routes = routes;
+      }
+    }, err => {
+      console.log(err)
+    })
   }
 
 

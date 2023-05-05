@@ -38,6 +38,19 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Mode of Allocation</mat-label>
+                                    <mat-select formControlName="mode" required>
+                                        <mat-option value="M-Pesa">MPesa</mat-option>
+                                        <mat-option value="Cash">Cash</mat-option>
+                                        <mat-option value="Bank">Bank</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="allocationForm.get('mode').hasError('required')">
+                                        Allocated mode is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">

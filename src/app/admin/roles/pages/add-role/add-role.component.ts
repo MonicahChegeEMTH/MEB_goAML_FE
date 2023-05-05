@@ -97,6 +97,8 @@ export class AddRoleComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAccessRights();
+    
     this.currentUserName = this.tokenStorage.getUser().username;
     console.log("this.function_typ: ", this.function_type);
     // this.getAccessRights();

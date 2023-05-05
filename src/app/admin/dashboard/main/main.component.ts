@@ -19,29 +19,40 @@ export class MainComponent implements OnInit {
   data: any;
   subscription!: Subscription;
   loaded: boolean = false;
+  isdata:boolean=false
 
   constructor(private service: DashboardService) {
 
   }
 
-  getAnalysis() {
-    this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
-      this.data = res;
-      if (this.data) {
-        this.loaded = true;
-        this.users = this.data.entity.users;
-        this.teams = this.data.entity.teams;
-        this.meetingCategories = this.data.entity.meetingCategeories;
-        this.departments = this.data.entity.departments;
-        this.actionTypes = this.data.entity.actionTypes;
-        this.subsidiaries = this.data.entity.subsidiaries;
-      }
-    });
-  }
+  // getAnalysis() {
+  //   this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
+  //     this.data = res;
+  //     if (this.data) {
+        
+  //       this.loaded = true;
+  //       this.users = this.data.entity.users;
+  //       this.teams = this.data.entity.teams;
+  //       this.meetingCategories = this.data.entity.meetingCategeories;
+  //       this.departments = this.data.entity.departments;
+  //       this.actionTypes = this.data.entity.actionTypes;
+  //       this.subsidiaries = this.data.entity.subsidiaries;
+  //     }else{
+  //       this.loaded = false;
+  //       this.users = 0;
+  //       this.teams = 0;
+  //       this.meetingCategories =0;
+  //       this.departments = 0;
+  //       this.actionTypes =0;
+  //       this.subsidiaries = 0;
+
+  //     }
+  //   });
+  // }
 
 
   ngOnInit() {
-    this.getAnalysis();
+    // this.getAnalysis();
   }
 
 }

@@ -11,6 +11,7 @@ import { DeleteFarmerComponent } from '../delete-farmer/delete-farmer.component'
 import { FarmerDetailsComponent } from '../farmer-details/farmer-details.component';
 import { RegisterFarmerComponent } from '../register-farmer/register-farmer.component';
 import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-farmer-managenent',
@@ -18,14 +19,17 @@ import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component'
   styleUrls: ['./farmer-managenent.component.sass']
 })
 export class FarmerManagenentComponent implements OnInit {
+  filterform:FormGroup
+  selected = "";
 
   displayedColumns: string[] = [
     'id',
-    "memberCode",
-    "firstName",
-    "lastName",
-    "mobileNo",
-    'date',
+    "farmer_no",
+    "username",
+    "mobile_no",
+    "ID No.",
+    "route",
+    'pickUpLocation',
     'action',
   ];
 
@@ -33,7 +37,7 @@ export class FarmerManagenentComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private dialog: MatDialog, private service: FarmerService,) { }
+  constructor(private router: Router, private dialog: MatDialog, private service: FarmerService,private fb:FormBuilder) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -46,9 +50,11 @@ export class FarmerManagenentComponent implements OnInit {
 
 
   getData() {
+    this.selected = "";
     this.isLoading = true;
     this.subscription = this.service.getFarmers().subscribe(res => {
       this.data = res;
+      console.log(this.data)
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
@@ -61,6 +67,9 @@ export class FarmerManagenentComponent implements OnInit {
         this.isdata = false;
         this.dataSource = new MatTableDataSource<any>(this.data);
       }
+    },error => {
+      console.log('An error occurred:', error)
+      
     })
   }
 
@@ -73,6 +82,9 @@ export class FarmerManagenentComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
+    this.filterform= this.fb.group({
+      farmer_no: [""],
+    })
     this.getData();
   }
 
@@ -123,5 +135,40 @@ export class FarmerManagenentComponent implements OnInit {
   viewFarmerCollections(row) {
 
     this.router.navigate(['/staff/sales/farmer', row.id]);
+  }
+
+  // filterFarmers() {
+  //   if (this.selected == 'fn') {
+  //  this.getFarmerByFarmerNo();
+  //   }
+  // }
+  getFarmerByFarmerNo(){
+    this.isLoading = true;
+    let farmerNo=this.filterform.value.farmer_no
+    console.log(this.filterform.value.farmer_no)
+      
+    if (farmerNo != null && farmerNo != undefined ) {
+  
+      this.subscription = this.service.getByFarmersByFarmerNo(farmerNo).subscribe(res => {
+        this.data = res;
+        console.log(this.data.entity)
+        if (this.data.entity!=null) {
+          let result = []
+          result.push(this.data.entity)
+         
+          this.isLoading = false;
+          this.isdata = true;
+          // Binding with the datasource
+          this.dataSource = new MatTableDataSource(result);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+        else {
+          this.isdata = false;
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource(null);
+        }
+      })
+    }
   }
 }

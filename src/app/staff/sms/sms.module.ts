@@ -15,12 +15,29 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SendSmsComponent } from './send-sms/send-sms.component';
+import { BulkComponent } from './bulk/bulk.component';
+import { SmsTemplateComponent } from './sms-template/sms-template.component';
+import { SmsLimitsComponent } from './sms-limits/sms-limits.component';
+import { CreateTemplateComponent } from './create-template/create-template.component';
+import { EditTemplateComponent } from './edit-template/edit-template.component';
+import { DeleteTemplateComponent } from './delete-template/delete-template.component';
+import { ViewTemplateBodyComponent } from './view-template-body/view-template-body.component';
+import { InitiateBulkSmsComponent } from './initiate-bulk-sms/initiate-bulk-sms.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
   declarations: [
     SmsManagementComponent,
-    SendSmsComponent
+    SendSmsComponent,
+    BulkComponent,
+    SmsTemplateComponent,
+    SmsLimitsComponent,
+    CreateTemplateComponent,
+    EditTemplateComponent,
+    DeleteTemplateComponent,
+    ViewTemplateBodyComponent,
+    InitiateBulkSmsComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +52,9 @@ import { SendSmsComponent } from './send-sms/send-sms.component';
     MatSortModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule
+
   ]
 })
 export class SmsModule { }

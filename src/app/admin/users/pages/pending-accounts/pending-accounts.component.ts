@@ -225,11 +225,11 @@ export class PendingAccountsComponent extends BaseComponent implements OnInit {
         (res) => {
           row.isDisabled = false;
           console.log(res);
-          this.snackbar.showNotification("snackbar-success", res.message);
+          this.snackbar.showNotification(res.message, "snackbar-success");
           this.router.navigate([`/admin/user-accounts/all`]);
         },
         (err) => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error
+          this.snackbar.showNotification(err.error.error, "snackbar-danger"
           );
           console.log(err);
           row.isDisabled = false;

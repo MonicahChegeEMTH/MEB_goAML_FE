@@ -5,7 +5,7 @@
             <app-breadcrumb [title]="'Milk Collection Statements'" [items]="['Collections']" [active_item]="'Farmer'">
             </app-breadcrumb>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="body p-2">
@@ -77,7 +77,7 @@
                                                 </div>
                                             </li>
 
-                                            <li class="dropdown m-l-5" *ngIf="found">
+                                            <li class="dropdown m-l-10" *ngIf="found">
                                                 <p style="color:green">Total Qtty : <b> {{accruals.quantity}}</b></p>
                                             </li>
 
@@ -88,7 +88,16 @@
                                         </ul>
                                     </div>
                                     <div class="col-2">
+
                                         <ul class="header-buttons">
+
+                                            <button mat-mini-fab color="primary" (click)="generateSTatement(farmerid)"
+                                                matTooltip="Generate Statement">
+                                                <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                            </button>
+
+
+
                                             <li>
                                                 <div class="export-button m-l-10" matTooltip="XLSX">
                                                     <img src="assets/images/icons/xlsx.png" alt="" (click)="
@@ -111,7 +120,6 @@
                             </div>
                             <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
                                 #exporter="matTableExporter">
-                                <!-- Checkbox Column -->
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -127,7 +135,6 @@
                                         </mat-checkbox>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- ID Column -->
                                 <ng-container matColumnDef="id">
                                     <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
                                         mat-sort-header>#</mat-header-cell>
@@ -189,28 +196,513 @@
                                     </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
                                 <mat-row *matRowDef="let row; columns: displayedColumns"
                                     (click)="countyDetailsCall(county)" [style.cursor]="'pointer'" matRipple>
                                 </mat-row>
                                 <mat-cell *matNoDataRow colspan="4">
                                     No data matching the filter "{{ input.value }}"</mat-cell>
                             </mat-table>
-
-                            <!-- Loading spinner -->
                             <div *ngIf="isLoading" class="tbl-spinner">
                                 <mat-progress-spinner color="primary" [diameter]="50" mode="indeterminate">
                                 </mat-progress-spinner>
                             </div>
-
-                            <!-- <div class="tbl-spinner" *ngIf="!isdata && !isLoading">
-                                <h4>0 Records Found</h4>
-                            </div> -->
+                            <div *ngIf="!isdata" class="no-results p-5">
+                                No collections made from this farmer
+                            </div>
 
                             <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
                                 [pageSizeOptions]="[5, 10, 25, 100]">
                             </mat-paginator>
                         </div>
+                        <div class="text-end p-3">
+                            <button (click)="navigateBackToFarmers()" mat-raised-button class="msr-2" color="accent">
+                              Back
+                            </button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Farmer Details</h2>
+                    </div>
+                    <div class="body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="card">
+                                <div class="chat">
+                                    <div class="chat-header clearfix">
+                                        <div class="row mt-2">
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Lastname </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Member code </div>
+                                                    <div class="chat-num-messages">{{farmer.farmerNo }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Subcounty" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">ID number </div>
+                                                    <div class="chat-num-messages">{{farmer.id_number}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Subcounty" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">Subcounty</div>
+                                                    <div class="chat-num-messages">{{farmer.subcounty}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Lastname </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">No of cows </div>
+                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card project_widget">
+                                <div class="header">
+                                </div>
+                                <div class="body">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ amountNotPayedOnCollections | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Pending Accrued Payment On Collections
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ amountPayedOnCollections | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Amount Paid On Accrued Collections
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{  notPayedAccruals | currency: "KES"}}</h3>
+                                                <div class="text font-15 m-b-5">Amount Not Paid On Allocated Items</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="text-center m-b-20">
+                                                <h3 class="m-b-10 col-green">{{ (payedAccruals) | currency: "KES" }}</h3>
+                                                <div class="text font-15 m-b-5">Amount Paid On allocated Items</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <mat-tab-group>
+                            <mat-tab label="Farmer Collections">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card pt-3">
+                                        <div class="header">
+                                            <h2 class="font-bold col-green">Milk Deliveries: </h2>
+                                        </div>
+                                        <div class="body">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="table-responsive">
+                                                    <div class="materialTableHeader">
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <ul class="header-buttons-left ms-0">
+                                                                    <li class="dropdown">
+                                                                        <h2>Deliveries</h2>
+                                                                    </li>
+                                                                    <li class="dropdown m-l-20">
+                                                                        <label for="search-input"><i
+                                                                                class="material-icons search-icon">search</i></label>
+                                                                        <input placeholder="Filter..." type="text"
+                                                                            (keyup)="applyFilter($event)" #filter
+                                                                            class="browser-default search-field"
+                                                                            aria-label="Search box" />
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="m-l-10"
+                                                                            [hidden]="!selection.hasValue()"
+                                                                            matTooltip="DELETE">
+                                                                            <button mat-mini-fab color="primary">
+                                                                                <mat-icon
+                                                                                    class="col-white">check_circle</mat-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <ul class="header-buttons">
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="XLSX">
+                                                                            <img src="assets/images/icons/xlsx.png"
+                                                                                alt="" (click)="
+                                                                    exporter.exportTable('xlsx', {
+                                                                      fileName: 'Meeting Agendas',
+                                                                      sheet: 'sheet1'
+                                                                    })
+                                                                  " />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="CSV">
+                                                                            <img src="assets/images/icons/csv.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('csv')" />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="JSON">
+                                                                            <img src="assets/images/icons/json.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('json')" />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="TXT">
+                                                                            <img src="assets/images/icons/txt.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('txt')" />
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <mat-table #table matTableExporter [dataSource]="dataSource" matSort
+                                                class="mat-cell" #exporter="matTableExporter">
+                                                <ng-container matColumnDef="select">
+                                                    <mat-header-cell *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-6'">
+                                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                            [checked]="selection.hasValue() && isAllSelected()"
+                                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                                            [ngClass]="'tbl-checkbox'">
+                                                        </mat-checkbox>
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
+                                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                                            (change)="$event ? selection.toggle(row) : null"
+                                                            [checked]="selection.isSelected(row)"
+                                                            [ngClass]="'tbl-checkbox'">
+                                                        </mat-checkbox>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="id">
+                                                    <mat-header-cell class="table-img tbl-col-width-per-8"
+                                                        *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+                                                    <mat-cell class="table-img tbl-col-width-per-8"
+                                                        *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
+                                                        [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="quantity">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">Quantity</mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        {{response.quantity}}
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="amount">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">Amount</mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        {{response.amount | currency:'KES':'symbol':'4.2-2'}}
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="collector">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">Collected
+                                                        By</mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        {{response.collector}}
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="pickUpLocation">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">PickUp
+                                                        Location</mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        {{response.pickUpLocation}}
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="collection_date">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">Collection
+                                                        Date</mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        {{response.collection_date | date:'medium'}}
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="paymentStatus">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="column-nowrap">Payment
+                                                        Status
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let response;let i = index"
+                                                        [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                        class="column-nowrap">
+                                                        <span *ngIf="response.paymentStatus == 'N'"
+                                                            class="badge badge-pill badge-primary col-red"><b>No</b></span>
+                                                        <span *ngIf="response.paymentStatus == 'Y'"
+                                                            class="badge badge-pill badge-primary col-green"><b>Yes</b></span>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                                <mat-row *matRowDef="let row; let i = index columns: displayedColumns"
+                                                    [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                                    (click)="countyDetailsCall(county)" [style.cursor]="'pointer'"
+                                                    matRipple>
+                                                </mat-row>
+                                                <mat-cell *matNoDataRow colspan="4">
+                                                    No data matching the filter "{{ input.value }}"</mat-cell>
+                                            </mat-table>
+                                            <div *ngIf="isLoading" class="tbl-spinner">
+                                                <mat-progress-spinner color="primary" [diameter]="50"
+                                                    mode="indeterminate">
+                                                </mat-progress-spinner>
+                                            </div>
+                                            <div *ngIf="!isdata" class="no-results p-5">
+                                                No collections made from this farmer
+                                            </div>
+
+                                            <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
+                                                [pageSizeOptions]="[5, 10, 25, 100]">
+                                            </mat-paginator>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Items Allocated To Farmer">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="header">
+                                            <h2 class="font-bold col-green">Product Items Allocated: </h2>
+                                        </div>
+                                        <div class="body">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="table-responsive">
+                                                    <div class="materialTableHeader">
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <ul class="header-buttons-left ms-0">
+                                                                    <li class="dropdown">
+                                                                        <h2>Products</h2>
+                                                                    </li>
+                                                                    <li class="dropdown m-l-20">
+                                                                        <label for="search-input"><i
+                                                                                class="material-icons search-icon">search</i></label>
+                                                                        <input placeholder="Filter..." type="text"
+                                                                            (keyup)="applyAllocationFilter($event)" #filter
+                                                                            class="browser-default search-field"
+                                                                            aria-label="Search box" />
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="m-l-10"
+                                                                            matTooltip="REFRESH">
+                                                                            <button (click)="refreshAllocations()" mat-mini-fab color="primary">
+                                                                                <mat-icon
+                                                                                    class="col-white">refresh</mat-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <ul class="header-buttons">
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="XLSX">
+                                                                            <img src="assets/images/icons/xlsx.png"
+                                                                                alt="" (click)="
+                                                                    exporter.exportTable('xlsx', {
+                                                                      fileName: 'Meeting Agendas',
+                                                                      sheet: 'sheet1'
+                                                                    })
+                                                                  " />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="CSV">
+                                                                            <img src="assets/images/icons/csv.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('csv')" />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="JSON">
+                                                                            <img src="assets/images/icons/json.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('json')" />
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="export-button m-l-10"
+                                                                            matTooltip="TXT">
+                                                                            <img src="assets/images/icons/txt.png"
+                                                                                alt=""
+                                                                                (click)="exporter.exportTable('txt')" />
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <mat-table #table matTableExporter [dataSource]="allocationsDataSource" matSort
+                                        class="mat-cell" #exporter="matTableExporter">
+                                        <!-- ID Column -->
+                                        <ng-container matColumnDef="id">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{i+1}}</mat-cell>
+                                        </ng-container>
+
+
+                                        <ng-container matColumnDef="username">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer /
+                                                Supplier</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.username }}</mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="product">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Product</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.product }}</mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="quantity">
+                                            <mat-header-cell *matHeaderCellDef
+                                                mat-sort-header>Quantity</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.quantity }}
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="amount">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.amount | currency:'KES'}}
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="allocationDate">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Sold On</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.allocationDate | date}}
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="time">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.time}}
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="paymentStatus">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Payment
+                                                Status</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                <div *ngIf="row.paymentStatus == 'Y'">
+                                                    <span class="badge badge-pill badge-primary col-green">
+                                                        {{'Paid'}}</span>
+                                                </div>
+                                                <div *ngIf="row.paymentStatus == 'N'">
+                                                    <span class="badge badge-pill badge-primary col-red">
+                                                        {{'Not Paid'}}</span>
+                                                </div>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="statusReason">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Delivery
+                                                Status</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.statusReason}}
+                                            </mat-cell>
+                                        </ng-container>
+                                        <mat-header-row *matHeaderRowDef="allocationsDisplayedColumns"></mat-header-row>
+                                        <mat-row *matRowDef="let row; columns: allocationsDisplayedColumns"
+                                            (click)="viewRoleCall(row)" [style.cursor]="'pointer'" matRipple>
+                                        </mat-row>
+                                        <mat-cell *matNoDataRow colspan="4">
+                                            No data matching the filter "{{ input.value }}"</mat-cell>
+                                    </mat-table>
+                                            <div *ngIf="allocationsNotAdded">
+                                                <p class="p-3">
+                                                    No allocations for this farmer
+                                                </p>
+                                            </div>
+                                            <mat-paginator [pageSize]="2" #collectorsPaginator="matPaginator"
+                                                [pageSizeOptions]="[2, 5, 10, 20, 30, 40, 50, 100]"
+                                                aria-label="Select page of users"></mat-paginator>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </mat-tab>
+                        </mat-tab-group>
+                        <div class="text-end">
+                            <button (click)="navigateBackToFarmers()" mat-raised-button class="msr-2" color="accent">
+                              Back
+                            </button>
+                          </div>
                     </div>
                 </div>
             </div>

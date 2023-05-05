@@ -22,6 +22,15 @@ export class SalesService {
   getAllCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/all`, httpOptions);
   }
+  getCollectionsPerPickUpLocation(id:any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id, httpOptions);
+  }
+  getCollectionsPerPRoute(id:any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/route?routeId=`+id, httpOptions);
+  }
+
+  
+  
 
   getTodayCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
@@ -59,8 +68,8 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/year?year=` + year, httpOptions);
   }
 
-  getFarmerAccruals(farmerId: any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId, httpOptions);
+  getFarmerAccruals(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/accruals?farmerId=` + farmerId + `&paymentStatus=` + paymentStatus, httpOptions);
   }
 
   getAllCollectors(): Observable<any> {
@@ -75,9 +84,22 @@ export class SalesService {
   getSales(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/get`, httpOptions);
   }
+  getSalesPerType(type:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/type?type=`+type, httpOptions);
+  }
 
+
+  
   addAllocation(data: any) {
-    return this.http.post(`${environment.apiUrl}/api/v1/farmers/allocation/add`, data, httpOptions);
+    return this.http.post(`${environment.apiUrl}/api/v1/farmer/allocations/add`, data, httpOptions);
+  }
+
+  verifyAllocatins(id:any,status:any){
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/verify?id=`+id+`&status=`+status, httpOptions);
+
+  }
+  updateCollections(data: any) {
+    return this.http.put(`${environment.apiUrl}/api/v1/collections/update`, data, httpOptions);
   }
 
 
@@ -89,4 +111,34 @@ export class SalesService {
   getAllProducts(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
   }
+
+  getAllocationsByDate(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocations(farmerId): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/farmer?farmerId=` + farmerId, httpOptions);
+  }
+
+  getFarmerAllocationsByDate(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocationsPerPaymentStatus(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/products/all`, httpOptions);
+  }
+
+  getFarmerAllocationAccruals(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/allocations/farmer/accruals?farmerId=` + farmerId + `&paymentStatus=` + paymentStatus, httpOptions);
+  }
+
+  getFarmerPayments(farmerId: any, paymentStatus: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/amount?farmerNo=` + farmerId + `&paymentFlag=` + paymentStatus, httpOptions);
+  }
+
+
+  getFarmersPaymentRecords(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/payments/records`, httpOptions);
+  }
+
 }
