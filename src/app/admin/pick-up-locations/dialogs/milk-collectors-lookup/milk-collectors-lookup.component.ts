@@ -55,10 +55,12 @@ export class MilkCollectorsLookupComponent extends BaseComponent implements OnIn
 
           users.forEach(user => {
             console.log(user)
-            if(user.roles[0].name == "ROLE_COLLECTOR"){
+            if(user.roles[0].name == "MILK_COLLECTOR"){
               this.collectors.push(user);
             }
           })
+
+          console.log("Collectors")
 
           if (this.collectors.length > 0) {
             this.isLoading = false;
