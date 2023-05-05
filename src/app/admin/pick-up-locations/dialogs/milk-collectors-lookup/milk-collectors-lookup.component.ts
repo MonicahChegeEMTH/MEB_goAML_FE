@@ -52,10 +52,9 @@ export class MilkCollectorsLookupComponent extends BaseComponent implements OnIn
       .subscribe(
         (res) => {
           let users = res.userData;
-
+          
           users.forEach(user => {
-            console.log(user)
-            if(user.roles[0].name == "ROLE_COLLECTOR"){
+            if(user.roles[0].name == "MILK_COLLECTOR"){
               this.collectors.push(user);
             }
           })
@@ -96,8 +95,6 @@ export class MilkCollectorsLookupComponent extends BaseComponent implements OnIn
   }
 
   selectActionSubjects(){
-    console.log("Action Subjects ", this.selection.selected);
-
     this.dialogRef.close({ event: "close", data: this.selection.selected });
   }
 
@@ -125,7 +122,7 @@ export class MilkCollectorsLookupComponent extends BaseComponent implements OnIn
 
       users.forEach(user => {
         console.log(user)
-        if(user.roles[0].name == "ROLE_COLLECTOR"){
+        if(user.roles[0].name == "MILK_COLLECTOR"){
           this.collectors.push(user);
         }
       })

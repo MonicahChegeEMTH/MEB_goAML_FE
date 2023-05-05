@@ -252,13 +252,8 @@ export class AddPickupComponent extends BaseComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       (result) => {
-        console.log("Result ", result.data);
-
         let collectors: any[] = [];
         collectors = result.data;
-
-        console.log("Collectors ", collectors)
-
         if (collectors.length > 0) {
         
 
@@ -272,8 +267,6 @@ export class AddPickupComponent extends BaseComponent implements OnInit {
 
             this.collectorsForm.reset();
           });
-
-          console.log("Collectors Array ", this.collectorsArray)
 
           if (this.collectorsArray.length > 0) {
             this.collectorsNotAdded = false;
