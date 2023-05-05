@@ -367,11 +367,11 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: '/staff/farmers/farmers',
-    title: 'Farmers',
-    moduleName: 'farmers',
+    path: '/staff/sales/collections',
+    title: 'Collections',
+    moduleName: 'sales',
     iconType: 'feather',
-    icon: 'cloud-rain',
+    icon: 'layers',
     class: '',
     groupTitle: false,
     badge: '',
@@ -380,11 +380,11 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: '/staff/sales/collections',
-    title: 'Collections',
-    moduleName: 'sales',
+    path: '/staff/farmers/farmers',
+    title: 'Farmers',
+    moduleName: 'farmers',
     iconType: 'feather',
-    icon: 'layers',
+    icon: 'cloud-rain',
     class: '',
     groupTitle: false,
     badge: '',
@@ -421,7 +421,7 @@ export const ROUTES: RouteInfo[] = [
 
   {
     path: '/staff/configs',
-    title: 'Products Configs',
+    title: 'Price Management',
     moduleName: 'users',
     iconType: 'feather',
     icon: 'slack',
@@ -435,7 +435,7 @@ export const ROUTES: RouteInfo[] = [
 
   {
     path: '/staff/cans',
-    title: 'Milk Cans',
+    title: 'Delivery Cans',
     moduleName: 'milk-cans',
     iconType: 'feather',
     icon: 'thermometer',

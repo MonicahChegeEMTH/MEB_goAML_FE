@@ -22,8 +22,14 @@ export class SalesService {
   getAllCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/all`, httpOptions);
   }
+  getTodaysCollections(date: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=${date}`, httpOptions);
+  }
   getCollectionsPerPickUpLocation(id:any) {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id, httpOptions);
+  }
+  getCollectionsByFarmerNo(id:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` +id,httpOptions);
   }
   getCollectionsPerPRoute(id:any) {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/route?routeId=`+id, httpOptions);
