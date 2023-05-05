@@ -11,12 +11,29 @@
       <div class="col-lg-3 col-sm-4">
         <div class="info-box7 bg1 order-info-box7" matTooltip="System Users" routerLink="/staff/sales/collections">
           <div class="info-box7-block">
-            <h4 class="m-b-20">Milk Quantity(Kgs)</h4>
-            <h2 class="text-end"><span class="float-start">{{quantity | number : '1.2-2' }}</span><i
+            <h4 class="m-b-20">Today's Qty (Kgs)</h4>
+            <!-- <h2 class="text-end"><span class="float-start">{{quantity | number : '1.2-2' }}</span><i -->
+              <h2 class="text-end"><span class="float-start">{{dquantity}}</span><i
                 class="fas fa-th"></i></h2>
 
           </div>
 
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg1 order-info-box7" matTooltip="All Subsidiaries" routerLink="/staff/sales/collections">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Today Collections</h4>
+            <h2 class="text-end"><span class="float-start">{{count}}</span><i class="fas fa-th"></i></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-4">
+        <div class="info-box7 bg1 order-info-box7" matTooltip="All Departments" routerLink="/staff/farmers/farmers">
+          <div class="info-box7-block">
+            <h4 class="m-b-20">Registered Farmers</h4>
+            <h2 class="text-end"><span class="float-start">{{farmers}}</span><i class="fas fa-th"></i></h2>
+          </div>
         </div>
       </div>
       <div class="col-lg-3 col-sm-4">
@@ -33,22 +50,7 @@
 
         </div>
       </div>
-      <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg1 order-info-box7" matTooltip="All Departments" routerLink="/staff/farmers/farmers">
-          <div class="info-box7-block">
-            <h4 class="m-b-20">Registered Farmers</h4>
-            <h2 class="text-end"><span class="float-start">{{farmers}}</span><i class="fas fa-th"></i></h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-sm-4">
-        <div class="info-box7 bg1 order-info-box7" matTooltip="All Subsidiaries" routerLink="/staff/sales/collections">
-          <div class="info-box7-block">
-            <h4 class="m-b-20">Today Collections</h4>
-            <h2 class="text-end"><span class="float-start">{{count}}</span><i class="fas fa-th"></i></h2>
-          </div>
-        </div>
-      </div>
+
 
     </div>
 
@@ -59,7 +61,7 @@
         <app-collector-collections></app-collector-collections>
       </div>
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-        <app-collector-collections-milk-price></app-collector-collections-milk-price>
+        <app-milk-qauntity-per-location></app-milk-qauntity-per-location>
       </div>
     </div>
     <div class="row">
@@ -80,7 +82,7 @@
     </div>
     <div class="row">
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-        <app-milk-qauntity-per-location></app-milk-qauntity-per-location>
+        <app-collector-collections-milk-price></app-collector-collections-milk-price>
       </div>
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <app-collections-quantity></app-collections-quantity>

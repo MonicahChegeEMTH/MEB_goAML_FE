@@ -39,6 +39,25 @@
                                             <div class="clearfix">
                                                 <div class="card-right">
                                                     <div>
+                                                        <h5 class="float-end">Collections Count</h5>
+                                                    </div>
+                                                    <div class="m-r-10 m-l-10">
+                                                        <h3 class="font-weight-bold float-end mb-0">{{dcount}}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-chart">
+                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
+                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                        <div class="card card-statistic-2">
+                                            <div class="clearfix">
+                                                <div class="card-right">
+                                                    <div>
                                                         <h5 class="float-end">Amount(KES)</h5>
                                                     </div>
                                                     <div class="m-r-10 m-l-10">
@@ -72,25 +91,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-                                        <div class="card card-statistic-2">
-                                            <div class="clearfix">
-                                                <div class="card-right">
-                                                    <div>
-                                                        <h5 class="float-end">Collections Count</h5>
-                                                    </div>
-                                                    <div class="m-r-10 m-l-10">
-                                                        <h3 class="font-weight-bold float-end mb-0">{{dcount}}</h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-chart">
-                                                <canvas baseChart [chartType]="'line'" [datasets]="cardChart2Data"
-                                                    [labels]="cardChart2Label" [options]="cardChart2" [legend]="true">
-                                                </canvas>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                 </div>
                                 <div class="table-responsive">
@@ -98,7 +98,7 @@
                                         <div class="row">
                                             <div class="col-10">
                                                 <ul class="header-buttons-left ms-0">
-                                                    <li class="dropdown">
+                                                    <!-- <li class="dropdown">
                                                         <label for="search-input"><i
                                                                 class="material-icons search-icon">search</i></label>
                                                         <input placeholder="Search" type="text"
@@ -106,7 +106,7 @@
                                                             (keyup)="applyFilter($event)"
                                                             class="browser-default search-field"
                                                             aria-label="Search box" />
-                                                    </li>
+                                                    </li> -->
 
                                                     <li>
                                                         <div class="m-l-10" matTooltip="Refresh">
@@ -118,7 +118,10 @@
                                                     <li class="dropdown m-l-5">
                                                         <mat-form-field>
                                                             <mat-label>Filter By </mat-label>
-                                                            <mat-select [(value)]="selected">
+                                                            <mat-select [(value)]="selected"  (selectionChange)="onSelectionChange()">
+                                                                <mat-option value="current_date"><b>Today</b></mat-option>
+                                                                <mat-option value="all"><b>All</b></mat-option>
+                                                                <mat-option value="farmer_no"><b>Farmer Number</b></mat-option>
                                                                 <mat-option value="sd"><b>Specific Date</b></mat-option>
                                                                 <mat-option value="dr"><b>Date Range</b>
                                                                 </mat-option><mat-option value="pul"><b>Pick-Up
@@ -168,6 +171,13 @@
                                                                 <mat-icon matSuffix (click)="selectRoute()">search
                                                                 </mat-icon>
                                                             </mat-form-field>
+                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'farmer_no'">
+                                                                <input matInput
+                                                                    placeholder="Enter Farmer Number"
+                                                                    formControlName="farmer_no">
+                                                                <mat-icon matSuffix (click)="filterByFarmerNo()">search
+                                                                </mat-icon>
+                                                            </mat-form-field>
                                                         </form>
                                                     </li>
                                                 </ul>
@@ -178,7 +188,7 @@
                                                         <div class="export-button m-l-10" matTooltip="XLSX">
                                                             <img src="assets/images/icons/xlsx.png" alt="" (click)="
                                                                 exporter.exportTable('xlsx', {
-                                                                fileName: 'all-counties',
+                                                                fileName: 'Collections - '  + currentDate,
                                                                 sheet: 'sheet1'
                                                                 })" />
                                                         </div>
@@ -215,25 +225,25 @@
                                         </ng-container>
                                         <ng-container matColumnDef="farmer_no">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-8">Farmer No.</mat-header-cell>
+                                                class="column-wrap tbl-col-width-per-8">Farmer No.</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                [class.even-row]="!(i % 2)" class="column-nonwrap tbl-col-width-per-8">
                                                 {{response.farmer_no}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="farmer">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Farmer</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-11">Farmer</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-11">
                                                 {{response.farmer}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="quantity">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-5">Qtty</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-9">Qty (kgs)</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-5">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-9">
                                                 {{response.quantity | number :'1.2-2'}}
                                             </mat-cell>
                                         </ng-container>
@@ -247,7 +257,7 @@
                                         </ng-container>
                                         <ng-container matColumnDef="collection_date">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">collection_date
+                                                class="column-nowrap">Date
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap">
@@ -264,7 +274,7 @@
                                         </ng-container>
                                         <ng-container matColumnDef="pickUpLocation">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-20">pickUpLocation
+                                                class="column-nowrap tbl-col-width-per-20">MCC
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-20">

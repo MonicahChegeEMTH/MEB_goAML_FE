@@ -22,6 +22,7 @@ import { RoutesLookUpComponent } from '../routes-look-up/routes-look-up.componen
   styleUrls: ['./collections.component.scss']
 })
 export class CollectionsComponent implements OnInit {
+  filterform: FormGroup
   today: Date = new Date();
   formattedDate: string = this.today.toISOString().slice(0, 10);
   date: any;
@@ -30,12 +31,14 @@ export class CollectionsComponent implements OnInit {
   form: FormGroup;
   mapForm: FormGroup;
   selected = "";
-  selectedvalue="";
+  selectedvalue = "";
   count: any = 0
   dcount: any = 0
   dquantity: any = 0.0;
   damount: any = 0.0;
   farmers: any = 0
+  farmer: any
+  filename = "collections for " + this.today;
 
   public cardChart2: any;
   public cardChart2Data: any;
@@ -74,6 +77,8 @@ export class CollectionsComponent implements OnInit {
     'action',
   ];
 
+  currentDate: any
+
   subscription!: Subscription;
   data: any;
   isdata: boolean = false;
@@ -82,7 +87,9 @@ export class CollectionsComponent implements OnInit {
     // public dialogRef: MatDialogRef<MainComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router, private datePipe: DatePipe, private fb: FormBuilder, private dialog: MatDialog, private service: SalesService, private dashboard: DashboardService,
-    private snackbar: SnackbarService) { }
+    private snackbar: SnackbarService) {
+    this.currentDate = this.getCurrentDate()
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -90,6 +97,29 @@ export class CollectionsComponent implements OnInit {
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  getCurrentDate(): any {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  }
+
+  onSelectionChange() {
+    switch (this.selected) {
+      case 'current_date':
+        this.getTodaysData()
+        break;
+        case 'all':
+          this.getData()
+      default:
+        break;
+
     }
   }
 
@@ -139,15 +169,18 @@ export class CollectionsComponent implements OnInit {
       })
     } else if (this.selected == 'pul') {
       console.log("Filter by  pick up location")
-      
 
-    }else if(this.selected=="route"){
+
+    } else if (this.selected == "route") {
       console.log("Filter by  route")
-      
 
-      
+
+
     }
-    else {
+    else if (this.selected == "current_date") {
+      this.getTodaysData()
+    }
+    else if (this.selected == "all") {
       this.getData();
     }
   }
@@ -184,7 +217,7 @@ export class CollectionsComponent implements OnInit {
 
 
   getData() {
-    this.selected = "";
+    // this.selected = "all";
     this.isLoading = true;
     this.subscription = this.service.getAllCollections().subscribe(res => {
       this.data = res;
@@ -204,6 +237,27 @@ export class CollectionsComponent implements OnInit {
     })
   }
 
+  getTodaysData() {
+    this.isLoading = true;
+    this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
+      this.data = res;
+      if (this.data.entity.length > 0) {
+        console.log(this.data.entity)
+        this.isLoading = false;
+        this.isdata = true;
+        // Binding with the datasource
+        this.dataSource = new MatTableDataSource(this.data.entity);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.isdata = false;
+        this.isLoading = false
+        this.dataSource = new MatTableDataSource(null);
+      }
+    })
+  }
+
   dataSource!: MatTableDataSource<any>;
 
 
@@ -215,8 +269,9 @@ export class CollectionsComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
+    this.selected = 'current_date'
     this.smallChart2()
-    this.getData();
+    this.getTodaysData();
     this.getMilkCollectors();
     this.form = this.fb.group({
       date: [""],
@@ -224,14 +279,17 @@ export class CollectionsComponent implements OnInit {
       toDate: [""],
       pickuplocation: [""],
       pickuplocationId: [""],
-      route:[""],
-      routeId:[""]
+      route: [""],
+      routeId: [""],
+      farmer_no: [""]
     });
 
     this.mapForm = this.fb.group({
       collectorId: ["", [Validators.required]],
       date: ["", [Validators.required]],
     });
+
+    console.log("The current date is", this.currentDate)
   }
 
   viewFarmerCollections(row) {
@@ -269,12 +327,13 @@ export class CollectionsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       // console.log(result)
       this.dialogData = result;
+
       this.form.patchValue({
         pickuplocation: this.dialogData.data.name,
-        pickuplocationId:this.dialogData.data.id
+        pickuplocationId: this.dialogData.data.id
       });
-      let pid=this.form.value.pickuplocationId
-       this.filterByPickUpLoction(pid) 
+      let pid = this.form.value.pickuplocationId
+      this.filterByPickUpLoction(pid)
 
     });
   }
@@ -288,28 +347,28 @@ export class CollectionsComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(RoutesLookUpComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
-      console.log("Routes",result)
+      console.log("Routes", result)
       this.dialogData = result;
       this.form.patchValue({
         route: this.dialogData.data.route,
-        routeId:this.dialogData.data.id
+        routeId: this.dialogData.data.id
       });
-      let rid=this.form.value.routeId
-       this.filterByRoute(rid) 
+      let rid = this.form.value.routeId
+      this.filterByRoute(rid)
 
     });
   }
-  filterByPickUpLoction(id:any) {
+  filterByPickUpLoction(id: any) {
     this.isLoading = true;
     console.log("Filter Function called! ")
 
     // let pickUpLocationId = this.form.value.pickUpLocationId
-    console.log("Passed Id is ",id)
+    console.log("Passed Id is ", id)
 
     this.subscription = this.service.getCollectionsPerPickUpLocation(id).subscribe(res => {
       this.data = res;
       if (this.data) {
-        this.isLoading = false
+        this.isdata = true
         console.log(this.data)
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(this.data.entity);
@@ -318,29 +377,76 @@ export class CollectionsComponent implements OnInit {
       }
       else {
         this.isdata = false;
+        this.isLoading = false
         this.dataSource = new MatTableDataSource(null);
       }
     })
   }
-  filterByRoute(id:any) {
+  filterByFarmerNo(id: any) {
+    this.isLoading = true;
+    let farmerNo = this.form.value.farmer_no
+    console.log(this.form.value.farmer_no)
+
+    if (farmerNo != null && farmerNo != undefined) {
+
+      // this.subscription = this.service.getCollectionsByFarmerNo(farmerNo).subscribe(res => {
+      //   this.data = res;
+      //   console.log(this.data.entity)
+      //   if (this.data.entity!=null) {
+      //     let result = []
+      //     result.push(this.data.entity)
+
+      //     this.isLoading = false;
+      //     this.isdata = true;
+      //     // Binding with the datasource
+      //     this.dataSource = new MatTableDataSource(result);
+      //     this.dataSource.paginator = this.paginator;
+      //     this.dataSource.sort = this.sort;
+      //   }
+      //   else {
+      //     this.isdata = false;
+      //     this.isLoading = false;
+      //     this.dataSource = new MatTableDataSource(null);
+      //   }
+      // })
+      this.subscription = this.service.getCollectionsByFarmerNo(farmerNo).subscribe(res => {
+        this.data = res;
+        if (this.data) {
+          this.isLoading = false
+          console.log(this.data.entity.size > 0)
+          this.isdata = true;
+          this.dataSource = new MatTableDataSource(this.data.entity);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+        else {
+          this.isdata = false;
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource(null);
+        }
+      })
+    }
+  }
+  filterByRoute(id: any) {
     this.isLoading = true;
     console.log("Filter Function called! ")
 
     // let pickUpLocationId = this.form.value.pickUpLocationId
-    console.log("Passed Id is ",id)
+    console.log("Passed Id is ", id)
 
     this.subscription = this.service.getCollectionsPerPRoute(id).subscribe(res => {
       this.data = res;
-      if (this.data) {
+      if (this.data.entity.size > 0) {
         this.isLoading = false
         console.log(this.data)
-        this.isLoading = false;
+        this.isdata = true;
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       }
       else {
         this.isdata = false;
+        this.isLoading = false
         this.dataSource = new MatTableDataSource(null);
       }
     })
