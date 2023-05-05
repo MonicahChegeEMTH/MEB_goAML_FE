@@ -59,6 +59,8 @@ export class MilkCollectorsLookupComponent extends BaseComponent implements OnIn
             }
           })
 
+          console.log("Collectors")
+
           if (this.collectors.length > 0) {
             this.isLoading = false;
 
