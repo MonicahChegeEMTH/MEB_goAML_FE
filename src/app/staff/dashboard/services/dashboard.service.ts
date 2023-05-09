@@ -14,9 +14,6 @@ export class DashboardService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-
-
-
   public getTodaysCollections(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today`,httpOptions);
   }
@@ -27,6 +24,18 @@ export class DashboardService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions);
   }
 
+  public getDateDangeCollections(from:any,to:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/date/range/records?fromdate=`+from+`&&toDate=`+to,httpOptions);
+  }
+
+  public getPickUpLocationCollections(pickUpLocationId:any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/record/pickupLocations?pickUpLocation=`+pickUpLocationId,httpOptions);
+  }
+
+  public getAllCollectionsRecords(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/record/records/all`,httpOptions);
+  }
+  
   
 
   // public getDashboardWigetsAnalytics(): Observable<any> {

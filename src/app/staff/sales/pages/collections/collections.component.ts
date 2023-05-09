@@ -129,6 +129,7 @@ export class CollectionsComponent implements OnInit {
       this.toDate = this.datePipe.transform(this.form.value.toDate, 'yyyy-MM-dd');
       if (this.fromDate != null && this.fromDate != undefined && this.toDate != null && this.toDate != undefined) {
         this.isLoading = true;
+        this.getDateRangeSummary(this.fromDate,this.toDate)
         this.subscription = this.service.getCollectionsDateRange(this.fromDate, this.toDate).subscribe(res => {
           this.data = res;
           if (this.data.entity.length > 0) {
@@ -138,6 +139,7 @@ export class CollectionsComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.data.entity);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
+            
           }
           else {
             this.isdata = false;
@@ -219,6 +221,7 @@ export class CollectionsComponent implements OnInit {
   getData() {
     // this.selected = "all";
     this.isLoading = true;
+    this.getAllColectionsSummary()
     this.subscription = this.service.getAllCollections().subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
@@ -313,6 +316,58 @@ export class CollectionsComponent implements OnInit {
 
 
   }
+  getDateRangeSummary(from,to) {
+    this.isLoading = true
+  
+    this.subscription = this.dashboard.getDateDangeCollections(from,to).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+
+  }
+  getSummaryPerPickUpLocatins(pickUpLocationId) {
+    this.isLoading = true
+  
+    this.subscription = this.dashboard.getPickUpLocationCollections(pickUpLocationId).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+
+  }
+  getAllColectionsSummary() {
+    this.isLoading = true
+  
+    this.subscription = this.dashboard.getAllCollectionsRecords().subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log(this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+
+  }
+
   dialogData: any;
 
   selectpickUpLocation() {
@@ -334,6 +389,7 @@ export class CollectionsComponent implements OnInit {
       });
       let pid = this.form.value.pickuplocationId
       this.filterByPickUpLoction(pid)
+      
 
     });
   }
@@ -360,7 +416,7 @@ export class CollectionsComponent implements OnInit {
   }
   filterByPickUpLoction(id: any) {
     this.isLoading = true;
-    console.log("Filter Function called! ")
+    this.getSummaryPerPickUpLocatins(id)
 
     // let pickUpLocationId = this.form.value.pickUpLocationId
     console.log("Passed Id is ", id)
