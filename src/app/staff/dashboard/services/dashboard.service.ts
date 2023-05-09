@@ -21,6 +21,7 @@ export class DashboardService {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
   public getDateCollections(date:any): Observable<any> {
+    console.log("Calling api..")
     return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions);
   }
 
@@ -33,7 +34,7 @@ export class DashboardService {
   }
 
   public getAllCollectionsRecords(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/record/records/all`,httpOptions);
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/records/all`,httpOptions);
   }
   
   

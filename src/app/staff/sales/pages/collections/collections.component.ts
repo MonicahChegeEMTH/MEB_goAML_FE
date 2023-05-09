@@ -151,8 +151,8 @@ export class CollectionsComponent implements OnInit {
     }
     else if (this.selected == 'sd') {
       this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
-      this.getDateSummary()
       this.isLoading = true;
+      this.getDateSummary(this.date)
       this.subscription = this.service.getCollections(this.date).subscribe(res => {
         this.data = res;
         if (this.data.entity.length > 0) {
@@ -242,7 +242,7 @@ export class CollectionsComponent implements OnInit {
 
   getTodaysData() {
     this.isLoading = true;
-    this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
+      this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
         console.log(this.data.entity)
@@ -298,11 +298,11 @@ export class CollectionsComponent implements OnInit {
   viewFarmerCollections(row) {
     this.router.navigate(['/staff/sales/farmer', row.farmerId]);
   }
-  getDateSummary() {
+  getDateSummary(date) {
     this.isLoading = true
-    this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", this.date)
-    this.subscription = this.dashboard.getDateCollections(this.date).subscribe(res => {
+    // this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
+    console.log("Formated date is ", date)
+    this.subscription = this.dashboard.getDateCollections(date).subscribe(res => {
       this.data = res;
       if (this.data) {
         this.isLoading = false
