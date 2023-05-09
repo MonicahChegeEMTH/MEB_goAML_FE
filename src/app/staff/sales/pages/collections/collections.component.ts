@@ -350,6 +350,23 @@ export class CollectionsComponent implements OnInit {
 
 
   }
+  getSummaryPerRoute(routeId) {
+    this.isLoading = true
+  console.log("Route id"+ routeId)
+    this.subscription = this.dashboard.getRouteCollections(routeId).subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        this.isLoading = false
+        console.log("Route collection summary",this.data)
+        this.isLoading = true;
+        this.dquantity = this.data.entity[0].quantity;
+        this.damount = this.data.entity[0].amount;
+        this.dcount = this.data.entity[0].count
+      }
+    });
+
+
+  }
   getAllColectionsSummary() {
     this.isLoading = true
   
@@ -485,16 +502,16 @@ export class CollectionsComponent implements OnInit {
   }
   filterByRoute(id: any) {
     this.isLoading = true;
-    console.log("Filter Function called! ")
+    this.getSummaryPerRoute(id)
 
     // let pickUpLocationId = this.form.value.pickUpLocationId
-    console.log("Passed Id is ", id)
+    console.log("Passed ROute Id is ", id)
 
     this.subscription = this.service.getCollectionsPerPRoute(id).subscribe(res => {
       this.data = res;
-      if (this.data.entity.size > 0) {
+      if (this.data.entity.length > 0) {
         this.isLoading = false
-        console.log(this.data)
+        console.log("Route collections"+ this.data)
         this.isdata = true;
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;

@@ -36,7 +36,6 @@ export class SalesService {
   }
 
   
-  
 
   getTodayCollections() {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today/collector`, httpOptions);
