@@ -242,6 +242,7 @@ export class CollectionsComponent implements OnInit {
 
   getTodaysData() {
     this.isLoading = true;
+     this.getDateSummary(this.currentDate)
       this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
@@ -273,6 +274,7 @@ export class CollectionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.selected = 'current_date'
+    this.getAllFarmers();
     this.smallChart2()
     this.getTodaysData();
     this.getMilkCollectors();
@@ -385,7 +387,25 @@ export class CollectionsComponent implements OnInit {
 
   }
 
+  getAllFarmers() {
+    this.subscription = this.service.getAllFarmers().subscribe(res => {
+      this.data = res;
+      if (this.data) {
+        console.log(this.data)
+        this.isLoading = false
+        this.farmers = this.data.entity.length
+
+
+      }
+    });
+
+
+  }
+
+
   dialogData: any;
+
+
 
   selectpickUpLocation() {
     const dialogConfig = new MatDialogConfig();

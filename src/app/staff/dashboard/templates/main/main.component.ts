@@ -18,9 +18,7 @@ export class MainComponent implements OnInit {
   amount: any = 0.0;
   farmers: any = 0
   count: any = 0
-  dcount: any = 0
-  dquantity: any = 0.0;
-  damount: any = 0.0;
+
 
   data: any;
   subscription!: Subscription;
@@ -41,21 +39,27 @@ export class MainComponent implements OnInit {
     private service: DashboardService,
     private fb: FormBuilder,
     private datePipe: DatePipe,
+   
   ) {
 
   }
 
-  getTodaysCollections() {
-    this.subscription = this.service.getTodaysCollections().subscribe(res => {
+  getAllColectionsSummary() {
+    this.isloading = true
+  
+    this.subscription = this.service.getAllCollectionsRecords().subscribe(res => {
       this.data = res;
       if (this.data) {
-        console.log(this.data)
-        this.loaded = true;
+        this.isloading = false
+        console.log("All collections Summary"+ this.data.entity[0])
+        this.isloading = true;
         this.quantity = this.data.entity[0].quantity;
         this.amount = this.data.entity[0].amount;
         this.count = this.data.entity[0].count
       }
     });
+
+
   }
 
   getAllFarmers() {
@@ -75,17 +79,13 @@ export class MainComponent implements OnInit {
 
 
 
-
-
-
-
   ngOnInit() {
     this.collectionSummaryForm = this.fb.group(
       {
         date: ["", [Validators.required]],
       }
     )
-    this.getTodaysCollections();
+    this.getAllColectionsSummary();
     this.getAllFarmers();
     this.smallChart2()
   }
