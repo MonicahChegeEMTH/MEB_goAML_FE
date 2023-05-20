@@ -133,6 +133,8 @@ export class ReportsService {
     };
     let API_URL = `${environment.apiUrl}/api/v1/reports/collections/per/pickUpLocation?pickUpLocationId=`+locationId+`&date=` + date;
 
+    console.log("Calling api == "+ API_URL)
+
     return this.http.get(API_URL, requestOptions).pipe(
       map((response) => {
         return {
