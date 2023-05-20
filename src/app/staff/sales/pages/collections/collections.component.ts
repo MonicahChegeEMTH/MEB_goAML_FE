@@ -37,6 +37,7 @@ export class CollectionsComponent implements OnInit {
   dquantity: any = 0.0;
   damount: any = 0.0;
   farmers: any = 0
+  datasize:any=0
   farmer: any
   filename = "collections for " + this.today;
 
@@ -136,6 +137,7 @@ export class CollectionsComponent implements OnInit {
             this.isLoading = false;
             this.isdata = true;
             // Binding with the datasource
+            this.datasize=this.data.entity.length
             this.dataSource = new MatTableDataSource(this.data.entity);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
@@ -159,6 +161,7 @@ export class CollectionsComponent implements OnInit {
           this.isLoading = false;
           this.isdata = true;
           // Binding with the datasource
+          this.datasize=this.data.entity.length
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -229,6 +232,7 @@ export class CollectionsComponent implements OnInit {
         this.isLoading = false;
         this.isdata = true;
         // Binding with the datasource
+        this.datasize=this.data.entity.length
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -250,6 +254,7 @@ export class CollectionsComponent implements OnInit {
         this.isLoading = false;
         this.isdata = true;
         // Binding with the datasource
+        this.datasize=this.data.entity.length
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -464,6 +469,7 @@ export class CollectionsComponent implements OnInit {
         this.isdata = true
         console.log(this.data)
         this.isLoading = false;
+        this.datasize=this.data.entity.length
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -508,6 +514,7 @@ export class CollectionsComponent implements OnInit {
           this.isLoading = false
           console.log(this.data.entity.size > 0)
           this.isdata = true;
+          this.datasize=this.data.entity.length
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -533,6 +540,7 @@ export class CollectionsComponent implements OnInit {
         this.isLoading = false
         console.log("Route collections"+ this.data)
         this.isdata = true;
+        this.datasize=this.data.entity.length
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

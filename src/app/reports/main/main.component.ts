@@ -32,6 +32,9 @@ const MONTHS = [
 export class MainComponent implements OnInit {
   reportCollectionForm: FormGroup;
   farmerstatementForm: FormGroup
+  collectionPerpLocationsForm:FormGroup
+  reportCollectionForm2:FormGroup
+  reportCollectionForm3:FormGroup
   paymentFileForm:FormGroup
   isloading: boolean
   collectors: any
@@ -44,6 +47,7 @@ export class MainComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   dialogData: any;
   date: string;
+ 
 
   constructor(
     // public dialogRef: MatDialogRef<MainComponent>,
@@ -58,13 +62,27 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.reportCollectionForm = this.fb.group({
 
+      date: ["", [Validators.required]],  
+ 
+
+    })
+    this.reportCollectionForm2= this.fb.group({
+
+      date: ["", [Validators.required]],  
+ 
+    })
+    this.reportCollectionForm3= this.fb.group({
+
+      date: ["", [Validators.required]],  
+     })
+    this.collectionPerpLocationsForm = this.fb.group({
+
       date: ["", [Validators.required]],
-      // collector: ["", [Validators.required]]
-    
-      pul: ["", [Validators.required]],
+      pul: ["", [Validators.required]], 
       locationId: ["", [Validators.required]],
 
     })
+
 
     this.months=MONTHS
     
@@ -127,7 +145,7 @@ export class MainComponent implements OnInit {
 
   generateCollectionsPerCollector() {
     // console.log(this.reportCollectionForm.value)
-    this.date = this.datePipe.transform(this.reportCollectionForm.value.date, 'yyyy-MM-dd');
+    this.date = this.datePipe.transform(this.reportCollectionForm2.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", this.date)
     this.isloading = true
     this.service.collectionsPerCollectorByDate(this.date)
@@ -151,8 +169,6 @@ export class MainComponent implements OnInit {
 
           this.isloading = false;
 
-
-
           this.snackbar.showNotification(
             "Report generated successfully",
             "snackbar-success"
@@ -173,7 +189,7 @@ export class MainComponent implements OnInit {
 
   generateCollectionsPerLocations() {
     // console.log(this.reportCollectionForm.value)
-    this.date = this.datePipe.transform(this.reportCollectionForm.value.date, 'yyyy-MM-dd');
+    this.date = this.datePipe.transform(this.reportCollectionForm3.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", this.date)
     this.isloading = true
     this.service.collectionsPerLocationrByDate(this.date)
@@ -228,7 +244,7 @@ export class MainComponent implements OnInit {
     const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
-      this.reportCollectionForm.patchValue({
+      this.collectionPerpLocationsForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
@@ -279,11 +295,10 @@ export class MainComponent implements OnInit {
   }
   generateCollectionsPerPickUpLocations(){
     this.isloading = true
-    // console.log(this.reportCollectionForm.value)
-    this.date = this.datePipe.transform(this.reportCollectionForm.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", this.date)
-
-    this.service.collectionsPerPulByDate(1,this.date)
+    console.log(this.collectionPerpLocationsForm.value)
+    this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');
+    console.log("Formated date "+ this.date)
+    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId,this.date)
       .subscribe(
         (response) => {
           console.log(response)

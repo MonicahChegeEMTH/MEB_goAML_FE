@@ -43,13 +43,15 @@
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                           </mat-form-field>
-
+                          <mat-error *ngIf="reportCollectionForm.get('date').hasError('required')">
+                            Date is required
+                        </mat-error>
 
 
                           <div class="example-button-row">
 
                             <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
-                              (click)="generateStatement()" (click)="accordion.closeAll()">
+                              (click)="generateStatement(); reportCollectionForm.reset()" >
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
                             </button>
@@ -84,7 +86,7 @@
                             </mat-panel-description> -->
                       </mat-expansion-panel-header>
 
-                      <form class="register-form" [formGroup]="reportCollectionForm">
+                      <form class="register-form" [formGroup]="reportCollectionForm2">
                         <div class="row">
 
                           <mat-form-field class="m-l-5">
@@ -93,12 +95,15 @@
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
                           </mat-form-field>
+                          <mat-error *ngIf="reportCollectionForm2.get('date').hasError('required')">
+                            Date is required
+                        </mat-error>
 
 
 
                           <div class="example-button-row">
 
-                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
+                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm2.valid"
                               (click)="generateCollectionsPerCollector()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
@@ -132,7 +137,7 @@
                               </mat-panel-description> -->
                       </mat-expansion-panel-header>
 
-                      <form class="register-form" [formGroup]="reportCollectionForm">
+                      <form class="register-form" [formGroup]="reportCollectionForm3">
                         <div class="row">
 
                           <mat-form-field class="m-l-5">
@@ -141,11 +146,14 @@
                             <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                             <mat-datepicker #picker3></mat-datepicker>
                           </mat-form-field>
+                          <mat-error *ngIf="reportCollectionForm3.get('date').hasError('required')">
+                            Date is required
+                        </mat-error>
 
 
                           <div class="example-button-row">
 
-                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
+                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm3.valid"
                               (click)="generateCollectionsPerLocations()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
@@ -180,13 +188,13 @@
                               </mat-panel-description> -->
                       </mat-expansion-panel-header>
 
-                      <form class="register-form" [formGroup]="reportCollectionForm">
+                      <form class="register-form" [formGroup]="collectionPerpLocationsForm">
                         <div class="row">
                           <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
                             <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
-                            <mat-error *ngIf="reportCollectionForm.get('pul').hasError('required')">
+                            <mat-error *ngIf="collectionPerpLocationsForm.get('pul').hasError('required')">
                                 Pick-Up Location is required
                             </mat-error>
                         </mat-form-field>
@@ -196,11 +204,14 @@
                             <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                             <mat-datepicker #picker4></mat-datepicker>
                           </mat-form-field>
+                          <mat-error *ngIf="collectionPerpLocationsForm.get('date').hasError('required')">
+                            Date is required
+                        </mat-error>
 
 
                           <div class="example-button-row">
 
-                            <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
+                            <button mat-raised-button color="primary" [disabled]="!collectionPerpLocationsForm.valid"
                               (click)="generateCollectionsPerPickUpLocations()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
