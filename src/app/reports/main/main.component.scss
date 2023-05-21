@@ -13,3 +13,8 @@
 mat-accordion{
   max-width: 100%;
 }
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+  margin: 15px;
+}

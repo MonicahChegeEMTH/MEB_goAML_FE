@@ -37,21 +37,34 @@
 
                       <form class="register-form" [formGroup]="reportCollectionForm">
                         <div class="row">
+                          <!-- <mat-form-field class="example-full-width mb-1" appearance="outline">
+                            <mat-label>Select Report Format</mat-label>
+                            <mat-select formControlName="format" required>
+                              <mat-option value="pdf">PDF</mat-option>
+                              <mat-option value="excel">Excel</mat-option>
+                            </mat-select>
+                          </mat-form-field> -->
+                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                            <mat-radio-button value="pdf">PDF</mat-radio-button>
+                            <mat-radio-button value="excel">Excel</mat-radio-button>
+                          </mat-radio-group>
 
                           <mat-form-field class="m-l-5">
                             <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                           </mat-form-field>
-                          <mat-error *ngIf="reportCollectionForm.get('date').hasError('required')">
+                          <!-- <mat-error *ngIf="reportCollectionForm.get('date').hasError('required')">
                             Date is required
-                        </mat-error>
+                          </mat-error> -->
+
+
 
 
                           <div class="example-button-row">
 
                             <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
-                              (click)="generateStatement(); reportCollectionForm.reset()" >
+                              (click)="generateDateReport(); reportCollectionForm.reset()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
                             </button>
@@ -95,9 +108,15 @@
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
                           </mat-form-field>
-                          <mat-error *ngIf="reportCollectionForm2.get('date').hasError('required')">
+                          <!-- <mat-error *ngIf="reportCollectionForm2.get('date').hasError('required')">
                             Date is required
-                        </mat-error>
+                          </mat-error> -->
+
+                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                            <mat-radio-button value="pdf">PDF</mat-radio-button>
+                            <mat-radio-button value="excel">Excel</mat-radio-button>
+                          </mat-radio-group>
+
 
 
 
@@ -139,6 +158,10 @@
 
                       <form class="register-form" [formGroup]="reportCollectionForm3">
                         <div class="row">
+                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                            <mat-radio-button value="pdf">PDF</mat-radio-button>
+                            <mat-radio-button value="excel">Excel</mat-radio-button>
+                          </mat-radio-group>
 
                           <mat-form-field class="m-l-5">
                             <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
@@ -146,9 +169,10 @@
                             <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                             <mat-datepicker #picker3></mat-datepicker>
                           </mat-form-field>
-                          <mat-error *ngIf="reportCollectionForm3.get('date').hasError('required')">
+                          <!-- <mat-error *ngIf="reportCollectionForm3.get('date').hasError('required')">
                             Date is required
-                        </mat-error>
+                          </mat-error> -->
+
 
 
                           <div class="example-button-row">
@@ -189,24 +213,32 @@
                       </mat-expansion-panel-header>
 
                       <form class="register-form" [formGroup]="collectionPerpLocationsForm">
+
                         <div class="row">
+                          <div>
+                            <mat-radio-group aria-label="Select an option" formControlName="format">
+                              <mat-radio-button value="pdf">PDF</mat-radio-button>
+                              <mat-radio-button value="excel">Excel</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+
                           <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
                             <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
                             <mat-error *ngIf="collectionPerpLocationsForm.get('pul').hasError('required')">
-                                Pick-Up Location is required
+                              Pick-Up Location is required
                             </mat-error>
-                        </mat-form-field>
+                          </mat-form-field>
                           <mat-form-field class="m-l-5">
                             <input matInput [matDatepicker]="picker4" placeholder="Choose a date"
                               formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                             <mat-datepicker #picker4></mat-datepicker>
                           </mat-form-field>
-                          <mat-error *ngIf="collectionPerpLocationsForm.get('date').hasError('required')">
+                          <!-- <mat-error *ngIf="collectionPerpLocationsForm.get('date').hasError('required')">
                             Date is required
-                        </mat-error>
+                          </mat-error> -->
 
 
                           <div class="example-button-row">
@@ -226,9 +258,6 @@
 
 
                 </li>
-
-
-
 
               </ul>
             </div>
@@ -286,7 +315,7 @@
                     </td>
                   </div>
                 </li>
-               
+
               </ul>
             </div>
           </div>
