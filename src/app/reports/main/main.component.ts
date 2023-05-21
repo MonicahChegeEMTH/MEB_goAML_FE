@@ -71,18 +71,18 @@ export class MainComponent implements OnInit {
     this.reportCollectionForm2 = this.fb.group({
 
       date: ["", [Validators.required]],
-      format: ["", [Validators.required]],
+      // format: ["", [Validators.required]],
 
     })
     this.reportCollectionForm3 = this.fb.group({
 
       date: ["", [Validators.required]],
-      format: ["", [Validators.required]],
+      // format: ["", [Validators.required]],
     })
     this.collectionPerpLocationsForm = this.fb.group({
 
       date: ["", [Validators.required]],
-      format: ["", [Validators.required]],
+      // format: ["", [Validators.required]],
       pul: ["", [Validators.required]],
       locationId: ["", [Validators.required]],
 
@@ -95,6 +95,8 @@ export class MainComponent implements OnInit {
       {
         month: ["", [Validators.required]],
         mode: ["", [Validators.required]],
+        pul: ["", [Validators.required]],
+        locationId: ["", [Validators.required]],
       }
     )
 
@@ -268,10 +270,28 @@ export class MainComponent implements OnInit {
       });
     });
   }
+  choosePickUpLocation() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+      this.paymentFileForm.patchValue({
+        pul: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      });
+    });
+  }
   generatePaymentFile() {
-    console.log(this.paymentFileForm.value)
+    console.log("Paymentfile Form Data"+ this.paymentFileForm.value.pul)
+    console.log("Paymentfile Form Data"+ this.paymentFileForm.value.locationId)
     this.isloading = true
-    this.service.getPaymentFile(this.paymentFileForm.value.month, this.paymentFileForm.value.mode)
+    this.service.getPaymentFile(this.paymentFileForm.value.locationId,this.paymentFileForm.value.month, this.paymentFileForm.value.mode)
       .subscribe(
         (response) => {
           console.log(response)
