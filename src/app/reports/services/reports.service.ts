@@ -111,7 +111,7 @@ export class ReportsService {
     //   responseType: "blob",
     //   withCredentials: false,
     // };
-    let API_URL = `http://localhost:9600/api/v1/excel/reports/date?date=` + date;
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collectionsPerDate?date=` + date;
     console.log("Calling api " + API_URL)
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
@@ -185,7 +185,7 @@ export class ReportsService {
       })
     );
   }
-  getPaymentFile(month: any, mode: any): Observable<any> {
+  getPaymentFile(locationId:any,month: any, mode: any): Observable<any> {
     console.log("..Calling api  ....")
     let headers = new HttpHeaders();
     headers.append("Accept", "application/pdf");
@@ -196,7 +196,7 @@ export class ReportsService {
       responseType: "blob",
       withCredentials: false,
     };
-    let API_URL = `${environment.apiUrl}/api/v1/reports/paymentfile?month=` + month + `&paymentMode=` + mode;
+    let API_URL = `${environment.apiUrl}/api/v1/reports/paymentfile?pickupLocationId=`+locationId+`&month=` + month + `&paymentMode=` + mode;
     console.log(API_URL)
 
     return this.http.get(API_URL, requestOptions).pipe(

@@ -112,11 +112,11 @@
                             Date is required
                           </mat-error> -->
 
-                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                          <!-- <mat-radio-group aria-label="Select an option" formControlName="format">
                             <mat-radio-button value="pdf">PDF</mat-radio-button>
                             <mat-radio-button value="excel">Excel</mat-radio-button>
                           </mat-radio-group>
-
+ -->
 
 
 
@@ -158,10 +158,10 @@
 
                       <form class="register-form" [formGroup]="reportCollectionForm3">
                         <div class="row">
-                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                          <!-- <mat-radio-group aria-label="Select an option" formControlName="format">
                             <mat-radio-button value="pdf">PDF</mat-radio-button>
                             <mat-radio-button value="excel">Excel</mat-radio-button>
-                          </mat-radio-group>
+                          </mat-radio-group> -->
 
                           <mat-form-field class="m-l-5">
                             <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
@@ -215,12 +215,12 @@
                       <form class="register-form" [formGroup]="collectionPerpLocationsForm">
 
                         <div class="row">
-                          <div>
+                          <!-- <div>
                             <mat-radio-group aria-label="Select an option" formControlName="format">
                               <mat-radio-button value="pdf">PDF</mat-radio-button>
                               <mat-radio-button value="excel">Excel</mat-radio-button>
                             </mat-radio-group>
-                          </div>
+                          </div> -->
 
                           <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select PickUpLocation</mat-label>
@@ -352,6 +352,14 @@
 
                       <form class="register-form" [formGroup]="paymentFileForm">
                         <div class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Select PickUpLocation</mat-label>
+                            <input matInput formControlName="pul" required readonly />
+                            <mat-icon matSuffix (click)="choosePickUpLocation()">search</mat-icon>
+                            <mat-error *ngIf="collectionPerpLocationsForm.get('pul').hasError('required')">
+                              Collection center is required
+                            </mat-error>
+                          </mat-form-field>
 
                           <mat-form-field class="example-full-width mb-1" appearance="outline">
                             <mat-label>Select Month</mat-label>
