@@ -20,6 +20,8 @@ import { FarmerStatementComponent } from './farmer-statement/farmer-statement.co
 import {MatRippleModule} from '@angular/material/core';
 import { StatmentComponent } from './pages/statment/statment.component';
 import { FarmerProductsReportComponent } from './pages/farmer-products-report/farmer-products-report.component'; 
+import {MatRadioModule} from '@angular/material/radio';
+
 
 @NgModule({
     declarations: [
@@ -45,7 +47,8 @@ import { FarmerProductsReportComponent } from './pages/farmer-products-report/fa
         PerfectScrollbarModule,
         MatIconModule,
         MatExpansionModule,
-        MatRippleModule
+        MatRippleModule,
+        MatRadioModule
         
     
     ]

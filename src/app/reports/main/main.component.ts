@@ -10,19 +10,20 @@ import { ReportsService } from '../services/reports.service';
 import { StatmentComponent } from '../pages/statment/statment.component';
 import { FarmerProductsReportComponent } from '../pages/farmer-products-report/farmer-products-report.component';
 import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
+import { saveAs } from 'file-saver';
 const MONTHS = [
-  {value: 'JANUARY', name: 'JANUARY'},
-  {value: 'FEBRUARY', name: 'FEBRUARY'},
-  {value: 'MARCH', name: 'MARCH'},
-  {value: 'APRIL', name: 'APRIL'},
-  {value: 'MAY', name: 'MAY'},
-  {value: 'JUNE', name: 'JUNE'},
-  {value: 'JULY', name: 'JULY'},
-  {value: 'AUGUST', name: 'AUGUST'},
-  {value: 'SEPTEMBER', name: 'SEPTEMBER'},
-  {value: 'OCTOBER', name: 'OCTOBER'},
-  {value: 'NOVEMBER', name: 'NOVEMBER'},
-  {value: 'DECEMBER', name: 'DECEMBER'}
+  { value: 'JANUARY', name: 'JANUARY' },
+  { value: 'FEBRUARY', name: 'FEBRUARY' },
+  { value: 'MARCH', name: 'MARCH' },
+  { value: 'APRIL', name: 'APRIL' },
+  { value: 'MAY', name: 'MAY' },
+  { value: 'JUNE', name: 'JUNE' },
+  { value: 'JULY', name: 'JULY' },
+  { value: 'AUGUST', name: 'AUGUST' },
+  { value: 'SEPTEMBER', name: 'SEPTEMBER' },
+  { value: 'OCTOBER', name: 'OCTOBER' },
+  { value: 'NOVEMBER', name: 'NOVEMBER' },
+  { value: 'DECEMBER', name: 'DECEMBER' }
 ];
 @Component({
   selector: 'app-main',
@@ -32,13 +33,13 @@ const MONTHS = [
 export class MainComponent implements OnInit {
   reportCollectionForm: FormGroup;
   farmerstatementForm: FormGroup
-  collectionPerpLocationsForm:FormGroup
-  reportCollectionForm2:FormGroup
-  reportCollectionForm3:FormGroup
-  paymentFileForm:FormGroup
+  collectionPerpLocationsForm: FormGroup
+  reportCollectionForm2: FormGroup
+  reportCollectionForm3: FormGroup
+  paymentFileForm: FormGroup
   isloading: boolean
   collectors: any
-  months:any
+  months: any
 
   centered = false;
   // radius: number;
@@ -47,7 +48,7 @@ export class MainComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   dialogData: any;
   date: string;
- 
+
 
   constructor(
     // public dialogRef: MatDialogRef<MainComponent>,
@@ -62,31 +63,35 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.reportCollectionForm = this.fb.group({
 
-      date: ["", [Validators.required]],  
- 
+      date: ["", [Validators.required]],
+      format: ["", [Validators.required]],
+
 
     })
-    this.reportCollectionForm2= this.fb.group({
+    this.reportCollectionForm2 = this.fb.group({
 
-      date: ["", [Validators.required]],  
- 
+      date: ["", [Validators.required]],
+      format: ["", [Validators.required]],
+
     })
-    this.reportCollectionForm3= this.fb.group({
+    this.reportCollectionForm3 = this.fb.group({
 
-      date: ["", [Validators.required]],  
-     })
+      date: ["", [Validators.required]],
+      format: ["", [Validators.required]],
+    })
     this.collectionPerpLocationsForm = this.fb.group({
 
       date: ["", [Validators.required]],
-      pul: ["", [Validators.required]], 
+      format: ["", [Validators.required]],
+      pul: ["", [Validators.required]],
       locationId: ["", [Validators.required]],
 
     })
 
 
-    this.months=MONTHS
-    
-    this.paymentFileForm=this.fb.group(
+    this.months = MONTHS
+
+    this.paymentFileForm = this.fb.group(
       {
         month: ["", [Validators.required]],
         mode: ["", [Validators.required]],
@@ -94,52 +99,65 @@ export class MainComponent implements OnInit {
     )
 
   }
-  generateStatement() {
+  generateDateReport() {
     // this.color="green"
     // this.centered=true
     this.isloading = true
-    // console.log(this.reportCollectionForm.value)
+    let format = this.reportCollectionForm.value.format
     this.date = this.datePipe.transform(this.reportCollectionForm.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", this.date)
+    if (format == "pdf") {
 
-    this.service.collectionsPerDate(this.date)
-      .subscribe(
-        (response) => {
-          console.log(response)
-          let url = window.URL.createObjectURL(response.data);
+      this.service.collectionsPerDate(this.date)
+        .subscribe(
+          (response) => {
+            console.log(response)
+            let url = window.URL.createObjectURL(response.data);
 
-          // if you want to open PDF in new tab
-          window.open(url);
+            // if you want to open PDF in new tab
+            window.open(url);
 
-          let a = document.createElement("a");
-          document.body.appendChild(a);
-          a.setAttribute("style", "display: none");
-          a.setAttribute("target", "blank");
-          a.href = url;
-          a.download = response.filename;
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
+            let a = document.createElement("a");
+            document.body.appendChild(a);
+            a.setAttribute("style", "display: none");
+            a.setAttribute("target", "blank");
+            a.href = url;
+            a.download = response.filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
 
-          this.isloading = false;
+            this.isloading = false;
 
 
 
-          this.snackbar.showNotification(
-            "Report generated successfully",
-            "snackbar-success"
-          );
+            this.snackbar.showNotification(
+              "Report generated successfully",
+              "snackbar-success"
+            );
+          },
+          (err) => {
+            console.log(err);
+            this.isloading = false
+
+            this.snackbar.showNotification(
+              "Report could not be generated successfully",
+              "snackbar-danger"
+            );
+          }
+        );
+    } else if (format == "excel") {
+      console.log("File format picked = " + format)
+      console.log("Formated Date = " + this.date)
+      this.service.collectionsPerDateExcel(this.date).subscribe(
+        (response: Blob) => {
+          const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+          saveAs(response, filename);
         },
-        (err) => {
-          console.log(err);
-          this.isloading = false
-
-          this.snackbar.showNotification(
-            "Report could not be generated successfully",
-            "snackbar-danger"
-          );
+        error => {
+          console.error('Failed to download report:', error);
         }
       );
+    }
 
   }
 
@@ -251,9 +269,9 @@ export class MainComponent implements OnInit {
     });
   }
   generatePaymentFile() {
-      console.log(this.paymentFileForm.value)
+    console.log(this.paymentFileForm.value)
     this.isloading = true
-    this.service.getPaymentFile(this.paymentFileForm.value.month,this.paymentFileForm.value.mode)
+    this.service.getPaymentFile(this.paymentFileForm.value.month, this.paymentFileForm.value.mode)
       .subscribe(
         (response) => {
           console.log(response)
@@ -293,12 +311,12 @@ export class MainComponent implements OnInit {
       );
 
   }
-  generateCollectionsPerPickUpLocations(){
+  generateCollectionsPerPickUpLocations() {
     this.isloading = true
     console.log(this.collectionPerpLocationsForm.value)
     this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');
-    console.log("Formated date "+ this.date)
-    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId,this.date)
+    console.log("Formated date " + this.date)
+    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId, this.date)
       .subscribe(
         (response) => {
           console.log(response)
