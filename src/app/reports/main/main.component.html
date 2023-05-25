@@ -64,7 +64,7 @@
                           <div class="example-button-row">
 
                             <button mat-raised-button color="primary" [disabled]="!reportCollectionForm.valid"
-                              (click)="generateDateReport(); reportCollectionForm.reset()">
+                              (click)="generateDateReport()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
                             </button>
@@ -377,6 +377,7 @@
                               <mat-option value="M-pesa">MPesa</mat-option>
                               <mat-option value="Cash">Cash</mat-option>
                               <mat-option value="Bank">Bank</mat-option>
+                              <mat-option value="cooperative saccos">Cooperative Saccos</mat-option>
                             </mat-select>
                             <mat-error *ngIf="paymentFileForm.get('mode').hasError('required')">
                               Payment mode Is required

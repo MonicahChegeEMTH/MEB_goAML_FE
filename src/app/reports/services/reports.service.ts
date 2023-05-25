@@ -197,7 +197,7 @@ export class ReportsService {
       withCredentials: false,
     };
     let API_URL = `${environment.apiUrl}/api/v1/reports/paymentfile?pickupLocationId=`+locationId+`&month=` + month + `&paymentMode=` + mode;
-    console.log(API_URL)
+    console.log("Calling api"+ API_URL)
 
     return this.http.get(API_URL, requestOptions).pipe(
       map((response) => {

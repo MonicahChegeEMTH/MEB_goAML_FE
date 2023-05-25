@@ -7,11 +7,21 @@
                 </div>
                 <div class="body">
                     <form [formGroup]="configsForm" class="m-4">
+                        <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
                         <div class="row">
+                           
+                                <mat-form-field class="example-full-width mb-3" appearance="outline" hidden>
+                                    <mat-label>Product ID</mat-label>
+                                    <input formControlName="id" matInput required />
+                                    <mat-error *ngIf="configsForm.get('id').hasError('required')" >
+                                        Product ID Name is required
+                                    </mat-error>
+                                </mat-form-field>
+                           
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width mb-3" appearance="outline">
                                     <mat-label>Product Name</mat-label>
-                                    <input formControlName="productName" matInput required />
+                                    <input formControlName="productName" matInput required readonly />
                                     <mat-error *ngIf="configsForm.get('productName').hasError('required')">
                                         Product Name is required
                                     </mat-error>
@@ -69,11 +79,14 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Ward</mat-label>
+                                    <mat-label>Route</mat-label>
                                     <mat-select formControlName="routeFk">
                                       <mat-option *ngFor="let route of routes" [value]="route.id">{{ route.route
                                         }}</mat-option>
                                     </mat-select>
+                                    <mat-error *ngIf="configsForm.get('routeFk').hasError('required')">
+                                        Route is required
+                                    </mat-error>
                                   </mat-form-field>
                             </div>
                         </div>
