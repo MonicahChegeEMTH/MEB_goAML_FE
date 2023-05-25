@@ -90,6 +90,7 @@ export class ProductsConfigsComponent implements OnInit {
   }
 
   edit(config) {
+    
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true

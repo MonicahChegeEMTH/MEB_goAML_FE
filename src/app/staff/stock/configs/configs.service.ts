@@ -15,22 +15,25 @@ export class ConfigsService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-  rolesUrl = `${environment.API}/api/v1/product/configuration/`;
+  url = `${environment.API}/api/v1/product/configuration/`;
 
   public getConfigs(): Observable<any> {
-    return this.http.get<any>(this.rolesUrl + 'get');
+    return this.http.get<any>(this.url + 'get');
+  }
+  public getConfigsById(productId:any): Observable<any> {
+    return this.http.get<any>(this.url + 'id?productconfigId='+productId);
   }
 
   addNewConfiguration(data: any): Observable<any> {
-    return this.http.post(this.rolesUrl + 'add', data, httpOptions);
+    return this.http.post(this.url + 'add', data, httpOptions);
   }
 
   updateConfiguration(data: any): Observable<any> {
-    return this.http.put(this.rolesUrl + 'update', data, httpOptions);
+    return this.http.put(this.url + 'update', data, httpOptions);
   }
 
   deleteConfiguration(id: any): Observable<any> {
-    return this.http.delete(this.rolesUrl + `delete/` + id, httpOptions);
+    return this.http.delete(this.url + `delete/` + id, httpOptions);
   }
 
   getRoutes(): Observable<any> {

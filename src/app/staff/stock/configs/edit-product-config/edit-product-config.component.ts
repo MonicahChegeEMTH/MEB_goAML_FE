@@ -18,6 +18,7 @@ export class EditProductConfigComponent extends BaseComponent implements OnInit 
   configsForm: FormGroup;
   loading = false;
   routes: any[] = [];
+  productConfig:any
 
   constructor(
     private fb: FormBuilder,
@@ -27,57 +28,68 @@ export class EditProductConfigComponent extends BaseComponent implements OnInit 
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     super()
-   }
+  }
 
   ngOnInit(): void {
-    this.configsForm = this.fb.group({
-      id: [this.data.configs.id, [Validators.required]],
-      productName: [this.data.configs.productName, [Validators.required]],
-      buyingPrice: [this.data.configs.buyingPrice, [Validators.required]],
-      sellingPrice: [this.data.configs.sellingPrice, [Validators.required]],
-      unitMeasurement: [this.data.configs.unitMeasurement, [Validators.required]],
-      quantity: [this.data.configs.quantity, [Validators.required]],
-      effectiveFrom: [this.data.configs.effectiveFrom, [Validators.required]],
-      routeFk: [this.data.configs.routeFk, [Validators.required]]
-    });
+    let productId = this.data.configs.id
+    // console.log("Product id "+productId)
 
-    this.getRoutes();
+    this.service.getConfigsById(productId).subscribe(res => {
+      this.data = res;
+      this.loading = false;
+      this.productConfig = this.data.entity
+      console.log("Product Config details ", this.data.entity)
 
-  }
+
+      this.configsForm = this.fb.group({
+        id: [this.productConfig.id, [Validators.required]],
+        productName: [this.productConfig.productName, [Validators.required]],
+        buyingPrice: [this.productConfig.buyingPrice, [Validators.required]],
+        sellingPrice: [this.productConfig.sellingPrice, [Validators.required]],
+        unitMeasurement: [this.productConfig.unitMeasurement, [Validators.required]],
+        quantity: [this.productConfig.quantity, [Validators.required]],
+        effectiveFrom: [this.productConfig.effectiveFrom, [Validators.required]],
+        routeFk: [this.productConfig.routeFk, [Validators.required]]
+      });
+    })
+
+      this.getRoutes();
+
+    }
 
   getRoutes(){
-    this.service.getRoutes().pipe(takeUntil(this.subject)).subscribe(res => {
-      let routes = res.entity;
+      this.service.getRoutes().pipe(takeUntil(this.subject)).subscribe(res => {
+        let routes = res.entity;
 
-      if(routes.length > 0){
-        this.routes = routes;
-      }
-    }, err => {
-      console.log(err)
-    })
-  }
+        if (routes.length > 0) {
+          this.routes = routes;
+        }
+      }, err => {
+        console.log(err)
+      })
+    }
 
 
 
 
   onCancel() {
-    this.dialogRef.close();
-  }
+      this.dialogRef.close();
+    }
 
   onSubmit() {
-    this.loading = true;
-    this.service.updateConfiguration(this.configsForm.value).subscribe(
-      (res) => {
-        this.loading = false;
-        this.snackbar.showNotification("snackbar-success", "Successful!");
-        this.configsForm.reset();
-        this.dialogRef.close();
-      },
-      (err) => {
-        this.loading = false;
-        this.snackbar.showNotification("snackbar-danger", err);
-      }
-    );
-  }
+      this.loading = true;
+      this.service.updateConfiguration(this.configsForm.value).subscribe(
+        (res) => {
+          this.loading = false;
+          this.snackbar.showNotification("snackbar-success", "Successful!");
+          this.configsForm.reset();
+          this.dialogRef.close();
+        },
+        (err) => {
+          this.loading = false;
+          this.snackbar.showNotification("snackbar-danger", err);
+        }
+      );
+    }
 }
 
