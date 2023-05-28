@@ -36,7 +36,9 @@ export class MainComponent implements OnInit {
   collectionPerpLocationsForm: FormGroup
   reportCollectionForm2: FormGroup
   reportCollectionForm3: FormGroup
+  reportCollectionFormp:FormGroup
   paymentFileForm: FormGroup
+  reportCollectionFormm:FormGroup
   isloading: boolean
   collectors: any
   months: any
@@ -65,8 +67,8 @@ export class MainComponent implements OnInit {
 
       date: ["", [Validators.required]],
       format: ["", [Validators.required]],
-
-
+      
+    
     })
     this.reportCollectionForm2 = this.fb.group({
 
@@ -78,11 +80,25 @@ export class MainComponent implements OnInit {
 
       date: ["", [Validators.required]],
       // format: ["", [Validators.required]],
+    
     })
-    this.collectionPerpLocationsForm = this.fb.group({
+    this.reportCollectionFormp = this.fb.group({
 
       date: ["", [Validators.required]],
       // format: ["", [Validators.required]],
+    
+    })
+    this.reportCollectionFormm = this.fb.group({
+
+      month: ["", [Validators.required]],
+      // format: ["", [Validators.required]],
+    
+    })
+
+    this.collectionPerpLocationsForm = this.fb.group({
+
+      date: ["", [Validators.required]],
+      format: ["", [Validators.required]],
       pul: ["", [Validators.required]],
       locationId: ["", [Validators.required]],
 
@@ -152,6 +168,7 @@ export class MainComponent implements OnInit {
       console.log("Formated Date = " + this.date)
       this.service.collectionsPerDateExcel(this.date).subscribe(
         (response: Blob) => {
+          this.isloading = false
           const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
           saveAs(response, filename);
         },
@@ -252,6 +269,96 @@ export class MainComponent implements OnInit {
       );
 
   }
+  generateCollectionsPerLocationsp() {
+    // console.log(this.reportCollectionForm.value)
+    this.date = this.datePipe.transform(this.reportCollectionFormp.value.date, 'yyyy-MM-dd');
+    console.log("Formated date is ", this.date)
+    this.isloading = true
+    this.service.collectionsPerLocationrByDatep(this.date)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+
+  }
+  generateCollectionsPerLocationsm() {
+    // console.log(this.reportCollectionForm.value)
+    
+    
+    this.isloading = true
+    this.service.collectionsPerLocationrByMonth(this.reportCollectionFormm.value.month)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+
+  }
 
   selectPickUpLocation() {
     const dialogConfig = new MatDialogConfig();
@@ -281,12 +388,13 @@ export class MainComponent implements OnInit {
     const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
-      this.paymentFileForm.patchValue({
+      this.collectionPerpLocationsForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
     });
   }
+  
   generatePaymentFile() {
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.pul)
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.locationId)
@@ -332,6 +440,65 @@ export class MainComponent implements OnInit {
 
   }
   generateCollectionsPerPickUpLocations() {
+    this.isloading = true
+   let format=this.collectionPerpLocationsForm.value.format
+    this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');
+    console.log("Formated date " + this.date)
+    if(format=="pdf"){
+    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId, this.date)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+      }else if (format == "excel") {
+        console.log("File format picked = " + format)
+        console.log("Formated Date = " + this.date)
+        this.service.collectionsPerMCCandDateExcel(this.collectionPerpLocationsForm.value.locationId,this.date).subscribe(
+          (response: Blob) => {
+            this.isloading = false
+            const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+            saveAs(response, filename);
+          },
+          error => {
+            console.error('Failed to download report:', error);
+          }
+        );
+      }
+  }
+  generateTotalCollectionsPerPickUpLocations() {
     this.isloading = true
     console.log(this.collectionPerpLocationsForm.value)
     this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');

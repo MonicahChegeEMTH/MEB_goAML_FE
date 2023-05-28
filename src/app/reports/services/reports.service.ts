@@ -104,14 +104,16 @@ export class ReportsService {
     let headers = new HttpHeaders();
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-
-    // let requestOptions: any = {
-    //   params: date,
-    //   headers: headers,
-    //   responseType: "blob",
-    //   withCredentials: false,
-    // };
     let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collectionsPerDate?date=` + date;
+    console.log("Calling api " + API_URL)
+
+    return this.http.get(API_URL, { headers, responseType: 'blob' });
+  }
+  collectionsPerMCCandDateExcel(pid:any,date: string): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/pickuplocation?pid=`+pid+`&date=` + date;
     console.log("Calling api " + API_URL)
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
@@ -179,7 +181,49 @@ export class ReportsService {
     return this.http.get(API_URL, requestOptions).pipe(
       map((response) => {
         return {
-          filename: "CollectionsPerLocation",
+          filename: "TotalCollectionsPerRoute",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  collectionsPerLocationrByDatep(date: any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      params: date,
+      headers: headers,
+      responseType: "blob",
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/collections/pickuplocations/date?date=` + date;
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        return {
+          filename: "TotalCollectionsPerLocation",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  collectionsPerLocationrByMonth(month: any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      params: month,
+      headers: headers,
+      responseType: "blob",
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/collections/pickuplocations/month?month=` + month;
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        return {
+          filename: "TotalCollectionsPerLocation",
           data: new Blob([response], { type: "application/pdf" }),
         };
       })
