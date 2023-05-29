@@ -388,12 +388,13 @@ export class MainComponent implements OnInit {
     const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
-      this.collectionPerpLocationsForm.patchValue({
+      this.paymentFileForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
     });
   }
+
   
   generatePaymentFile() {
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.pul)

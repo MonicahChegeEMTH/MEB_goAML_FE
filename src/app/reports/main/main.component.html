@@ -476,7 +476,7 @@
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
                             <mat-icon matSuffix (click)="choosePickUpLocation()">search</mat-icon>
-                            <mat-error *ngIf="collectionPerpLocationsForm.get('pul').hasError('required')">
+                            <mat-error *ngIf="paymentFileForm.get('pul').hasError('required')">
                               Collection center is required
                             </mat-error>
                           </mat-form-field>
