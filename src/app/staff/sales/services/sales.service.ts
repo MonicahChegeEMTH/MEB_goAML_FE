@@ -78,7 +78,7 @@ export class SalesService {
   }
 
   getAllCollectors(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/roleUsers?roleId=2`, httpOptions);
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/roleUsers?roleId=3`, httpOptions);
   }
 
   getCollectorLocationsByDate(collectorId: any, date: any): Observable<any> {
