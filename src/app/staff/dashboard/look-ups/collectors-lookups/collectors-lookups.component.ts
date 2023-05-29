@@ -20,7 +20,7 @@ export class CollectorsLookupsComponent extends BaseComponent implements OnInit 
   isLoading: boolean = true;
   collectors: any[] = [];
 
-  displayedColumns: string[] = ["username", "phonenumber", "email"];
+  displayedColumns: string[] = ["username"];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -41,41 +41,61 @@ export class CollectorsLookupsComponent extends BaseComponent implements OnInit 
   }
 
   ngOnInit(): void {
-    this.getActiveAccounts();
+    this.getMilkCollectors();
   }
 
-  getActiveAccounts() {
-    this.userService
-      .fetchAllUserAccounts()
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          let users = res.userData;
+  colData: any;
+  getMilkCollectors() {
+    this.userService.getAllCollectors().subscribe(res => {
+      this.colData = res;
+      if (this.colData.entity.length > 0) {
+        console.log("Collectors found"+ res)
+        this.collectors = this.colData.entity;
+        this.isLoading = false;
 
-          users.forEach(user => {
-            console.log(user)
-            if(user.roles[0].name == "ROLE_COLLECTOR"){
-              this.collectors.push(user);
-            }
-          })
-
-          if (this.collectors.length > 0) {
-            this.isLoading = false;
-
-            this.dataSource = new MatTableDataSource<any>(
-              this.collectors
-            );
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          } else {
-            this.isLoading = false;
-          }
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+        this.dataSource = new MatTableDataSource<any>(this.collectors
+        );
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        this.collectors = [];
+      }
+    })
   }
+
+  // getActiveAccounts() {
+  //   this.userService
+  //     .getAllCollectors()
+  //     .pipe(takeUntil(this.subject))
+  //     .subscribe(
+  //       (res) => {
+  //         let users = res.userData;
+
+  //         users.forEach(user => {
+  //           console.log(user)
+  //           if(user.roles[0].name == "ROLE_COLLECTOR"){
+  //             this.collectors.push(user);
+  //           }
+  //         })
+
+  //         if (this.collectors.length > 0) {
+  //           this.isLoading = false;
+
+  //           this.dataSource = new MatTableDataSource<any>(
+  //             this.collectors
+  //           );
+  //           this.dataSource.paginator = this.paginator;
+  //           this.dataSource.sort = this.sort;
+  //         } else {
+  //           this.isLoading = false;
+  //         }
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     );
+  // }
 
    /** Whether the number of selected elements matches the total number of rows. */
    isAllSelected() {

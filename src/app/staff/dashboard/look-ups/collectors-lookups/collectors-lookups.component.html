@@ -63,30 +63,8 @@
                     {{ row.username }}
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="phonenumber">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-40">
-                    Phone
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
-                    {{ row.mobile }}
-                  </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="email">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-40">
-                    Mail
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
-                    {{ row.email }}
-                  </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="reportingTo">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-40">
-                    Reporting to
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
-                    {{ row.reportingTo }}
-                  </mat-cell>
-                </ng-container>
+               
+                 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectRow(row)"
                   [style.cursor]="'pointer'" matRipple>
