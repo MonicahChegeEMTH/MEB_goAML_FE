@@ -34,6 +34,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTableExporterModule,
     MatSortModule,
     MatPaginatorModule,
+    MatTabsModule
    
   ],
   exports: [
