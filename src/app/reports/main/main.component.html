@@ -450,7 +450,7 @@
           <div class="body">
             <div class="doc-file-type">
               <ul class="list-unstyled" style="position: relative; height: 500px;" [perfectScrollbar]>
-                <li (click)="collectionsPerLocation('Report For Single User Action Items')" class="d-flex mb-3">
+                <li  class="d-flex mb-3">
 
 
                   <!-- <div class="example-action-buttons">
@@ -462,7 +462,7 @@
                     <mat-expansion-panel>
                       <mat-expansion-panel-header>
                         <mat-panel-title>
-                          Payment File report
+                          Monthly Payment File report
                         </mat-panel-title>
                         <!-- <mat-panel-description>
                                 Inform the date you wish to travel
@@ -472,6 +472,12 @@
 
                       <form class="register-form" [formGroup]="paymentFileForm">
                         <div class="row">
+                          <div>
+                            <mat-radio-group aria-label="Select an option" formControlName="format">
+                              <mat-radio-button value="pdf">PDF</mat-radio-button>
+                              <mat-radio-button value="excel">Excel</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
                           <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
@@ -522,6 +528,77 @@
 
 
                 </li>
+                <li  class="d-flex mb-3">
+
+
+                  <!-- <div class="example-action-buttons">
+                            <button mat-button (click)="accordion.openAll()">Expand All</button>
+                            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+                          </div> -->
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isloading"></mat-progress-bar>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          Payment File report for date range
+                        </mat-panel-title>
+                        <!-- <mat-panel-description>
+                                Inform the date you wish to travel
+                                <mat-icon>date_range</mat-icon>
+                              </mat-panel-description> -->
+                      </mat-expansion-panel-header>
+
+                      <form class="register-form" [formGroup]="paymentFileFormdr">
+                        <div class="row">
+                          <div>
+                            <mat-radio-group aria-label="Select an option" formControlName="format">
+                              <mat-radio-button value="pdf">PDF</mat-radio-button>
+                              <mat-radio-button value="excel">Excel</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+
+                          <mat-form-field class="m-l-5">
+                            <input matInput [matDatepicker]="p1" placeholder="From date" formControlName="from">
+                            <mat-datepicker-toggle matSuffix [for]="p1"></mat-datepicker-toggle>
+                            <mat-datepicker #p1></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field class="m-l-5">
+                            <input matInput [matDatepicker]="p2" placeholder="To date" formControlName="to">
+                            <mat-datepicker-toggle matSuffix [for]="p2"></mat-datepicker-toggle>
+                            <mat-datepicker #p2></mat-datepicker>
+                        </mat-form-field>
+                          <mat-form-field class="example-full-width mb-1" appearance="outline">
+                            <mat-label>Select Payment Mode</mat-label>
+                            <mat-select formControlName="mode" required>
+                              <mat-option value="M-pesa">MPesa</mat-option>
+                              <mat-option value="Cash">Cash</mat-option>
+                              <mat-option value="Bank">Bank</mat-option>
+                              <mat-option value="cooperative saccos">Cooperative Saccos</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="paymentFileFormdr.get('mode').hasError('required')">
+                              Payment mode Is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="example-button-row">
+
+                          <button mat-raised-button color="primary" [disabled]="!paymentFileFormdr.valid"
+                            (click)="generatePaymentFileDR()">
+                            <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
+                            <b>Generate</b>
+                          </button>
+                        </div>
+
+
+                      </form>
+
+                    </mat-expansion-panel>
+                  </mat-accordion>
+
+
+                </li>
+                
               </ul>
             </div>
           </div>
