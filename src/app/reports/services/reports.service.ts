@@ -118,6 +118,24 @@ export class ReportsService {
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
   }
+  paymentFileExcel(pid:any,month:any,mode:any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/paymentfile?pid=`+pid+`&month=` + month+`&mode=`+mode;
+    console.log("Calling api " + API_URL)
+
+    return this.http.get(API_URL, { headers, responseType: 'blob' });
+  }
+  paymentFileExcelDr(from:any,to:any,mode:any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/paymentfile/dates?from=`+from+`&to=` + to+`&mode=`+mode;
+    console.log("Calling api " + API_URL)
+
+    return this.http.get(API_URL, { headers, responseType: 'blob' });
+  }
 
 
   collectionsPerCollectorByDate(date: any): Observable<any> {
@@ -247,6 +265,29 @@ export class ReportsService {
       map((response) => {
         return {
           filename: month + "-PaymentFile",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  getPaymentFileDR(from:any,to: any, mode: any): Observable<any> {
+    console.log("..Calling api  ....")
+    let headers = new HttpHeaders();
+    headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      params: from,to, mode,
+      headers: headers,
+      responseType: "blob",
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/paymentfile/date/range?from=`+from+`&to=` + to + `&paymentMode=` + mode;
+    console.log("Calling api"+ API_URL)
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        return {
+          filename: "DateRange" + "-PaymentFile",
           data: new Blob([response], { type: "application/pdf" }),
         };
       })

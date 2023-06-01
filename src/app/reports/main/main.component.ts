@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
@@ -25,6 +25,7 @@ const MONTHS = [
   { value: 'NOVEMBER', name: 'NOVEMBER' },
   { value: 'DECEMBER', name: 'DECEMBER' }
 ];
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -38,10 +39,13 @@ export class MainComponent implements OnInit {
   reportCollectionForm3: FormGroup
   reportCollectionFormp:FormGroup
   paymentFileForm: FormGroup
+  paymentFileFormdr:FormGroup
   reportCollectionFormm:FormGroup
   isloading: boolean
   collectors: any
   months: any
+  from:any
+  to:any
 
   centered = false;
   // radius: number;
@@ -94,6 +98,12 @@ export class MainComponent implements OnInit {
       // format: ["", [Validators.required]],
     
     })
+    this.paymentFileFormdr= this.fb.group({
+      format: ["", [Validators.required]],
+      mode: ["", [Validators.required]],
+      from: ["", [Validators.required]],
+      to: ["", [Validators.required]]
+    });
 
     this.collectionPerpLocationsForm = this.fb.group({
 
@@ -105,11 +115,14 @@ export class MainComponent implements OnInit {
     })
 
 
+
+
     this.months = MONTHS
 
     this.paymentFileForm = this.fb.group(
       {
         month: ["", [Validators.required]],
+        format: ["", [Validators.required]],
         mode: ["", [Validators.required]],
         pul: ["", [Validators.required]],
         locationId: ["", [Validators.required]],
@@ -399,7 +412,9 @@ export class MainComponent implements OnInit {
   generatePaymentFile() {
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.pul)
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.locationId)
+    let format=this.paymentFileForm.value.format
     this.isloading = true
+    if (format == "pdf") {
     this.service.getPaymentFile(this.paymentFileForm.value.locationId,this.paymentFileForm.value.month, this.paymentFileForm.value.mode)
       .subscribe(
         (response) => {
@@ -438,6 +453,82 @@ export class MainComponent implements OnInit {
           );
         }
       );
+    }else if(format=="excel"){
+      console.log("File format picked = " + format)
+        console.log("Formated Date = " + this.date)
+        this.service.paymentFileExcel(this.paymentFileForm.value.locationId,this.paymentFileForm.value.month, this.paymentFileForm.value.mode).subscribe(
+          (response: Blob) => {
+            this.isloading = false
+            const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+            saveAs(response, filename);
+          },
+          error => {
+            console.error('Failed to download report:', error);
+          }
+        );
+    }
+
+  }
+  generatePaymentFileDR() {
+    this.from = this.datePipe.transform(this.paymentFileFormdr.value.from, 'yyyy-MM-dd');
+    this.to = this.datePipe.transform(this.paymentFileFormdr.value.to, 'yyyy-MM-dd');
+    let format = this.paymentFileFormdr.value.format;
+    console.log("From "+ this.from)
+    console.log("To "+ this.to)
+    this.isloading = true
+    if (format == "pdf") {
+    this.service.getPaymentFileDR(this.from,this.to, this.paymentFileFormdr.value.mode)
+      .subscribe(
+        (response) => {
+          console.log(response)
+          let url = window.URL.createObjectURL(response.data);
+
+          // if you want to open PDF in new tab
+          window.open(url);
+
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.setAttribute("style", "display: none");
+          a.setAttribute("target", "blank");
+          a.href = url;
+          a.download = response.filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          this.isloading = false;
+
+
+
+          this.snackbar.showNotification(
+            "Report generated successfully",
+            "snackbar-success"
+          );
+        },
+        (err) => {
+          console.log(err);
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "Report could not be generated successfully",
+            "snackbar-danger"
+          );
+        }
+      );
+    }else if(format=="excel"){
+      console.log("File format picked = " + format)
+        console.log("Formated Date = " + this.date)
+        this.service.paymentFileExcelDr(this.from,this.to, this.paymentFileFormdr.value.mode).subscribe(
+          (response: Blob) => {
+            this.isloading = false
+            const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+            saveAs(response, filename);
+          },
+          error => {
+            console.error('Failed to download report:', error);
+          }
+        );
+    }
 
   }
   generateCollectionsPerPickUpLocations() {
