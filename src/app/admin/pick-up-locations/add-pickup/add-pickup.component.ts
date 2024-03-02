@@ -135,7 +135,7 @@ export class AddPickupComponent extends BaseComponent implements OnInit {
   //     this.addLocationForm.reset();
   //     this.dialogRef.close();
   //   }, err => {
-  //     this.loading = false;
+  //     this.loading = false;MilkCollectorsLookupComponent
   //     this.snackbar.showNotification("snackbar-danger", err);
   //     this.dialogRef.close();
   //   })

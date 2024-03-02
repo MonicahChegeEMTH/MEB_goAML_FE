@@ -123,7 +123,7 @@ export class ReportsService {
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
     let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/paymentfile?pid=`+pid+`&month=` + month+`&mode=`+mode;
-    console.log("Calling api " + API_URL)
+
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
   }

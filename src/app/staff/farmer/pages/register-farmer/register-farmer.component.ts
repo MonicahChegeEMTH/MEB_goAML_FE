@@ -354,6 +354,7 @@ export class RegisterFarmerComponent implements OnInit {
     private countiesService: CountiesService,
     private routesService: PickupService,
     private service: FarmerService,
+    
     private routeService: RoutesService
   ) {}
   subscription!: Subscription;
@@ -362,6 +363,7 @@ export class RegisterFarmerComponent implements OnInit {
     this.getSubcounties();
     this.getCounties();
     this.getRoutes();
+    
 
     this.bankDetailsForm = this.fb.group({
      
@@ -395,6 +397,7 @@ export class RegisterFarmerComponent implements OnInit {
     });
   }
 
+
   onSubmit() {
     this.loading = true;
     this.farmerRegirstartionForm.value.bankDetails = this.bankDetailsForm.value;
@@ -421,12 +424,18 @@ export class RegisterFarmerComponent implements OnInit {
     this.dialogRef.close();
   }
 
+
+
   getSubcounties() {
     this.isLoading = true;
-    this.subscription = this.service.getSubCounties().subscribe((res) => {
-      this.data = res;
-      if (this.data.entity.length > 0) {
-        this.subcounties = this.data.entity;
+
+    
+    this.subscription = this.service.getSubCounties().subscribe(res => {
+      
+      console.log(res)
+    
+      if (res.entity.length > 0) {
+        this.subcounties = res.entity;
       } else {
         this.subcounties = [];
       }
