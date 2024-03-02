@@ -23,11 +23,15 @@ export class FarmerService {
   public getByFarmersByFarmerNo(farmer_no:any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/membernumber?farmer_number=`+farmer_no,httpOptions);
   }
+
+
   public getFarmersById(id:any): Observable<any> {
-    console.log("Calling api ...")
-    console.log(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id)
+    // console.log("Calling api ...")
+    // console.log(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id)
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=`+id,httpOptions);
   }
+
+
   registerFarmer(farmer:any){
     return this.http.post(`${environment.apiUrl}/api/v1/farmer/add`,farmer);
   }
