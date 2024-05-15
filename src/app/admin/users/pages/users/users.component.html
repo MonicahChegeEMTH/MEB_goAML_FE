@@ -84,8 +84,8 @@
                 #exporter="matTableExporter">
                 <ng-container matColumnDef="id">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-2">Id</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-2">{{ user.id
+                    class="column-nowrap psl-3 tbl-col-width-per-3">Id</mat-header-cell>
+                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">{{ user.id
                     }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="username">
@@ -119,7 +119,7 @@
                 </ng-container> -->
                 <ng-container matColumnDef="PickupLocation">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-10">Pick Up Location</mat-header-cell>
+                    class="column-nowrap psl-3 tbl-col-width-per-10">Center</mat-header-cell>
                   <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-10">
                     {{ user.pickUpLocation }}
