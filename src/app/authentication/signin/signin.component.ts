@@ -53,7 +53,8 @@ export class SigninComponent
       this.error = "Username and Password not valid !";
       return;
     } else {
-      this.authService.login(this.authForm.value).subscribe(res => {
+      this.authService.login(this.authForm.value).subscribe(response => {
+        const res = response.entity
         this.tokenStorage.saveToken(res.token);
         this.tokenStorage.saveUser(res);
         const role = res.roles[0].name;
