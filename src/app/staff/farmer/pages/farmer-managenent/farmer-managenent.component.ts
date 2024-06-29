@@ -23,7 +23,7 @@ export class FarmerManagenentComponent implements OnInit {
   selected = "";
 
   displayedColumns: string[] = [
-    'id',
+    // 'id',
     "farmer_no",
     "username",
     "mobile_no",

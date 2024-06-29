@@ -106,6 +106,11 @@ export class InventoryManagementComponent implements OnInit {
       stock: data
     }
     this.dialog.open(DeleteStockComponent, dialogConfig)
+    this.dialog.afterAllClosed.subscribe({
+      next: () => {
+        this.ngOnInit();
+      }
+    })
   }
 
 
