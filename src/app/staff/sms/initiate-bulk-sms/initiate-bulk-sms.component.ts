@@ -129,7 +129,7 @@ export class InitiateBulkSmsComponent implements OnInit {
     this.selection.selected.forEach(function (value) {
       let farmer: FarmerData = new FarmerData();
       farmer.memberNumber = value.farmer_no;
-      farmer.name = value.username;
+      farmer.name = value.name;
       farmer.phoneNumber = value.mobile_no;
       farmer.idNumber = value.id_number;
       items.push(farmer);

@@ -61,6 +61,7 @@ export class ManagePickupsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
       else {
+        this.isLoading = false;
         this.isdata = false;
         this.dataSource = new MatTableDataSource<any>(this.data);
       }

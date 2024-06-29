@@ -81,6 +81,11 @@ export class ManageStockCategoriesComponent implements OnInit {
       test: ""
     }
     this.dialog.open(AddStockCategoryComponent, dialogConfig)
+    this.dialog.afterAllClosed.subscribe({
+      next: () => {
+        this.ngOnInit();
+      },
+    })
   }
 
   editCall(data:any) {

@@ -67,7 +67,7 @@ export class CollectionsComponent implements OnInit {
 
 
   displayedColumns: string[] = [
-    'id',
+    // 'id',
     "farmer_no",
     'farmer',
     "quantity",

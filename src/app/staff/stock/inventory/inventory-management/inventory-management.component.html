@@ -82,26 +82,26 @@
                                         class="mat-cell" #exporter="matTableExporter">
                                         <!-- ID Column -->
                                         <ng-container matColumnDef="id">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-3">Id
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-3">
                                                 {{i+1}}</mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="name" class="trow">
+                                        <ng-container matColumnDef="name" class="column-nowrap psl-3 tbl-col-width-per-12">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Product
                                                 Name</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap trow">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
                                                 {{ row.name }}</mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="price">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Buying
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-12">Buying
                                                 Price</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
                                                 {{ row.price }}</mat-cell>
                                         </ng-container>
 

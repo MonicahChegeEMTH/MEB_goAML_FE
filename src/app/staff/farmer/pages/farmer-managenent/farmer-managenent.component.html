@@ -118,18 +118,18 @@
                                     </mat-cell>
                                 </ng-container>
                                 <!-- ID Column -->
-                                <ng-container matColumnDef="id">
+                                <!-- <ng-container matColumnDef="id">
                                     <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
                                         mat-sort-header>#</mat-header-cell>
                                     <mat-cell class="table-img tbl-col-width-per-8"
                                         *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
-                                </ng-container>
+                                </ng-container> -->
                                 <ng-container matColumnDef="farmer_no">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer No.
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-8">Farmer No.
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
+                                        [class.even-row]="!(i % 2)" class="table-img tbl-col-width-per-8">
                                         {{farmer.farmer_no}}
                                     </mat-cell>
                                 </ng-container>
@@ -167,8 +167,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="pickUpLocation">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp
-                                        Location
-                                        on</mat-header-cell>
+                                        Location</mat-header-cell>
                                     <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
                                         [class.even-row]="!(i % 2)" class="column-nowrap">
                                         {{farmer.pickUpLocation }}
