@@ -51,10 +51,10 @@ export class UpdateFarmerComponent implements OnInit {
 
       this.bankDetailsForm = this.fb.group({
         
-        branch: [this.farmer.bankDetails.branch, [Validators.required]],
-        bankName: [this.farmer.bankDetails.bankName, [Validators.required]],
-        accountNumber: [this.farmer.bankDetails.accountNumber, [Validators.required]],
-        accountName: [this.farmer.bankDetails.accountName, [Validators.required]],
+        branch: [this.farmer.bankDetails?.branch ?? "NAN", [Validators.required]],
+        bankName: [this.farmer.bankDetails?.bankName ?? "NAN", [Validators.required]],
+        accountNumber: [this.farmer.bankDetails?.accountNumber ?? "NAN", [Validators.required]],
+        accountName: [this.farmer.bankDetails?.accountName ?? "NAN", [Validators.required]],
       });
 
       this.farmerEditForm = this.fb.group({
@@ -64,6 +64,7 @@ export class UpdateFarmerComponent implements OnInit {
         firstName: [this.farmer.firstName, [Validators.required]],
         lastName: [this.farmer.lastName, [Validators.required]],
         idNumber: [this.farmer.idNumber, [Validators.required]],
+        farmerNo: [this.farmer.farmerNo, [Validators.required]],
         mobileNo: [this.farmer.mobileNo, [Validators.required]],
         address: [""],
         subcounty_fk: [this.farmer.subcounty_fk, [Validators.required]],
@@ -144,15 +145,18 @@ export class UpdateFarmerComponent implements OnInit {
   }
 
   getWards(id: any) {
-    console.log("Getting wards  from subcounty id ...",id)
-    this.subscription = this.service.getSubCountyById(id).subscribe(res => {
+    console.log("Getting wards  from subcounty id ...",id?.value)
+    this.subscription = this.service.getSubCountyById(id?.value).subscribe(res => {
       this.data = res;
-      if (this.data.entity.wards.length > 0) {
-        this.wards = this.data.entity.wards;
-      }
-      else {
+      if(this.data.entity.wards) {
+        if (this.data.entity.wards.length > 0) {
+          this.wards = this.data.entity.wards;
+        }
+        else {
+        }
       }
     })
   }
+  
 }
 

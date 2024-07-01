@@ -11,7 +11,7 @@ export class SnackbarService {
 
   showNotification(colorName, text) {
     this.snackBar.open(text, "", {
-      duration: 2000,
+      duration: 3000,
       verticalPosition: "top",
       horizontalPosition: "center",
       panelClass: colorName,
