@@ -205,6 +205,10 @@
                                         <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                         </mat-progress-spinner>
                                     </div>
+
+                                    <div class="tbl-spinner" *ngIf="!isLoading">
+                                        <h4>No Product Allocations Found</h4>
+                                    </div>
                                     <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
                                         aria-label="Select page of users"></mat-paginator>
                                 </div>

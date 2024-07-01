@@ -85,13 +85,16 @@ export class CreateBusinessProfileComponent implements OnInit {
     this.loading = true;
     this.subscription = this.service.getProfile().subscribe(res => {
       this.data = res;
-      this.profile = this.data.entity[0].logo;
+
+      if (this.data?.entity) {
+        this.profile = this.data.entity[0].logo;
+      }
       console.log(this.profile)
-        this.loading = false;
+      this.loading = false;
       if(this.profile == undefined || this.profile==null || this.profile=="")
       {
         this.state = false;        
-
+        this.loading = false;
       }
       else
       {

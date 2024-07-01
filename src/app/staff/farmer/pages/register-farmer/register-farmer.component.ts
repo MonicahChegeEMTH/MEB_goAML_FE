@@ -28,32 +28,18 @@ export class RegisterFarmerComponent implements OnInit {
     count: 45,
     list: [
       {
-        name: 'AFRICAN BANKING CORPORATION',
-        code: '35',
+        name: 'MPESA',
+        code: '68',
         payPointType: 'BANK',
         status: 'ACTIVE',
-        id: 607,
+        id: 649,
       },
       {
-        name: 'BANK OF AFRICA KENYA LTD',
-        code: '19',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 608,
-      },
-      {
-        name: 'BANK OF BARODA',
-        code: '6',
+        name: 'EQUITY BANK',
+        code: '68',
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 609,
-      },
-      {
-        name: 'BANK OF INDIA',
-        code: '5',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 610,
       },
       {
         name: 'BARCLAYS BANK OF KENYA LIMITED',
@@ -63,35 +49,7 @@ export class RegisterFarmerComponent implements OnInit {
         id: 611,
       },
       {
-        name: 'CENTRAL BANK OF KENYA',
-        code: '9',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 612,
-      },
-      {
-        name: 'CHARTERHOUSE BANK LTD',
-        code: '64',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 613,
-      },
-      {
-        name: 'CHASE BANK (KENYA) LIMITED',
-        code: '30',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 614,
-      },
-      {
-        name: 'CITIBANK N.A.',
-        code: '16',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 615,
-      },
-      {
-        name: 'CO OPERATIVE BANK',
+        name: 'COOPERATIVE BANK',
         code: '11',
         payPointType: 'BANK',
         status: 'ACTIVE',
@@ -112,32 +70,11 @@ export class RegisterFarmerComponent implements OnInit {
         id: 618,
       },
       {
-        name: 'CREDIT BANK LTD',
-        code: '24',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 619,
-      },
-      {
-        name: 'DEVELOPMENT BANK OF KENYA',
-        code: '59',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 620,
-      },
-      {
         name: 'DIAMOND TRUST BANK',
         code: '63',
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 621,
-      },
-      {
-        name: 'DUBAI BANK OF KENYA LTD',
-        code: '20',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 622,
       },
       {
         name: 'ECOBANK KENYA LTD',
@@ -147,95 +84,11 @@ export class RegisterFarmerComponent implements OnInit {
         id: 623,
       },
       {
-        name: 'EQUITORIAL COMMERCIAL BANK LTD',
-        code: '49',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 624,
-      },
-      {
-        name: 'EQUITY BANK',
-        code: '68',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 649,
-      },
-      {
         name: 'FAMILY BANK LTD',
         code: '70',
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 625,
-      },
-      {
-        name: 'FIDELITY COMMERCIAL BANK',
-        code: '60',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 626,
-      },
-      {
-        name: 'FINA BANK',
-        code: '53',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 627,
-      },
-      {
-        name: 'FIRST AMERICAN BANK OF KENYA',
-        code: '15',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 628,
-      },
-      {
-        name: 'FIRST COMMUNITY BANK',
-        code: '74',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 629,
-      },
-      {
-        name: 'GIRO BANK LTD',
-        code: '42',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 630,
-      },
-      {
-        name: 'GUARDIAN BANK',
-        code: '55',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 631,
-      },
-      {
-        name: 'GULF AFRICAN BANK LTD',
-        code: '72',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 632,
-      },
-      {
-        name: 'HABIB BANK LTD',
-        code: '8',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 633,
-      },
-      {
-        name: 'IMPERIAL BANK LIMITED',
-        code: '39',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 634,
-      },
-      {
-        name: 'INVESTMENTS AND MORTGAGES',
-        code: '57',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 635,
       },
       {
         name: 'JAMII BORA BANK LTD',
@@ -245,18 +98,11 @@ export class RegisterFarmerComponent implements OnInit {
         id: 636,
       },
       {
-        name: 'KENYA COMMERCIAL BANK LTD',
+        name: 'KCB BANK',
         code: '1',
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 650,
-      },
-      {
-        name: 'MIDDLE EAST BANK (K) LIMITED',
-        code: '18',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 638,
       },
       {
         name: 'NATIONAL BANK OF KENYA',
@@ -271,20 +117,6 @@ export class RegisterFarmerComponent implements OnInit {
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 640,
-      },
-      {
-        name: 'ORIENTAL COMMERCIAL BANK',
-        code: '13',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 641,
-      },
-      {
-        name: 'PARAMOUNT UNIVERSAL BANK LTD',
-        code: '50',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 642,
       },
       {
         name: 'PRIME BANK LIMITED',
@@ -313,28 +145,6 @@ export class RegisterFarmerComponent implements OnInit {
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 645,
-      },
-      {
-        name: 'TRANS NATION SACCO',
-        code: '100',
-        defaultBranchCode: 'Chuka',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 118527,
-      },
-      {
-        name: 'TRANS NATIONAL BANK',
-        code: '26',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 646,
-      },
-      {
-        name: 'UBA KENYA LTD',
-        code: '76',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 647,
       },
       {
         name: 'VICTORIA COMMERCIAL BANK LTD',
@@ -406,8 +216,9 @@ export class RegisterFarmerComponent implements OnInit {
     this.subscription = this.service
       .registerFarmer(this.farmerRegirstartionForm.value)
       .subscribe(
-        (res) => {
-          this.snackbar.showNotification('snackbar-success', 'Successful!');
+        (res: any) => {
+          const farmer = res.entity
+          this.snackbar.showNotification('snackbar-success', 'Farmer No: ' +farmer.farmerNo + ', '+farmer.username+ ' added Successfully');
           this.loading = false;
           this.farmerRegirstartionForm.reset();
           this.dialogRef.close();

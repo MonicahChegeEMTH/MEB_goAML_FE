@@ -40,6 +40,7 @@ export class CollectionsComponent implements OnInit {
   datasize:any=0
   farmer: any
   filename = "collections for " + this.today;
+  todaysData: any
 
   public cardChart2: any;
   public cardChart2Data: any;
@@ -250,6 +251,7 @@ export class CollectionsComponent implements OnInit {
       this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
+        this.todaysData = this.data.entity
         console.log(this.data.entity)
         this.isLoading = false;
         this.isdata = true;
@@ -513,6 +515,13 @@ export class CollectionsComponent implements OnInit {
         if (this.data) {
           this.isLoading = false
           console.log(this.data.entity.size > 0)
+          this.isdata = this.data.entity.size > 0
+          // const farmer_no = this.form.get("farmer_no").value
+          // const filteredEntity = this.todaysData.filter((item)  => {
+          //   console.log("item data   ", item.farmer_no)
+          //   console.log("farmmmmmmm", item.farmer_no.toString().trim() == farmer_no.toString().trim())
+          //   return item.farmer_no === farmer_no;
+          // })
           this.isdata = true;
           this.datasize=this.data.entity.length
           this.dataSource = new MatTableDataSource(this.data.entity);
@@ -527,6 +536,8 @@ export class CollectionsComponent implements OnInit {
       })
     }
   }
+
+
   filterByRoute(id: any) {
     this.isLoading = true;
     this.getSummaryPerRoute(id)

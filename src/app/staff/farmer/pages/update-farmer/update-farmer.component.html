@@ -57,6 +57,18 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Farmer Number</mat-label>
+                                    <input matInput formControlName="farmerNo" required />
+                                    <mat-error *ngIf="farmerEditForm.get('farmerNo').hasError('required')">
+                                        Farmer Number is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                                <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>mobile Number</mat-label>
                                     <input matInput formControlName="mobileNo" required />
                                     <mat-error *ngIf="farmerEditForm.get('mobileNo').hasError('required')">
