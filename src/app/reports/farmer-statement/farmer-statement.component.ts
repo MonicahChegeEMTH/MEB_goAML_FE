@@ -6,6 +6,7 @@ import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/
 import { FarmerService } from 'src/app/staff/farmer/services/farmer.service';
 import { MainComponent } from '../main/main.component';
 import { ReportsService } from '../services/reports.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-farmer-statement',
@@ -19,6 +20,8 @@ export class FarmerStatementComponent implements OnInit {
   dialogData: any;
   loading: boolean
   title: any
+  from:any
+  to:any
   
   constructor(
     public dialogRef: MatDialogRef<MainComponent>,
@@ -26,7 +29,8 @@ export class FarmerStatementComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
-    private service: ReportsService
+    private service: ReportsService,
+    private datePipe: DatePipe
 
   ) {
     // this.title = data.data;
@@ -38,7 +42,8 @@ export class FarmerStatementComponent implements OnInit {
     this.farmerCollectionsForm = this.fb.group({
       username: ["", [Validators.required]],
       farmerNo: ["", [Validators.required]],
-
+      from: ["", [Validators.required]],
+      to: ["", [Validators.required]]
     })
    
   }
@@ -61,9 +66,10 @@ export class FarmerStatementComponent implements OnInit {
     });
   }
   onSubmit() {
-
     console.log("Form data " + this.farmerCollectionsForm.controls.farmerNo.value)
-    this.service.generatefarmerCollections(this.farmerCollectionsForm.controls.farmerNo.value)
+    this.from = this.datePipe.transform(this.farmerCollectionsForm.value.from, 'yyyy-MM-dd');
+    this.to = this.datePipe.transform(this.farmerCollectionsForm.value.to, 'yyyy-MM-dd');
+    this.service.generatefarmerCollections(this.farmerCollectionsForm.controls.farmerNo.value, this.from, this.to)
       .subscribe(
         (response) => {
           console.log(response)
@@ -84,23 +90,28 @@ export class FarmerStatementComponent implements OnInit {
 
           this.loading = false;
 
-          this.dialogRef.close();
-
-          this.snackbar.showNotification(
-            "Report generated successfully",
-            "snackbar-success"
-          );
+          this.dialogRef.afterClosed().subscribe({
+            next: () => {
+              this.snackbar.showNotification(
+                "Report generated successfully",
+                "snackbar-success"
+              );
+            }
+          })
         },
-        (err) => {
+        (err: any) => {
           console.log(err);
           this.loading = false;
 
-          this.dialogRef.close();
-
-          this.snackbar.showNotification(
+          
+          this.dialogRef.afterClosed().subscribe({
+            next: () => {
+              this.snackbar.showNotification(
             "Report could not be generated successfully",
             "snackbar-danger"
-          );
+              );
+            }
+          })
         }
       );
 

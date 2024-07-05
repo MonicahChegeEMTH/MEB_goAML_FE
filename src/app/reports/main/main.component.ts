@@ -287,44 +287,43 @@ export class MainComponent implements OnInit {
     this.date = this.datePipe.transform(this.reportCollectionFormp.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", this.date)
     this.isloading = true
-    this.service.collectionsPerLocationrByDatep(this.date)
-      .subscribe(
-        (response) => {
-          console.log(response)
-          let url = window.URL.createObjectURL(response.data);
+    this.service.collectionsPerLocationrByDatep(this.date).subscribe({
+      next: (response: any) => {
+            console.log(response)
+            let url = window.URL.createObjectURL(response.data);
+  
+            // if you want to open PDF in new tab
+            window.open(url);
+  
+            let a = document.createElement("a");
+            document.body.appendChild(a);
+            a.setAttribute("style", "display: none");
+            a.setAttribute("target", "blank");
+            a.href = url;
+            a.download = response.filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+  
+            this.isloading = false;
+  
+  
+  
+            this.snackbar.showNotification(
+              "snackbar-success",
+              "Report generated successfully"
+            );
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.isloading = false
 
-          // if you want to open PDF in new tab
-          window.open(url);
-
-          let a = document.createElement("a");
-          document.body.appendChild(a);
-          a.setAttribute("style", "display: none");
-          a.setAttribute("target", "blank");
-          a.href = url;
-          a.download = response.filename;
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-
-          this.isloading = false;
-
-
-
-          this.snackbar.showNotification(
-            "Report generated successfully",
-            "snackbar-success"
-          );
-        },
-        (err) => {
-          console.log(err);
-          this.isloading = false
-
-          this.snackbar.showNotification(
-            "Report could not be generated successfully",
-            "snackbar-danger"
-          );
-        }
-      );
+        this.snackbar.showNotification(
+          "snackbar-danger",
+          "Report could not be generated successfully"
+        );
+      }
+    })
 
   }
   generateCollectionsPerLocationsm() {
