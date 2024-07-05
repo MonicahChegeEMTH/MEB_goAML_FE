@@ -30,7 +30,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
     "username",
     "firstname",
     "lastname",
-    "PickupLocation",
     "phonenumber",
     "status",
     "update",

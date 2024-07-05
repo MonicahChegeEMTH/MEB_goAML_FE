@@ -110,7 +110,7 @@
 
                                                     <li>
                                                         <div class="m-l-10" matTooltip="Refresh">
-                                                            <button mat-mini-fab color="primary" (click)="getData()">
+                                                            <button mat-mini-fab color="primary" (click)="getTodaysData()">
                                                                 <mat-icon class="col-white">refresh</mat-icon>
                                                             </button>
                                                         </div>
@@ -299,6 +299,12 @@
                                                     class="tbl-action-btn">
                                                     <app-feather-icons matTooltip="Edit Collections" [icon]="'edit'"
                                                         [class]="'tbl-fav-edit'"></app-feather-icons>
+                                                </button>
+                                                <button mat-icon-button color="primary"
+                                                    (click)="$event.stopPropagation()" (click)="return(response)"
+                                                    class="tbl-action-btn">
+                                                    <app-feather-icons matTooltip="Return Collections" [icon]="'delete'"
+                                                        [class]="'tbl-fav-delete'"></app-feather-icons>
                                                 </button>
                                             </mat-cell>
                                         </ng-container>
