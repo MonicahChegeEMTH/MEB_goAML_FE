@@ -15,6 +15,7 @@ import { EditCollectionComponent } from '../edit-collection/edit-collection.comp
 import { LookupPickUpLocationsComponent } from '../lookup-pick-up-locations/lookup-pick-up-locations.component';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { RoutesLookUpComponent } from '../routes-look-up/routes-look-up.component';
+import { ReturnDeliveryComponent } from '../return-delivery/return-delivery.component';
 
 @Component({
   selector: 'app-collections',
@@ -575,6 +576,19 @@ export class CollectionsComponent implements OnInit {
     }
     this.dialog.open(EditCollectionComponent, dialogConfig)
   }
+
+
+  return(collection) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "60%"
+    dialogConfig.data = {
+      collection: collection
+    }
+    this.dialog.open(ReturnDeliveryComponent, dialogConfig)
+  }
+
   private smallChart2() {
     this.cardChart2 = {
       responsive: true,

@@ -107,6 +107,10 @@ export class SalesService {
     return this.http.put(`${environment.apiUrl}/api/v1/collections/update`, data, httpOptions);
   }
 
+  returnCollections(id: any) {
+    return this.http.post(`${environment.apiUrl}/api/v1/collections/return/${id}`, httpOptions);
+  }
+
 
   getAllFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`, httpOptions);
