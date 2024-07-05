@@ -14,7 +14,7 @@ export class ReportsService {
 
 
 
-  generatefarmerCollections(farmerN0: any): Observable<any> {
+  generatefarmerCollections(farmerN0: any, from: any, to: any): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", "application/pdf");
 
@@ -24,7 +24,7 @@ export class ReportsService {
       responseType: "blob",
       withCredentials: false,
     };
-    let API_URL = `${environment.apiUrl}/api/v1/reports/farmer/collections?farmerNo=` + farmerN0;
+    let API_URL = `${environment.apiUrl}/api/v1/reports/farmer/collections?farmerNo=${farmerN0}&from=${from}&to=${to}`;
 
     return this.http.get(API_URL, requestOptions).pipe(
       map((response) => {
