@@ -93,8 +93,8 @@ export class FarmerStatementComponent implements OnInit {
           this.dialogRef.afterClosed().subscribe({
             next: () => {
               this.snackbar.showNotification(
-                "Report generated successfully",
-                "snackbar-success"
+                "snackbar-success",
+                "Report generated successfully"
               );
             }
           })

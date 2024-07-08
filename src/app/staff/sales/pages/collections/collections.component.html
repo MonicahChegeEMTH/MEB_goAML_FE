@@ -257,27 +257,27 @@
                                         </ng-container>
                                         <ng-container matColumnDef="collection_date">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Date
+                                                class="column-nowrap tbl-col-width-per-8">Date
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
                                                 {{response.collection_date |date }}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="route">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-15">Route</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-18">Route</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-18">
                                                 {{response.route}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="pickUpLocation">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-20">MCC
+                                                class="column-nowrap tbl-col-width-per-15">MCC
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-20">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
                                                 {{response.pickUpLocation }}
                                             </mat-cell>
                                         </ng-container>
@@ -324,7 +324,7 @@
                                         </mat-progress-spinner>
                                     </div>
 
-                                    <div class="tbl-spinner" *ngIf="isdata==false && !isLoading">
+                                    <div class="tbl-spinner" *ngIf="!isdata && !isLoading">
                                         <h4>0 Records Found</h4>
                                     </div>
 

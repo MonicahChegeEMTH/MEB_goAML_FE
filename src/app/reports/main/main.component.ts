@@ -162,8 +162,8 @@ export class MainComponent implements OnInit {
 
 
             this.snackbar.showNotification(
-              "Report generated successfully",
-              "snackbar-success"
+              "snackbar-success",
+              "Report generated successfully"
             );
           },
           (err) => {
@@ -171,8 +171,8 @@ export class MainComponent implements OnInit {
             this.isloading = false
 
             this.snackbar.showNotification(
-              "Report could not be generated successfully",
-              "snackbar-danger"
+              "snackbar-danger",
+              "Report could not be generated successfully"
             );
           }
         );
@@ -182,10 +182,21 @@ export class MainComponent implements OnInit {
       this.service.collectionsPerDateExcel(this.date).subscribe(
         (response: Blob) => {
           this.isloading = false
+          
+          this.snackbar.showNotification(
+            "snackbar-success",
+            "Report generated successfully"
+          );
           const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
           saveAs(response, filename);
         },
         error => {
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "snackbar-danger",
+            "Report could not be generated successfully"
+          );
           console.error('Failed to download report:', error);
         }
       );
@@ -560,8 +571,8 @@ export class MainComponent implements OnInit {
 
 
           this.snackbar.showNotification(
+            "snackbar-success",
             "Report generated successfully",
-            "snackbar-success"
           );
         },
         (err) => {
@@ -569,8 +580,8 @@ export class MainComponent implements OnInit {
           this.isloading = false
 
           this.snackbar.showNotification(
-            "Report could not be generated successfully",
-            "snackbar-danger"
+            "snackbar-danger",
+            "Report could not be generated successfully"
           );
         }
       );
@@ -582,13 +593,25 @@ export class MainComponent implements OnInit {
             this.isloading = false
             const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
             saveAs(response, filename);
+            
+          this.snackbar.showNotification(
+            "snackbar-success",
+            "Report generated successfully",
+          );
           },
           error => {
+            this.isloading = false;
             console.error('Failed to download report:', error);
+            this.snackbar.showNotification(
+              "snackbar-danger",
+              "Report could not be generated successfully"
+            );
           }
         );
       }
   }
+
+
   generateTotalCollectionsPerPickUpLocations() {
     this.isloading = true
     console.log(this.collectionPerpLocationsForm.value)
