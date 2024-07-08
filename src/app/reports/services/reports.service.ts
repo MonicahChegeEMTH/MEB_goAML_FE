@@ -183,6 +183,15 @@ export class ReportsService {
     );
   }
 
+  getMCCRouteSummaryByDate(date: any, centerId: any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/route-summary-center/${date}/${centerId}`;
+    console.log("Calling api " + API_URL)
+
+    return this.http.get(API_URL, { headers, responseType: 'blob' });
+  }
 
   collectionsPerLocationrByDate(date: any): Observable<any> {
     let headers = new HttpHeaders();

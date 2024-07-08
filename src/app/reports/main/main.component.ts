@@ -83,7 +83,9 @@ export class MainComponent implements OnInit {
     this.reportCollectionForm3 = this.fb.group({
 
       date: ["", [Validators.required]],
-      // format: ["", [Validators.required]],
+      mcc: ["", [Validators.required]],
+      centerId: ["", [Validators.required]],
+      format: ["", [Validators.required]],
     
     })
     this.reportCollectionFormp = this.fb.group({
@@ -162,8 +164,8 @@ export class MainComponent implements OnInit {
 
 
             this.snackbar.showNotification(
-              "Report generated successfully",
-              "snackbar-success"
+              "snackbar-success",
+              "Report generated successfully"
             );
           },
           (err) => {
@@ -171,8 +173,8 @@ export class MainComponent implements OnInit {
             this.isloading = false
 
             this.snackbar.showNotification(
-              "Report could not be generated successfully",
-              "snackbar-danger"
+              "snackbar-danger",
+              "Report could not be generated successfully"
             );
           }
         );
@@ -182,10 +184,21 @@ export class MainComponent implements OnInit {
       this.service.collectionsPerDateExcel(this.date).subscribe(
         (response: Blob) => {
           this.isloading = false
+          
+          this.snackbar.showNotification(
+            "snackbar-success",
+            "Report generated successfully"
+          );
           const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
           saveAs(response, filename);
         },
         error => {
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "snackbar-danger",
+            "Report could not be generated successfully"
+          );
           console.error('Failed to download report:', error);
         }
       );
@@ -239,10 +252,37 @@ export class MainComponent implements OnInit {
 
   generateCollectionsPerLocations() {
     // console.log(this.reportCollectionForm.value)
+    const mcc = this.reportCollectionForm3.value.mcc
     this.date = this.datePipe.transform(this.reportCollectionForm3.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", this.date)
     this.isloading = true
-    this.service.collectionsPerLocationrByDate(this.date)
+
+    if (this.reportCollectionForm3.value.format == "excel") {
+      this.service.getMCCRouteSummaryByDate(this.date, this.reportCollectionForm3.value.centerId).subscribe({
+        next: (res: Blob) => {
+          this.isloading = false;
+
+          
+          this.snackbar.showNotification(
+            "snackbar-success",
+            "Report generated successfully"
+          );
+          const filename = mcc+'-summary'+this.date+'.xlsx'; // Specify the desired filename with the appropriate extension
+          saveAs(res, filename);
+        },
+        error: (error: any) => {
+          this.isloading = false
+
+          this.snackbar.showNotification(
+            "snackbar-danger",
+            "Report could not be generated successfully"
+          );
+          console.error('Failed to download report:', error);
+        },
+        complete: () => {}
+      })
+    } else {
+      this.service.collectionsPerLocationrByDate(this.date)
       .subscribe(
         (response) => {
           console.log(response)
@@ -280,6 +320,7 @@ export class MainComponent implements OnInit {
           );
         }
       );
+    }
 
   }
   generateCollectionsPerLocationsp() {
@@ -383,12 +424,39 @@ export class MainComponent implements OnInit {
     const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
+
       this.collectionPerpLocationsForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
     });
   }
+
+  selectCollectionCenter() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+
+      this.reportCollectionForm3.patchValue({
+        mcc: this.dialogData.data.name,
+        centerId: this.dialogData.data.id
+      })
+
+      this.collectionPerpLocationsForm.patchValue({
+        pul: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      });
+    });
+  }
+
+
   choosePickUpLocation() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
@@ -560,8 +628,8 @@ export class MainComponent implements OnInit {
 
 
           this.snackbar.showNotification(
+            "snackbar-success",
             "Report generated successfully",
-            "snackbar-success"
           );
         },
         (err) => {
@@ -569,8 +637,8 @@ export class MainComponent implements OnInit {
           this.isloading = false
 
           this.snackbar.showNotification(
-            "Report could not be generated successfully",
-            "snackbar-danger"
+            "snackbar-danger",
+            "Report could not be generated successfully"
           );
         }
       );
@@ -582,13 +650,25 @@ export class MainComponent implements OnInit {
             this.isloading = false
             const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
             saveAs(response, filename);
+            
+          this.snackbar.showNotification(
+            "snackbar-success",
+            "Report generated successfully",
+          );
           },
           error => {
+            this.isloading = false;
             console.error('Failed to download report:', error);
+            this.snackbar.showNotification(
+              "snackbar-danger",
+              "Report could not be generated successfully"
+            );
           }
         );
       }
   }
+
+
   generateTotalCollectionsPerPickUpLocations() {
     this.isloading = true
     console.log(this.collectionPerpLocationsForm.value)
