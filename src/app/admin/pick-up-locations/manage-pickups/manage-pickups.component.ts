@@ -114,6 +114,7 @@ export class ManagePickupsComponent implements OnInit {
     dialogConfig.disableClose = false
     dialogConfig.autoFocus = true
     dialogConfig.width = "60%"
+    dialogConfig.height = "80%"
     dialogConfig.data = {
       location: Location
     }

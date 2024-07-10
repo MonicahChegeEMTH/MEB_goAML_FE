@@ -118,7 +118,7 @@ export class FarmerStatementComponent implements OnInit {
   }
  
   onClick() {
-
+    this.dialogRef.close();
   }
 
 
