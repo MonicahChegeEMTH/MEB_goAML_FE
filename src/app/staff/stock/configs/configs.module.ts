@@ -25,6 +25,8 @@ import { ProductsConfigsComponent } from './products-configs/products-configs.co
 import { AddProductConfigComponent } from './add-product-config/add-product-config.component';
 import { EditProductConfigComponent } from './edit-product-config/edit-product-config.component';
 import { DeleteProductConfigComponent } from './delete-product-config/delete-product-config.component';
+import { AddProductPriceComponent } from './add-product-price/add-product-price.component';
+import { ProductLookupComponent } from './product-lookup/product-lookup.component';
 
 
 @NgModule({
@@ -32,7 +34,9 @@ import { DeleteProductConfigComponent } from './delete-product-config/delete-pro
     ProductsConfigsComponent,
     AddProductConfigComponent,
     EditProductConfigComponent,
-    DeleteProductConfigComponent
+    DeleteProductConfigComponent,
+    AddProductPriceComponent,
+    ProductLookupComponent
   ],
   imports: [
     CommonModule,

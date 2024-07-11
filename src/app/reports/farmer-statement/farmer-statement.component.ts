@@ -66,6 +66,7 @@ export class FarmerStatementComponent implements OnInit {
     });
   }
   onSubmit() {
+    this.loading = true;
     console.log("Form data " + this.farmerCollectionsForm.controls.farmerNo.value)
     this.from = this.datePipe.transform(this.farmerCollectionsForm.value.from, 'yyyy-MM-dd');
     this.to = this.datePipe.transform(this.farmerCollectionsForm.value.to, 'yyyy-MM-dd');
@@ -89,7 +90,7 @@ export class FarmerStatementComponent implements OnInit {
           a.remove();
 
           this.loading = false;
-
+          this.dialogRef.close()
           this.dialogRef.afterClosed().subscribe({
             next: () => {
               this.snackbar.showNotification(
@@ -103,12 +104,12 @@ export class FarmerStatementComponent implements OnInit {
           console.log(err);
           this.loading = false;
 
-          
+          this.dialogRef.close()
           this.dialogRef.afterClosed().subscribe({
             next: () => {
               this.snackbar.showNotification(
-            "Report could not be generated successfully",
-            "snackbar-danger"
+                "snackbar-danger",
+                "Report could not be generated successfully"
               );
             }
           })

@@ -10,6 +10,8 @@ import { AddProductConfigComponent } from '../add-product-config/add-product-con
 import { ConfigsService } from '../configs.service';
 import { DeleteProductConfigComponent } from '../delete-product-config/delete-product-config.component';
 import { EditProductConfigComponent } from '../edit-product-config/edit-product-config.component';
+import { error } from 'console';
+import { AddProductPriceComponent } from '../add-product-price/add-product-price.component';
 
 @Component({
   selector: 'app-products-configs',
@@ -29,11 +31,26 @@ export class ProductsConfigsComponent implements OnInit {
     "actions"
   ];
 
+  displayedPriceColumns: string[] = [
+    "id",
+    "mcc",
+    "productName",
+    "selling_price",
+    "buying_price",
+    "category",
+    "effective_from",
+    "actions"
+  ];
+
+  pricesDataSource!: MatTableDataSource<any>;
+
   dataSource!: MatTableDataSource<any>;
   selection = new SelectionModel<any>(true, []);
   isLoading = true;
   isdata: boolean;
+  pricesdata: boolean = false
   configs: any;
+  prices: any
 
   constructor(
     private service: ConfigsService,
@@ -51,6 +68,7 @@ export class ProductsConfigsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllConfigurations();
+    this.getProductPrices()
   }
 
   refresh() {
@@ -75,7 +93,38 @@ export class ProductsConfigsComponent implements OnInit {
             this.isdata = false;
             this.dataSource = new MatTableDataSource<any>(this.configs);
           }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.isdata = false;
         }
+      );
+  }
+  
+
+  getProductPrices() {
+    this.service.getProductPrices()
+      .subscribe({
+        next: (res) => {
+          this.prices = res.entity
+          if (this.prices.length > 0) {
+            this.isLoading = false;
+            this.pricesdata = true;
+            this.pricesDataSource = new MatTableDataSource<any>(this.prices);
+            this.pricesDataSource.paginator = this.paginator;
+            this.pricesDataSource.sort = this.sort;
+          }
+          else {
+            this.isLoading = false;
+            this.pricesdata = false;
+            this.pricesDataSource = new MatTableDataSource<any>(this.prices);
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.pricesdata = false;
+        }
+      }
       );
   }
 
@@ -88,6 +137,15 @@ export class ProductsConfigsComponent implements OnInit {
       test: ""
     }
     this.dialog.open(AddProductConfigComponent, dialogConfig)
+  }
+
+  addPriceDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = "60%"
+    dialogConfig.data = {},
+    this.dialog.open(AddProductPriceComponent, dialogConfig);
   }
 
   edit(config) {
