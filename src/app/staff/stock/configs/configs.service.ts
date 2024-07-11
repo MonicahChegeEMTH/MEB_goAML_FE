@@ -16,16 +16,26 @@ export class ConfigsService {
   constructor(private http: HttpClient) { }
 
   url = `${environment.API}/api/v1/product/configuration/`;
+  pricesUrl = `${environment.API}/api/v1/product-prices/`;
 
   public getConfigs(): Observable<any> {
     return this.http.get<any>(this.url + 'get');
   }
+
+  public getProductPrices(): Observable<any> {
+    return this.http.get<any>(this.pricesUrl + 'all');
+  }
+
   public getConfigsById(productId:any): Observable<any> {
     return this.http.get<any>(this.url + 'id?productconfigId='+productId);
   }
 
   addNewConfiguration(data: any): Observable<any> {
     return this.http.post(this.url + 'add', data, httpOptions);
+  }
+
+  createProductPrice(productId: any, locationId: any, sellingPrice: any, effectiveFrom: any) {
+    return this.http.post(this.pricesUrl+ `create/`+`${productId}/${locationId}?sellingPrice=${sellingPrice}&effectiveFrom=${effectiveFrom}`, {}, httpOptions);
   }
 
   updateConfiguration(data: any): Observable<any> {
