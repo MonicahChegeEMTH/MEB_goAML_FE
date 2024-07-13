@@ -432,8 +432,6 @@ export class CollectionsComponent implements OnInit {
         pickuplocation: this.dialogData.data.name,
         pickuplocationId: this.dialogData.data.id
       });
-      let pid = this.form.value.pickuplocationId
-      this.filterByPickUpLoction(pid)
       
 
     });
@@ -459,17 +457,18 @@ export class CollectionsComponent implements OnInit {
 
     });
   }
-  filterByPickUpLoction(id: any) {
+  filterByPickUpLoction() {
+    let pid = this.form.value.pickuplocationId
     this.fromDate = this.datePipe.transform(this.form.value.fromDate, 'yyyy-MM-dd');
     this.toDate = this.datePipe.transform(this.form.value.toDate, 'yyyy-MM-dd');
     if (this.fromDate != null && this.fromDate != undefined && this.toDate != null && this.toDate != undefined) {
       this.isLoading = true;
-      this.getSummaryPerPickUpLocatins(id)
+      this.getSummaryPerPickUpLocatins(pid)
   
       // let pickUpLocationId = this.form.value.pickUpLocationId
-      console.log("Passed Id is ", id)
+      console.log("Passed Id is ", pid)
   
-      this.subscription = this.service.getCollectionsPerPickUpLocation(id, this.fromDate, this.toDate).subscribe(res => {
+      this.subscription = this.service.getCollectionsPerPickUpLocation(pid, this.fromDate, this.toDate).subscribe(res => {
         this.data = res;
         if (this.data) {
           this.isdata = true
