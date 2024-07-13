@@ -167,7 +167,7 @@
                                                     matTooltip="Update Details">
                                                     <mat-icon>launch</mat-icon>
                                                 </button>
-                                                <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                                <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
                                                     (click)="delete(configs)" matTooltip="Delete"
                                                     class="tbl-action-btn">
                                                     <mat-icon>delete_outline</mat-icon>
@@ -307,17 +307,17 @@
                                                 }}</mat-cell>
                                         </ng-container>
         
-                                        <ng-container matColumnDef="Milk Center">
+                                        <ng-container matColumnDef="mcc">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Unit</mat-header-cell>
+                                                class="column-nowrap">Route</mat-header-cell>
                                             <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap">{{configs.mcc
                                                 }}</mat-cell>
                                         </ng-container>
         
-                                        <ng-container matColumnDef="Category">
+                                        <ng-container matColumnDef="category">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap">Qtty</mat-header-cell>
+                                                class="column-nowrap">Category</mat-header-cell>
                                             <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap">{{
                                                 configs.category}}</mat-cell>
@@ -335,8 +335,7 @@
                                             <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Created
                                                 On</mat-header-cell>
                                             <mat-cell *matCellDef="let configs;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.effective_from
-                                                |date}}</mat-cell>
+                                                [class.even-row]="!(i % 2)" class="column-nowrap">{{ configs.effective_from | date}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="actions">
                                             <mat-header-cell class="pr-0 column-nowrap"
@@ -348,7 +347,7 @@
                                                     matTooltip="Update Details">
                                                     <mat-icon>launch</mat-icon>
                                                 </button>
-                                                <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
+                                                <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
                                                     (click)="delete(configs)" matTooltip="Delete"
                                                     class="tbl-action-btn">
                                                     <mat-icon>delete_outline</mat-icon>
@@ -359,7 +358,7 @@
         
                                         <mat-header-row *matHeaderRowDef="displayedPriceColumns"></mat-header-row>
                                         <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                                        <mat-row *matRowDef="let row; columns: pricesDataSource" [style.cursor]="'pointer'"
+                                        <mat-row *matRowDef="let row; columns: displayedPriceColumns" [style.cursor]="'pointer'"
                                             matRipple>
                                         </mat-row>
                                         <mat-cell *matNoDataRow colspan="4">
@@ -372,7 +371,7 @@
                                         </mat-progress-spinner>
                                     </div>
         
-                                    <div class="tbl-spinner" *ngIf="pricesdata==false">
+                                    <div class="tbl-spinner" *ngIf="pricesdata==false && isLoading==false">
                                         <h4>0 Records Found</h4>
                                     </div>
                                     <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"

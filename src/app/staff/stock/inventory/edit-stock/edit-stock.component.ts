@@ -34,7 +34,7 @@ export class EditStockComponent implements OnInit {
       price: [this.data.stock.price, [Validators.required]],
       salePrice: [this.data.stock.salePrice, [Validators.required]],
       stock: [this.data.stock.stock],
-      categoryName: [this.data.stock.categoryName]
+      categoryName: [this.data.stock.category]
     });
 
   }
@@ -68,6 +68,11 @@ export class EditStockComponent implements OnInit {
         this.snackbar.showNotification("snackbar-success", "Successful!");
         this.productsForm.reset();
         this.dialogRef.close();
+        this.dialogRef.afterClosed().subscribe({
+          next: () => {
+            this.ngOnInit();
+          }
+        })
       },
       (err) => {
         this.loading = false;
