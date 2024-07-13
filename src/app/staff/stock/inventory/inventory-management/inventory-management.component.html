@@ -190,7 +190,7 @@
                                         <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                         </mat-progress-spinner>
                                     </div>
-                                    <div class="tbl-spinner" *ngIf="!isLoading">
+                                    <div class="tbl-spinner" *ngIf="isLoading==false && hasdata==false">
                                         <h4>No Products Found</h4>
                                     </div>
 

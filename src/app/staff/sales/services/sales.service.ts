@@ -25,8 +25,8 @@ export class SalesService {
   getTodaysCollections(date: any) {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=${date}`, httpOptions);
   }
-  getCollectionsPerPickUpLocation(id:any) {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id, httpOptions);
+  getCollectionsPerPickUpLocation(id:any, from: any, to: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id+`&from=${from}&to=${to}`, httpOptions);
   }
   getCollectionsByFarmerNo(id:any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` +id,httpOptions);

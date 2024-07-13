@@ -29,8 +29,8 @@ export class DashboardService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/date/range/records?fromdate=`+from+`&&toDate=`+to,httpOptions);
   }
 
-  public getPickUpLocationCollections(pickUpLocationId:any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/record/pickupLocations?pickUpLocation=`+pickUpLocationId,httpOptions);
+  public getPickUpLocationCollections(pickUpLocationId:any, from: any, to: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/record/pickupLocations?pickUpLocation=`+pickUpLocationId+`&from=${from}&to=${to}`,httpOptions);
   }
   public getRouteCollections(routeId:any): Observable<any> {
     console.log("Calling api route d=id ,"+ routeId)

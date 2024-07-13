@@ -8,7 +8,7 @@
                 <div class="body">
                     <form [formGroup]="priceForm" class="m-4">
                         <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                            <div class="col-xl-6 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Product</mat-label>
                                     <mat-icon matSuffix (click)="selectProduct()" color="primary"
@@ -19,7 +19,7 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                            <div class="col-xl-6 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width mb-3" appearance="outline">
                                     <mat-label>Selling Price</mat-label>
                                     <input formControlName="sellingPrice" matInput />
@@ -28,9 +28,10 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
-                                    <mat-form-field class="example-full-width" appearance="outline">
+                        </div>
+                        <div class="row">
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Milk Center</mat-label>
                                         <mat-select formControlName="mcc">
                                           <mat-option *ngFor="let mcc of mccs" [value]="mcc.id">{{ mcc.name
@@ -38,10 +39,7 @@
                                         </mat-select>
                                       </mat-form-field>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                            <div class="col-xl-6 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width mb-3" appearance="outline">
                                     <mat-label>Effective From</mat-label>
                                     <input matInput [matDatepicker]="picker1" formControlName="effectiveFrom" required>

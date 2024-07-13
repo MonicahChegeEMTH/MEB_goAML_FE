@@ -91,6 +91,13 @@ export class RegisterFarmerComponent implements OnInit {
         id: 625,
       },
       {
+        name: 'MWANANCHI SACCO',
+        code: '70',
+        payPointType: 'SACCO',
+        status: 'ACTIVE',
+        id: 547
+      },
+      {
         name: 'JAMII BORA BANK LTD',
         code: '51',
         payPointType: 'BANK',
@@ -110,13 +117,6 @@ export class RegisterFarmerComponent implements OnInit {
         payPointType: 'BANK',
         status: 'ACTIVE',
         id: 639,
-      },
-      {
-        name: 'NIC BANK',
-        code: '41',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 640,
       },
       {
         name: 'PRIME BANK LIMITED',

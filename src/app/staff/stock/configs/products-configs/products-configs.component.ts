@@ -34,7 +34,7 @@ export class ProductsConfigsComponent implements OnInit {
   displayedPriceColumns: string[] = [
     "id",
     "mcc",
-    "productName",
+    "product_name",
     "selling_price",
     "buying_price",
     "category",
@@ -103,6 +103,7 @@ export class ProductsConfigsComponent implements OnInit {
   
 
   getProductPrices() {
+    this.isLoading = true;
     this.service.getProductPrices()
       .subscribe({
         next: (res) => {

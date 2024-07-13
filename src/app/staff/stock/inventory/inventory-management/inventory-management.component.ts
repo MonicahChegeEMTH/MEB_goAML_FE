@@ -38,6 +38,7 @@ export class InventoryManagementComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
   data: any;
+  hasdata: boolean = false
   error: any;
   isLoading: boolean = true;
   currentUser: any;
@@ -57,17 +58,21 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   getData() {
+    this.isLoading = true
     this.service.getAllProducts().subscribe(
       (res) => {
         this.data = res.productData;
+        this.isLoading = !this.isLoading;
         if (this.data != null) {
-          this.isLoading = false;
+          this.hasdata = true
           this.dataSource = new MatTableDataSource<any>(this.data);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }
       },
       (err) => {
+        this.hasdata = false
+        this.isLoading = false
         console.log(err);
       }
     );
@@ -84,6 +89,11 @@ export class InventoryManagementComponent implements OnInit {
       test: ""
     }
     this.dialog.open(AddStockComponent, dialogConfig)
+    this.dialog.afterAllClosed.subscribe({
+      next: () => {
+        this.ngOnInit();
+      }
+    })
   }
 
   editCall(data: any) {

@@ -346,7 +346,7 @@ export class CollectionsComponent implements OnInit {
   getSummaryPerPickUpLocatins(pickUpLocationId) {
     this.isLoading = true
   
-    this.subscription = this.dashboard.getPickUpLocationCollections(pickUpLocationId).subscribe(res => {
+    this.subscription = this.dashboard.getPickUpLocationCollections(pickUpLocationId, this.fromDate, this.toDate).subscribe(res => {
       this.data = res;
       if (this.data) {
         this.isLoading = false
@@ -460,29 +460,35 @@ export class CollectionsComponent implements OnInit {
     });
   }
   filterByPickUpLoction(id: any) {
-    this.isLoading = true;
-    this.getSummaryPerPickUpLocatins(id)
-
-    // let pickUpLocationId = this.form.value.pickUpLocationId
-    console.log("Passed Id is ", id)
-
-    this.subscription = this.service.getCollectionsPerPickUpLocation(id).subscribe(res => {
-      this.data = res;
-      if (this.data) {
-        this.isdata = true
-        console.log(this.data)
-        this.isLoading = false;
-        this.datasize=this.data.entity.length
-        this.dataSource = new MatTableDataSource(this.data.entity);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }
-      else {
-        this.isdata = false;
-        this.isLoading = false
-        this.dataSource = new MatTableDataSource(null);
-      }
-    })
+    this.fromDate = this.datePipe.transform(this.form.value.fromDate, 'yyyy-MM-dd');
+    this.toDate = this.datePipe.transform(this.form.value.toDate, 'yyyy-MM-dd');
+    if (this.fromDate != null && this.fromDate != undefined && this.toDate != null && this.toDate != undefined) {
+      this.isLoading = true;
+      this.getSummaryPerPickUpLocatins(id)
+  
+      // let pickUpLocationId = this.form.value.pickUpLocationId
+      console.log("Passed Id is ", id)
+  
+      this.subscription = this.service.getCollectionsPerPickUpLocation(id, this.fromDate, this.toDate).subscribe(res => {
+        this.data = res;
+        if (this.data) {
+          this.isdata = true
+          console.log(this.data)
+          this.isLoading = false;
+          this.datasize=this.data.entity.length
+          this.dataSource = new MatTableDataSource(this.data.entity);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+        else {
+          this.isdata = false;
+          this.isLoading = false
+          this.dataSource = new MatTableDataSource(null);
+        }
+      })
+    } else {
+      this.snackbar.showNotification("snackbar-danger", "Date Range is Required")
+    }
   }
   filterByFarmerNo(id: any) {
     this.isLoading = true;
