@@ -14,6 +14,11 @@ export class InventoryService {
     return this.http.get<any>(url)
   }
 
+  getMccAllocations(): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/mcc-allocations/all`;
+    return this.http.get<any>(url)
+  }
+
   updateProduct(id:any,data): Observable<any> {
     const url = `${environment.apiUrl}/api/v1/products/update/${id}`;
     return this.http.put<any>(url, data)
