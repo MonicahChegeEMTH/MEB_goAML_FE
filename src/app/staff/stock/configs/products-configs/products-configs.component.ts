@@ -61,6 +61,11 @@ export class ProductsConfigsComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  
+  @ViewChild('pricePaginator', { static: true }) pricePaginator: MatPaginator;
+  @ViewChild('priceSort', { static: true }) priceSort: MatSort;
+
   @ViewChild("filter", { static: true }) filter: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
@@ -73,6 +78,10 @@ export class ProductsConfigsComponent implements OnInit {
 
   refresh() {
     this.getAllConfigurations();
+  }
+
+  refreshPrices() {
+    this.getProductPrices();
   }
 
 
@@ -112,8 +121,8 @@ export class ProductsConfigsComponent implements OnInit {
             this.isLoading = false;
             this.pricesdata = true;
             this.pricesDataSource = new MatTableDataSource<any>(this.prices);
-            this.pricesDataSource.paginator = this.paginator;
-            this.pricesDataSource.sort = this.sort;
+            this.pricesDataSource.paginator = this.pricePaginator;
+            this.pricesDataSource.sort = this.priceSort;
           }
           else {
             this.isLoading = false;
@@ -147,6 +156,11 @@ export class ProductsConfigsComponent implements OnInit {
     dialogConfig.width = "60%"
     dialogConfig.data = {},
     this.dialog.open(AddProductPriceComponent, dialogConfig);
+    this.dialog.afterAllClosed.subscribe({
+      next: (res) => {
+        this.getProductPrices()
+      }
+    })
   }
 
   edit(config) {

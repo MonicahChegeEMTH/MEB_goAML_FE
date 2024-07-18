@@ -241,7 +241,7 @@
                                                             </li>
                                                             <li>
                                                                 <div class="m-l-10" matTooltip="Refresh">
-                                                                    <button mat-mini-fab color="primary" (click)="refresh()">
+                                                                    <button mat-mini-fab color="primary" (click)="getMccAllocations()">
                                                                         <mat-icon class="col-white">refresh</mat-icon>
                                                                     </button>
                                                                 </div>
@@ -344,7 +344,7 @@
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Center</mat-header-cell>
                                                     <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                         [class.even-row]="!(i % 2)">
-                                                        {{ row.mcc | date }}</mat-cell>
+                                                        {{ row.mcc }}</mat-cell>
                                                 </ng-container>
         
                                                 <!-- Actions -->
@@ -377,8 +377,8 @@
                                                 <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                                 </mat-progress-spinner>
                                             </div>
-                                            <div class="tbl-spinner" *ngIf="isLoading==false && mccdata==false">
-                                                <h4>No Products Found</h4>
+                                            <div class="tbl-spinner" *ngIf="!isLoading && mccdata==false">
+                                                <h4>No Mcc Allocations Found</h4>
                                             </div>
         
                                             <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"

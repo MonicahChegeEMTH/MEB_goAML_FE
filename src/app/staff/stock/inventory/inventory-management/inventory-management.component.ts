@@ -67,11 +67,11 @@ export class InventoryManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    this.getMccAllocations();
   }
 
   refresh() {
     this.getData();
-    this.getMccAllocations();
   }
 
   getData() {
@@ -101,11 +101,14 @@ export class InventoryManagementComponent implements OnInit {
       (res) => {
         this.mccproducts = res.productData;
         this.isLoading = !this.isLoading;
-        if (this.data != null) {
+        if (this.mccproducts.length > 0) {
           this.mccdata = true
           this.mccProductsDataSource = new MatTableDataSource<any>(this.mccproducts);
           this.mccProductsDataSource.paginator = this.paginator;
           this.mccProductsDataSource.sort = this.sort;
+        } else {
+          this.mccdata = false
+          this.isLoading = false
         }
       },
       (err) => {
