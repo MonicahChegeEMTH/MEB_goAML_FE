@@ -79,7 +79,7 @@ export class AddProductPriceComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     const pId = this.priceForm.value.productId
-    const mccId = this.priceForm.value.locationId
+    const mccId = this.priceForm.value.mcc
     const sellingPrice = this.priceForm.value.sellingPrice
     const effectiveFrom = this.datePipe.transform(this.priceForm.value.effectiveFrom, "yyy-MM-dd")
 

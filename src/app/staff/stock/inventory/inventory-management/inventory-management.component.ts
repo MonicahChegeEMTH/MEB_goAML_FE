@@ -30,14 +30,30 @@ export class InventoryManagementComponent implements OnInit {
     "actions",
   ];
 
+  displayedMccColumns: string[] = [
+    "id",
+    "name",
+    "price",
+    "salePrice",
+    "allocatedOn",
+    "stock",
+    "mcc",
+    "category",
+    "actions",
+  ];
+
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: "0px", y: "0px" };
 
+  mccProductsDataSource: MatTableDataSource<any>;
+  mccdata: boolean = false
+
   selection = new SelectionModel<any>(true, []);
   data: any;
+  mccproducts: any
   hasdata: boolean = false
   error: any;
   isLoading: boolean = true;
@@ -51,6 +67,7 @@ export class InventoryManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    this.getMccAllocations();
   }
 
   refresh() {
@@ -72,6 +89,30 @@ export class InventoryManagementComponent implements OnInit {
       },
       (err) => {
         this.hasdata = false
+        this.isLoading = false
+        console.log(err);
+      }
+    );
+  }
+
+  getMccAllocations() {
+    this.isLoading = true
+    this.service.getMccAllocations().subscribe(
+      (res) => {
+        this.mccproducts = res.productData;
+        this.isLoading = !this.isLoading;
+        if (this.mccproducts.length > 0) {
+          this.mccdata = true
+          this.mccProductsDataSource = new MatTableDataSource<any>(this.mccproducts);
+          this.mccProductsDataSource.paginator = this.paginator;
+          this.mccProductsDataSource.sort = this.sort;
+        } else {
+          this.mccdata = false
+          this.isLoading = false
+        }
+      },
+      (err) => {
+        this.mccdata = false
         this.isLoading = false
         console.log(err);
       }
