@@ -3,7 +3,7 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header">
-                    <h2>Edit New Product</h2>
+                    <h2>Edit Product Details</h2>
                 </div>
                 <div class="body">
                     <form [formGroup]="productsForm" class="m-4">
@@ -33,7 +33,7 @@
                                         matTooltip="Click To Select Product Category">search</mat-icon>
                                     <input matInput formControlName="categoryName" required readonly />
                                     <mat-error *ngIf="productsForm.get('categoryName').hasError('required')">
-                                        Procuct Category is required
+                                        Product Category is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -52,7 +52,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width mb-3" appearance="outline">
                                     <mat-label>Selling Price</mat-label>
-                                    <input formControlName="salePrice" matInput required />
+                                    <input type="number" formControlName="salePrice" matInput required />
                                     <mat-error *ngIf="productsForm.get('salePrice').hasError('required')">
                                         Selling price is required
                                     </mat-error>
@@ -65,6 +65,21 @@
                                     <input matInput formControlName="stock" required />
                                     <mat-error *ngIf="productsForm.get('stock').hasError('required')">
                                         Quantity is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                    <mat-label>Price Category</mat-label>
+                                    <mat-select formControlName="priceType">
+                                        <mat-option value="Common">Common</mat-option>
+                                        <mat-option value="Specific">Specific</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="productsForm.get('priceType').hasError('required')">
+                                        Price category is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>

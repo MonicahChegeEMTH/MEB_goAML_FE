@@ -34,7 +34,8 @@ export class AddStockComponent implements OnInit {
       price: ["", [Validators.required]],
       salePrice: ["", [Validators.required]],
       stock: [""],
-      categoryName: [""]
+      categoryName: [""],
+      priceType: ["", [Validators.required]]
     });
 
   }
