@@ -6,6 +6,7 @@ import { FarmerLookupComponent } from 'src/app/staff/farmer/pages/farmer-lookup/
 import { MainComponent } from '../../main/main.component';
 import { ReportsService } from '../../services/reports.service';
 import { DatePipe } from '@angular/common';
+import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 const MONTHS = [
   {value: 'JANUARY', name: 'JANUARY'},
   {value: 'FEBRUARY', name: 'FEBRUARY'},
@@ -52,10 +53,9 @@ export class FarmerProductsReportComponent implements OnInit {
     this.months=MONTHS
 
     this.farmerProductsForm = this.fb.group({
-      username: ["", [Validators.required]],
-      farmerNo: ["", [Validators.required]],
+      name: ["", [Validators.required]],
       month: ["", [Validators.required]],
-
+      locationId: ["", [Validators.required]]
     })
    
   }
@@ -77,11 +77,12 @@ export class FarmerProductsReportComponent implements OnInit {
       });
     });
   }
-  onSubmit() {
 
-    console.log("Form data " + this.farmerProductsForm.controls.farmerNo.value)
+  onSubmit() {
+    this.loading = true;
+    console.log("Form data " + this.farmerProductsForm.controls.locationId.value)
     this.date = this.datePipe.transform(this.farmerProductsForm.value.from, 'yyyy-MM-dd');
-    this.service.generatefarmerProducts(this.farmerProductsForm.controls.farmerNo.value,this.farmerProductsForm.value.month)
+    this.service.generatefarmerProducts(this.farmerProductsForm.controls.locationId.value,this.farmerProductsForm.value.month)
       .subscribe(
         (response) => {
           console.log(response)
@@ -105,8 +106,8 @@ export class FarmerProductsReportComponent implements OnInit {
           this.dialogRef.close();
 
           this.snackbar.showNotification(
-            "Report generated successfully",
-            "snackbar-success"
+            "snackbar-success",
+            "Report generated successfully"
           );
         },
         (err) => {
@@ -114,10 +115,9 @@ export class FarmerProductsReportComponent implements OnInit {
           this.loading = false;
 
           this.dialogRef.close();
-
           this.snackbar.showNotification(
+            "snackbar-danger",
             "Report could not be generated successfully",
-            "snackbar-danger"
           );
         }
       );
@@ -126,5 +126,23 @@ export class FarmerProductsReportComponent implements OnInit {
  
   onClick() {
 
+  }
+
+  choosePickUpLocation() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result;
+      this.farmerProductsForm.patchValue({
+        name: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      });
+    });
   }
 }

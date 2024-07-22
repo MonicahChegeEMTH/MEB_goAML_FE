@@ -19,13 +19,14 @@
         <form class="register-form m-4" [formGroup]="farmerProductsForm">
             <div class="row">
                 <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Select Farmer</mat-label>
-                    <input matInput formControlName="username" required readonly />
-                    <mat-icon matSuffix (click)="selectFarmer()">search</mat-icon>
-                    <mat-error *ngIf="farmerProductsForm.get('username').hasError('required')">
-                        Farmer is required
+                    <mat-label>Select Pick Up Location</mat-label>
+                    <input matInput formControlName="name" required readonly />
+                    <mat-icon matSuffix (click)="choosePickUpLocation()">search</mat-icon>
+                    <mat-error *ngIf="farmerProductsForm.get('name').hasError('required')">
+                        MCC is required
                     </mat-error>
                 </mat-form-field>
+                
                 <mat-form-field class="example-full-width mb-1" appearance="outline">
                     <mat-label>Select Month</mat-label>
                     <mat-select formControlName="month" required>
