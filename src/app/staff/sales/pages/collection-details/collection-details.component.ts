@@ -95,7 +95,7 @@ export class CollectionDetailsComponent implements OnInit {
       // Use the id parameter in your component logic
     });
 
-    this.getFarmerDetails(this.farmerid);
+    this.getFarmerById(this.farmerid);
     this.getFarmerCollections(this.farmerid);
     this.getFarmerAllocations(this.farmerid);
     this.getPayedFarmerAccruals(this.farmerid);
@@ -109,8 +109,8 @@ export class CollectionDetailsComponent implements OnInit {
   found: boolean = false;
   selection = new SelectionModel<any>(true, []);
 
-  getFarmerDetails(id) {
-    this.service.getFarmerDetails(id).subscribe((res) => {
+  getFarmerById(id) {
+    this.service.getFarmerById(id).subscribe((res) => {
       this.farmer = res.entity;
       if (this.farmer.username != null || this.farmer.username != undefined) {
         this.present = true;

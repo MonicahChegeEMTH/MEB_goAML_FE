@@ -45,6 +45,9 @@ export class InventoryManagementComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  @ViewChild('mccPaginator') mccPaginator: MatPaginator
+  @ViewChild('mccSort') mccSort: MatSort
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: "0px", y: "0px" };
 
@@ -104,7 +107,7 @@ export class InventoryManagementComponent implements OnInit {
         if (this.mccproducts.length > 0) {
           this.mccdata = true
           this.mccProductsDataSource = new MatTableDataSource<any>(this.mccproducts);
-          this.mccProductsDataSource.paginator = this.paginator;
+          this.mccProductsDataSource.paginator = this.mccPaginator;
           this.mccProductsDataSource.sort = this.sort;
         } else {
           this.mccdata = false
@@ -146,6 +149,11 @@ export class InventoryManagementComponent implements OnInit {
       stock: data
     }
     this.dialog.open(EditStockComponent, dialogConfig)
+    this.dialog.afterAllClosed.subscribe({
+      next: (res) => {
+        this.ngOnInit()
+      }
+    })
   }
 
   deleteCall(data: any) {
@@ -170,6 +178,14 @@ export class InventoryManagementComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  mccProductFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.mccProductsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.mccProductsDataSource.paginator) {
+      this.mccProductsDataSource.paginator.firstPage();
     }
   }
 

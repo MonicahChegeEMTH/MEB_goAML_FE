@@ -57,6 +57,10 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` + id, httpOptions);
   }
 
+  getFarmerById(id: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=` + id, httpOptions);
+  }
+
   getFarmerDetails(id: any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmers/details?farmerId=` + id, httpOptions);
   }

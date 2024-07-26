@@ -42,6 +42,8 @@
 
                            
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Product Category</mat-label>
@@ -49,7 +51,7 @@
                                         matTooltip="Click To Select Product Category">search</mat-icon>
                                     <input matInput formControlName="categoryName" required readonly />
                                     <mat-error *ngIf="productsForm.get('categoryName').hasError('required')">
-                                        Procuct Category is required
+                                        Product Category is required
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -58,6 +60,16 @@
                                     <mat-label>Number Of Items</mat-label>
                                     <input matInput formControlName="stock"  />
                                     
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Price Category</mat-label>
+                                    <mat-select formControlName="priceType">
+                                        <mat-option value="Common">Common</mat-option>
+                                        <mat-option value="Specific">Specific</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
                         </div>

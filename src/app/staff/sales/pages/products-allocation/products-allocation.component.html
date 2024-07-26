@@ -90,6 +90,13 @@
                                                 {{i+1}}</mat-cell>
                                         </ng-container>
 
+                                        <ng-container matColumnDef="farmer_no">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer No</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)">
+                                                {{ row.farmer_no }}</mat-cell>
+                                        </ng-container>
+
 
                                         <ng-container matColumnDef="username">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer /
@@ -123,11 +130,11 @@
                                             </mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="allocationDate">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Sold On</mat-header-cell>
+                                        <ng-container matColumnDef="requestedOn">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Requetsed On</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.allocationDate | date}}
+                                                {{ row.requestedOn | date}}
                                             </mat-cell>
                                         </ng-container>
 
@@ -142,11 +149,11 @@
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                <div *ngIf="row.status=='N'">
+                                                <div *ngIf="row.status=='PENDING'">
                                                     <span class="badge badge-pill badge-primary col-red">
                                                         {{'Pending'}}</span>
                                                 </div>
-                                                <div *ngIf="row.status=='Y'">
+                                                <div *ngIf="row.status=='APPROVED'">
                                                     <span class="badge badge-pill badge-primary col-green">
                                                         {{'Approved'}}</span>
                                                     
@@ -155,7 +162,7 @@
                                             </mat-cell>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="paymentStatus">
+                                        <!-- <ng-container matColumnDef="paymentStatus">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Payment
                                                 Status</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
@@ -169,7 +176,7 @@
                                                         {{'Not Paid'}}</span>
                                                 </div>
                                             </mat-cell>
-                                        </ng-container>
+                                        </ng-container> -->
                                         <ng-container matColumnDef="Actions">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
@@ -206,7 +213,7 @@
                                         </mat-progress-spinner>
                                     </div>
 
-                                    <div class="tbl-spinner" *ngIf="!isLoading">
+                                    <div class="tbl-spinner" *ngIf="!isLoading && goods_data">
                                         <h4>No Product Allocations Found</h4>
                                     </div>
                                     <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"

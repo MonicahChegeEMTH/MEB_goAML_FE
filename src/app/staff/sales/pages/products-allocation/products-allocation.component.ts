@@ -22,14 +22,14 @@ export class ProductsAllocationComponent implements OnInit {
 
   displayedColumns: string[] = [
     "id",
+    "farmer_no",
     "username",
     "product",
     "quantity",
     "amount",
-    "allocationDate",
+    "requestedOn",
     "type",
     "status",
-    "paymentStatus",
     "Actions",
   ];
   displayedColumns1: string[] = [
@@ -54,6 +54,7 @@ export class ProductsAllocationComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   goods: any;
   services: any;
+  goods_data: any;
   error: any;
   isLoading: boolean = true;
   currentUser: any;
@@ -66,17 +67,42 @@ export class ProductsAllocationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getGoods("Good");
+    // this.getGoods("Good");
+    this.getSales();
     this.getallcataionPerType("Service");
   }
 
   refresh() {
-    this.getGoods("Good");
+    this.getSales()
   }
 
   
   getGoods(type) {
     this.service.getSalesPerType(type).subscribe(
+      (res) => {
+        this.goods = res.entity;
+        console.log("Goods"+ res.entity)
+        if (this.goods != null) {
+          this.goods_data = true
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource<any>(this.goods);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        } else {
+          this.goods_data = false
+          this.isLoading = false
+        }
+      },
+      (err) => {
+        this.isLoading = false;
+        this.goods_data = false
+        console.log(err);
+      }
+    );
+  }
+
+  getSales() {
+    this.service.getSales().subscribe(
       (res) => {
         this.goods = res.entity;
         console.log("Goods"+ res.entity)
@@ -92,6 +118,7 @@ export class ProductsAllocationComponent implements OnInit {
       }
     );
   }
+
   getallcataionPerType(type:any) {
     this.service.getSalesPerType(type).subscribe(
       (res) => {

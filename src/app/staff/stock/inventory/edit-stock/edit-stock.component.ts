@@ -26,15 +26,17 @@ export class EditStockComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("passed data", this.data.stock)
     this.productsForm = this.fb.group({
-      id: [this.data.stock.id],
       name: [this.data.stock.name, [Validators.required]],
       description: [this.data.stock.description, [Validators.required]],
-      category: [this.data.stock.category, [Validators.required]],
+      // category: [this.data.stock.category, [Validators.required]],
       price: [this.data.stock.price, [Validators.required]],
       salePrice: [this.data.stock.salePrice, [Validators.required]],
       stock: [this.data.stock.stock],
-      categoryName: [this.data.stock.category]
+      categoryName: [this.data.stock.category],
+      priceType: [this.data.stock.priceType],
+      type: [this.data.stock.type]
     });
 
   }
@@ -62,17 +64,18 @@ export class EditStockComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    this.service.updateProduct(this.productsForm.value.id,this.productsForm.value).subscribe(
+    console.log("saleprice", this.productsForm.value)
+    this.service.updateProduct(this.data.stock.id,this.productsForm.value).subscribe(
       (res) => {
         this.loading = false;
         this.snackbar.showNotification("snackbar-success", "Successful!");
         this.productsForm.reset();
         this.dialogRef.close();
-        this.dialogRef.afterClosed().subscribe({
-          next: () => {
-            this.ngOnInit();
-          }
-        })
+        // this.dialogRef.afterClosed().subscribe({
+        //   next: () => {
+        //     this.ngOnInit();
+        //   }
+        // })
       },
       (err) => {
         this.loading = false;

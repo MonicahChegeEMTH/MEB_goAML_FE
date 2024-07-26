@@ -173,11 +173,11 @@
                                                             <mat-icon>launch</mat-icon>
                                                         </button>
         
-                                                        <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
+                                                        <!-- <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
                                                             class="tbl-action-btn" (click)="deleteCall(row)">
                                                             <app-feather-icons [icon]="'trash'"
                                                                 [class]="'tbl-fav-delete'"></app-feather-icons>
-                                                        </button>
+                                                        </button> -->
                                                     </mat-cell>
                                                 </ng-container>
         
@@ -228,7 +228,7 @@
                                                                 <label for="search-input"><i
                                                                         class="material-icons search-icon">search</i></label>
                                                                 <input placeholder="Filter..." type="text"
-                                                                    (keyup)="applyFilter($event)" #filter
+                                                                    (keyup)="mccProductFilter($event)" #filter
                                                                     class="browser-default search-field"
                                                                     aria-label="Search box">
                                                             </li>
@@ -357,11 +357,11 @@
                                                             <mat-icon>launch</mat-icon>
                                                         </button>
         
-                                                        <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
+                                                        <!-- <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
                                                             class="tbl-action-btn" (click)="deleteCall(row)">
                                                             <app-feather-icons [icon]="'trash'"
                                                                 [class]="'tbl-fav-delete'"></app-feather-icons>
-                                                        </button>
+                                                        </button> -->
                                                     </mat-cell>
                                                 </ng-container>
         
@@ -381,7 +381,7 @@
                                                 <h4>No Mcc Allocations Found</h4>
                                             </div>
         
-                                            <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
+                                            <mat-paginator #mccPaginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
                                                 aria-label="Select page of users"></mat-paginator>
                                         </div>
                                     </div>
