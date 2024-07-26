@@ -10,7 +10,7 @@ export class AdministrationService {
 
   constructor(private http: HttpClient) { }
 
-  bulkDeliveryUpload(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/api/v1/collections/add/bulk`, data);
+  bulkDeliveryUpload(data: any, username: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/v1/collections/add/bulk?username=${username}`, data);
   }
 }

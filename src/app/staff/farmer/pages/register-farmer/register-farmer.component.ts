@@ -42,7 +42,7 @@ export class RegisterFarmerComponent implements OnInit {
         id: 609,
       },
       {
-        name: 'BARCLAYS BANK OF KENYA LIMITED',
+        name: 'ABSA BANK',
         code: '3',
         payPointType: 'BANK',
         status: 'ACTIVE',
@@ -56,11 +56,32 @@ export class RegisterFarmerComponent implements OnInit {
         id: 616,
       },
       {
-        name: 'COMMERCIAL BANK OF AFRICA LTD',
-        code: '7',
+        name: 'FAMILY BANK',
+        code: '70',
         payPointType: 'BANK',
         status: 'ACTIVE',
-        id: 617,
+        id: 625,
+      },
+      {
+        name: 'MWANANCHI SACCO LTD',
+        code: '70',
+        payPointType: 'SACCO',
+        status: 'ACTIVE',
+        id: 547
+      },
+      {
+        name: 'Boresha Sacco',
+        code: '70',
+        payPointType: 'SACCO',
+        status: 'ACTIVE',
+        id: 547
+      },
+      {
+        name: 'TOWER SACCO',
+        code: '70',
+        payPointType: 'SACCO',
+        status: 'ACTIVE',
+        id: 547
       },
       {
         name: 'CONSOLIDATED BANK OF KENYA LTD',
@@ -84,20 +105,6 @@ export class RegisterFarmerComponent implements OnInit {
         id: 623,
       },
       {
-        name: 'FAMILY BANK LTD',
-        code: '70',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 625,
-      },
-      {
-        name: 'MWANANCHI SACCO',
-        code: '70',
-        payPointType: 'SACCO',
-        status: 'ACTIVE',
-        id: 547
-      },
-      {
         name: 'JAMII BORA BANK LTD',
         code: '51',
         payPointType: 'BANK',
@@ -105,7 +112,7 @@ export class RegisterFarmerComponent implements OnInit {
         id: 636,
       },
       {
-        name: 'KCB BANK',
+        name: 'KCB Bank',
         code: '1',
         payPointType: 'BANK',
         status: 'ACTIVE',

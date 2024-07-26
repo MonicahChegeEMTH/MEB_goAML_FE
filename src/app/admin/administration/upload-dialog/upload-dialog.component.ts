@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { BulkDeliveryComponent } from '../bulk-delivery/bulk-delivery.component';
 import { AdministrationService } from '../administration.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 
 @Component({
   selector: 'app-upload-dialog',
@@ -15,13 +16,15 @@ export class UploadDialogComponent implements OnInit {
   uploadForm: FormGroup
   currentDate: any
   selectedFile: File | null = null
+  username: any
 
-  constructor(public dialogRef: MatDialogRef<BulkDeliveryComponent>, @Inject(MAT_DIALOG_DATA) private data: any, private fb: FormBuilder, private administratorService: AdministrationService, private snackbar: SnackbarService,
+  constructor(public dialogRef: MatDialogRef<BulkDeliveryComponent>, @Inject(MAT_DIALOG_DATA) private data: any, private fb: FormBuilder, private administratorService: AdministrationService, private snackbar: SnackbarService, private tokenStorage: TokenStorageService
 ) {
     this.currentDate = this.getCurrentDate()
    }
 
   ngOnInit(): void {
+    this.username = this.tokenStorage.getUser().username;
     this.uploadForm = this.fb.group({
       file: ['', [Validators.required]]
     })
@@ -54,7 +57,7 @@ export class UploadDialogComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.selectedFile, this.selectedFile.name)
 
-      this.administratorService.bulkDeliveryUpload(formData).subscribe({
+      this.administratorService.bulkDeliveryUpload(formData, this.username).subscribe({
         next: (response: any) => {
           this.loading = true;
 
