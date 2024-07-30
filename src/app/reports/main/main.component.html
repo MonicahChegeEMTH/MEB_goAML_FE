@@ -484,19 +484,19 @@
                       <form class="register-form" [formGroup]="paymentFileForm">
                         <div class="row">
                           <div>
-                            <mat-radio-group aria-label="Select an option" formControlName="format">
+                            <!-- <mat-radio-group aria-label="Select an option" formControlName="format">
                               <mat-radio-button value="pdf">PDF</mat-radio-button>
                               <mat-radio-button value="excel">Excel</mat-radio-button>
-                            </mat-radio-group>
+                            </mat-radio-group> -->
                           </div>
-                          <mat-form-field class="example-full-width" appearance="outline">
+                          <!-- <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
                             <mat-icon matSuffix (click)="choosePickUpLocation()">search</mat-icon>
                             <mat-error *ngIf="paymentFileForm.get('pul').hasError('required')">
                               Collection center is required
                             </mat-error>
-                          </mat-form-field>
+                          </mat-form-field> -->
 
                           <mat-form-field class="example-full-width mb-1" appearance="outline">
                             <mat-label>Select Month</mat-label>
@@ -509,6 +509,16 @@
                             </mat-error>
                           </mat-form-field>
                           <mat-form-field class="example-full-width mb-1" appearance="outline">
+                            <mat-label>Select Year</mat-label>
+                            <mat-select formControlName="year" required>
+                              <mat-option *ngFor="let year of years" [value]="year.value">{{ year.name
+                                }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="paymentFileForm.get('year').hasError('required')">
+                              Year Is required
+                            </mat-error>
+                        </mat-form-field>
+                          <!-- <mat-form-field class="example-full-width mb-1" appearance="outline">
                             <mat-label>Select Payment Mode</mat-label>
                             <mat-select formControlName="mode" required>
                               <mat-option value="M-pesa">MPesa</mat-option>
@@ -519,7 +529,7 @@
                             <mat-error *ngIf="paymentFileForm.get('mode').hasError('required')">
                               Payment mode Is required
                             </mat-error>
-                          </mat-form-field>
+                          </mat-form-field> -->
                         </div>
 
                         <div class="example-button-row">
@@ -539,13 +549,7 @@
 
 
                 </li>
-                <li  class="d-flex mb-3">
-
-
-                  <!-- <div class="example-action-buttons">
-                            <button mat-button (click)="accordion.openAll()">Expand All</button>
-                            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
-                          </div> -->
+                <!-- <li  class="d-flex mb-3">
                   <mat-accordion class="example-headers-align" multi>
                     <mat-progress-bar mode="indeterminate" *ngIf="isloading"></mat-progress-bar>
                     <mat-expansion-panel>
@@ -553,10 +557,6 @@
                         <mat-panel-title>
                           Payment File report for date range
                         </mat-panel-title>
-                        <!-- <mat-panel-description>
-                                Inform the date you wish to travel
-                                <mat-icon>date_range</mat-icon>
-                              </mat-panel-description> -->
                       </mat-expansion-panel-header>
 
                       <form class="register-form" [formGroup]="paymentFileFormdr">
@@ -608,7 +608,7 @@
                   </mat-accordion>
 
 
-                </li>
+                </li> -->
                 
               </ul>
             </div>

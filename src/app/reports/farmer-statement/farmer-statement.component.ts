@@ -84,7 +84,7 @@ export class FarmerStatementComponent implements OnInit {
           a.setAttribute("style", "display: none");
           a.setAttribute("target", "blank");
           a.href = url;
-          a.download = response.filename;
+          a.download = response.filename.pdf;
           a.click();
           window.URL.revokeObjectURL(url);
           a.remove();
