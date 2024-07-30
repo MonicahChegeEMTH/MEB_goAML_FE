@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { ReportsService } from 'src/app/reports/services/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SalesService } from '../../services/sales.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-collection-details',
@@ -35,15 +36,20 @@ export class CollectionDetailsComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  farmerid: any;
+  farmerNo: any;
+  form: FormGroup
   constructor(
     private route: ActivatedRoute,
     private location: Location,
     private dialog: MatDialog,
     private service: SalesService,
     private reportservice: ReportsService,
-    private snackbar: SnackbarService
-  ) {}
+    private snackbar: SnackbarService,
+    private fb: FormBuilder,
+    private datePipe: DatePipe
+  ) {
+    this.today = this.getCurrentDate();
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -88,20 +94,36 @@ export class CollectionDetailsComponent implements OnInit {
   totalAmountOnMilkDelivered: number = 0;
   amountPayedOnCollections: number = 0;
   amountNotPayedOnCollections: number = 0;
+  quantity: number = 0.0
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      from: ['', [Validators.required]],
+      to: ['', [Validators.required]]
+    })
+    
     this.route.params.subscribe((params: Params) => {
-      this.farmerid = params['id'];
+      this.farmerNo = params['fno'];
       // Use the id parameter in your component logic
     });
 
-    this.getFarmerById(this.farmerid);
-    this.getFarmerCollections(this.farmerid);
-    this.getFarmerAllocations(this.farmerid);
-    this.getPayedFarmerAccruals(this.farmerid);
-    this.getNonPayedFarmerAccruals(this.farmerid);
-    this.getFarmerAmountOnNotPayedCollections(this.farmerid);
-    this.getFarmerAmountOnPayedCollections(this.farmerid)
+    this.getByFarmerNo(this.farmerNo);
+    this.getTodaysCollections();
+    this.getFarmerAllocations(this.farmerNo);
+    this.getPayedFarmerAccruals(this.farmerNo);
+    this.getNonPayedFarmerAccruals(this.farmerNo);
+    this.getFarmerAmountOnNotPayedCollections(this.farmerNo);
+    this.getFarmerAmountOnPayedCollections(this.farmerNo);
+  }
+
+  getCurrentDate(): any {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
   }
 
   farmer: any;
@@ -109,25 +131,28 @@ export class CollectionDetailsComponent implements OnInit {
   found: boolean = false;
   selection = new SelectionModel<any>(true, []);
 
-  getFarmerById(id) {
-    this.service.getFarmerById(id).subscribe((res) => {
+  getByFarmerNo(farmerNo: any) {
+    this.service.getByFarmerNo(farmerNo).subscribe((res) => {
       this.farmer = res.entity;
       if (this.farmer.username != null || this.farmer.username != undefined) {
         this.present = true;
+        console.log("farmer data ", this.farmer)
       } else {
         this.present = false;
       }
     });
   }
 
-  getFarmerCollections(id) {
+
+  getTodaysCollections() {
     this.isLoading = true;
-    this.service.getFarmerCollections(id).subscribe((res) => {
+    this.service.filterCollections(this.farmerNo, this.today, this.today).subscribe((res) => {
       this.data = res;
 
       if (this.data.entity.length > 0) {
         this.isLoading = false;
         this.isdata = true;
+        this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
 
       
         // Binding with the datasource
@@ -140,6 +165,35 @@ export class CollectionDetailsComponent implements OnInit {
         // this.dataSource = new MatTableDataSource<any>(this.data);
       }
     });
+  }
+
+  filterCollections() {
+    if (this.form.valid) {
+      this.isLoading = true;
+      const from = this.datePipe.transform(this.form.value.from, "yyyy-MM-dd")
+      const to = this.datePipe.transform(this.form.value.to, "yyyy-MM-dd")
+      this.service.filterCollections(this.farmerNo, from, to).subscribe((res) => {
+        this.data = res;
+  
+        if (this.data.entity.length > 0) {
+          this.isLoading = false;
+          this.isdata = true;
+          this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
+  
+        
+          // Binding with the datasource
+          this.dataSource = new MatTableDataSource(this.data.entity);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        } else {
+          this.isdata = false;
+          this.isLoading = false;
+          // this.dataSource = new MatTableDataSource<any>(this.data);
+        }
+      });
+    } else {
+      this.snackbar.showNotification('snackbar-danger', "from and to date required");
+    }
   }
 
   getFarmerAllocations(id) {
@@ -163,7 +217,7 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
   refreshAllocations(){
-    this.getFarmerAllocations(this.farmerid)
+    this.getFarmerAllocations(this.farmerNo)
   }
 
 

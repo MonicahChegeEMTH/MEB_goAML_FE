@@ -235,6 +235,8 @@
                             <div class="card">
                                 <div class="chat">
                                     <div class="chat-header clearfix">
+
+                                        <!-- farmer details -->
                                         <div class="row mt-2">
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
@@ -244,35 +246,64 @@
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Member code </div>
-                                                    <div class="chat-num-messages">{{farmer.farmerNo }}</div>
+                                                    <div class="chat-with">Member Code </div>
+                                                    <div class="chat-num-messages">{{farmer.fno }}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="Subcounty" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">ID number </div>
-                                                    <div class="chat-num-messages">{{farmer.idNumber}}</div>
+                                                    <div class="chat-with">ID Number </div>
+                                                    <div class="chat-num-messages">{{farmer.idno}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
-                                                <div matTooltip="Subcounty" class="chat-about"
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Gender </div>
+                                                    <div class="chat-num-messages">{{farmer.gender}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Route" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">Subcounty</div>
-                                                    <div class="chat-num-messages">{{farmer.subcounty}}</div>
+                                                    <div class="chat-with">Route</div>
+                                                    <div class="chat-num-messages">{{farmer.route}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="" class="chat-about" *ngIf="present==true">
+                                                    <div class="chat-with">Center </div>
+                                                    <div class="chat-num-messages">{{farmer.mcc}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                        <!-- bank details row -->
+                                        <div class="row mt-2">
+                                            <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Lastname </div>
-                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                    <div class="chat-with">Bank</div>
+                                                    <div class="chat-num-messages">{{farmer.bank}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">No of cows </div>
-                                                    <div class="chat-num-messages">{{farmer.last_name}}</div>
+                                                    <div class="chat-with">Account Number</div>
+                                                    <div class="chat-num-messages">{{farmer.accno}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Acc No" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">Account Name</div>
+                                                    <div class="chat-num-messages">{{farmer.username}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm-6">
+                                                <div matTooltip="Branch" class="chat-about"
+                                                    *ngIf="present==true">
+                                                    <div class="chat-with">Branch</div>
+                                                    <div class="chat-num-messages">{{farmer.branch}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -288,8 +319,8 @@
                                     <div class="row">
                                         <div class="col-lg-3 col-sm-6">
                                             <div class="text-center m-b-20">
-                                                <h3 class="m-b-10 col-green">{{ amountNotPayedOnCollections | currency: "KES"}}</h3>
-                                                <div class="text font-15 m-b-5">Pending Accrued Payment On Collections
+                                                <h3 class="m-b-10 col-green">{{ quantity}} Kgs</h3>
+                                                <div class="text font-15 m-b-5">Total Quantity
                                                 </div>
                                             </div>
                                         </div>
@@ -330,29 +361,55 @@
                                                     <div class="materialTableHeader">
                                                         <div class="row">
                                                             <div class="col-8">
-                                                                <ul class="header-buttons-left ms-0">
-                                                                    <li class="dropdown">
-                                                                        <h2>Deliveries</h2>
-                                                                    </li>
-                                                                    <li class="dropdown m-l-20">
-                                                                        <label for="search-input"><i
-                                                                                class="material-icons search-icon">search</i></label>
-                                                                        <input placeholder="Filter..." type="text"
-                                                                            (keyup)="applyFilter($event)" #filter
-                                                                            class="browser-default search-field"
-                                                                            aria-label="Search box" />
-                                                                    </li>
-                                                                    <li>
-                                                                        <div class="m-l-10"
-                                                                            [hidden]="!selection.hasValue()"
-                                                                            matTooltip="DELETE">
-                                                                            <button mat-mini-fab color="primary">
-                                                                                <mat-icon
-                                                                                    class="col-white">check_circle</mat-icon>
-                                                                            </button>
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
+                                                                <form [formGroup]="form">
+                                                                    <ul class="header-buttons-left ms-0">
+                                                                        <li class="dropdown">
+                                                                            <h2>Deliveries</h2>
+                                                                        </li>
+                                                                        <li class="dropdown m-l-20">
+                                                                            <!-- <label for="search-input"><i
+                                                                                    class="material-icons search-icon">search</i></label>
+                                                                            <input placeholder="Filter..." type="text"
+                                                                                (keyup)="applyFilter($event)" #filter
+                                                                                class="browser-default search-field"
+                                                                                aria-label="Search box" /> -->
+                                                                                <mat-form-field class="m-l-5">
+                                                                                    <input type="text" matInput [matDatepicker]="picker1" placeholder="from date" formControlName="from">
+                                                                                    <mat-datepicker-toggle [for]="picker1" matSuffix></mat-datepicker-toggle>
+                                                                                    <mat-datepicker #picker1></mat-datepicker>
+                                                                                </mat-form-field>
+                                                                                <mat-form-field class="m-l-5">
+                                                                                    <input type="text" matInput [matDatepicker]="picker2" placeholder="to date" formControlName="to">
+                                                                                    <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
+                                                                                    <mat-datepicker #picker2></mat-datepicker>
+                                                                                </mat-form-field>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="m-l-5" matTooltip="Refresh">
+                                                                                <button mat-mini-fab color="primary" (click)="getTodaysCollections()">
+                                                                                    <mat-icon class="col-white">refresh</mat-icon>
+                                                                                </button>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="m-l-5" matTooltip="Search">
+                                                                                <button mat-mini-fab color="primary" (click)="filterCollections()">
+                                                                                    <mat-icon class="col-white">search</mat-icon>
+                                                                                </button>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="m-l-10"
+                                                                                [hidden]="!selection.hasValue()"
+                                                                                matTooltip="DELETE">
+                                                                                <button mat-mini-fab color="primary">
+                                                                                    <mat-icon
+                                                                                        class="col-white">check_circle</mat-icon>
+                                                                                </button>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </form>
                                                             </div>
                                                             <div class="col-4">
                                                                 <ul class="header-buttons">
@@ -362,7 +419,7 @@
                                                                             <img src="assets/images/icons/xlsx.png"
                                                                                 alt="" (click)="
                                                                     exporter.exportTable('xlsx', {
-                                                                      fileName: 'Meeting Agendas',
+                                                                      fileName: 'fno-'+farmer.fno+'-deliveries',
                                                                       sheet: 'sheet1'
                                                                     })
                                                                   " />
@@ -471,7 +528,7 @@
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                                         class="column-nowrap">
-                                                        {{response.collection_date | date:'medium'}}
+                                                        {{response.date | date:'medium'}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="paymentStatus">

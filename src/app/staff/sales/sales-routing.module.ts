@@ -25,7 +25,7 @@ const routes: Routes = [
     component: CollectorsFloatAllocationsComponent,
   },
   {
-    path: "farmer/:id",
+    path: "farmer/:fno",
     component: CollectionDetailsComponent,
   },
   {

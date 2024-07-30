@@ -133,8 +133,7 @@ export class FarmerManagenentComponent implements OnInit {
   }
 
   viewFarmerCollections(row) {
-
-    this.router.navigate(['/staff/sales/farmer', row.id]);
+    this.router.navigate(['/staff/sales/farmer', row.farmer_no]);
   }
 
   // filterFarmers() {

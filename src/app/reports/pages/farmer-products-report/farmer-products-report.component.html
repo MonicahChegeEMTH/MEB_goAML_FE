@@ -36,7 +36,18 @@
                     <mat-error *ngIf="farmerProductsForm.get('month').hasError('required')">
                       Month Is required
                     </mat-error>
-                  </mat-form-field>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width mb-1" appearance="outline">
+                    <mat-label>Select Year</mat-label>
+                    <mat-select formControlName="year" required>
+                      <mat-option *ngFor="let year of years" [value]="year.value">{{ year.name
+                        }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="farmerProductsForm.get('year').hasError('required')">
+                      Year Is required
+                    </mat-error>
+                </mat-form-field>
                   
          
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">

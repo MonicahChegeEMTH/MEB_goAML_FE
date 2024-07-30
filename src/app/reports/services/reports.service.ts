@@ -56,6 +56,32 @@ export class ReportsService {
       })
     );
   }
+
+  generateMccAllocations(locationId: any, month: any, year: any): Observable<any> {
+    let headers = new HttpHeaders();
+    // headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      headers: headers,
+      responseType: "blob" as 'json',
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/allocations/mcc/${locationId}/${month}/${year}`;
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        console.log("response data", response)
+        // if (condition) {
+          
+        // }
+        return {
+          filename: "allocations",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  
   generatefarmerStatement(farmerNo: any, from: any, to: any): Observable<any> {
     console.log("Calling api  ....")
     let headers = new HttpHeaders();

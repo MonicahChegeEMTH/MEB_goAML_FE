@@ -53,12 +53,12 @@ export class SalesService {
     return this.http.get(`${environment.apiUrl}/api/v1/float/get/allocations`, httpOptions);
 
   }
-  getFarmerCollections(id: any) {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` + id, httpOptions);
+  filterCollections(farmerNo: any, from: any, to: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/farmer/deliveries/${farmerNo}/${from}/${to}`, httpOptions);
   }
 
-  getFarmerById(id: any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/farmer/id?farmerId=` + id, httpOptions);
+  getByFarmerNo(farmerNo: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/data/${farmerNo}`, httpOptions);
   }
 
   getFarmerDetails(id: any): Observable<any> {
