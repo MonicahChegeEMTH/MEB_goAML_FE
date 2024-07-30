@@ -86,6 +86,7 @@ export class StatmentComponent implements OnInit {
           a.setAttribute("style", "display: none");
           a.setAttribute("target", "blank");
           a.href = url;
+          response.filename = this.farmerstatementForm.value.username
           a.download = response.filename;
           a.click();
           window.URL.revokeObjectURL(url);
