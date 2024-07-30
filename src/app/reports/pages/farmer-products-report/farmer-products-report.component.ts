@@ -97,8 +97,12 @@ export class FarmerProductsReportComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     console.log("Form data " + this.farmerProductsForm.controls.locationId.value)
+    const monthname = this.getMonthName()
+
+    const mcc = this.farmerProductsForm.value.name
+    const year = this.farmerProductsForm.value.year
     this.date = this.datePipe.transform(this.farmerProductsForm.value.from, 'yyyy-MM-dd');
-    this.service.generateMccAllocations(this.farmerProductsForm.controls.locationId.value,this.farmerProductsForm.value.month, this.farmerProductsForm.value.year)
+    this.service.generateMccAllocations(this.farmerProductsForm.controls.locationId.value,this.farmerProductsForm.value.month, year)
       .subscribe({
         next: (response: any) => {
             console.log(response)
@@ -112,6 +116,8 @@ export class FarmerProductsReportComponent implements OnInit {
             a.setAttribute("style", "display: none");
             a.setAttribute("target", "blank");
             a.href = url;
+
+            response.filename = mcc+'-'+monthname+'-'+year
             a.download = response.filename;
             a.click();
             window.URL.revokeObjectURL(url);
@@ -163,5 +169,10 @@ export class FarmerProductsReportComponent implements OnInit {
         locationId: this.dialogData.data.id
       });
     });
+  }
+
+  getMonthName(): string {
+    const month = MONTHS.find(m => m.value === this.farmerProductsForm.value.month);
+    return month ? month.name : "inavalid-month";
   }
 }
