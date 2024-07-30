@@ -8,18 +8,29 @@ import { ReportsService } from '../../services/reports.service';
 import { DatePipe } from '@angular/common';
 import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 const MONTHS = [
-  {value: 'JANUARY', name: 'JANUARY'},
-  {value: 'FEBRUARY', name: 'FEBRUARY'},
-  {value: 'MARCH', name: 'MARCH'},
-  {value: 'APRIL', name: 'APRIL'},
-  {value: 'MAY', name: 'MAY'},
-  {value: 'JUNE', name: 'JUNE'},
-  {value: 'JULY', name: 'JULY'},
-  {value: 'AUGUST', name: 'AUGUST'},
-  {value: 'SEPTEMBER', name: 'SEPTEMBER'},
-  {value: 'OCTOBER', name: 'OCTOBER'},
-  {value: 'NOVEMBER', name: 'NOVEMBER'},
-  {value: 'DECEMBER', name: 'DECEMBER'}
+  {value: '1', name: 'JANUARY'},
+  {value: '2', name: 'FEBRUARY'},
+  {value: '3', name: 'MARCH'},
+  {value: '4', name: 'APRIL'},
+  {value: '5', name: 'MAY'},
+  {value: '6', name: 'JUNE'},
+  {value: '7', name: 'JULY'},
+  {value: '8', name: 'AUGUST'},
+  {value: '9', name: 'SEPTEMBER'},
+  {value: '10', name: 'OCTOBER'},
+  {value: '11', name: 'NOVEMBER'},
+  {value: '12', name: 'DECEMBER'}
+];
+
+const YEARS = [
+  {value: '2024', name: '2024'},
+  {value: '2025', name: '2025'},
+  {value: '2026', name: '2026'},
+  {value: '2027', name: '2027'},
+  {value: '2028', name: '2028'},
+  {value: '2029', name: '2029'},
+  {value: '2030', name: '2030'},
+  {value: '2031', name: '2031'},
 ];
 @Component({
   selector: 'app-farmer-products-report',
@@ -30,6 +41,8 @@ export class FarmerProductsReportComponent implements OnInit {
 
   farmerProductsForm: FormGroup
   months:any
+  years: any
+  currentYear: any
 
   dialogData: any;
   loading: boolean
@@ -51,10 +64,13 @@ export class FarmerProductsReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.months=MONTHS
+    this.years = YEARS
+    this.currentYear = new Date().getFullYear().toString()
 
     this.farmerProductsForm = this.fb.group({
       name: ["", [Validators.required]],
       month: ["", [Validators.required]],
+      year: [this.currentYear],
       locationId: ["", [Validators.required]]
     })
    
@@ -82,44 +98,47 @@ export class FarmerProductsReportComponent implements OnInit {
     this.loading = true;
     console.log("Form data " + this.farmerProductsForm.controls.locationId.value)
     this.date = this.datePipe.transform(this.farmerProductsForm.value.from, 'yyyy-MM-dd');
-    this.service.generatefarmerProducts(this.farmerProductsForm.controls.locationId.value,this.farmerProductsForm.value.month)
-      .subscribe(
-        (response) => {
-          console.log(response)
-          let url = window.URL.createObjectURL(response.data);
+    this.service.generateMccAllocations(this.farmerProductsForm.controls.locationId.value,this.farmerProductsForm.value.month, this.farmerProductsForm.value.year)
+      .subscribe({
+        next: (response: any) => {
+            console.log(response)
+            let url = window.URL.createObjectURL(response.data);
+  
+            // if you want to open PDF in new tab
+            window.open(url);
+  
+            let a = document.createElement("a");
+            document.body.appendChild(a);
+            a.setAttribute("style", "display: none");
+            a.setAttribute("target", "blank");
+            a.href = url;
+            a.download = response.filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+  
+            this.loading = false;
+  
+            this.dialogRef.close();
+  
+            this.snackbar.showNotification(
+              "snackbar-success",
+              "Report generated successfully"
+            );
 
-          // if you want to open PDF in new tab
-          window.open(url);
-
-          let a = document.createElement("a");
-          document.body.appendChild(a);
-          a.setAttribute("style", "display: none");
-          a.setAttribute("target", "blank");
-          a.href = url;
-          a.download = response.filename;
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-
-          this.loading = false;
-
-          this.dialogRef.close();
-
-          this.snackbar.showNotification(
-            "snackbar-success",
-            "Report generated successfully"
-          );
         },
-        (err) => {
+        error: (err) => {
           console.log(err);
           this.loading = false;
-
           this.dialogRef.close();
+  
+          // Attempt to access the error message
           this.snackbar.showNotification(
             "snackbar-danger",
-            "Report could not be generated successfully",
+            err,
           );
-        }
+        },
+      }
       );
 
   }

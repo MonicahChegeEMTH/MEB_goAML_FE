@@ -40,7 +40,7 @@
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
 
-                    {{ row.name }}
+                    {{ row.name == "MILK_COLLECTOR" ? "GRADER" : row.name}}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="creationDate">

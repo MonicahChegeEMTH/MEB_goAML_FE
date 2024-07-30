@@ -201,7 +201,7 @@ export class RegisterFarmerComponent implements OnInit {
       wardFk: ['', [Validators.required]],
       memberType: ['', [Validators.required]],
       alternativeMobileNo: [''],
-      noOfCows: ['', [Validators.required]],
+      noOfCows: ['',],
       paymentMode:['',[Validators.required]],
       county_fk: [''],
       location: [''],
@@ -209,8 +209,7 @@ export class RegisterFarmerComponent implements OnInit {
       village: [''],
       paymentFreequency: ['',[Validators.required]],
       gender: [''],
-      routeFk: [''],
-      
+      routeFk: [''], 
     });
   }
 

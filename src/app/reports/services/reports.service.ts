@@ -56,6 +56,32 @@ export class ReportsService {
       })
     );
   }
+
+  generateMccAllocations(locationId: any, month: any, year: any): Observable<any> {
+    let headers = new HttpHeaders();
+    // headers.append("Accept", "application/pdf");
+
+    let requestOptions: any = {
+      headers: headers,
+      responseType: "blob" as 'json',
+      withCredentials: false,
+    };
+    let API_URL = `${environment.apiUrl}/api/v1/reports/allocations/mcc/${locationId}/${month}/${year}`;
+
+    return this.http.get(API_URL, requestOptions).pipe(
+      map((response) => {
+        console.log("response data", response)
+        // if (condition) {
+          
+        // }
+        return {
+          filename: "allocations",
+          data: new Blob([response], { type: "application/pdf" }),
+        };
+      })
+    );
+  }
+  
   generatefarmerStatement(farmerNo: any, from: any, to: any): Observable<any> {
     console.log("Calling api  ....")
     let headers = new HttpHeaders();
@@ -118,14 +144,14 @@ export class ReportsService {
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
   }
-  paymentFileExcel(pid:any,month:any,mode:any): Observable<any> {
+  paymentFileExcel(month:any, year:any): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/paymentfile?pid=`+pid+`&month=` + month+`&mode=`+mode;
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/payroll/${month}/${year}`;
 
 
-    return this.http.get(API_URL, { headers, responseType: 'blob' });
+    return this.http.get(API_URL, { headers, responseType: 'blob', });
   }
   paymentFileExcelDr(from:any,to:any,mode:any): Observable<any> {
     let headers = new HttpHeaders();

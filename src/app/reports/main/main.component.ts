@@ -12,18 +12,29 @@ import { FarmerProductsReportComponent } from '../pages/farmer-products-report/f
 import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 import { saveAs } from 'file-saver';
 const MONTHS = [
-  { value: 'JANUARY', name: 'JANUARY' },
-  { value: 'FEBRUARY', name: 'FEBRUARY' },
-  { value: 'MARCH', name: 'MARCH' },
-  { value: 'APRIL', name: 'APRIL' },
-  { value: 'MAY', name: 'MAY' },
-  { value: 'JUNE', name: 'JUNE' },
-  { value: 'JULY', name: 'JULY' },
-  { value: 'AUGUST', name: 'AUGUST' },
-  { value: 'SEPTEMBER', name: 'SEPTEMBER' },
-  { value: 'OCTOBER', name: 'OCTOBER' },
-  { value: 'NOVEMBER', name: 'NOVEMBER' },
-  { value: 'DECEMBER', name: 'DECEMBER' }
+  { value: '1', name: 'January' },
+  { value: '2', name: 'February' },
+  { value: '3', name: 'March' },
+  { value: '4', name: 'April' },
+  { value: '5', name: 'May' },
+  { value: '6', name: 'June' },
+  { value: '7', name: 'July' },
+  { value: '8', name: 'August' },
+  { value: '9', name: 'September' },
+  { value: '10', name: 'October' },
+  { value: '11', name: 'November' },
+  { value: '12', name: 'December' }
+];
+
+const YEARS = [
+  {value: '2024', name: '2024'},
+  {value: '2025', name: '2025'},
+  {value: '2026', name: '2026'},
+  {value: '2027', name: '2027'},
+  {value: '2028', name: '2028'},
+  {value: '2029', name: '2029'},
+  {value: '2030', name: '2030'},
+  {value: '2031', name: '2031'},
 ];
 
 @Component({
@@ -46,6 +57,7 @@ export class MainComponent implements OnInit {
   months: any
   from:any
   to:any
+  years: any
 
   centered = false;
   // radius: number;
@@ -54,6 +66,7 @@ export class MainComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   dialogData: any;
   date: string;
+  currentYear: any
 
 
   constructor(
@@ -67,48 +80,44 @@ export class MainComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.reportCollectionForm = this.fb.group({
+    this.currentYear = new Date().getFullYear().toString();
+    this.years = YEARS
 
+    this.reportCollectionForm = this.fb.group({
       date: ["", [Validators.required]],
       format: ["", [Validators.required]],
-      
-    
     })
-    this.reportCollectionForm2 = this.fb.group({
 
+    this.reportCollectionForm2 = this.fb.group({
       date: ["", [Validators.required]],
       // format: ["", [Validators.required]],
-
     })
-    this.reportCollectionForm3 = this.fb.group({
 
+    this.reportCollectionForm3 = this.fb.group({
       date: ["", [Validators.required]],
       mcc: ["", [Validators.required]],
       centerId: ["", [Validators.required]],
       format: ["", [Validators.required]],
-    
     })
-    this.reportCollectionFormp = this.fb.group({
 
+    this.reportCollectionFormp = this.fb.group({
       date: ["", [Validators.required]],
       // format: ["", [Validators.required]],
-    
     })
-    this.reportCollectionFormm = this.fb.group({
 
+    this.reportCollectionFormm = this.fb.group({
       month: ["", [Validators.required]],
       // format: ["", [Validators.required]],
-    
     })
+
     this.paymentFileFormdr= this.fb.group({
       format: ["", [Validators.required]],
       mode: ["", [Validators.required]],
       from: ["", [Validators.required]],
-      to: ["", [Validators.required]]
+      to: ["", [Validators.required]],
     });
 
     this.collectionPerpLocationsForm = this.fb.group({
-
       date: ["", [Validators.required]],
       format: ["", [Validators.required]],
       pul: ["", [Validators.required]],
@@ -120,14 +129,11 @@ export class MainComponent implements OnInit {
 
 
     this.months = MONTHS
-
     this.paymentFileForm = this.fb.group(
       {
         month: ["", [Validators.required]],
-        format: ["", [Validators.required]],
-        mode: ["", [Validators.required]],
-        pul: ["", [Validators.required]],
-        locationId: ["", [Validators.required]],
+        format: ["excel"],
+        year: [this.currentYear, [Validators.required]],
       }
     )
 
@@ -523,13 +529,18 @@ export class MainComponent implements OnInit {
     }else if(format=="excel"){
       console.log("File format picked = " + format)
         console.log("Formated Date = " + this.date)
-        this.service.paymentFileExcel(this.paymentFileForm.value.locationId,this.paymentFileForm.value.month, this.paymentFileForm.value.mode).subscribe(
+        const year = this.paymentFileForm.value.year
+        this.service.paymentFileExcel(this.paymentFileForm.value.month, year).subscribe(
           (response: Blob) => {
             this.isloading = false
-            const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+            const month = this.getMonthName();
+            const filename = 'payroll-'+month+'-'+year+'.xlsx'; // Specify the desired filename with the appropriate extension
+            console.log("filename", filename)
             saveAs(response, filename);
           },
           error => {
+            this.isloading = false
+            this.snackbar.showNotification("snackbar-danger", "unable to generate payroll")
             console.error('Failed to download report:', error);
           }
         );
@@ -756,6 +767,12 @@ export class MainComponent implements OnInit {
 
 
   }
+
+  getMonthName(): string {
+    const month = MONTHS.find(m => m.value === this.paymentFileForm.value.month);
+    return month ? month.name : "inavalid-month";
+  }
+
   DailyCOllectionReport() {
 
   }

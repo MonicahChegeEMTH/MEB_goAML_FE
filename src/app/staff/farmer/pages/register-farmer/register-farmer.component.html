@@ -66,7 +66,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Alternative MobileNo</mat-label>
-                                    <input matInput formControlName="alternativeMobileNo" required />
+                                    <input matInput formControlName="alternativeMobileNo"/>
                                     <mat-error
                                         *ngIf="farmerRegirstartionForm.get('alternativeMobileNo').hasError('required')">
                                         alternativeMobileNo name is required
@@ -77,7 +77,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Number of Cows</mat-label>
-                                    <input matInput formControlName="noOfCows" type="number" required />
+                                    <input matInput formControlName="noOfCows" type="number" />
                                     <mat-error *ngIf="farmerRegirstartionForm.get('noOfCows').hasError('required')">
                                         Input is required
                                     </mat-error>
@@ -169,7 +169,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Location</mat-label>
-                                    <input matInput formControlName="location" required />
+                                    <input matInput formControlName="location"/>
                                     <mat-error *ngIf="farmerRegirstartionForm.get('location').hasError('required')">
                                         Location is required
                                     </mat-error>
@@ -179,7 +179,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Sub Location</mat-label>
-                                    <input matInput formControlName="subLocation" required />
+                                    <input matInput formControlName="subLocation"/>
                                     <mat-error *ngIf="farmerRegirstartionForm.get('subLocation').hasError('required')">
                                         Sub Location is required
                                     </mat-error>
@@ -189,7 +189,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Village</mat-label>
-                                    <input matInput formControlName="village" required />
+                                    <input matInput formControlName="village"/>
                                     <mat-error *ngIf="farmerRegirstartionForm.get('village').hasError('required')">
                                         Village is required
                                     </mat-error>
