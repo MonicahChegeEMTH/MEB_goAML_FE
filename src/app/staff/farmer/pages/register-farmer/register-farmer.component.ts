@@ -194,6 +194,7 @@ export class RegisterFarmerComponent implements OnInit {
       bankDetails: [''],
       transportMeans: [''],
       firstName: ['', [Validators.required]],
+      middleName: [''],
       lastName: ['', [Validators.required]],
       idNumber: ['', [Validators.required]],
       mobileNo: ['', [Validators.required]],

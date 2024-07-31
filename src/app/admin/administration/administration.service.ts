@@ -10,7 +10,15 @@ export class AdministrationService {
 
   constructor(private http: HttpClient) { }
 
-  bulkDeliveryUpload(data: any, username: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/api/v1/collections/add/bulk?username=${username}`, data);
+  bulkDeliveryUpload(data: any, username: any, mobile: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/v1/collections/add/bulk?username=${username}&mobile=${mobile}`, data);
+  }
+
+  getTodaysUploads(date: any):  Observable<any>{
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/bulk/by-date/${date}/${date}`);
+  }
+
+  filterBulkUploads(from: any, to: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/bulk/by-date/${from}/${to}`);
   }
 }

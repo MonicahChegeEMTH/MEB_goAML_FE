@@ -17,6 +17,7 @@ export class UploadDialogComponent implements OnInit {
   currentDate: any
   selectedFile: File | null = null
   username: any
+  mobile: any
 
   constructor(public dialogRef: MatDialogRef<BulkDeliveryComponent>, @Inject(MAT_DIALOG_DATA) private data: any, private fb: FormBuilder, private administratorService: AdministrationService, private snackbar: SnackbarService, private tokenStorage: TokenStorageService
 ) {
@@ -25,6 +26,7 @@ export class UploadDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.username = this.tokenStorage.getUser().username;
+    this.mobile = this.tokenStorage.getUser().mobile;
     this.uploadForm = this.fb.group({
       file: ['', [Validators.required]]
     })
@@ -57,7 +59,7 @@ export class UploadDialogComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.selectedFile, this.selectedFile.name)
 
-      this.administratorService.bulkDeliveryUpload(formData, this.username).subscribe({
+      this.administratorService.bulkDeliveryUpload(formData, this.username, this.mobile).subscribe({
         next: (response: any) => {
           this.loading = true;
 
