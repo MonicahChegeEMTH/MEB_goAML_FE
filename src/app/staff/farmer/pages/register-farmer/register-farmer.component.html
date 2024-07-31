@@ -34,6 +34,15 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Middle Name</mat-label>
+                                    <input matInput formControlName="middleName"/>
+                                    <mat-error *ngIf="farmerRegirstartionForm.get('lastName').hasError('required')">
+                                        middle name name is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                                <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Last Name</mat-label>
                                     <input matInput formControlName="lastName" required />
                                     <mat-error *ngIf="farmerRegirstartionForm.get('lastName').hasError('required')">
@@ -41,6 +50,9 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>idNumber</mat-label>
@@ -50,9 +62,6 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>mobileNo</mat-label>
@@ -74,6 +83,8 @@
                                 </mat-form-field>
                             </div>
 
+                        </div>
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Number of Cows</mat-label>
@@ -83,8 +94,6 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                                 <mat-form-field class="example-full-width mb-1" appearance="outline">
                                     <mat-label>Select Farmer/Supplier Category</mat-label>

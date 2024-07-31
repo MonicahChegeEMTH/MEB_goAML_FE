@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UploadDialogComponent } from './upload-dialog/upload-dialog.component';
 
@@ -44,6 +45,7 @@ import { UploadDialogComponent } from './upload-dialog/upload-dialog.component';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatRadioModule
   ]
 })
 export class AdministrationModule { }

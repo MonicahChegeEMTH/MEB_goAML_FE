@@ -97,77 +97,85 @@
                                     <div class="materialTableHeader">
                                         <div class="row">
                                             <div class="col-10">
-                                                <ul class="header-buttons-left ms-0">
-                                                    <!-- <li class="dropdown">
-                                                        <label for="search-input"><i
-                                                                class="material-icons search-icon">search</i></label>
-                                                        <input placeholder="Search" type="text"
-                                                            style="text-transform: capitalize;"
-                                                            (keyup)="applyFilter($event)"
-                                                            class="browser-default search-field"
-                                                            aria-label="Search box" />
-                                                    </li> -->
-                                                    <li>
-                                                        <div class="m-l-10" matTooltip="Upload">
-                                                            <button mat-mini-fab color="primary" (click)="uploadDialog()">
-                                                                <mat-icon class="col-white">add</mat-icon>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="m-l-10" matTooltip="Refresh">
-                                                            <button mat-mini-fab color="primary" (click)="getTodaysUploads()">
-                                                                <mat-icon class="col-white">refresh</mat-icon>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="dropdown m-l-5">
-                                                        <mat-form-field>
-                                                            <mat-label>Filter By </mat-label>
-                                                            <mat-select [(value)]="selected"  (selectionChange)="onSelectionChange()">
-                                                                <mat-option value="current_date"><b>Today</b></mat-option>
-                                                                <mat-option value="farmer_no"><b>Farmer Number</b></mat-option>
-                                                                <mat-option value="sd"><b>Specific Date</b></mat-option>
-                                                                <mat-option value="dr"><b>Date Range</b></mat-option>
-                                                            </mat-select>
-                                                        </mat-form-field>
-                                                    </li>
-                                                    <li class="dropdown">
-                                                        <form [formGroup]="form">
-                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'sd'">
-                                                                <input matInput [matDatepicker]="picker1"
-                                                                    (dateChange)="filterByDate()"
-                                                                    placeholder="Choose a date" formControlName="date">
-                                                                <mat-datepicker-toggle matSuffix
-                                                                    [for]="picker1"></mat-datepicker-toggle>
-                                                                <mat-datepicker #picker1></mat-datepicker>
+                                                <form [formGroup]="form">
+                                                    <ul class="header-buttons-left ms-0">
+                                                        <!-- <li class="dropdown">
+                                                            <label for="search-input"><i
+                                                                    class="material-icons search-icon">search</i></label>
+                                                            <input placeholder="Search" type="text"
+                                                                style="text-transform: capitalize;"
+                                                                (keyup)="applyFilter($event)"
+                                                                class="browser-default search-field"
+                                                                aria-label="Search box" />
+                                                        </li> -->
+                                                        <li>
+                                                            <div class="m-l-10" matTooltip="Upload">
+                                                                <button mat-mini-fab color="primary" (click)="uploadDialog()">
+                                                                    <mat-icon class="col-white">add</mat-icon>
+                                                                </button>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="m-l-10" matTooltip="Refresh">
+                                                                <button mat-mini-fab color="primary" (click)="getTodaysUploads(currentDate)">
+                                                                    <mat-icon class="col-white">refresh</mat-icon>
+                                                                </button>
+                                                            </div>
+                                                        </li>
+                                                        <li class="dropdown m-l-5">
+                                                            <mat-form-field>
+                                                                <mat-label>Filter By </mat-label>
+                                                                <mat-select [(value)]="selected"  (selectionChange)="onSelectionChange()">
+                                                                    <mat-option value="current_date"><b>Today</b></mat-option>
+                                                                    <!-- <mat-option value="farmer_no"><b>Farmer Number</b></mat-option> -->
+                                                                    <mat-option value="sd"><b>Specific Date</b></mat-option>
+                                                                    <mat-option value="dr"><b>Date Range</b></mat-option>
+                                                                </mat-select>
                                                             </mat-form-field>
-
-                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
-                                                                <input matInput [matDatepicker]="picker2"
-                                                                    placeholder="From Date" formControlName="fromDate">
-                                                                <mat-datepicker-toggle matSuffix
-                                                                    [for]="picker2"></mat-datepicker-toggle>
-                                                                <mat-datepicker #picker2></mat-datepicker>
-                                                            </mat-form-field>
-                                                            <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
-                                                                <input matInput [matDatepicker]="picker3"
-                                                                    (dateChange)="filterByDate()" placeholder="To Date"
-                                                                    formControlName="toDate">
-                                                                <mat-datepicker-toggle matSuffix
-                                                                    [for]="picker3"></mat-datepicker-toggle>
-                                                                <mat-datepicker #picker3></mat-datepicker>
-                                                            </mat-form-field>
-                                                            <!-- <mat-form-field class="m-l-5" *ngIf="selected == 'farmer_no'">
-                                                                <input matInput
-                                                                    placeholder="Enter Farmer Number"
-                                                                    formControlName="farmer_no">
-                                                                <mat-icon matSuffix (click)="filterByFarmerNo()">search
-                                                                </mat-icon>
-                                                            </mat-form-field> -->
-                                                        </form>
-                                                    </li>
-                                                </ul>
+                                                        </li>
+                                                        <li class="m-l-10">
+                                                            <div class="row">
+                                                                <mat-radio-group formControlName="status" (change)="filterData()">
+                                                                    <mat-radio-button value="success">success</mat-radio-button>
+                                                                    <mat-radio-button value="fail">failed</mat-radio-button>
+                                                                </mat-radio-group>
+                                                            </div>
+                                                        </li>
+                                                        <li class="dropdown">
+                                                                <mat-form-field class="m-l-5" *ngIf="selected == 'sd'">
+                                                                    <input matInput [matDatepicker]="picker1"
+                                                                        (dateChange)="filterBySpecificDate()"
+                                                                        placeholder="Choose a date" formControlName="date">
+                                                                    <mat-datepicker-toggle matSuffix
+                                                                        [for]="picker1"></mat-datepicker-toggle>
+                                                                    <mat-datepicker #picker1></mat-datepicker>
+                                                                </mat-form-field>
+    
+                                                                <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
+                                                                    <input matInput [matDatepicker]="picker2"
+                                                                        placeholder="From Date" formControlName="fromDate">
+                                                                    <mat-datepicker-toggle matSuffix
+                                                                        [for]="picker2"></mat-datepicker-toggle>
+                                                                    <mat-datepicker #picker2></mat-datepicker>
+                                                                </mat-form-field>
+                                                                <mat-form-field class="m-l-5" *ngIf="selected == 'dr'">
+                                                                    <input matInput [matDatepicker]="picker3"
+                                                                        (dateChange)="filterByDate()" placeholder="To Date"
+                                                                        formControlName="toDate">
+                                                                    <mat-datepicker-toggle matSuffix
+                                                                        [for]="picker3"></mat-datepicker-toggle>
+                                                                    <mat-datepicker #picker3></mat-datepicker>
+                                                                </mat-form-field>
+                                                                <!-- <mat-form-field class="m-l-5" *ngIf="selected == 'farmer_no'">
+                                                                    <input matInput
+                                                                        placeholder="Enter Farmer Number"
+                                                                        formControlName="farmer_no">
+                                                                    <mat-icon matSuffix (click)="filterByFarmerNo()">search
+                                                                    </mat-icon>
+                                                                </mat-form-field> -->
+                                                        </li>
+                                                    </ul>
+                                                </form>
                                             </div>
                                             <div class="col-2">
                                                 <ul class="header-buttons">
@@ -210,19 +218,19 @@
                                                 *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="farmer_no">
+                                        <ng-container matColumnDef="farmerNo">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
                                                 class="column-wrap tbl-col-width-per-8">Farmer No.</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nonwrap tbl-col-width-per-8">
-                                                {{response.farmer_no}}
+                                                {{response.farmerNo}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="farmer">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-11">Farmer</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-14">Farmer</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-11">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-14">
                                                 {{response.farmer}}
                                             </mat-cell>
                                         </ng-container>
@@ -242,30 +250,39 @@
                                                 {{response.session}}
                                             </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="collection_date">
+                                        <ng-container matColumnDef="date">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-8">Date
+                                                class="column-nowrap tbl-col-width-per-10">Delivery Date
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
-                                                {{response.collection_date |date }}
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
+                                                {{response.date | date }}
                                             </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="route">
+                                        <ng-container matColumnDef="postedOn">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-18">Route</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-9">Posted On</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-18">
-                                                {{response.route}}
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-9">
+                                                {{response.postedOn | date}}
                                             </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="pickUpLocation">
+                                        <ng-container matColumnDef="reason">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-15">MCC
+                                                class="column-nowrap tbl-col-width-per-15">Message
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
-                                                {{response.pickUpLocation }}
+                                                {{response.reason }}
+                                            </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="postedBy">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                class="column-nowrap tbl-col-width-per-10">postedBy
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
+                                                {{response.postedBy }}
                                             </mat-cell>
                                         </ng-container>
 
