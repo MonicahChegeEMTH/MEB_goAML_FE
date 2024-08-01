@@ -144,6 +144,7 @@ export class ReportsService {
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
   }
+
   paymentFileExcel(month:any, year:any): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -153,6 +154,17 @@ export class ReportsService {
 
     return this.http.get(API_URL, { headers, responseType: 'blob', });
   }
+
+  mccMonthlyRouteSummary(month:any, locationId:any): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/route-summary-center/monthly/${month}/${locationId}`;
+
+
+    return this.http.get(API_URL, { headers, responseType: 'blob', });
+  }
+
   paymentFileExcelDr(from:any,to:any,mode:any): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

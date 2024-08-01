@@ -52,6 +52,7 @@ export class MainComponent implements OnInit {
   paymentFileForm: FormGroup
   paymentFileFormdr:FormGroup
   reportCollectionFormm:FormGroup
+  mccMonthlyRouteSummary: FormGroup
   isloading: boolean
   collectors: any
   months: any
@@ -97,8 +98,14 @@ export class MainComponent implements OnInit {
       date: ["", [Validators.required]],
       mcc: ["", [Validators.required]],
       centerId: ["", [Validators.required]],
-      format: ["", [Validators.required]],
+      format: ["excel", [Validators.required]],
     })
+
+    this.mccMonthlyRouteSummary = this.fb.group({
+      month: ['', [Validators.required]],
+      mcc: ['', [Validators.required]],
+      locationId: ['', [Validators.required]]
+    });
 
     this.reportCollectionFormp = this.fb.group({
       date: ["", [Validators.required]],
@@ -329,6 +336,41 @@ export class MainComponent implements OnInit {
     }
 
   }
+
+
+  generateMccMonthlyRouteSummary() {
+    // console.log(this.reportCollectionForm.value)
+    const mcc = this.mccMonthlyRouteSummary.value.mcc
+    this.isloading = true
+
+    this.service.mccMonthlyRouteSummary(this.mccMonthlyRouteSummary.value.month, this.mccMonthlyRouteSummary.value.locationId).subscribe({
+      next: (res: Blob) => {
+        this.isloading = false;
+
+        
+        this.snackbar.showNotification(
+          "snackbar-success",
+          "Report generated successfully"
+        );
+        const filename = mcc+'-summary.xlsx'; // Specify the desired filename with the appropriate extension
+        saveAs(res, filename);
+      },
+      error: (error: any) => {
+        this.isloading = false
+
+        this.snackbar.showNotification(
+          "snackbar-danger",
+          "Report could not be generated successfully"
+        );
+        console.error('Failed to download report:', error);
+      },
+      complete: () => {}
+    })
+
+  }
+
+
+
   generateCollectionsPerLocationsp() {
     // console.log(this.reportCollectionForm.value)
     this.date = this.datePipe.transform(this.reportCollectionFormp.value.date, 'yyyy-MM-dd');
@@ -459,6 +501,11 @@ export class MainComponent implements OnInit {
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
+
+      this.mccMonthlyRouteSummary.patchValue({
+        mcc: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      })
     });
   }
 

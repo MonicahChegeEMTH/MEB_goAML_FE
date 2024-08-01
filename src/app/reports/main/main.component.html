@@ -71,13 +71,67 @@
                           </div>
 
                         </div>
-
                       </form>
-
-
 
                     </mat-expansion-panel>
                   </mat-accordion>
+                </li>
+
+                <!-- Monthly Route Summary For MCC Routes -->
+                <li (click)="collectionsPerLocation('Report For Single User Action Items')" class="d-flex mb-3">
+
+
+                  <!-- <div class="example-action-buttons">
+                            <button mat-button (click)="accordion.openAll()">Expand All</button>
+                            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+                          </div> -->
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-progress-bar mode="indeterminate" *ngIf="isloading"></mat-progress-bar>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          MCC Monthly Route Summary
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+
+                      <form class="register-form" [formGroup]="mccMonthlyRouteSummary">
+                        <div class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Select Collection Center</mat-label>
+                            <input matInput formControlName="mcc" required readonly />
+                            <mat-icon matSuffix (click)="selectCollectionCenter()">search</mat-icon>
+                            <mat-error *ngIf="mccMonthlyRouteSummary.get('mcc').hasError('required')">
+                              mcc is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Select Month</mat-label>
+                            <mat-select formControlName="month" required>
+                              <mat-option *ngFor="let month of months" [value]="month.value">{{ month.name
+                                }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="mccMonthlyRouteSummary.get('month').hasError('required')">
+                              Month Is required
+                            </mat-error>
+                          </mat-form-field>
+
+                          <div class="example-button-row">
+                            <button mat-raised-button color="primary" [disabled]="!mccMonthlyRouteSummary.valid"
+                              (click)="generateMccMonthlyRouteSummary()">
+                              <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
+                              <b>Generate</b>
+                            </button>
+                          </div>
+
+                        </div>
+                      </form>
+
+                    </mat-expansion-panel>
+                  </mat-accordion>
+
+
                 </li>
 
                 <!-- Daily Summary For Routes -->
@@ -103,10 +157,10 @@
 
                       <form class="register-form" [formGroup]="reportCollectionForm3">
                         <div class="row">
-                          <mat-radio-group aria-label="Select an option" formControlName="format">
+                          <!-- <mat-radio-group aria-label="Select an option" formControlName="format">
                             <mat-radio-button value="pdf">PDF</mat-radio-button>
                             <mat-radio-button value="excel">Excel</mat-radio-button>
-                          </mat-radio-group>
+                          </mat-radio-group> -->
 
                           <mat-form-field class="example-full-width" appearance="outline">
                             <mat-label>Select Collection Center</mat-label>
