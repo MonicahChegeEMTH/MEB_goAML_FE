@@ -64,7 +64,7 @@ export class UpdateFarmerComponent implements OnInit {
         id: 625,
       },
       {
-        name: 'MWANANCHI SACCO LTD',
+        name: 'WANANCHI SACCO LTD',
         code: '70',
         payPointType: 'SACCO',
         status: 'ACTIVE',
