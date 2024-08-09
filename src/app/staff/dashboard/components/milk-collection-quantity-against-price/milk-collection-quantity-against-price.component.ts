@@ -51,7 +51,7 @@ export class MilkCollectionQuantityAgainstPriceComponent extends BaseComponent i
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = [2020, 2022, 2023, 2024, 2025];
+  chartDispType: any = [2024, 2025, 2026, 2027, 2028];
   monthsArray: any = [
     { name: "January", value: 1 },
     { name: "February", value : 2 },
@@ -66,6 +66,7 @@ export class MilkCollectionQuantityAgainstPriceComponent extends BaseComponent i
     { name: "Novembar", value: 11  },
     { name: "December", value: 12 },
   ];
+  
   isLoading: boolean;
   currentYear = new Date().getFullYear();
   currentMonth = this.monthsArray[new Date().getMonth()];
