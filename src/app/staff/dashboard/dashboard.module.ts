@@ -35,6 +35,7 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
+import { BahatiDailySummaryComponent } from './components/bahati-daily-summary/bahati-daily-summary.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     CollectionsPriceComponent,
     CollectorCollectionsPerDateComponent,
     CollectorsLookupsComponent,
+    BahatiDailySummaryComponent,
   ],
   imports: [
     CommonModule,

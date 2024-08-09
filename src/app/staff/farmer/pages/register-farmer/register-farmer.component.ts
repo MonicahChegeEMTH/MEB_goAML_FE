@@ -63,7 +63,7 @@ export class RegisterFarmerComponent implements OnInit {
         id: 625,
       },
       {
-        name: 'MWANANCHI SACCO LTD',
+        name: 'WANANCHI SACCO LTD',
         code: '70',
         payPointType: 'SACCO',
         status: 'ACTIVE',
@@ -191,7 +191,7 @@ export class RegisterFarmerComponent implements OnInit {
     });
 
     this.farmerRegirstartionForm = this.fb.group({
-      bankDetails: [''],
+      bankDetails: ['',],
       transportMeans: [''],
       firstName: ['', [Validators.required]],
       middleName: [''],
@@ -222,20 +222,21 @@ export class RegisterFarmerComponent implements OnInit {
     console.log("Farmer Registration Details ", this.farmerRegirstartionForm.value)
     this.subscription = this.service
       .registerFarmer(this.farmerRegirstartionForm.value)
-      .subscribe(
-        (res: any) => {
+      .subscribe({
+        next: (res: any) => {
+          console.log("response", res)
           const farmer = res.entity
           this.snackbar.showNotification('snackbar-success', 'Farmer No: ' +farmer.farmerNo + ', '+farmer.username+ ' added Successfully');
           this.loading = false;
           this.farmerRegirstartionForm.reset();
           this.dialogRef.close();
         },
-        (err) => {
+        error: (error) => {
+          console.log("reg error", error)
           this.loading = false;
-          this.snackbar.showNotification('snackbar-danger', err);
-          this.dialogRef.close();
+          this.snackbar.showNotification("snackbar-danger", error)
         }
-      );
+      });
   }
 
   onClick() {

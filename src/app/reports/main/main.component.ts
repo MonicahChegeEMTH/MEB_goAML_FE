@@ -52,6 +52,7 @@ export class MainComponent implements OnInit {
   paymentFileForm: FormGroup
   paymentFileFormdr:FormGroup
   reportCollectionFormm:FormGroup
+  mccMonthlyRouteSummary: FormGroup
   isloading: boolean
   collectors: any
   months: any
@@ -100,12 +101,22 @@ export class MainComponent implements OnInit {
       format: ["", [Validators.required]],
     })
 
+    this.mccMonthlyRouteSummary = this.fb.group({
+      month: ['', [Validators.required]],
+      mcc: ['', [Validators.required]],
+      locationId: ['', [Validators.required]]
+    });
+
     this.reportCollectionFormp = this.fb.group({
-      date: ["", [Validators.required]],
+      month: ["", [Validators.required]],
+      year: [this.currentYear, [Validators.required]],
+      mcc: ['', [Validators.required]],
+      locationId: ['', [Validators.required]]
       // format: ["", [Validators.required]],
     })
 
     this.reportCollectionFormm = this.fb.group({
+      year: [this.currentYear, [Validators.required]],
       month: ["", [Validators.required]],
       // format: ["", [Validators.required]],
     })
@@ -119,7 +130,7 @@ export class MainComponent implements OnInit {
 
     this.collectionPerpLocationsForm = this.fb.group({
       date: ["", [Validators.required]],
-      format: ["", [Validators.required]],
+      format: ["excel", [Validators.required]],
       pul: ["", [Validators.required]],
       locationId: ["", [Validators.required]],
 
@@ -212,12 +223,12 @@ export class MainComponent implements OnInit {
 
   }
 
-  generateCollectionsPerCollector() {
+  getBahatiDailyDeliverySummary() {
     // console.log(this.reportCollectionForm.value)
     this.date = this.datePipe.transform(this.reportCollectionForm2.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", this.date)
     this.isloading = true
-    this.service.collectionsPerCollectorByDate(this.date)
+    this.service.bahatiDailyDeliverySummary(this.date)
       .subscribe(
         (response) => {
           console.log(response)
@@ -239,8 +250,8 @@ export class MainComponent implements OnInit {
           this.isloading = false;
 
           this.snackbar.showNotification(
+            "snackbar-success",
             "Report generated successfully",
-            "snackbar-success"
           );
         },
         (err) => {
@@ -248,8 +259,8 @@ export class MainComponent implements OnInit {
           this.isloading = false
 
           this.snackbar.showNotification(
+            "snackbar-danger",
             "Report could not be generated successfully",
-            "snackbar-danger"
           );
         }
       );
@@ -288,7 +299,7 @@ export class MainComponent implements OnInit {
         complete: () => {}
       })
     } else {
-      this.service.collectionsPerLocationrByDate(this.date)
+      this.service.mccDailyRouteSummary(this.reportCollectionForm3.value.centerId, this.date)
       .subscribe(
         (response) => {
           console.log(response)
@@ -329,12 +340,46 @@ export class MainComponent implements OnInit {
     }
 
   }
-  generateCollectionsPerLocationsp() {
+
+
+  generateMccMonthlyRouteSummary() {
     // console.log(this.reportCollectionForm.value)
-    this.date = this.datePipe.transform(this.reportCollectionFormp.value.date, 'yyyy-MM-dd');
+    const mcc = this.mccMonthlyRouteSummary.value.mcc
+    this.isloading = true
+
+    this.service.mccMonthlyRouteSummary(this.mccMonthlyRouteSummary.value.month, this.mccMonthlyRouteSummary.value.locationId).subscribe({
+      next: (res: Blob) => {
+        this.isloading = false;
+
+        
+        this.snackbar.showNotification(
+          "snackbar-success",
+          "Report generated successfully"
+        );
+        const filename = mcc+'-summary.xlsx'; // Specify the desired filename with the appropriate extension
+        saveAs(res, filename);
+      },
+      error: (error: any) => {
+        this.isloading = false
+
+        this.snackbar.showNotification(
+          "snackbar-danger",
+          "Report could not be generated successfully"
+        );
+        console.error('Failed to download report:', error);
+      },
+      complete: () => {}
+    })
+
+  }
+
+
+
+  monthlyRouteSummary() {
+    // console.log(this.reportCollectionForm.value)
     console.log("Formated date is ", this.date)
     this.isloading = true
-    this.service.collectionsPerLocationrByDatep(this.date).subscribe({
+    this.service.monthlyRouteSummary(this.reportCollectionFormp.value.locationId, this.reportCollectionFormp.value.month, this.reportCollectionFormp.value.year).subscribe({
       next: (response: any) => {
             console.log(response)
             let url = window.URL.createObjectURL(response.data);
@@ -378,7 +423,7 @@ export class MainComponent implements OnInit {
     
     
     this.isloading = true
-    this.service.collectionsPerLocationrByMonth(this.reportCollectionFormm.value.month)
+    this.service.collectionsPerLocationrByMonth(this.reportCollectionFormm.value.month, this.reportCollectionFormm.value.year)
       .subscribe(
         (response) => {
           console.log(response)
@@ -402,8 +447,8 @@ export class MainComponent implements OnInit {
 
 
           this.snackbar.showNotification(
+            "snackbar-success",
             "Report generated successfully",
-            "snackbar-success"
           );
         },
         (err) => {
@@ -411,8 +456,8 @@ export class MainComponent implements OnInit {
           this.isloading = false
 
           this.snackbar.showNotification(
+            "snackbar-danger",
             "Report could not be generated successfully",
-            "snackbar-danger"
           );
         }
       );
@@ -459,6 +504,16 @@ export class MainComponent implements OnInit {
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
+
+      this.mccMonthlyRouteSummary.patchValue({
+        mcc: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      })
+
+      this.reportCollectionFormp.patchValue({
+        mcc: this.dialogData.data.name,
+        locationId: this.dialogData.data.id
+      })
     });
   }
 

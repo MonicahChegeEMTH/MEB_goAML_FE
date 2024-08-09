@@ -61,6 +61,7 @@ export class BulkDeliveryComponent implements OnInit {
 
   getTodaysUploads(date: any) {
     this.isLoading = true;
+    this.isdata = false;
     this.service.getTodaysUploads(date).subscribe({
       next: (resp) => {
         if (resp.entity.length > 0) {
@@ -74,9 +75,13 @@ export class BulkDeliveryComponent implements OnInit {
           this.dataSource.paginator = this.paginator
           this.dataSource.sort = this.sort
         } else {
+          this.dcount = 0;
+          this.dquantity = 0.0
           this.isdata = false;
           this.isLoading = false;
-
+          this.dataSource = new MatTableDataSource<any>(null)
+          this.dataSource.paginator = this.paginator
+          this.dataSource.sort = this.sort
         }
       },
       error: (error) => {
@@ -105,8 +110,12 @@ export class BulkDeliveryComponent implements OnInit {
           this.dataSource.paginator = this.paginator
           this.dataSource.sort = this.sort
         } else {
+          this.dcount = 0;
+          this.dquantity = 0.0
           this.isLoading = false;
           this.isdata = false;
+          this.dataSource = new MatTableDataSource<any>(null)
+
         }
       },
       error: (error) => {
@@ -135,6 +144,8 @@ export class BulkDeliveryComponent implements OnInit {
           this.dataSource.paginator = this.paginator
           this.dataSource.sort = this.sort
         } else {
+          this.dcount = 0;
+          this.dquantity = 0.0
           this.isLoading = false;
           this.isdata = false;
           this.dataSource = new MatTableDataSource<any>(null)

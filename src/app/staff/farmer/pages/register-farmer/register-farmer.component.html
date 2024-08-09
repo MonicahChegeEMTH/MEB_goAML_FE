@@ -347,7 +347,7 @@
                                 <button mat-raised-button color="warn" (click)="onClick()" tabindex="-1">
                                     Cancel
                                 </button>
-                                <button mat-raised-button color="primary" [disabled]="!farmerRegirstartionForm.valid"
+                                <button mat-raised-button color="primary" [disabled]="!farmerRegirstartionForm.valid || !bankDetailsForm.valid"
                                     (click)="onSubmit()">
                                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                                     <b>Submit</b>
