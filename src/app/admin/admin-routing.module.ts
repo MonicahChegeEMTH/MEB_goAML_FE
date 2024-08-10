@@ -59,7 +59,7 @@ const routes: Routes = [
   },
 
   {
-    path: "tranpsorters",
+    path: "transporters",
     loadChildren: () => import("./transporters/transporters.module").then((m) => m.TransportersModule)
   },
 
