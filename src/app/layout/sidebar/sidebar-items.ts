@@ -106,6 +106,19 @@ export const ROUTES: RouteInfo[] = [
         role: ['ROLE_ADMIN'],
         submenu: [],
       },
+      {
+        path: "/admin/transporters",
+        title: "Transporters",
+        moduleName: "transporters",
+        iconType: "feather",
+        icon: "layers",
+        class: "",
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['ROLE_ADMIN'],
+        submenu: []
+      }
     ],
   },
 
