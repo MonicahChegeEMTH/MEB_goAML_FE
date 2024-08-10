@@ -59,6 +59,11 @@ const routes: Routes = [
   },
 
   {
+    path: "tranpsorters",
+    loadChildren: () => import("./transporters/transporters.module").then((m) => m.TransportersModule)
+  },
+
+  {
     path: "pickup-locations",
     loadChildren: () =>
       import("./pick-up-locations/pickup.module").then(

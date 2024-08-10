@@ -95,6 +95,7 @@ import { BahatiDailySummaryComponent } from './components/bahati-daily-summary/b
     CollectionsPriceComponent,
     CollectorCollectionsPerDateComponent,
     CollectorsLookupsComponent,
+    BahatiDailySummaryComponent
   ],
   providers: [DatePipe]
 })

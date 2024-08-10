@@ -10,9 +10,12 @@ export class AnalyticsService {
 
   constructor(private http: HttpClient) { }
 
+  getBahatiDailySummary(month: any, year: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/daily-summary/${month}/${year}`);
+  }
+
   getCollectorCollectionSPerMonth(params): Observable<any>{
     const getCollectionSPerMonthUrl = `${environment.apiUrl}/api/v1/collections/analytics/collection/collector/month`;
-
     return this.http.get<any>(getCollectionSPerMonthUrl, { params })
   }
 
