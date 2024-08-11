@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./manage.component.sass']
 })
 export class ManageComponent implements OnInit {
+  dataSource: any
+  displayedColumns = ['id', 'route', 'transporter', 'status', 'addedon', 'actions']
 
   constructor() { }
 
   ngOnInit(): void {
   }
+
+  applyFilter(event: any) {}
+
+  refresh() {}
+  create() {}
 
 }

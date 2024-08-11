@@ -6,6 +6,8 @@ import { ManageComponent } from './manage/manage.component';
 import { AddDialogComponent } from './add-dialog/add-dialog.component';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { WidgetsComponent } from './widgets/widgets.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ComponentsModule } from 'src/app/shared/components/components.module';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { WidgetsComponent } from './widgets/widgets.component';
   ],
   imports: [
     CommonModule,
-    TransportersRoutingModule
+    TransportersRoutingModule,
+    SharedModule,
+    ComponentsModule,
   ]
 })
 export class TransportersModule { }
