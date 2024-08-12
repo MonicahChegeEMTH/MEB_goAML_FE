@@ -86,33 +86,54 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="transporter">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-8">Transporter</mat-header-cell>
-                                    <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-12">Transporter</mat-header-cell>
+                                    <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-12">
                                         {{user.transporter}}
                                     </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="status">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-8">status</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-8">Status</mat-header-cell>
                                     <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">
-                                        {{user.status}}
+                                        <div *ngIf="user.status === 'Y'">
+                                            <span class="badge badge-pill badge-primary col-green">{{Active}}</span>
+                                        </div>
+                                        <div *ngIf="user.status === 'N'">
+                                            <span class="badge badge-pill badge-primary col-red">{{Inactive}}</span>
+                                        </div>
                                     </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="addedon">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-8">Route</mat-header-cell>
-                                    <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">
-                                        {{user.addedon}}
-                                    </mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="route">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-8">Added On</mat-header-cell>
                                     <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">
                                         {{user.addedon}}
                                     </mat-cell>
                                 </ng-container>
+
+                                <ng-container matColumnDef="actions">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-6">Update</mat-header-cell>
+                                    <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-6">
+                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="edit(user)">
+                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                              </mat-table>
+
+                             <!-- loading spinner, pagination -->
+                              <div *ngIf="loading" class="tbl-spinner">
+                                <mat-progress-spinner color="primary" [diameter]="50" mode="indeterminate"></mat-progress-spinner>/mat-progress-spinner>
+                              </div>
+
+                              <div class="tbl-spinner" *ngIf="!loading">
+                                <h4>No records found</h4>
+                              </div>
+
+                              <mat-paginator #paginator [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5,10,25,100]"></mat-paginator>
                         </div>
                     </div>
                 </div>
