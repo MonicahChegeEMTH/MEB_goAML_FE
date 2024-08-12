@@ -7,6 +7,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { MaterialModule } from "./material.module";
 import { FeatherIconsModule } from "./components/feather-icons/feather-icons.module";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatPaginatorModule } from "@angular/material/paginator";
 @NgModule({
   declarations: [],
   imports: [
@@ -26,6 +27,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatSnackBarModule,
     FeatherIconsModule,
     MatSnackBarModule,
+    MatPaginatorModule
   ],
 })
 export class SharedModule {}
