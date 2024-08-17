@@ -13,6 +13,10 @@ const routes: Routes = [
       import("./farmer/farmer.module").then((m) => m.FarmerModule)
   },
   {
+    path: "user-profile",
+    loadChildren: () => import("./../admin/users/users.module").then((m) => m.UsersModule)
+  },
+  {
     path: "administrator",
     loadChildren: () => import("./../admin/administration/administration.module").then((m) => m.AdministrationModule)
   },

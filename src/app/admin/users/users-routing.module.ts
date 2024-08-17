@@ -12,6 +12,7 @@ import { ModifyAccountComponent } from "./pages/modify-account/modify-account.co
 import { PendingAccountsComponent } from "./pages/pending-accounts/pending-accounts.component";
 import { RejectedAccountsComponent } from "./pages/rejected-accounts/rejected-accounts.component";
 import { UsersComponent } from "./pages/users/users.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
 
 const routes: Routes = [
   {
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path: "add-account",
     component: AddAccountComponent,
+  },
+  {
+    path: "profile",
+    component: ProfileComponent
   },
   {
     path: "modify-account/:id",

@@ -56,7 +56,7 @@ export class SigninComponent
       this.authService.login(this.authForm.value).subscribe(response => {
         const res = response.entity
         this.tokenStorage.saveToken(res.token);
-        console.log("user dataaaaaaaaaa", res)
+        console.log("user data", res)
         this.tokenStorage.saveUser(res);
         const role = res.roles[0].name;
         if (role == Role.Admin) {
