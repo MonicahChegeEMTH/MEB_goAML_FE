@@ -20,7 +20,7 @@ const routes: Routes = [
   },
 
   {
-    path: "user-accounts",
+    path: "user-profile",
     loadChildren: () =>
       import("./users/users.module").then(
         (m) => m.UsersModule

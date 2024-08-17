@@ -8,7 +8,9 @@ import {
   AfterViewInit,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { log } from "console";
 import { ConfigService } from "src/app/config/config.service";
+import { Role } from "src/app/core/models/role";
 import { AuthService } from "src/app/core/service/auth.service";
 import { LanguageService } from "src/app/core/service/language.service";
 import { TokenStorageService } from "src/app/core/service/token-storage.service";
@@ -34,6 +36,7 @@ export class HeaderComponent
   isOpenSidebar: boolean;
   userName: string;
   date = new Date();
+  userRole: any
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -105,7 +108,7 @@ export class HeaderComponent
   ];
   ngOnInit() {
     this.config = this.configService.configData;
-    const userRole = this.tokenStorage.getUser().roles[0];
+    this.userRole = this.tokenStorage.getUser().roles[0];
     this.userName = this.tokenStorage.getUser().username;
     this.userImg = "assets/images/user/profile_img.png";
 
@@ -243,7 +246,12 @@ export class HeaderComponent
   }
 
   toProfile() {
-    this.router.navigate(["/admin/users/profile"]);
+    console.log("user role", this.userRole)
+    if (this.userRole === Role.Admin) {
+      this.router.navigate(["/admin/user-profile/add-account"]);
+    } else {
+      this.router.navigate(['/staff/user-profile/profile'])
+    }
   }
 
   toSMSManagement() {

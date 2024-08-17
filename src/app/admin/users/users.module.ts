@@ -42,6 +42,7 @@ import { AdminUpdateUserPasswordComponent } from './pages/dialogs/admin-update-u
 import { LookupMilkCollectorsComponent } from "./pages/milk-collectors/lookup-milk-collectors/lookup-milk-collectors.component";
 import { ViewCollectorsComponent } from "./pages/milk-collectors/view-collectors/view-collectors.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     AdminUpdateUserPasswordComponent,
 
     LookupMilkCollectorsComponent,
-    ViewCollectorsComponent
+    ViewCollectorsComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
