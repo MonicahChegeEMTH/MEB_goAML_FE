@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { TransporterService } from '../transporter.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-manage',
@@ -9,15 +11,17 @@ import { MatSort } from '@angular/material/sort';
 })
 export class ManageComponent implements OnInit {
   dataSource: any
-  displayedColumns = ['id', 'route', 'transporter', 'status', 'addedon', 'actions']
+  displayedColumns = ['id', 'username', 'active', 'createdOn', 'route', 'actions']
   loading: boolean = false
+  data: boolean = false
 
   @ViewChild(MatPaginator, {static: true}) paginator : MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor() { }
+  constructor(private service: TransporterService) {}
 
   ngOnInit(): void {
+    this.get()
   }
 
   applyFilter(event: Event) {
@@ -28,9 +32,34 @@ export class ManageComponent implements OnInit {
     }
   }
 
-  refresh() {}
+  refresh() {
+    this.get()
+  }
   create() {}
-  get() {}
+  get() {
+    this.loading = true
+    this.service.getTransporters().subscribe({
+      next: (res) =>  {
+        this.loading = false;
+        console.log("data", res)
+        if (res.entity.length > 0) {
+          this.data = true
+          this.dataSource = new MatTableDataSource(res.entity)
+          this.dataSource.paginator = this.paginator
+          this.dataSource.sort = this.sort
+        } else {
+          this.data = false
+          this.dataSource = new MatTableDataSource(null)
+          this.dataSource.paginator = this.paginator
+          this.dataSource.sort = this.sort
+        }
+      },
+      error: (error) => {
+        console.log("caught error", error)
+      },
+      complete: () => {}
+    })
+  }
   edit(user: any) {}
 
 }
