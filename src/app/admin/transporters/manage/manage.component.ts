@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TransporterService } from '../transporter.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 
 @Component({
   selector: 'app-manage',
@@ -18,7 +20,7 @@ export class ManageComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator : MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor(private service: TransporterService) {}
+  constructor(private service: TransporterService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.get()
@@ -35,7 +37,16 @@ export class ManageComponent implements OnInit {
   refresh() {
     this.get()
   }
-  create() {}
+  create() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false
+    dialogConfig.autoFocus = true
+    dialogConfig.width = '60%'
+    dialogConfig.data = {
+      data: ""
+    }
+    this.dialog.open(AddDialogComponent, dialogConfig)
+  }
   get() {
     this.loading = true
     this.service.getTransporters().subscribe({

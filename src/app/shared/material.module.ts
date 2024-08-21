@@ -13,6 +13,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTableModule } from "@angular/material/table";
 import { MatTableExporterModule } from "mat-table-exporter";
 import { MatSelectModule } from "@angular/material/select";
+import { MatDialogModule } from "@angular/material/dialog";
 
 const materialModules = [
   MatButtonModule,
@@ -28,7 +29,8 @@ const materialModules = [
   MatSlideToggleModule,
   MatTableModule,
   MatTableExporterModule,
-  MatSelectModule
+  MatSelectModule,
+  MatDialogModule
 ];
 
 @NgModule({
