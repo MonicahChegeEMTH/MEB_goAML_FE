@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfigsService } from 'src/app/staff/stock/configs/configs.service';
 import { ManageComponent } from '../manage/manage.component';
+import { TransporterService } from '../transporter.service';
 
 @Component({
   selector: 'app-add-dialog',
@@ -15,7 +16,7 @@ export class AddDialogComponent implements OnInit {
   users: any[] = []
   loading: boolean = false
 
-  constructor(private fb: FormBuilder, private configService: ConfigsService, private dialogRef: MatDialogRef<ManageComponent>) { }
+  constructor(private fb: FormBuilder, private service: TransporterService,private configService: ConfigsService, private dialogRef: MatDialogRef<ManageComponent>) { }
 
   ngOnInit(): void {
     this.form=this.fb.group({
@@ -24,6 +25,7 @@ export class AddDialogComponent implements OnInit {
     })
 
     this.getRoutes()
+    this.getTransporters()
   }
 
 
@@ -42,7 +44,17 @@ export class AddDialogComponent implements OnInit {
     })
   }
 
-  getTransporters() {}
+  getTransporters() {
+    this.service.getTransporters().subscribe({
+      next: (res) => {
+        this.users=res.entity
+      },
+      error: (error) => {
+        console.log("error caught", error)
+        this.users = []
+      }
+    })
+  }
 
   cancel() {
     this.dialogRef.close()

@@ -49,4 +49,8 @@ export class ConfigsService {
   getRoutes(): Observable<any> {
     return this.http.get<any>(`${environment.API}/api/v1/routes/get`, httpOptions);
   }
+
+  getTransporters(): Observable<any>{
+    return this.http.get(`${environment.apiUrl}/api/v1/users/by-role/5`);
+  }
 }
