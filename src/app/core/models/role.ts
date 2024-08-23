@@ -3,4 +3,5 @@ export enum Role {
   Admin = "ROLE_ADMIN",
   Staff = "ROLE_STAFF",
   Collector = "ROLE_COLLECTOR",
+  Transporter = "TRANSPORTER"
 }
