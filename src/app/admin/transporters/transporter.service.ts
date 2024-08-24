@@ -13,4 +13,8 @@ export class TransporterService {
   getTransporters(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/transporter/all`);
   }
+
+  addTransporter(routeId: any, username: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/transporter/${routeId}/${username}`)
+  }
 }
