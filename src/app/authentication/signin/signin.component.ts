@@ -5,6 +5,8 @@ import { AuthService } from "src/app/core/service/auth.service";
 import { Role } from "src/app/core/models/role";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { TokenStorageService } from "src/app/core/service/token-storage.service";
+import { NotificationService } from "src/app/data/services/notification.service";
+import { SnackbarService } from "src/app/shared/snackbar.service";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -26,7 +28,9 @@ export class SigninComponent
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private notificationService: NotificationService,
+    private snackbar: SnackbarService
   ) {
     super();
   }
@@ -76,6 +80,8 @@ export class SigninComponent
         this.error = err;
         this.submitted = false;
         this.loading = false;
+
+        this.notificationService.alertWarning(this.error)
       })
     }
   }

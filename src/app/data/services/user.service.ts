@@ -28,7 +28,7 @@ export class UserService {
     return this.http.get<any>(fetchAllUserAccountsUrl)
   }
   getAllCollectors(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/roleUsers?roleId=3`);
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/analytics/collectors`);
   }
 
   createUserAccounts(user): Observable<any>{

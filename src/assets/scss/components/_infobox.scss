@@ -603,6 +603,18 @@
 .order-info-box7 i {
   font-size: 30px;
 }
+.info-box7-block h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.info-box7-block h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .box-part {
   background: #fff;
   border-radius: 10px;
@@ -663,3 +675,42 @@
     width: 0;
   }
 }
+
+
+// dashboard Icons style
+.icon-qty {
+  color: #ff9800
+}
+
+.icon-count {
+  color: #2196F3
+}
+
+.icon-farmers {
+  color: #4CAF50
+}
+
+.icon-amount {
+  color: #f44336
+}
+
+.info-box-content {
+  // display: flex;
+  // align-items: center; /* Keep number and icon aligned */
+  justify-content: space-between; /* Ensure they stay in one row */
+  font-size: 1.5rem; /* Adjust font size to fit */
+  // white-space: nowrap; /* Prevent text wrapping */
+  // overflow: hidden;
+}
+
+.info-value {
+  flex-grow: 1; /* Allow number to take available space */
+  text-align: left;
+  min-width: 0; /* Prevent number from expanding beyond available space */
+}
+
+.info-box-content i {
+  font-size: 1.6rem; /* Adjust icon size */
+  margin-left: 8px; /* Space between number and icon */
+}
+

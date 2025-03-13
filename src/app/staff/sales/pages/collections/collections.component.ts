@@ -94,6 +94,41 @@ export class CollectionsComponent implements OnInit {
     this.currentDate = this.getCurrentDate()
   }
 
+  dataSource!: MatTableDataSource<any>;
+
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild("filter", { static: true }) filter: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = { x: "0px", y: "0px" };
+
+  ngOnInit(): void {
+    this.selected = 'current_date'
+    this.getAllFarmers();
+    this.smallChart2()
+    this.getTodaysData();
+    this.getMilkCollectors();
+    this.form = this.fb.group({
+      date: [""],
+      fromDate: [""],
+      toDate: [""],
+      pickuplocation: [""],
+      pickuplocationId: [""],
+      route: [""],
+      routeId: [""],
+      farmer_no: [""]
+    });
+
+    this.mapForm = this.fb.group({
+      collectorId: ["", [Validators.required]],
+      date: ["", [Validators.required]],
+    });
+
+    console.log("The current date is", this.currentDate)
+  }
+  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -143,7 +178,7 @@ export class CollectionsComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.data.entity);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
-            
+
           }
           else {
             this.isdata = false;
@@ -171,6 +206,7 @@ export class CollectionsComponent implements OnInit {
         else {
           this.isdata = false;
           this.isLoading = false;
+          console.log("inside here with data and loading", this.isdata, this.isLoading)
           this.dataSource = new MatTableDataSource(null);
         }
       })
@@ -180,8 +216,6 @@ export class CollectionsComponent implements OnInit {
 
     } else if (this.selected == "route") {
       console.log("Filter by  route")
-
-
 
     }
     else if (this.selected == "current_date") {
@@ -270,41 +304,6 @@ export class CollectionsComponent implements OnInit {
     })
   }
 
-  dataSource!: MatTableDataSource<any>;
-
-
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild("filter", { static: true }) filter: ElementRef;
-  @ViewChild(MatMenuTrigger)
-  contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
-
-  ngOnInit(): void {
-    this.selected = 'current_date'
-    this.getAllFarmers();
-    this.smallChart2()
-    this.getTodaysData();
-    this.getMilkCollectors();
-    this.form = this.fb.group({
-      date: [""],
-      fromDate: [""],
-      toDate: [""],
-      pickuplocation: [""],
-      pickuplocationId: [""],
-      route: [""],
-      routeId: [""],
-      farmer_no: [""]
-    });
-
-    this.mapForm = this.fb.group({
-      collectorId: ["", [Validators.required]],
-      date: ["", [Validators.required]],
-    });
-
-    console.log("The current date is", this.currentDate)
-  }
-
   viewFarmerCollections(row) {
     this.router.navigate(['/staff/sales/farmer', row.farmerId]);
   }
@@ -328,7 +327,7 @@ export class CollectionsComponent implements OnInit {
   }
   getDateRangeSummary(from,to) {
     this.isLoading = true
-  
+
     this.subscription = this.dashboard.getDateDangeCollections(from,to).subscribe(res => {
       this.data = res;
       if (this.data) {
@@ -345,7 +344,7 @@ export class CollectionsComponent implements OnInit {
   }
   getSummaryPerPickUpLocatins(pickUpLocationId) {
     this.isLoading = true
-  
+
     this.subscription = this.dashboard.getPickUpLocationCollections(pickUpLocationId, this.fromDate, this.toDate).subscribe(res => {
       this.data = res;
       if (this.data) {
@@ -379,7 +378,7 @@ export class CollectionsComponent implements OnInit {
   }
   getAllColectionsSummary() {
     this.isLoading = true
-  
+
     this.subscription = this.dashboard.getAllCollectionsRecords().subscribe(res => {
       this.data = res;
       if (this.data) {
@@ -432,7 +431,7 @@ export class CollectionsComponent implements OnInit {
         pickuplocation: this.dialogData.data.name,
         pickuplocationId: this.dialogData.data.id
       });
-      
+
 
     });
   }
@@ -464,10 +463,10 @@ export class CollectionsComponent implements OnInit {
     if (this.fromDate != null && this.fromDate != undefined && this.toDate != null && this.toDate != undefined) {
       this.isLoading = true;
       this.getSummaryPerPickUpLocatins(pid)
-  
+
       // let pickUpLocationId = this.form.value.pickUpLocationId
       console.log("Passed Id is ", pid)
-  
+
       this.subscription = this.service.getCollectionsPerPickUpLocation(pid, this.fromDate, this.toDate).subscribe(res => {
         this.data = res;
         if (this.data) {

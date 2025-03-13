@@ -122,7 +122,7 @@ export class InitiateBulkSmsComponent implements OnInit {
 
   submit()
   {
-    
+
     this.sendSMSform.value.templateBody = this.sendSMSform.value.templateName.templateBody
     this.sendSMSform.value.templateName = this.sendSMSform.value.templateName.templateName
     let items: FarmerData[] = [];
@@ -134,6 +134,9 @@ export class InitiateBulkSmsComponent implements OnInit {
       farmer.idNumber = value.id_number;
       items.push(farmer);
     });
+
+    console.log("the cumber of receipients are ", items.length)
+
     this.sendSMSform.value.recipients = items;
     if(items.length > 0)
     {
@@ -144,16 +147,16 @@ export class InitiateBulkSmsComponent implements OnInit {
       this.recipientsSelected = false;
     }
 
-    this.loading = true;
-    this.subscription = this.service.sendBulkSMS(this.sendSMSform.value).subscribe(res => {
-      this.snackbar.showNotification("snackbar-success", "Successful!");
-      this.loading = false;
-      this.sendSMSform.reset();
-      this.dialogRef.close();
-    }, err => {
-      this.loading = false;
-      this.dialogRef.close();
-    })
+    // this.loading = true;
+    // this.subscription = this.service.sendBulkSMS(this.sendSMSform.value).subscribe(res => {
+    //   this.snackbar.showNotification("snackbar-success", "Successful!");
+    //   this.loading = false;
+    //   this.sendSMSform.reset();
+    //   this.dialogRef.close();
+    // }, err => {
+    //   this.loading = false;
+    //   this.dialogRef.close();
+    // })
 
   }
 

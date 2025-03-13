@@ -10,55 +10,60 @@
       <mat-tab label="System Dashboard">
         <div class="row" *ngIf="loaded">
           <div class="col-lg-3 col-sm-4">
-            <div class="info-box7 bg1 order-info-box7" matTooltip="System Users" routerLink="/staff/sales/collections">
+            <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Deliveries" routerLink="/staff/sales/collections">
               <div class="info-box7-block">
                 <h4 class="m-b-20">Todays Qty (Kgs)</h4>
-                <!-- <h2 class="text-end"><span class="float-start">{{quantity | number : '1.2-2' }}</span><i -->
-                  <h2 class="text-end"><span class="float-start">{{quantity}}</span><i
-                    class="fas fa-th"></i></h2>
-    
+                <h2 class="info-box-content">
+                  <span class="info-value">{{quantity}}</span>
+                  <i class="fas fa-weight-hanging icon-qty"></i>
+                </h2>
+
               </div>
-    
+
             </div>
           </div>
           <div class="col-lg-3 col-sm-4">
-            <div class="info-box7 bg1 order-info-box7" matTooltip="All Subsidiaries" routerLink="/staff/sales/collections">
+            <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Delivery Count" routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Todays Collections</h4>
-                <h2 class="text-end"><span class="float-start">{{count}}</span><i class="fas fa-th"></i></h2>
-              </div>
+                <h4 class="m-b-20">Todays Count</h4>
+                <h2 class="info-box-content">
+                  <span class="info-value">{{count}}</span>
+                  <i class="fas fa-boxes icon-count"></i>
+                </h2>              </div>
             </div>
           </div>
           <div class="col-lg-3 col-sm-4">
-            <div class="info-box7 bg1 order-info-box7" matTooltip="All Departments" routerLink="/staff/farmers/farmers">
+            <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Farmer Count" routerLink="/staff/farmers/farmers">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Registered Farmers</h4>
-                <h2 class="text-end"><span class="float-start">{{farmers}}</span><i class="fas fa-th"></i></h2>
-              </div>
+                <h4 class="m-b-20">All Farmers</h4>
+                <h2 class="info-box-content">
+                  <span class="info-value">{{farmers}}</span>
+                  <i class="fas fa-user-friends icon-farmers"></i>
+                </h2>              </div>
             </div>
           </div>
           <div class="col-lg-3 col-sm-4">
-            <div class="info-box7 bg1 order-info-box7" matTooltip="All Teams Maintained"
+            <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Monthly Amount"
               routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Total Amount (KES)</h4>
-    
-                <h2 class="text-end"><span class="float-start">{{amount | number : '1.2-2' }}</span><i
-                    class="fas fa-th"></i></h2>
-    
-    
+                <h4 class="m-b-20">Month Amount (KES)</h4>
+
+                <h2 class="info-box-content">
+                  <span class="info-value">{{amount | number : '1.2-2' }}</span>
+                  <i class="fas fa-coins icon-amount"></i>
+                </h2>
               </div>
-    
+
             </div>
           </div>
-    
-    
+
+
         </div>
-     
-     
+
+
 
     <!-- Widgets -->
-    
+
 
 
     <!--Milk Collections Analysis Per Collector-->

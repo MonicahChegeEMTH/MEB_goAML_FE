@@ -26,7 +26,10 @@ const routes: Routes = [
         (m) => m.UsersModule
       ),
   },
-
+  {
+    path: "user-accounts",
+    loadChildren: () => import("./users/users.module").then((m) => m.UsersModule)
+  },
   {
     path: "counties",
     loadChildren: () =>
