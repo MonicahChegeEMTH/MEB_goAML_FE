@@ -24,7 +24,6 @@ export class MainComponent implements OnInit {
   currentDate: any
 
 
-
   data: any;
   subscription!: Subscription;
   loaded: boolean = false;
@@ -52,7 +51,7 @@ export class MainComponent implements OnInit {
 
   getAllColectionsSummary() {
     this.isloading = true
-  
+
     this.subscription = this.service.getAllCollectionsRecords().subscribe(res => {
       this.data = res;
       if (this.data) {

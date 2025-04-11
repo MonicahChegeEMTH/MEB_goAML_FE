@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { jwtDecode } from 'jwt-decode';
+
 import {
   HttpRequest,
   HttpHandler,
@@ -29,5 +31,10 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request.clone());
+  }
+
+  isTokenExpired = (token: string): boolean => {
+    const decoded: any = jwtDecode(token);
+    return decoded.exp * 1000 < Date.now();
   }
 }

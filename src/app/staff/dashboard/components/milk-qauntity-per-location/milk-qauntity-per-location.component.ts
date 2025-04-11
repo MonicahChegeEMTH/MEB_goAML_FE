@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -51,7 +52,8 @@ export class MilkQauntityPerLocationComponent
   public barChartOptions: Partial<ChartOptions>;
   public lineChartOptions: Partial<ChartOptions>;
 
-  chartDispType: any = ['Year-wise', 'Month-wise'];
+  // chartDispType: any = ['Year-wise', 'Month-wise'];
+  chartDispType: any = [new Date().getFullYear()];
   monthsArray: any = [
     { name: 'January', value: 1 },
     { name: 'February', value: 2 },
@@ -69,14 +71,21 @@ export class MilkQauntityPerLocationComponent
   isLoading: boolean;
   currentYear = new Date().getFullYear();
   currentMonth = this.monthsArray[new Date().getMonth()];
+  form: FormGroup
 
-  constructor(private analyticsService: AnalyticsService) {
-    super();
+  constructor(private analyticsService: AnalyticsService, private fb: FormBuilder) {
+    super()
   }
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      year: [this.currentYear, [Validators.required]],
+      month: [this.currentMonth.value, [Validators.required]]
+    })
+
     console.log('Current Month ', this.currentMonth);
     this.getQuantityPerLocation();
+
   }
 
   getQuantityPerLocation() {
@@ -88,7 +97,7 @@ export class MilkQauntityPerLocationComponent
 
     params = new HttpParams()
       .set('year', this.currentYear)
-      .set('month', this.currentMonth.value);
+      .set('month', this.form.value.currentMonth);
 
     this.analyticsService
       .getQuantityPerLocation()
@@ -100,9 +109,9 @@ export class MilkQauntityPerLocationComponent
           if(res.entity.length){
             res.entity.forEach((item) => {
               locations.push(item.location);
-  
+
               quantities.push(item.quantity);
-  
+
             });
           }else {
             locations = [];
@@ -110,7 +119,7 @@ export class MilkQauntityPerLocationComponent
             quantities = [];
           }
 
-         
+
 
           this.barChartOptions = {
             series: [

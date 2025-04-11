@@ -23,7 +23,7 @@ export class BulkDeliveryComponent implements OnInit {
   dataSource: MatTableDataSource<any>
   isLoading: boolean = false
   isdata: boolean = false
-  data: any
+  data: any [] = []
 
   displayedColumns: any = [
     'id',
@@ -210,7 +210,7 @@ export class BulkDeliveryComponent implements OnInit {
     this.dialog.afterAllClosed.subscribe({
       next: (res) => {
         this.ngOnInit()
-      } 
+      }
     })
   }
 

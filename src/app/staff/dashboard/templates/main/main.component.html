@@ -14,7 +14,7 @@
               <div class="info-box7-block">
                 <h4 class="m-b-20">Todays Qty (Kgs)</h4>
                 <h2 class="info-box-content">
-                  <span class="info-value">{{quantity}}</span>
+                  <span class="info-value">{{quantity | number: '1.2-2'}}</span>
                   <i class="fas fa-weight-hanging icon-qty"></i>
                 </h2>
 
@@ -27,7 +27,7 @@
               <div class="info-box7-block">
                 <h4 class="m-b-20">Todays Count</h4>
                 <h2 class="info-box-content">
-                  <span class="info-value">{{count}}</span>
+                  <span class="info-value">{{count | number : '1.'}}</span>
                   <i class="fas fa-boxes icon-count"></i>
                 </h2>              </div>
             </div>
@@ -35,9 +35,9 @@
           <div class="col-lg-3 col-sm-4">
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Farmer Count" routerLink="/staff/farmers/farmers">
               <div class="info-box7-block">
-                <h4 class="m-b-20">All Farmers</h4>
+                <h4 class="m-b-20">Farmers</h4>
                 <h2 class="info-box-content">
-                  <span class="info-value">{{farmers}}</span>
+                  <span class="info-value">{{farmers | number : '1.'}}</span>
                   <i class="fas fa-user-friends icon-farmers"></i>
                 </h2>              </div>
             </div>
@@ -46,7 +46,7 @@
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Monthly Amount"
               routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Month Amount (KES)</h4>
+                <h4 class="m-b-20">Monthly Amount (KES)</h4>
 
                 <h2 class="info-box-content">
                   <span class="info-value">{{amount | number : '1.2-2' }}</span>
@@ -75,7 +75,7 @@
         <app-milk-qauntity-per-location></app-milk-qauntity-per-location>
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <app-milk-collection-quantity-against-price></app-milk-collection-quantity-against-price>
       </div>
@@ -106,7 +106,7 @@
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <app-collector-collections-per-date></app-collector-collections-per-date>
       </div>
-    </div>
+    </div> -->
 
 
     <!-- <div class="row">

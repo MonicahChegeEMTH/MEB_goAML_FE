@@ -4,17 +4,17 @@
   </div>
   <div class="row p-3">
     <form [formGroup]="chartParametersForm">
-      <div class="row mx-3">
-        <div class="col-4">
-          <mat-form-field appearance="legacy">
+      <div class="d-flex justify-content-between mx-3">
+        <div class="col-4" style="width: 45%;">
+          <mat-form-field appearance="legacy" class="w-100">
             <mat-label>Select year</mat-label>
             <mat-select (selectionChange)="onSelectYear($event)" formControlName="year">
               <mat-option *ngFor="let item of chartDispType" [value]="item">{{ item }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="col-4">
-          <mat-form-field appearance="legacy">
+        <div class="col-4" style="width: 45%;">
+          <mat-form-field appearance="legacy" class="w-100">
             <mat-label>Select month</mat-label>
             <mat-select (selectionChange)="onSelectMonth($event)" formControlName="month">
               <mat-option *ngFor="let item of monthsArray" [value]="item.value">{{ item.name }}</mat-option>

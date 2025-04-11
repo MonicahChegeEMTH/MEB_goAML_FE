@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, map, Observable, of } from "rxjs";
 import { User } from "../models/user";
 import { environment } from "src/environments/environment";
+import { Router } from "@angular/router";
 
 const PASSWORD_RESET_API = `${environment.apiUrl}/api/v1/reset/`;
 const USERS_API = `${environment.apiUrl}/admin/api/v1/users/`;
@@ -22,7 +23,7 @@ export class AuthService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser') || '{}'));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -174,7 +175,8 @@ export class AuthService {
 
   logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
+    window.localStorage.clear();
+    this.router.navigate(['/authentication/signin'])
   }
 
 
