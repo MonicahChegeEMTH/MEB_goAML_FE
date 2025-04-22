@@ -12,6 +12,8 @@ import { FarmerDetailsComponent } from '../farmer-details/farmer-details.compone
 import { RegisterFarmerComponent } from '../register-farmer/register-farmer.component';
 import { UpdateFarmerComponent } from '../update-farmer/update-farmer.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { NotificationService } from 'src/app/data/services/notification.service';
 
 @Component({
   selector: 'app-farmer-managenent',
@@ -37,7 +39,7 @@ export class FarmerManagenentComponent implements OnInit {
   data: any;
   isdata: boolean = false;
   isLoading: boolean = false;
-  constructor(private router: Router, private dialog: MatDialog, private service: FarmerService,private fb:FormBuilder) { }
+  constructor(private router: Router, private snackbar: NotificationService, private dialog: MatDialog, private service: FarmerService,private fb:FormBuilder) { }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -69,7 +71,7 @@ export class FarmerManagenentComponent implements OnInit {
       }
     },error => {
       console.log('An error occurred:', error)
-      
+
     })
   }
 
@@ -144,17 +146,16 @@ export class FarmerManagenentComponent implements OnInit {
   getFarmerByFarmerNo(){
     this.isLoading = true;
     let farmerNo=this.filterform.value.farmer_no
-    console.log(this.filterform.value.farmer_no)
-      
-    if (farmerNo != null && farmerNo != undefined ) {
-  
+
+    if (farmerNo != null && farmerNo != undefined && farmerNo != "") {
+
       this.subscription = this.service.getByFarmersByFarmerNo(farmerNo).subscribe(res => {
         this.data = res;
         console.log(this.data.entity)
         if (this.data.entity!=null) {
           let result = []
           result.push(this.data.entity)
-         
+
           this.isLoading = false;
           this.isdata = true;
           // Binding with the datasource
@@ -168,6 +169,9 @@ export class FarmerManagenentComponent implements OnInit {
           this.dataSource = new MatTableDataSource(null);
         }
       })
+    } else {
+      this.isLoading = false
+      this.snackbar.alertWarning('Please enter farmer number')
     }
   }
 }
