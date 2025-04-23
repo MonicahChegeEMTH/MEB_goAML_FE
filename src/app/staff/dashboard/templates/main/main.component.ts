@@ -49,19 +49,29 @@ export class MainComponent implements OnInit {
     this.currentDate = this.getCurrentDate()
   }
 
+
+  ngOnInit() {
+    this.collectionSummaryForm = this.fb.group(
+      {
+        date: ["", [Validators.required]],
+      }
+    )
+
+    this.getAllColectionsSummary();
+    this.getAllFarmers();
+    this.smallChart2()
+  }
+
   getAllColectionsSummary() {
     this.isloading = true
 
-    this.subscription = this.service.getAllCollectionsRecords().subscribe(res => {
-      this.data = res;
-      if (this.data) {
-        this.isloading = false
-        console.log("All collections Summary"+ this.data.entity[0])
-        this.isloading = true;
-        // this.quantity = this.data.entity[0].quantity;
-        this.amount = this.data.entity[0].amount;
-        // this.count = this.data.entity[0].count
-      }
+    this.service.getAllCollectionsRecords().subscribe(res => {
+      this.isloading = false
+      console.log("All collections Summary"+ res.entity[0])
+      this.loaded = true
+      // this.quantity = this.data.entity[0].quantity;
+      this.amount = res.entity[0].amount;
+      // this.count = this.data.entity[0].count
     });
 
 
@@ -74,26 +84,10 @@ export class MainComponent implements OnInit {
         console.log(this.data)
         this.loaded = true;
         this.farmers = this.data.entity.length
-
-
       }
     });
 
 
-  }
-
-
-
-  ngOnInit() {
-    this.collectionSummaryForm = this.fb.group(
-      {
-        date: ["", [Validators.required]],
-      }
-    )
-    this.getTodaysData();
-    this.getAllColectionsSummary();
-    this.getAllFarmers();
-    this.smallChart2()
   }
 
 

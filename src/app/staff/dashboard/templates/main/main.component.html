@@ -8,11 +8,11 @@
 
     <mat-tab-group>
       <mat-tab label="System Dashboard">
-        <div class="row" *ngIf="loaded">
+        <div class="row">
           <div class="col-lg-3 col-sm-4">
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Deliveries" routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Todays Qty (Kgs)</h4>
+                <h5 class="m-b-20">Todays Qty (Kgs)</h5>
                 <h2 class="info-box-content">
                   <span class="info-value">{{quantity | number: '1.2-2'}}</span>
                   <i class="fas fa-weight-hanging icon-qty"></i>
@@ -25,7 +25,7 @@
           <div class="col-lg-3 col-sm-4">
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Delivery Count" routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Todays Count</h4>
+                <h5 class="m-b-20">Todays Count</h5>
                 <h2 class="info-box-content">
                   <span class="info-value">{{count | number : '1.'}}</span>
                   <i class="fas fa-boxes icon-count"></i>
@@ -35,18 +35,19 @@
           <div class="col-lg-3 col-sm-4">
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Farmer Count" routerLink="/staff/farmers/farmers">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Farmers</h4>
+                <h5 class="m-b-20">Farmers</h5>
                 <h2 class="info-box-content">
                   <span class="info-value">{{farmers | number : '1.'}}</span>
                   <i class="fas fa-user-friends icon-farmers"></i>
-                </h2>              </div>
+                </h2>
+              </div>
             </div>
           </div>
           <div class="col-lg-3 col-sm-4">
             <div class="info-box7 bg-c-brown order-info-box7" matTooltip="Monthly Amount"
               routerLink="/staff/sales/collections">
               <div class="info-box7-block">
-                <h4 class="m-b-20">Monthly Amount (KES)</h4>
+                <h5 class="m-b-20">Monthly Amount-KES</h5>
 
                 <h2 class="info-box-content">
                   <span class="info-value">{{amount | number : '1.2-2' }}</span>
@@ -56,8 +57,6 @@
 
             </div>
           </div>
-
-
         </div>
 
 

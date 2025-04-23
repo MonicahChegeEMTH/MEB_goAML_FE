@@ -19,7 +19,8 @@ import { FarmerDetailsComponent } from './pages/farmer-details/farmer-details.co
 import { UpdateFarmerComponent } from './pages/update-farmer/update-farmer.component';
 import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.component'; 
 import { FarmerLookupComponent } from './pages/farmer-lookup/farmer-lookup.component';
-import {MatProgressBarModule} from '@angular/material/progress-bar'; 
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { FarmerStatusLookupComponent } from './pages/farmer-status-lookup/farmer-status-lookup.component'; 
 @NgModule({
     declarations: [
         FarmerManagenentComponent,
@@ -27,7 +28,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         FarmerDetailsComponent,
         UpdateFarmerComponent,
         DeleteFarmerComponent,
-        FarmerLookupComponent
+        FarmerLookupComponent,
+        FarmerStatusLookupComponent
     ],
     imports: [
         CommonModule,

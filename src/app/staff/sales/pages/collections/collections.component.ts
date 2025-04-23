@@ -128,7 +128,7 @@ export class CollectionsComponent implements OnInit {
 
     console.log("The current date is", this.currentDate)
   }
-  
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -316,15 +316,15 @@ export class CollectionsComponent implements OnInit {
       if (this.data) {
         this.isLoading = false
         console.log(this.data)
-        this.isLoading = true;
+        this.isLoading = false;
         this.dquantity = this.data.entity[0].quantity;
         this.damount = this.data.entity[0].amount;
         this.dcount = this.data.entity[0].count
       }
     });
-
-
   }
+
+
   getDateRangeSummary(from,to) {
     this.isLoading = true
 
@@ -356,9 +356,8 @@ export class CollectionsComponent implements OnInit {
         this.dcount = this.data.entity[0].count
       }
     });
-
-
   }
+
   getSummaryPerRoute(routeId) {
     this.isLoading = true
   console.log("Route id"+ routeId)
@@ -376,6 +375,7 @@ export class CollectionsComponent implements OnInit {
 
 
   }
+
   getAllColectionsSummary() {
     this.isLoading = true
 
@@ -390,8 +390,6 @@ export class CollectionsComponent implements OnInit {
         this.dcount = this.data.entity[0].count
       }
     });
-
-
   }
 
   getAllFarmers() {
@@ -435,6 +433,7 @@ export class CollectionsComponent implements OnInit {
 
     });
   }
+
   selectRoute() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
@@ -456,6 +455,7 @@ export class CollectionsComponent implements OnInit {
 
     });
   }
+
   filterByPickUpLoction() {
     let pid = this.form.value.pickuplocationId
     this.fromDate = this.datePipe.transform(this.form.value.fromDate, 'yyyy-MM-dd');
@@ -488,6 +488,7 @@ export class CollectionsComponent implements OnInit {
       this.snackbar.showNotification("snackbar-danger", "Date Range is Required")
     }
   }
+
   filterByFarmerNo(id: any) {
     this.isLoading = true;
     let farmerNo = this.form.value.farmer_no

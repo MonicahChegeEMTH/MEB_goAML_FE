@@ -20,6 +20,19 @@ export class FarmerService {
   public getFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/all`,httpOptions);
   }
+
+  public getActiveFarmers(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active`,httpOptions);
+  }
+
+  public getRouteActiveFarmers(routeId: number, months: number): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/route?routeId=` + routeId + `&months=` + months,httpOptions);
+  }
+
+  public getCenterActiveFarmers(locationId: number, months: number): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/location?locationId=` + locationId + `&months=` + months,httpOptions);
+  }
+
   public getByFarmersByFarmerNo(farmer_no:any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/membernumber?farmer_number=`+farmer_no,httpOptions);
   }
@@ -50,5 +63,5 @@ export class FarmerService {
   public getFarmerStatement(id:any): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/api/v1/reports/farmer/statement?farmerid=` + id);
   }
-  
+
 }

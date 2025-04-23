@@ -100,7 +100,7 @@ export class InitiateBulkSmsComponent implements OnInit {
   getData() {
     this.selected = "";
     this.isLoading = true;
-    this.subscription = this.farmerService.getFarmers().subscribe(res => {
+    this.subscription = this.farmerService.getActiveFarmers().subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
         this.isLoading = false;
@@ -147,16 +147,16 @@ export class InitiateBulkSmsComponent implements OnInit {
       this.recipientsSelected = false;
     }
 
-    // this.loading = true;
-    // this.subscription = this.service.sendBulkSMS(this.sendSMSform.value).subscribe(res => {
-    //   this.snackbar.showNotification("snackbar-success", "Successful!");
-    //   this.loading = false;
-    //   this.sendSMSform.reset();
-    //   this.dialogRef.close();
-    // }, err => {
-    //   this.loading = false;
-    //   this.dialogRef.close();
-    // })
+    this.loading = true;
+    this.subscription = this.service.sendBulkSMS(this.sendSMSform.value).subscribe(res => {
+      this.snackbar.showNotification("snackbar-success", "Successful!");
+      this.loading = false;
+      this.sendSMSform.reset();
+      this.dialogRef.close();
+    }, err => {
+      this.loading = false;
+      this.dialogRef.close();
+    })
 
   }
 
