@@ -40,8 +40,8 @@ export class SmsService {
     return this.http.delete<any>(url)
   }
 
-  getAllBulkSMS(): Observable<any> {
-    const url = `${environment.apiUrl}/api/v1/bulkSMS/all/bulk`;
+  getByDateRange(from: string, to: any): Observable<any> {
+    const url = `${environment.apiUrl}/api/v1/bulk-sms/find/date-range?from=` + from + `&to=` + to;
     return this.http.get<any>(url)
   }
 
@@ -58,6 +58,6 @@ export class SmsService {
   sendBulkSMS(data:any)
   {
     const url = `${environment.apiUrl}/api/v1/bulkSMS/bulk`;
-    return this.http.post<any>(url, data,{})    
+    return this.http.post<any>(url, data,{})
   }
 }

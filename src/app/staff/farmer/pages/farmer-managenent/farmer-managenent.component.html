@@ -118,14 +118,14 @@
                                 <!-- Checkbox Column -->
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        <mat-checkbox class="form-check-input" (change)="$event ? masterToggle() : null"
                                             [checked]="selection.hasValue() && isAllSelected()"
                                             [indeterminate]="selection.hasValue() && !isAllSelected()"
                                             [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                        <mat-checkbox class="form-check-input" (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(row) : null"
                                             [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>

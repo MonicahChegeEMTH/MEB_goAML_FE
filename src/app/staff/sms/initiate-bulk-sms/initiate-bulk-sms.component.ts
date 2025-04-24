@@ -100,7 +100,7 @@ export class InitiateBulkSmsComponent implements OnInit {
   getData() {
     this.selected = "";
     this.isLoading = true;
-    this.subscription = this.farmerService.getActiveFarmers().subscribe(res => {
+    this.subscription = this.farmerService.getActiveFarmers(1).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
         this.isLoading = false;
@@ -126,7 +126,7 @@ export class InitiateBulkSmsComponent implements OnInit {
     this.sendSMSform.value.templateBody = this.sendSMSform.value.templateName.templateBody
     this.sendSMSform.value.templateName = this.sendSMSform.value.templateName.templateName
     let items: FarmerData[] = [];
-    this.selection.selected.forEach(function (value) {
+    this.selection.selected.forEach( (value) => {
       let farmer: FarmerData = new FarmerData();
       farmer.memberNumber = value.farmer_no;
       farmer.name = value.name;

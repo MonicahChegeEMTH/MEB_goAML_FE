@@ -17,10 +17,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import {MatSelectModule} from '@angular/material/select';
 import { FarmerDetailsComponent } from './pages/farmer-details/farmer-details.component';
 import { UpdateFarmerComponent } from './pages/update-farmer/update-farmer.component';
-import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.component'; 
+import { DeleteFarmerComponent } from './pages/delete-farmer/delete-farmer.component';
 import { FarmerLookupComponent } from './pages/farmer-lookup/farmer-lookup.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { FarmerStatusLookupComponent } from './pages/farmer-status-lookup/farmer-status-lookup.component'; 
+import { FarmerStatusLookupComponent } from './pages/farmer-status-lookup/farmer-status-lookup.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
     declarations: [
         FarmerManagenentComponent,
@@ -45,7 +47,9 @@ import { FarmerStatusLookupComponent } from './pages/farmer-status-lookup/farmer
         MatDialogModule,
         MatDatepickerModule,
         MatSelectModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatStepperModule,
+        MatCheckboxModule
     ]
 })
 export class FarmerModule { }

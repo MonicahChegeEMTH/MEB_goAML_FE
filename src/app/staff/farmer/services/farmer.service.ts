@@ -21,8 +21,8 @@ export class FarmerService {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/all`,httpOptions);
   }
 
-  public getActiveFarmers(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active`,httpOptions);
+  public getActiveFarmers(months: number): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/all?months=${months}`,httpOptions);
   }
 
   public getRouteActiveFarmers(routeId: number, months: number): Observable<any> {

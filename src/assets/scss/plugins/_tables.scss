@@ -570,8 +570,9 @@ tr.group:hover {
   -webkit-box-align: center;
   align-items: center;
   border-color: #e6e9ed;
-  background-color: #ebebee;
-  height: 70px;
+  background-color: rgba(76, 175, 80, 0.2);
+  border-radius: 6px;
+  height: 60px;
   min-width: 800px;
 
   .header-buttons {
@@ -612,9 +613,10 @@ tr.group:hover {
       color: rgba(0, 0, 0, 0.54);
       border-radius: 25px;
       border: 0;
-      height: 45px;
+      height: 40px;
       padding: 8px 8px 8px 50px;
       width: 250px;
+      position: relative;
       background: #ffffff;
       transition: background 0.2s, width 0.2s;
 

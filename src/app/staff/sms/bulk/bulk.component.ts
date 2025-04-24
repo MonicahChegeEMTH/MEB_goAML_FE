@@ -9,12 +9,17 @@ import { Router } from '@angular/router';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SmsService } from '../sms.service';
 import { InitiateBulkSmsComponent } from '../initiate-bulk-sms/initiate-bulk-sms.component';
+import { DatePipe } from '@angular/common';
+import { ComponentsModule } from "../../../shared/components/components.module";
+import { BreadcrumbComponent } from "../../../shared/components/breadcrumb/breadcrumb.component";
+import { FarmerStatusLookupComponent } from '../../farmer/pages/farmer-status-lookup/farmer-status-lookup.component';
 
 @Component({
   selector: 'app-bulk',
   templateUrl: './bulk.component.html',
-  styleUrls: ['./bulk.component.sass']
+  styleUrls: ['./bulk.component.sass'],
 })
+
 export class BulkComponent implements OnInit {
   selected:any;
   templates:any;
@@ -25,7 +30,7 @@ export class BulkComponent implements OnInit {
     "sentDate",
     "status",
     "statusReason",
-    "message",
+    "message"
   ];
 
   dataSource!: MatTableDataSource<any>;
@@ -39,21 +44,26 @@ export class BulkComponent implements OnInit {
   error: any;
   isLoading: boolean = true;
   currentUser: any;
+  from: string
+  to: string
 
   constructor(
     public dialog: MatDialog,
     private router: Router,
     private snackbar:SnackbarService,
     private service: SmsService,
+    private datePipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
     this.getData();
     this.getBulkCodes();
+
+    this.from = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
+    this.to = this.datePipe.transform(new Date(), 'yyyy-MM-dd') 
   }
 
-  getSelected()
-  {
+  getSelected() {
     this.service.getBulkSMSByCode(this.selected).subscribe(
       (res) => {
         this.data = res;
@@ -68,7 +78,6 @@ export class BulkComponent implements OnInit {
         console.log(err);
       }
     );
-    
   }
 
   getBulkCodes() {
@@ -87,10 +96,9 @@ export class BulkComponent implements OnInit {
   }
 
   getData() {
-
-    this.service.getAllBulkSMS().subscribe(
-      (res) => {
-        this.data = res;
+    this.service.getByDateRange("2025-04-01", this.to).subscribe({
+      next: (res) => {
+        this.data = res.entity;
         if (this.data != null) {
           this.isLoading = false;
           this.dataSource = new MatTableDataSource<any>(this.data);
@@ -98,9 +106,10 @@ export class BulkComponent implements OnInit {
           this.dataSource.sort = this.sort;
         }
       },
-      (err) => {
+      error: (err) => {
         console.log(err);
       }
+    }
     );
   }
 
@@ -126,7 +135,7 @@ export class BulkComponent implements OnInit {
     dialogConfig.data = {
       test: ""
     }
-    this.dialog.open(InitiateBulkSmsComponent, dialogConfig)
+    this.dialog.open(FarmerStatusLookupComponent, dialogConfig)
   }
 
 }
