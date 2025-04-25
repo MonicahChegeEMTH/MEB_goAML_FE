@@ -80,3 +80,5 @@ $meeting-master-theme: mat.define-light-theme((
 @include mat.button-theme($meeting-master-theme);
 @include mat.form-field-theme($meeting-master-theme);
 @include mat.input-theme($meeting-master-theme);
+@include mat.icon-theme($meeting-master-theme);
+
