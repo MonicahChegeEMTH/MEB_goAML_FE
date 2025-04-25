@@ -45,7 +45,7 @@
             <label>Active Farmer Category.</label>
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>Active Options</mat-label>
-
+              
               <mat-select formControlName="filter" (selectionChange)="clearTable($event)">
                 <mat-option value="All">All Active Farmers</mat-option>
                 <mat-option value="Center">Center Active</mat-option>
@@ -85,14 +85,7 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <button mat-stroked-button color="primary" class="w-100 h-80 d-flex align-items-center justify-content-center" [disabled]="loading" (click)="getFarmers()">
-              <span><mat-progress-spinner
-                *ngIf="loading"
-                diameter="20"
-                mode="indeterminate"
-                color="primary"
-                class="me-2"
-                strokeWidth="3">
-              </mat-progress-spinner></span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
               <span *ngIf="!loading">Click to Filter Farmers</span>
               <span *ngIf="loading">Filtering...</span>
             </button>
@@ -253,14 +246,7 @@
 
           <div class="col-md-6 mb-3">
             <button mat-stroked-button color="primary" class="w-100 h-80 d-flex align-items-center justify-content-center faded-bg-button" [disabled]="loading" (click)="sendMessage()">
-              <span><mat-progress-spinner
-                *ngIf="loading"
-                diameter="20"
-                mode="indeterminate"
-                color="primary"
-                class="me-2"
-                strokeWidth="3">
-              </mat-progress-spinner></span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
               <span *ngIf="!loading">Send Messages</span>
               <span *ngIf="loading">Sending...</span>
             </button>

@@ -46,6 +46,7 @@ export class BulkComponent implements OnInit {
   currentUser: any;
   from: string
   to: string
+  hasData: boolean = false
 
   constructor(
     public dialog: MatDialog,
@@ -56,11 +57,11 @@ export class BulkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getData();
-    this.getBulkCodes();
-
     this.from = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
     this.to = this.datePipe.transform(new Date(), 'yyyy-MM-dd') 
+
+    this.getData();
+    this.getBulkCodes();
   }
 
   getSelected() {
@@ -96,17 +97,24 @@ export class BulkComponent implements OnInit {
   }
 
   getData() {
-    this.service.getByDateRange("2025-04-01", this.to).subscribe({
+    this.isLoading = true;
+    this.service.getByDateRange(this.from, this.to).subscribe({
       next: (res) => {
         this.data = res.entity;
-        if (this.data != null) {
+        if (this.data != null && this.data.length > 0) {
           this.isLoading = false;
+          this.hasData  = true
           this.dataSource = new MatTableDataSource<any>(this.data);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+        } else {
+          this.isLoading = false;
+          this.hasData  = false
         }
       },
       error: (err) => {
+        this.isLoading = false;
+        this.hasData  = false
         console.log(err);
       }
     }
@@ -135,7 +143,14 @@ export class BulkComponent implements OnInit {
     dialogConfig.data = {
       test: ""
     }
-    this.dialog.open(FarmerStatusLookupComponent, dialogConfig)
+    this.dialog.open(FarmerStatusLookupComponent, dialogConfig).afterClosed().subscribe({
+      next: (res) => {
+        this.getData()
+      },
+      complete: () => {
+        this.getData()
+      }
+    })
   }
 
 }

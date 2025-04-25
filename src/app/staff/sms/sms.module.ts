@@ -24,6 +24,7 @@ import { DeleteTemplateComponent } from './delete-template/delete-template.compo
 import { ViewTemplateBodyComponent } from './view-template-body/view-template-body.component';
 import { InitiateBulkSmsComponent } from './initiate-bulk-sms/initiate-bulk-sms.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDialogModule,
     MatDatepickerModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatProgressBarModule
 
   ]
 })

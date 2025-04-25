@@ -5,6 +5,9 @@
             <app-breadcrumb [title]="'Bulk SMS Notifications'" [items]="['Home', 'Notifications']" [active_item]="'Bulk SMS'">
             </app-breadcrumb>
         </div>
+        <div>
+          <mat-progress-bar class="mat-progress-bar green-progress" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+        </div>
         <div class="card">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="boxs mail_listing">
@@ -87,10 +90,10 @@
                                         class="mat-cell" #exporter="matTableExporter">
                                         <!-- ID Column -->
                                         <ng-container matColumnDef="id">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-8">Id
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)">
+                                                [class.even-row]="!(i % 2)" class="tbl-col-width-per-8">
                                                 {{i+1}}</mat-cell>
                                         </ng-container>
 
@@ -99,7 +102,7 @@
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Msg Id</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.messageId }}</mat-cell>
+                                                {{ row.messageRef }}</mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="phoneNumber">
@@ -126,7 +129,7 @@
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Sent On</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.sentDate | date}}
+                                                {{ row.sentDate | date: 'medium' }}
                                             </mat-cell>
                                         </ng-container>
 
@@ -165,6 +168,9 @@
                                         <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                         </mat-progress-spinner>
                                     </div>
+                                    <div class="tbl-spinner" *ngIf="hasData==false && !isLoading">
+                                      <h4>No Messages Found</h4>
+                                  </div>
                                     <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
                                         aria-label="Select page of users"></mat-paginator>
                                 </div>
