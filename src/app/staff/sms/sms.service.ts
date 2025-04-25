@@ -57,7 +57,7 @@ export class SmsService {
 
   sendBulkSMS(data:any)
   {
-    const url = `${environment.apiUrl}/api/v1/bulkSMS/bulk`;
+    const url = `${environment.apiUrl}/api/v1/bulk-sms/bulk`;
     return this.http.post<any>(url, data,{})
   }
 }

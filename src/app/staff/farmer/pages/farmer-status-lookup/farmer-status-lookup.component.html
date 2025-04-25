@@ -46,10 +46,10 @@
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>Active Options</mat-label>
 
-              <mat-select formControlName="filter">
-                <mat-option value="all">All Active Farmers</mat-option>
-                <mat-option value="route">Route Active</mat-option>
-                <mat-option value="center">Center Active</mat-option>
+              <mat-select formControlName="filter" (selectionChange)="clearTable($event)">
+                <mat-option value="All">All Active Farmers</mat-option>
+                <mat-option value="Center">Center Active</mat-option>
+                <mat-option value="Route">Route Active</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -65,12 +65,18 @@
 
         <div class="row">
           <!-- Params based on filter -->
-          <div class="col-md-6 mb-3" *ngIf="filterForm.value.filter === 'route' || filterForm.value.filter === 'center'">
-            <label>Select {{ filterForm.value.filter === 'route' ? 'Route' : 'Center' }}</label>
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{ filterForm.value.filter === 'route' ? 'Route' : 'Center' }}</mat-label>
+          <div class="col-md-6 mb-3" *ngIf="filterForm.value.filter === 'Route' || filterForm.value.filter === 'Center'">
+            <label>Select {{ filterForm.value.filter === 'Route' ? 'Route' : 'Center' }}</label>
+            <mat-form-field class="w-100" appearance="outline" *ngIf="filterForm.value.filter === 'Center'">
+              <mat-label>Collection Center</mat-label>
+              <input matInput formControlName="location" required readonly />
+              <mat-icon matSuffix (click)="selectCollectionCenter()">search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field class="w-100" appearance="outline" *ngIf="filterForm.value.filter === 'Route'">
+              <mat-label>{{ filterForm.value.filter === 'Route' ? 'Route' : 'Center' }}</mat-label>
               <mat-select formControlName="location">
-                <mat-option *ngFor="let opt of getLocationOptions()" [value]="opt">{{ opt }}</mat-option>
+                <mat-option *ngFor="let r of routes" [value]="r">{{ r.route }}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -105,10 +111,10 @@
               </div>
               <div class="card">
                   <div class="body">
-                      <div class="table-responsive">
+                      <div class="table-responsive w-100">
                           <div class="materialTableHeader">
                               <div class="row">
-                                  <div class="col-10">
+                                  <div class="col-6">
                                       <ul class="header-buttons-left ms-0">
                                           <li class="dropdown">
                                               <h2>Farmers</h2>
@@ -157,25 +163,25 @@
                                       [class.odd-row]="i % 2" [class.even-row]="!(i % 2)">{{i +
                                       1}}</mat-cell>
                               </ng-container>
-                              <ng-container matColumnDef="farmer_no">
-                                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                                      class="column-nowrap table-img tbl-col-width-per-6">F/No.
-                                  </mat-header-cell>
-                                  <mat-cell *matCellDef="let farmer;let i = index"
-                                      [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
-                                      class="column-nowrap table-img tbl-col-width-per-6">
-                                      {{farmer.farmer_no}}
-                                  </mat-cell>
-                              </ng-container>
                               <ng-container matColumnDef="username">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header
                                     class="column-nowrap">Farmer Name</mat-header-cell>
                                 <mat-cell *matCellDef="let farmer;let i = index"
                                     [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
-                                    class="column-nowrap">
+                                    class="column-wrap">
                                     {{farmer.username}}
                                 </mat-cell>
                             </ng-container>
+                              <ng-container matColumnDef="farmer_no">
+                                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                                      class="column-nowrap tbl-col-width-per-8">F/No.
+                                  </mat-header-cell>
+                                  <mat-cell *matCellDef="let farmer;let i = index"
+                                      [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
+                                      class="column-nowrap tbl-col-width-per-8">
+                                      {{farmer.farmer_no}}
+                                  </mat-cell>
+                              </ng-container>
                               <ng-container matColumnDef="mobile_no">
                                   <mat-header-cell *matHeaderCellDef mat-sort-header
                                       class="column-nowrap">Mobile No</mat-header-cell>
@@ -187,7 +193,7 @@
                               </ng-container>
                               <ng-container matColumnDef="ID No.">
                                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                                      class="column-nowrap">ID Number</mat-header-cell>
+                                      class="column-nowrap">Id Number</mat-header-cell>
                                   <mat-cell *matCellDef="let farmer;let i = index"
                                       [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                       class="column-nowrap">
@@ -214,7 +220,7 @@
                               <h4>0 Farmers Found</h4>
                           </div>
 
-                          <mat-paginator #paginator [pageIndex]="0" [pageSize]="3"
+                          <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
                               [pageSizeOptions]="[5, 10, 25, 100]">
                           </mat-paginator>
                       </div>
@@ -241,12 +247,12 @@
           <div class="col-md-6 mb-3">
             <div>
               <span><label class="text-muted small">Selected Farmers:</label></span>
-              <span class="fw-bold fs-5 text-success">  {{ selectedCount || 0 }}</span>
+              <span class="fs-5 text-success">  {{ selectedCount || 0 }}</span>
               </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <button mat-stroked-button color="primary" class="w-100 h-80 d-flex align-items-center justify-content-center faded-bg-button" [disabled]="loading" (click)="getFarmers()">
+            <button mat-stroked-button color="primary" class="w-100 h-80 d-flex align-items-center justify-content-center faded-bg-button" [disabled]="loading" (click)="sendMessage()">
               <span><mat-progress-spinner
                 *ngIf="loading"
                 diameter="20"
@@ -269,7 +275,11 @@
 
           <div class="col-md-6 mb-3">
             <label class="text-muted small">Filter Type</label>
-            <div class="fw-semibold fs-6">{{ filterForm.value.filter || '—' }}</div>
+            <div>
+              <span class="fw-semibold fs-6" *ngIf="filterForm.value.filter === 'All'">{{ filterForm.value.filter || '—' }}</span>
+              <span class="fs-6 text-success" *ngIf="filterForm.value.filter === 'Center'">  {{ dialogData?.name }}</span>
+              <span class="fs-6 text-success" *ngIf="filterForm.value.filter === 'Route'">  {{ filterForm.value.location.route }}</span>
+            </div>
           </div>
         </div>
 

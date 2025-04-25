@@ -4,7 +4,7 @@ import { NotificationService } from 'src/app/data/services/notification.service'
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { BulkComponent } from 'src/app/staff/sms/bulk/bulk.component';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { filter } from 'rxjs';
@@ -13,6 +13,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FarmerData } from 'src/app/staff/sms/initiate-bulk-sms/initiate-bulk-sms.component';
+import { RoutesService } from 'src/app/admin/routes/routes.service';
+import { LookupPickUpLocationsComponent } from 'src/app/staff/sales/pages/lookup-pick-up-locations/lookup-pick-up-locations.component';
 
 @Component({
   selector: 'app-farmer-status-lookup',
@@ -37,6 +39,9 @@ export class FarmerStatusLookupComponent implements OnInit {
   selectedIndex: number = 0
   selectedFarmers: FarmerData[] = []
   selectedCount: number = 0
+  selectedTemplate: any
+  routes: any
+  dialogData: any
 
   selected = "";
   selection = new SelectionModel<any>(true, []);
@@ -56,7 +61,7 @@ export class FarmerStatusLookupComponent implements OnInit {
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: "0px", y: "0px" };
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private smsService: SmsService,private fb: FormBuilder,private service: FarmerService, private snackbar: NotificationService, public dialogRef: MatDialogRef<BulkComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog,private routeService: RoutesService,private smsService: SmsService,private fb: FormBuilder,private service: FarmerService, private snackbar: NotificationService, public dialogRef: MatDialogRef<BulkComponent>) { }
 
   ngOnInit(): void {
     this.templateForm = this.fb.group({
@@ -65,12 +70,14 @@ export class FarmerStatusLookupComponent implements OnInit {
     });
 
     this.filterForm = this.fb.group({
-      filter: ['all', Validators.required],
+      filter: ['All', Validators.required],
       location: [''],
+      center: [''],
       months: [1, [Validators.required, Validators.min(1)]],
     });
 
     this.getTemplates()
+    this.getRoutes()
   }
 
   applyFilter(event: Event) {
@@ -87,9 +94,16 @@ export class FarmerStatusLookupComponent implements OnInit {
     this.selectedIndex = event.selectedIndex
   }
 
+  clearTable(event: any) {
+    this.farmers = []
+    this.dataSource = new MatTableDataSource(this.farmers)
+    this.dataSource.paginator = this.paginator
+  }
+
   onTemplateChange(template: any) {
     console.log("template passed", template)
     this.readonly = true
+    this.selectedTemplate = template
     this.templateForm.patchValue({
       message: template.templateBody
     });
@@ -132,14 +146,13 @@ export class FarmerStatusLookupComponent implements OnInit {
       this.loading = true;
       this.months = this.filterForm.value.months;
 
-      if (this.filterForm.value.filter === 'route') {
+      if (this.filterForm.value.filter === 'Route') {
         this.getRouteActiveFarmers();
-      } else if(this.filterForm.value.filter === 'center') {
+      } else if(this.filterForm.value.filter === 'Center') {
         this.getCenterActiveFarmers();
       } else {
         this.getAllActiveFarmers()
       }
-
     }
   }
 
@@ -147,16 +160,24 @@ export class FarmerStatusLookupComponent implements OnInit {
       this.selection.selected.forEach( (value) => {
         let farmer: FarmerData = new FarmerData();
         farmer.memberNumber = value.farmer_no;
-        farmer.name = value.name;
+        farmer.name = value.username;
         farmer.phoneNumber = value.mobile_no;
         farmer.idNumber = value.id_number;
         this.selectedFarmers.push(farmer);
       });
   }
 
+  requestBody() {
+    return {
+      "templateName": this.selectedTemplate.templateName,
+      "templateBody": this.templateForm.value.message,
+      "recipients": this.selectedFarmers
+    }
+  }
+
   getLocationOptions() {
     return this.filterForm.value.filter === 'route'
-      ? ['Route A', 'Route B']
+      ? this.routes
       : ['Center X', 'Center Y'];
   }
 
@@ -191,15 +212,17 @@ export class FarmerStatusLookupComponent implements OnInit {
    getRouteActiveFarmers():void {
     this.loading = true
 
-    this.service.getRouteActiveFarmers(this.filterForm.value.location, this.months).subscribe({
+    this.service.getRouteActiveFarmers(this.filterForm.value.location.id, this.months).subscribe({
       next: (res) => {
         this.loading = false;
 
         if (res.entity.length > 0) {
+          this.isdata = true
           this.farmers = res.entity
           this.dataSource  = new MatTableDataSource(this.farmers)
-          this.dataSource.paginator = this.dataSource.paginator
-          this.dataSource.sort = this.dataSource.sort
+          this.dataSource.paginator = this.paginator
+          this.dataSource.sort = this.sort
+
         } else {
           this.snackbar.alertWarning("No active farmers found")
         }
@@ -214,11 +237,21 @@ export class FarmerStatusLookupComponent implements OnInit {
     })
   }
 
+  getRoutes() {
+    this.routeService.getRoutes().subscribe((res) => {
+      if (res.entity.length > 0) {
+        this.routes = res.entity;
+      } else {
+        this.routes = [];
+      }
+    });
+  }
+
 
    getCenterActiveFarmers():void {
     this.loading = true
 
-    this.service.getCenterActiveFarmers(this.filterForm.value.location, this.months).subscribe({
+    this.service.getCenterActiveFarmers(this.dialogData.id, this.months).subscribe({
       next: (res) => {
         this.loading = false;
 
@@ -243,7 +276,56 @@ export class FarmerStatusLookupComponent implements OnInit {
     })
   }
 
-  sendMessage() {}
+  sendMessage() {
+    this.mapSelectedFarmers()
+
+    this.loading = true;
+    if (this.selectedTemplate != null && this.selectedTemplate != undefined && this.selectedFarmers.length > 0) {
+      this.selectedTemplate.templateBody = this.templateForm.value.message
+      this.selectedTemplate.templateName = this.selectedTemplate.templateName
+      let items = this.requestBody()
+      console.log("the message buildt is", items)
+      this.loading = false
+    } else {
+      this.snackbar.alertWarning("Please select a template and farmers")
+      this.loading = false
+      return
+    }
+
+    this.smsService.sendBulkSMS(this.requestBody()).subscribe({
+      next: (res) => {
+        this.loading = false
+        this.dialogRef.close();
+        this.snackbar.alertSuccess(res.message);
+      },
+      error: (err) => {
+        this.loading = false
+        this.snackbar.alertWarning(err.message)
+      }
+    })
+
+  }
+
+
+  selectCollectionCenter() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "40%";
+    dialogConfig.data = {
+      user: '',
+    };
+    const dialogRef = this.dialog.open(LookupPickUpLocationsComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogData = result.data;
+
+      console.log("Dialog data", this.dialogData)
+
+      this.filterForm.patchValue({
+        location: this.dialogData.name,
+      })
+    });
+  }
 
   close() {
     this.dialogRef.close();
