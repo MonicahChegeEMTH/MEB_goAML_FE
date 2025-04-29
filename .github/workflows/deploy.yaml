@@ -22,7 +22,7 @@ jobs:
       run: npm i --force
 
     - name: Build Angular app
-      run: npm run build --omit=dev,optional --configuration=production
+      run: npm run build --configuration=production
 
     - name: Deploy to AWS Dairy EC2 Instance
       env:
@@ -32,5 +32,5 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -o StrictHostKeyChecking=no -i private_key.pem -r dist/main $USER@$HOST:/var/www/dev/
+        scp -o StrictHostKeyChecking=no -i private_key.pem -r dist/* $USER@$HOST:/var/www/dev/
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "sudo systemctl restart nginx"
