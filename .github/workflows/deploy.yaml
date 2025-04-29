@@ -22,7 +22,7 @@ jobs:
       run: npm i --force
 
     - name: Build Angular app
-      run: ng build --configuration=production
+      run: npm run build
 
     - name: Deploy to AWS Dairy EC2 Instance
       env:
