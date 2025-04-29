@@ -24,7 +24,7 @@ jobs:
     - name: Build Angular app
       run: npm run build --prod
 
-    - name: Deploy to AWS EC2
+    - name: Deploy to AWS Dairy EC2 Instance
       env:
         PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
         HOST: ${{ secrets.DAIRY_HOST }}
