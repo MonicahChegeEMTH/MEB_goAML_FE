@@ -27,8 +27,8 @@ jobs:
     - name: Deploy to AWS EC2
       env:
         PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
-        HOST: ${{ secrets.AWS_HOST }}
-        USER: ${{ secrets.AWS_USER }}
+        HOST: ${{ secrets.DAIRY_HOST }}
+        USER: ${{ secrets.DAIRY_USER }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
