@@ -1,6 +1,6 @@
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,15 +14,20 @@ export class DashboardService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   constructor(private http: HttpClient) { }
 
-  public getTodaysCollections(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/collections/today`,httpOptions);
+  public getTodaysCollections(date: any): Observable<any> {
+    return timer(0, 5000).pipe(
+      switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=${date}`, httpOptions))
+    )
   }
   public getAllFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
+  
   public getDateCollections(date:any): Observable<any> {
     console.log("Calling api..")
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions);
+    return timer(0, 5000).pipe(
+      switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions))
+    )
   }
 
   public getDateDangeCollections(from:any,to:any): Observable<any> {
@@ -37,11 +42,15 @@ export class DashboardService {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/records/route?routeId=`+routeId,httpOptions);
   }
 
+
   public getAllCollectionsRecords(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/records/all`,httpOptions);
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/records/all`,httpOptions)
+    // return timer(0, 5000).pipe(
+    //   switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/records/all`,httpOptions))
+    // )
   }
-  
-  
+
+
 
   // public getDashboardWigetsAnalytics(): Observable<any> {
   //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
@@ -51,5 +60,5 @@ export class DashboardService {
   //   return this.http.get(`${environment.apiUrl}api/v1/collections/collections/today`,httpOptions);
   // }
 
- 
+
 }
