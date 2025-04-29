@@ -27,8 +27,10 @@ jobs:
     - name: Deploy to AWS EC2
       env:
         PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
-        HOST: ${{ secrets.DAIRY_HOST }}
-        USER: ${{ secrets.DAIRY_USER }}
+        HOST: ${{ secrets.AWS_HOST }}
+        USER: ${{ secrets.AWS_USER }}
       run: |
-        sshpass -p "$PRIVATE_KEY" scp -r dist/* $USER@$HOST:/var/www/dev/
-        sshpass -p "$PRIVATE_KEY" ssh $USER@$HOST "sudo systemctl restart nginx"
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -r dist/* $USER@$HOST:/var/www/dev/
+        ssh -i private_key.pem $USER@$HOST "sudo systemctl restart nginx"
