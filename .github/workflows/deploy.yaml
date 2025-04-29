@@ -19,16 +19,16 @@ jobs:
         node-version: '22'
 
     - name: Install dependencies
-      run: npm install
+      run: npm i --force
 
     - name: Build Angular app
-      run: npm run build --configuration=production
+      run: npm run build --prod
 
     - name: Deploy to AWS EC2
       env:
-        PRIVATE_KEY: ${{ secrets.dairy_key }}
-        HOST: ${{ secrets.dairy_host }}
-        USER: ${{ secrets.dairy_user }}
+        PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
+        HOST: ${{ secrets.DAIRY_HOST }}
+        USER: ${{ secrets.DAIRY_USER }}
       run: |
         sshpass -p "$PRIVATE_KEY" scp -r dist/* $USER@$HOST:/var/www/dev/
         sshpass -p "$PRIVATE_KEY" ssh $USER@$HOST "sudo systemctl restart nginx"
