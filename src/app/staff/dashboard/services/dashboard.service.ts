@@ -15,6 +15,7 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   public getTodaysCollections(date: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=${date}`, httpOptions)
     return timer(0, 5000).pipe(
       switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/specific/date?date=${date}`, httpOptions))
     )
@@ -22,7 +23,7 @@ export class DashboardService {
   public getAllFarmers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
-  
+
   public getDateCollections(date:any): Observable<any> {
     console.log("Calling api..")
     return timer(0, 5000).pipe(
