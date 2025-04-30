@@ -26,6 +26,7 @@ export class DashboardService {
 
   public getDateCollections(date:any): Observable<any> {
     console.log("Calling api..")
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions)
     return timer(0, 5000).pipe(
       switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions))
     )
