@@ -279,25 +279,38 @@
                       </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="status">
+                    <ng-container matColumnDef="deliveryDate">
                       <mat-header-cell *matHeaderCellDef mat-sort-header
-                        >Status</mat-header-cell
+                        >Delivered On</mat-header-cell
                       >
                       <mat-cell
                         *matCellDef="let row; let i = index"
                         [class.odd-row]="i % 2"
                         [class.even-row]="!(i % 2)"
                       >
-                        <div *ngIf="row.status == 'delivered'">
+                        {{ row.deliveryTime | date : "medium" }}
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="category">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Catgory</mat-header-cell
+                      >
+                      <mat-cell
+                        *matCellDef="let row; let i = index"
+                        [class.odd-row]="i % 2"
+                        [class.even-row]="!(i % 2)"
+                      >
+                        <div *ngIf="row.category == 'One'">
                           <span
                             class="badge badge-pill badge-primary col-green"
                           >
-                            {{ row.status }}</span
+                            {{ row.category }}</span
                           >
                         </div>
-                        <div *ngIf="row.status == 'undelivered'">
-                          <span class="badge badge-pill badge-primary col-red">
-                            {{ row.status }}</span
+                        <div *ngIf="row.category == 'Bulk'">
+                          <span class="badge badge-pill badge-primary col-yellow">
+                            {{ row.category }}</span
                           >
                         </div>
                       </mat-cell>
@@ -312,7 +325,7 @@
                         [class.odd-row]="i % 2"
                         [class.even-row]="!(i % 2)"
                       >
-                        {{ row.statusReason }}
+                        {{ row.statusDescription }}
                       </mat-cell>
                     </ng-container>
                     <mat-header-row

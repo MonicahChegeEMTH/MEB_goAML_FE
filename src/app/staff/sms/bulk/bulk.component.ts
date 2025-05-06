@@ -26,10 +26,10 @@ export class BulkComponent implements OnInit {
   templates: any;
   displayedColumns: string[] = [
     'id',
-    'messageId',
     'phoneNumber',
     'sentDate',
-    'status',
+    'deliveryDate',
+    'category',
     'statusReason',
     'message',
   ];
@@ -121,6 +121,10 @@ export class BulkComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         } else {
+          this.dataSource = new MatTableDataSource<any>(null);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+
           this.isLoading = false;
           this.hasData = false;
         }
@@ -134,7 +138,7 @@ export class BulkComponent implements OnInit {
   }
 
   readMessage(message) {
-    this.snackbar.showNotification('snackbar-success', message);
+    this.snackbar.showNotification('snackbar-success',message)
   }
 
   applyFilter(event: Event) {
