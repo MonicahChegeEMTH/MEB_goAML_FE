@@ -1,9 +1,13 @@
 name: Bahati Dairy Angular App Deployment
 
 on:
+  pull-request:
+  branches:
+    - main
+
   push:
     branches:
-      - michael  # Deploy only when changes hit my branch
+      - main  # Deploy only when changes hit my branch
 
 jobs:
   deploy:
@@ -13,18 +17,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '22'
+    - name: Setting Up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+        docker --version
 
-    - name: Install dependencies
-      run: npm i --force
+    - name: Building Docker Image
+      run: |
+        docker build -t bahati-fe .
 
-    - name: Build Angular app
-      run: npm run build
+    - name: Transferring Docker Image to AWS Dairy Instance.
+    # - name: Set up Node.js
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: '22'
 
-    - name: Deploy to AWS Dairy EC2 Instance
+    # - name: Install dependencies
+    #   run: npm i --force
+
+    # - name: Build Angular app
+    #   run: npm run build
       env:
         PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
         HOST: ${{ secrets.DAIRY_HOST }}
@@ -32,5 +45,25 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -o StrictHostKeyChecking=no -i private_key.pem -r dist $USER@$HOST:/var/www/dev/
-        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "sudo systemctl restart nginx"
+
+        # save Docker image as a tar archive and transfer it
+        docker save bahati-fe | gzip > bahati-image.tar.gz
+        scp -o StrictHostKeyChecking=no -i private_key.pem bahati-image.tar.gz $USER@$HOST:/var/www/dev
+
+    - name: Deploy Bahati FE Container on AWS.
+      env:
+        PRIVATE_KEY: ${{ secrets.DAIRY_KEY }}
+        HOST: ${{ secrets.DAIRY_HOST }}
+        USER: ${{ secrets.DAIRY_USER }}
+      run: |
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
+        docker load < /var/www/dev/bahati-image.tar.gz
+        docker stop bahati-fe-container || true
+        docker rm bahati-fe-container || true
+        docker run --name bahati-fe-container -d -p 4000:80 bahati-fe
+        sudo systemctl restart nginx
+        EOF
+
+
+        # scp -o StrictHostKeyChecking=no -i private_key.pem -r dist $USER@$HOST:/var/www/dev/
+        # ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "sudo systemctl restart nginx"
