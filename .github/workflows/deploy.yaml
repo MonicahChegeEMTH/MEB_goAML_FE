@@ -23,6 +23,7 @@ jobs:
         curl -fsSL https://get.docker.com -o get-docker.sh
         sh get-docker.sh
         sudo usermod -aG docker $USER
+        echo "Docker Version :: "
         docker --version
 
     - name: Building Docker Image
@@ -61,10 +62,10 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
         set -e
         set -x
-        docker load < /var/www/dev/bahati-image.tar.gz
-        docker stop bahati-fe-container || true
-        docker rm bahati-fe-container || true
-        docker run --name bahati-fe-container -d -p 4000:80 bahati-fe
+        sudo docker load < /var/www/dev/bahati-image.tar.gz
+        sudo docker stop bahati-fe-container || true
+        sudo docker rm bahati-fe-container || true
+        sudo docker run --name bahati-fe-container -d -p 4000:80 bahati-fe
         sudo systemctl restart nginx
         EOF
         rm private_key.pem
