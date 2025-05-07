@@ -55,7 +55,7 @@ jobs:
         sudo docker load < /var/www/dev/bahati-image.tar.gz
         sudo docker stop bahati-fe-container || true
         sudo docker rm bahati-fe-container || true
-        sudo docker run --name bahati-fe-container -d -p 4000:80 bahati-fe
+        sudo docker run --name bahati-fe-container -d bahati-fe
         sudo systemctl restart nginx
         EOF
         rm private_key.pem
