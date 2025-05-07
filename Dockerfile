@@ -25,8 +25,13 @@ FROM nginx:stable-alpine
 # Copy project files.
 COPY --from=0 /app/dist /usr/share/nginx/html
 
-#Copy Custom Nginx ConfigurTION.
+#Copy Custom Nginx Configuration.
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy security keys into the final container
+COPY certs/private.key /etc/nginx/ssl/private.key
+COPY certs/certificate.crt /etc/nginx/ssl/certificate.crt
+COPY certs/ca_bundle.crt /etc/nginx/ssl/ca_bundle.crt
 
 # Expose the default Nginx port
 EXPOSE 443
