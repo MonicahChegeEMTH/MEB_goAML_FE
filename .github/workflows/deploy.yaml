@@ -19,8 +19,8 @@ jobs:
 
     - name: Setting Up Docker
       run: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
+        sudo apt update
+        sudo apt install -y docker.io
         docker --version
 
     - name: Building Docker Image
@@ -57,12 +57,15 @@ jobs:
         USER: ${{ secrets.DAIRY_USER }}
       run: |
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
+        set -e
+        set -x
         docker load < /var/www/dev/bahati-image.tar.gz
         docker stop bahati-fe-container || true
         docker rm bahati-fe-container || true
         docker run --name bahati-fe-container -d -p 4000:80 bahati-fe
         sudo systemctl restart nginx
         EOF
+        rm private_key.pem
 
 
         # scp -o StrictHostKeyChecking=no -i private_key.pem -r dist $USER@$HOST:/var/www/dev/
