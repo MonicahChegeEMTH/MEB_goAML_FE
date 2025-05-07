@@ -4,6 +4,11 @@ FROM node:23-slim
 # Set working directory in the container
 WORKDIR /app
 
+# Copy security keys.
+COPY certs/private.key /etc/nginx/ssl/private.key
+COPY certs/certificate.crt /etc/nginx/ssl/certificate.crt
+COPY certs/ca_bundle.crt /etc/nginx/ssl/ca_bundle.crt
+
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
 RUN npm i --force
@@ -24,6 +29,6 @@ COPY --from=0 /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose the default Nginx port
-EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
