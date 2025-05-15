@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,6 +12,8 @@ import { SalesService } from '../../services/sales.service';
 import { AddAllocationComponent } from '../add-allocation/add-allocation.component';
 import { VerifyAccountComponent } from 'src/app/admin/users/pages/verify-account/verify-account.component';
 import { VerifyproductAllocationsComponent } from '../../verifyproduct-allocations/verifyproduct-allocations.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-products-allocation',
@@ -28,9 +30,10 @@ export class ProductsAllocationComponent implements OnInit {
     "quantity",
     "amount",
     "requestedOn",
+    "approvalDate",
     "type",
     "status",
-    "Actions",
+    // "Actions",
   ];
   displayedColumns1: string[] = [
     "id",
@@ -58,16 +61,31 @@ export class ProductsAllocationComponent implements OnInit {
   error: any;
   isLoading: boolean = true;
   currentUser: any;
+  filtering: boolean = false
+  selected: string = ''
+  filterForm: FormGroup
+  from: any
+  to: any
 
   constructor(
     public dialog: MatDialog,
     private router: Router,
     private snackbar: SnackbarService,
     private service: SalesService,
+    private fb: FormBuilder,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
     // this.getGoods("Good");
+    this.from = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.to = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+
+    this.fb.group({
+      from: [this.from, [Validators.required]],
+      to: [this.to, [Validators.required]],
+      selected: ['',]
+    })
     this.getSales();
     this.getallcataionPerType("Service");
   }
@@ -76,7 +94,15 @@ export class ProductsAllocationComponent implements OnInit {
     this.getSales()
   }
 
-  
+  filterData() {
+    this.filtering = !this.filtering
+
+    console.log("the filtering value is ", this.filtering)
+  }
+
+  fetch() {}
+
+
   getGoods(type) {
     this.service.getSalesPerType(type).subscribe(
       (res) => {
@@ -105,7 +131,7 @@ export class ProductsAllocationComponent implements OnInit {
     this.service.getSales().subscribe(
       (res) => {
         this.goods = res.entity;
-        console.log("Goods"+ res.entity)
+        console.log("Goods")
         if (this.goods != null) {
           this.isLoading = false;
           this.dataSource = new MatTableDataSource<any>(this.goods);

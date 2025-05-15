@@ -262,17 +262,17 @@
                                         </ng-container>
                                         <ng-container matColumnDef="farmer">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-11">Farmer</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-12">Farmer</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-11">
+                                                [class.even-row]="!(i % 2)" class="column-wrap tbl-col-width-per-12">
                                                 {{response.farmer}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="quantity">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-9">Qty (kgs)</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-6">Qty (kgs)</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-9">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-6">
                                                 {{response.quantity | number :'1.2-2'}}
                                             </mat-cell>
                                         </ng-container>

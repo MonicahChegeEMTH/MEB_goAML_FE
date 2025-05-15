@@ -57,7 +57,8 @@ export class MainComponent implements OnInit {
       }
     )
 
-    this.getAllColectionsSummary();
+    this.getDateSummary(this.currentDate)
+    // this.getAllColectionsSummary();
     this.getAllFarmers();
     this.smallChart2()
   }
@@ -69,12 +70,10 @@ export class MainComponent implements OnInit {
       this.isloading = false
       console.log("All collections Summary"+ res.entity[0])
       this.loaded = true
-      // this.quantity = this.data.entity[0].quantity;
+      this.quantity = this.data.entity[0].quantity;
       this.amount = res.entity[0].amount;
-      // this.count = this.data.entity[0].count
+      this.count = this.data.entity[0].count
     });
-
-
   }
 
   getAllFarmers() {
@@ -93,8 +92,7 @@ export class MainComponent implements OnInit {
 
   getTodaysData() {
     this.isloading = true;
-     this.getDateSummary(this.currentDate)
-      this.subscription = this.saleService.getTodaysCollections(this.currentDate).subscribe(res => {
+      this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
         this.todaysData = this.data.entity
@@ -114,15 +112,13 @@ export class MainComponent implements OnInit {
     this.isloading = true
     // this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
     console.log("Formated date is ", date)
-    this.subscription = this.dashboard.getDateCollections(date).subscribe(res => {
-      this.data = res;
-      if (this.data) {
+    this.service.getDateCollections(date).subscribe(res => {
+      if (res) {
         this.isloading = false
-        console.log(this.data)
         this.isloading = true;
-        this.quantity = this.data.entity[0].quantity;
-        this.amount = this.data.entity[0].amount;
-        this.count = this.data.entity[0].count
+        this.quantity = res.entity[0].quantity;
+        this.amount = res.entity[0].amount;
+        this.count = res.entity[0].count
       }
     });
 
