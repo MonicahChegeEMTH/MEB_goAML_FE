@@ -72,7 +72,7 @@ export class ReportsService {
       map((response) => {
         console.log("response data", response)
         // if (condition) {
-          
+
         // }
         return {
           filename: "allocations",
@@ -81,7 +81,7 @@ export class ReportsService {
       })
     );
   }
-  
+
   generatefarmerStatement(farmerNo: any, from: any, to: any): Observable<any> {
     console.log("Calling api  ....")
     let headers = new HttpHeaders();
@@ -135,11 +135,11 @@ export class ReportsService {
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });
   }
-  collectionsPerMCCandDateExcel(pid:any,date: string): Observable<any> {
+  collectionsPerMCCandDateExcel(lid:any,from: string, to): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Accept", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/collections/pickuplocation?pid=`+pid+`&date=` + date;
+    let API_URL = `${environment.apiUrl}/api/v1/excel/reports/location/date-range?lid=${lid}&from=${from}&to=${to}`;
     console.log("Calling api " + API_URL)
 
     return this.http.get(API_URL, { headers, responseType: 'blob' });

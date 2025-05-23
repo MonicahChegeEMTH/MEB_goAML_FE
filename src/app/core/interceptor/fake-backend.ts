@@ -22,6 +22,7 @@ const users: User[] = [
     lastName: "Smith",
     role: Role.Admin,
     token: "admin-token",
+        refreshToken: "refresh-token"
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ const users: User[] = [
     lastName: "Cox",
     role: Role.Staff,
     token: "employee-token",
+    refreshToken: "refresh-token"
   },
   {
     id: 3,
@@ -42,6 +44,7 @@ const users: User[] = [
     lastName: "Stevens",
     role: Role.Collector,
     token: "client-token",
+        refreshToken: "refresh-token"
   },
 ];
 
