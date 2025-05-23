@@ -398,7 +398,8 @@
                                                                                 </button>
                                                                             </div>
                                                                         </li>
-                                                                        <li>
+                                                                        <!-- Delete Not Required Currently -->
+                                                                        <!-- <li>
                                                                             <div class="m-l-10"
                                                                                 [hidden]="!selection.hasValue()"
                                                                                 matTooltip="DELETE">
@@ -407,7 +408,7 @@
                                                                                         class="col-white">check_circle</mat-icon>
                                                                                 </button>
                                                                             </div>
-                                                                        </li>
+                                                                        </li> -->
                                                                     </ul>
                                                                 </form>
                                                             </div>
@@ -497,7 +498,7 @@
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                                         class="column-nowrap">
-                                                        {{response.amount | currency:'KES':'symbol':'4.2-2'}}
+                                                        {{response.amount | currency:'KES ':'symbol':'4.2-2'}}
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -511,6 +512,14 @@
                                                         {{response.collector}}
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="session">
+                                                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                      class="column-nowrap">Session</mat-header-cell>
+                                                  <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                      [class.even-row]="!(i % 2)" class="column-nowrap">
+                                                      {{response.session === "Session 1" ? "Morning" : (response.session === "Session 2" ? "Afternoon" : "Evening")}}
+                                                  </mat-cell>
+                                              </ng-container>
                                                 <ng-container matColumnDef="pickUpLocation">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                                         class="column-nowrap">PickUp
@@ -531,7 +540,7 @@
                                                         {{response.date | date:'medium'}}
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="paymentStatus">
+                                                <ng-container matColumnDef="paid">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                                         class="column-nowrap">Payment
                                                         Status
@@ -539,9 +548,9 @@
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                                         class="column-nowrap">
-                                                        <span *ngIf="response.paymentStatus == 'N'"
+                                                        <span *ngIf="response.paid == 'N'"
                                                             class="badge badge-pill badge-primary col-red"><b>No</b></span>
-                                                        <span *ngIf="response.paymentStatus == 'Y'"
+                                                        <span *ngIf="response.paid == 'Y'"
                                                             class="badge badge-pill badge-primary col-green"><b>Yes</b></span>
                                                     </mat-cell>
                                                 </ng-container>

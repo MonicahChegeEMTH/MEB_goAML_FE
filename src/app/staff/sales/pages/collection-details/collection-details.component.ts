@@ -27,9 +27,10 @@ export class CollectionDetailsComponent implements OnInit {
     'quantity',
     'amount',
     'collector',
+    'session',
     // 'pickUpLocation',
     'collection_date',
-    'paymentStatus',
+    'paid',
   ];
 
   subscription!: Subscription;
@@ -101,7 +102,7 @@ export class CollectionDetailsComponent implements OnInit {
       from: ['', [Validators.required]],
       to: ['', [Validators.required]]
     })
-    
+
     this.route.params.subscribe((params: Params) => {
       this.farmerNo = params['fno'];
       // Use the id parameter in your component logic
@@ -154,7 +155,7 @@ export class CollectionDetailsComponent implements OnInit {
         this.isdata = true;
         this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
 
-      
+
         // Binding with the datasource
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
@@ -174,13 +175,13 @@ export class CollectionDetailsComponent implements OnInit {
       const to = this.datePipe.transform(this.form.value.to, "yyyy-MM-dd")
       this.service.filterCollections(this.farmerNo, from, to).subscribe((res) => {
         this.data = res;
-  
+
         if (this.data.entity.length > 0) {
           this.isLoading = false;
           this.isdata = true;
           this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
-  
-        
+
+
           // Binding with the datasource
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
@@ -206,7 +207,7 @@ export class CollectionDetailsComponent implements OnInit {
         this.allocationsArray.forEach(allocation => {
           this.amountOnAllocatedItems = this.amountOnAllocatedItems + allocation.amount;
         })
-     
+
         this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
         this.allocationsDataSource.paginator = this.allocationsPaginator;
       } else {
@@ -284,7 +285,7 @@ export class CollectionDetailsComponent implements OnInit {
           // if (this.accruals != null) {
           //   this.found = true;
           // }
-        });    
+        });
   }
 
   getNonPayedFarmerAccruals(id){
@@ -295,8 +296,8 @@ export class CollectionDetailsComponent implements OnInit {
       }else {
         this.notPayedAccruals = 0;
       }
-      
-    });  
+
+    });
   }
 
   getFarmerAmountOnPayedCollections(id){
@@ -307,8 +308,8 @@ export class CollectionDetailsComponent implements OnInit {
       }else {
         this.amountPayedOnCollections = 0;
       }
-      
-    });  
+
+    });
   }
 
 
@@ -320,8 +321,8 @@ export class CollectionDetailsComponent implements OnInit {
       }else {
         this.amountNotPayedOnCollections = 0;
       }
-      
-    });  
+
+    });
   }
 
 
