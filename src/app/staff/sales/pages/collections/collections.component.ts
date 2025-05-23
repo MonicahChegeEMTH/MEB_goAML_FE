@@ -305,7 +305,7 @@ export class CollectionsComponent implements OnInit {
   }
 
   viewFarmerCollections(row) {
-    this.router.navigate(['/staff/sales/farmer', row.farmerId]);
+    this.router.navigate(['/staff/sales/farmer', row.farmer_no]);
   }
   getDateSummary(date) {
     this.isLoading = true
