@@ -63,7 +63,7 @@ const routes: Routes = [
   { path: "**", component: Page404Component },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: "legacy" , useHash: false})],
+  imports: [RouterModule.forRoot(routes, { useHash: false, relativeLinkResolution: "legacy"})],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }

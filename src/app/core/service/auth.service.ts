@@ -1,13 +1,15 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, map, Observable, of } from "rxjs";
 import { User } from "../models/user";
 import { environment } from "src/environments/environment";
 import { Router } from "@angular/router";
+import { TokenStorageService } from "./token-storage.service";
 
 const PASSWORD_RESET_API = `${environment.apiUrl}/api/v1/reset/`;
 const USERS_API = `${environment.apiUrl}/admin/api/v1/users/`;
 const AUTH_API = `${environment.apiUrl}/api/v1/auth/`;
+const REFRESH_TOKEN_API = `${environment.apiUrl}/api/v1/authentication/refresh-token?token=`
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,13 +19,12 @@ const httpOptions = {
   providedIn: "root",
 })
 export class AuthService {
-
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser') || '{}'));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -31,6 +32,11 @@ export class AuthService {
   login(user): Observable<any> {
     const authUrl = `${environment.apiUrl}/api/v1/authentication/login`
     return this.http.post<any>(authUrl, user);
+  }
+
+  refreshToken(): Observable<any> {
+    const refreshToken = this.tokenStorage.getRefreshToken()
+    return this.http.post(REFRESH_TOKEN_API+refreshToken, {})
   }
 
   resetPasswordRequest(email: any): Observable<any> {
@@ -97,9 +103,12 @@ export class AuthService {
     return this.http.put(USERS_API + `unlockaccount?username=${data}`, httpOptions);
   }
 
-  signout(id: any) {
+  signout() {
+    // remove user from local storage to log user out
+    window.localStorage.clear();
     sessionStorage.clear();
-    return this.http.put(AUTH_API + `logout/${id}`, httpOptions);
+    let token = this.tokenStorage.getRefreshToken()
+    return this.http.post(AUTH_API + `logout?token=${token}`, httpOptions);
   }
 
   getToken() {
@@ -173,10 +182,22 @@ export class AuthService {
     return this.http.put<{ message: string }>(updateUserUrl, user);
   }
 
-  logout() {
-    // remove user from local storage to log user out
-    window.localStorage.clear();
-    this.router.navigate(['/authentication/signin'])
+  refreshAuth(){
+    this.refreshToken().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == 200) {
+            return;
+        } else {
+              this.router.navigate(['/authentication/signin'])
+              this.signout()
+        }
+      },
+      error: (error) => {
+        console.log("Error from server: ",error)
+        this.signout()
+      },
+      complete: () => {}
+    })
   }
 
 
