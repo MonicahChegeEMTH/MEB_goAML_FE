@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { ErrorHandler, Injectable, NgModule } from "@angular/core";
 
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
@@ -34,6 +34,20 @@ import {
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
 import { FooterComponent } from "./layout/footer/footer.component";
 import { NgApexchartsModule } from "ng-apexcharts";
+
+@Injectable()
+export class GlobalErrorHandler implements ErrorHandler {
+  handleError(error: any): void {
+    const chunkFailedMessage = /Loading chunk [\d]+ failed/;
+
+    if (chunkFailedMessage.test(error.message)) {
+      console.warn('Chunk load failed. Reloading the app.');
+      window.location.reload(); // Force a reload
+    } else {
+      throw error;
+    }
+  }
+}
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -73,9 +87,9 @@ export function createTranslateLoader(http: HttpClient): any {
     LoadingBarRouterModule,
     // core & shared
     CoreModule,
-    SharedModule, 
-    
-  
+    SharedModule,
+
+
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
