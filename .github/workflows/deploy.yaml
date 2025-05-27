@@ -4,13 +4,16 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - closed  # Runs when a pull request is merged  or closed.
 
   push:
     branches:
-      - main  # Deploy only when changes hit my branch
+      - main  # Deploy only when changes hit main branch
 
 jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:

@@ -45,7 +45,7 @@ const YEARS = [
 export class MainComponent implements OnInit {
   reportCollectionForm: FormGroup;
   farmerstatementForm: FormGroup
-  collectionPerpLocationsForm: FormGroup
+  collectionsPerLocationsForm: FormGroup
   reportCollectionForm2: FormGroup
   reportCollectionForm3: FormGroup
   reportCollectionFormp:FormGroup
@@ -128,12 +128,12 @@ export class MainComponent implements OnInit {
       to: ["", [Validators.required]],
     });
 
-    this.collectionPerpLocationsForm = this.fb.group({
+    this.collectionsPerLocationsForm = this.fb.group({
+      to: ["", [Validators.required]],
       date: ["", [Validators.required]],
       format: ["excel", [Validators.required]],
       pul: ["", [Validators.required]],
       locationId: ["", [Validators.required]],
-
     })
 
 
@@ -201,7 +201,7 @@ export class MainComponent implements OnInit {
       this.service.collectionsPerDateExcel(this.date).subscribe(
         (response: Blob) => {
           this.isloading = false
-          
+
           this.snackbar.showNotification(
             "snackbar-success",
             "Report generated successfully"
@@ -279,7 +279,7 @@ export class MainComponent implements OnInit {
         next: (res: Blob) => {
           this.isloading = false;
 
-          
+
           this.snackbar.showNotification(
             "snackbar-success",
             "Report generated successfully"
@@ -351,7 +351,7 @@ export class MainComponent implements OnInit {
       next: (res: Blob) => {
         this.isloading = false;
 
-        
+
         this.snackbar.showNotification(
           "snackbar-success",
           "Report generated successfully"
@@ -383,10 +383,10 @@ export class MainComponent implements OnInit {
       next: (response: any) => {
             console.log(response)
             let url = window.URL.createObjectURL(response.data);
-  
+
             // if you want to open PDF in new tab
             window.open(url);
-  
+
             let a = document.createElement("a");
             document.body.appendChild(a);
             a.setAttribute("style", "display: none");
@@ -396,11 +396,11 @@ export class MainComponent implements OnInit {
             a.click();
             window.URL.revokeObjectURL(url);
             a.remove();
-  
+
             this.isloading = false;
-  
-  
-  
+
+
+
             this.snackbar.showNotification(
               "snackbar-success",
               "Report generated successfully"
@@ -420,8 +420,8 @@ export class MainComponent implements OnInit {
   }
   generateCollectionsPerLocationsm() {
     // console.log(this.reportCollectionForm.value)
-    
-    
+
+
     this.isloading = true
     this.service.collectionsPerLocationrByMonth(this.reportCollectionFormm.value.month, this.reportCollectionFormm.value.year)
       .subscribe(
@@ -476,7 +476,7 @@ export class MainComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       this.dialogData = result;
 
-      this.collectionPerpLocationsForm.patchValue({
+      this.collectionsPerLocationsForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
@@ -500,7 +500,7 @@ export class MainComponent implements OnInit {
         centerId: this.dialogData.data.id
       })
 
-      this.collectionPerpLocationsForm.patchValue({
+      this.collectionsPerLocationsForm.patchValue({
         pul: this.dialogData.data.name,
         locationId: this.dialogData.data.id
       });
@@ -536,7 +536,7 @@ export class MainComponent implements OnInit {
     });
   }
 
-  
+
   generatePaymentFile() {
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.pul)
     console.log("Paymentfile Form Data"+ this.paymentFileForm.value.locationId)
@@ -666,11 +666,12 @@ export class MainComponent implements OnInit {
   }
   generateCollectionsPerPickUpLocations() {
     this.isloading = true
-   let format=this.collectionPerpLocationsForm.value.format
-    this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');
-    console.log("Formated date " + this.date)
+   let format=this.collectionsPerLocationsForm.value.format
+    const fromDate = this.datePipe.transform(this.collectionsPerLocationsForm.value.date, 'yyyy-MM-dd');
+    const toDate = this.datePipe.transform(this.collectionsPerLocationsForm.value.to, "yyyy-MM-dd")
+
     if(format=="pdf"){
-    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId, this.date)
+    this.service.collectionsPerPulByDate(this.collectionsPerLocationsForm.value.locationId, this.date)
       .subscribe(
         (response) => {
           console.log(response)
@@ -691,8 +692,6 @@ export class MainComponent implements OnInit {
 
           this.isloading = false;
 
-
-
           this.snackbar.showNotification(
             "snackbar-success",
             "Report generated successfully",
@@ -711,12 +710,13 @@ export class MainComponent implements OnInit {
       }else if (format == "excel") {
         console.log("File format picked = " + format)
         console.log("Formated Date = " + this.date)
-        this.service.collectionsPerMCCandDateExcel(this.collectionPerpLocationsForm.value.locationId,this.date).subscribe(
+        this.service.collectionsPerMCCandDateExcel(this.collectionsPerLocationsForm.value.locationId,fromDate, toDate).subscribe(
           (response: Blob) => {
             this.isloading = false
-            const filename = 'collections_per_date.xlsx'; // Specify the desired filename with the appropriate extension
+            const centerName = this.collectionsPerLocationsForm.value.pul
+            const filename = centerName+'-Deliveries-'+fromDate+'to'+toDate+'.xlsx'; // Specify the desired filename with the appropriate extension
             saveAs(response, filename);
-            
+
           this.snackbar.showNotification(
             "snackbar-success",
             "Report generated successfully",
@@ -737,10 +737,10 @@ export class MainComponent implements OnInit {
 
   generateTotalCollectionsPerPickUpLocations() {
     this.isloading = true
-    console.log(this.collectionPerpLocationsForm.value)
-    this.date = this.datePipe.transform(this.collectionPerpLocationsForm.value.date, 'yyyy-MM-dd');
+    console.log(this.collectionsPerLocationsForm.value)
+    this.date = this.datePipe.transform(this.collectionsPerLocationsForm.value.date, 'yyyy-MM-dd');
     console.log("Formated date " + this.date)
-    this.service.collectionsPerPulByDate(this.collectionPerpLocationsForm.value.locationId, this.date)
+    this.service.collectionsPerPulByDate(this.collectionsPerLocationsForm.value.locationId, this.date)
       .subscribe(
         (response) => {
           console.log(response)
