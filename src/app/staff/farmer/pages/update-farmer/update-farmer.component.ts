@@ -26,7 +26,7 @@ export class UpdateFarmerComponent implements OnInit {
   wards: any;
   counties: any;
   routes: any;
-  banks: any = { "count": 45, 
+  banks: any = { "count": 45,
     "list": [
       {
         name: 'MPESA',
@@ -120,6 +120,13 @@ export class UpdateFarmerComponent implements OnInit {
         id: 650,
       },
       {
+        name: 'SMEP Bank',
+        code: '21',
+        payPointType: 'BANK',
+        status: 'ACTIVE',
+        id: 637
+      },
+      {
         name: 'NATIONAL BANK OF KENYA',
         code: '12',
         payPointType: 'BANK',
@@ -185,7 +192,7 @@ export class UpdateFarmerComponent implements OnInit {
       this.getWards(this.farmer.subcounty_fk)
 
       this.bankDetailsForm = this.fb.group({
-        
+
         branch: [this.farmer.bankDetails?.branch ?? "NAN", [Validators.required]],
         bankName: [this.farmer.bankDetails?.bankName ?? "NAN", [Validators.required]],
         accountNumber: [this.farmer.bankDetails?.accountNumber ?? "NAN", [Validators.required]],
@@ -292,6 +299,6 @@ export class UpdateFarmerComponent implements OnInit {
       }
     })
   }
-  
+
 }
 

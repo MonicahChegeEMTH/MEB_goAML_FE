@@ -91,6 +91,13 @@ export class RegisterFarmerComponent implements OnInit {
         id: 618,
       },
       {
+        name: 'SMEP Bank',
+        code: '21',
+        payPointType: 'BANK',
+        status: 'ACTIVE',
+        id: 637
+      },
+      {
         name: 'DIAMOND TRUST BANK',
         code: '63',
         payPointType: 'BANK',
@@ -171,7 +178,7 @@ export class RegisterFarmerComponent implements OnInit {
     private countiesService: CountiesService,
     private routesService: PickupService,
     private service: FarmerService,
-    
+
     private routeService: RoutesService
   ) {}
   subscription!: Subscription;
@@ -180,10 +187,10 @@ export class RegisterFarmerComponent implements OnInit {
     this.getSubcounties();
     this.getCounties();
     this.getRoutes();
-    
+
 
     this.bankDetailsForm = this.fb.group({
-     
+
       branch: ['', [Validators.required]],
       bankName: ['', [Validators.required]],
       accountNumber: ['', [Validators.required]],
@@ -210,7 +217,7 @@ export class RegisterFarmerComponent implements OnInit {
       village: [''],
       paymentFreequency: ['',[Validators.required]],
       gender: [''],
-      routeFk: [''], 
+      routeFk: [''],
     });
   }
 
@@ -248,11 +255,11 @@ export class RegisterFarmerComponent implements OnInit {
   getSubcounties() {
     this.isLoading = true;
 
-    
+
     this.subscription = this.service.getSubCounties().subscribe(res => {
-      
+
       console.log(res)
-    
+
       if (res.entity.length > 0) {
         this.subcounties = res.entity;
       } else {
