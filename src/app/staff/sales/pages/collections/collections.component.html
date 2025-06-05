@@ -254,33 +254,33 @@
                                         </ng-container>
                                         <ng-container matColumnDef="farmer_no">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-wrap tbl-col-width-per-8">Farmer No.</mat-header-cell>
+                                                class="column-wrap tbl-col-width-per-12">Farmer No.</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nonwrap tbl-col-width-per-8">
+                                                [class.even-row]="!(i % 2)" class="column-nonwrap tbl-col-width-per-12">
                                                 {{response.farmer_no}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="farmer">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-12">Farmer</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-10">Farmer</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-wrap tbl-col-width-per-12">
+                                                [class.even-row]="!(i % 2)" class="column-wrap tbl-col-width-per-10">
                                                 {{response.farmer}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="quantity">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-6">Qty (kgs)</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-10">Qty (kgs)</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-6">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
                                                 {{response.quantity | number :'1.2-2'}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="session">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-8">Session</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-10">Session</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-8">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
                                                 {{response.session === "Session 1" ? "Morning" : (response.session === "Session 2" ? "Afternoon" : "Evening")}}
                                             </mat-cell>
                                         </ng-container>
@@ -295,18 +295,18 @@
                                         </ng-container>
                                         <ng-container matColumnDef="route">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-18">Route</mat-header-cell>
+                                                class="column-nowrap tbl-col-width-per-10">Route</mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-18">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
                                                 {{response.route}}
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="pickUpLocation">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                class="column-nowrap tbl-col-width-per-15">MCC
+                                                class="column-nowrap tbl-col-width-per-10">MCC
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
                                                 {{response.pickUpLocation }}
                                             </mat-cell>
                                         </ng-container>

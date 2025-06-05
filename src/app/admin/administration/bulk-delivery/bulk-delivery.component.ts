@@ -178,7 +178,7 @@ export class BulkDeliveryComponent implements OnInit {
         console.log("data lenght", this.data.length)
         console.log("data at row one", this.data[0])
         filteredData = this.data.filter(item => item.reason === "Success");
-      } else {
+      } else {   
         filteredData = this.data.filter(item => item.reason != "Success");
       }
 

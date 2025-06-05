@@ -37,8 +37,8 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
   }
   ngOnInit() {
     this.authForm = this.formBuilder.group({
-      email: [""],
-      mobile: [""],
+    email: ["", [Validators.email]],
+      mobile: ["", [Validators.pattern('^[0-9]{10}$')]],
       username: [""],
     });
     
@@ -101,7 +101,7 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
       }
     }else if(this.mobileSelected){
       if(this.authForm.value.mobile == '' || this.authForm.value.mobile == null || this.authForm.value.mobile == undefined){
-        this.snackbar.showNotification("snackbar-danger", "Please provide a valid email !")
+        this.snackbar.showNotification("snackbar-danger", "Please provide a valid mobile number !")
       }else {
         this.submitted = true;
         this.loading = true;
