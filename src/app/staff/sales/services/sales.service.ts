@@ -28,11 +28,11 @@ export class SalesService {
   getCollectionsPerPickUpLocation(id:any, from: any, to: any) {
     return this.http.get(`${environment.apiUrl}/api/v1/collections/pickupLocations?pickUpLocation=`+id+`&from=${from}&to=${to}`, httpOptions);
   }
-  getCollectionsByFarmerNo(id:any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerId=` +id,httpOptions);
+  getCollectionsByFarmerNo(id: any, from: any, to: any): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/per/farmer?farmerNo=`+id+`&startDate=${from}&endDate=${to}`,httpOptions);
   }
-  getCollectionsPerPRoute(id:any) {
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/route?routeId=`+id, httpOptions);
+  getCollectionsPerPRoute(id:any, from: any, to: any) {
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/route/filter?routeId=`+id+`&startDate=${from}&endDate=${to}`, httpOptions);
   }
 
 

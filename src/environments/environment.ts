@@ -6,8 +6,11 @@ export const environment = {
   production: false,
 //   apiUrl: "https://dairy.emtechhouse.co.ke:8800",
 //     API: "https://dairy.emtechhouse.co.ke:8800",
-apiUrl: "http://172.16.9.84:9600",
-   API: "http://172.16.9.84:9600",
+// apiUrl: "http://172.16.9.84:9600",
+//    API: "http://172.16.9.84:9600",
+
+apiUrl: "http://172.16.9.198:8082",
+API: "http://172.16.9.198:8082"
 };
 
 /*

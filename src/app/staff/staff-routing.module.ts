@@ -67,6 +67,12 @@ const routes: Routes = [
         (m) => m.InventoryModule
       ),
   },
+{
+    path: "payment-management",
+    loadChildren: () =>
+      import("./payment-management/payment-management.module").then((m) => m.PaymentManagementModule)
+  },
+
 ];
 
 @NgModule({

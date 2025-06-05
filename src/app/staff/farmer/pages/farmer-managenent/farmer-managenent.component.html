@@ -1,246 +1,140 @@
 <section class="content">
-    <div class="content-block">
-        <div class="block-header">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'All farmers / Milk Suppliers'" [items]="['Farmers']"
-                [active_item]="'All Farmers'">
-            </app-breadcrumb>
-        </div>
-
-        <div class="row">
-            <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="body">
-                        <div class="table-responsive">
-                            <div class="materialTableHeader">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <ul class="header-buttons-left ms-0">
-                                            <!-- <li class="dropdown">
-                                                <h2>Farmers</h2>
-                                            </li> -->
-                                            <li class="dropdown m-l-20">
-                                                <label for="search-input"><i
-                                                        class="material-icons search-icon">search</i></label>
-                                                <input placeholder="Search" type="text"
-                                                    style="text-transform: capitalize;" (keyup)="applyFilter($event)"
-                                                    class="browser-default search-field" aria-label="Search box" />
-                                            </li>
-                                            <li>
-                                                <div class="m-l-10" matTooltip="Add">
-                                                    <button mat-mini-fab color="primary" (click)="addCall()">
-                                                        <mat-icon class="col-white">add</mat-icon>
-                                                    </button>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="m-l-10" matTooltip="Refresh">
-                                                    <button mat-mini-fab color="primary" (click)="getData()">
-                                                        <mat-icon class="col-white">refresh</mat-icon>
-                                                    </button>
-                                                </div>
-                                            </li>
-                                            <li class="dropdown m-l-5">
-                                                <mat-form-field>
-                                                    <mat-label>Filter By </mat-label>
-                                                    <mat-select [(value)]="selected">
-                                                        <mat-option value="fn"><b>Farmer Number</b></mat-option>
-                                                        <!-- <mat-option value="idno"><b>Id Number</b></mat-option>
-                                                        <mat-option value="mcc"><b>Collection Center</b></mat-option>
-                                                        <mat-option value="status"><b>Status</b></mat-option>
-                                                        <mat-option value="activity"><b>Activity</b></mat-option> -->
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </li>
-                                            <li class="dropdown">
-                                                <form [formGroup]="filterform">
-                                                    <mat-form-field class="m-l-3" *ngIf="selected == 'fn'">
-                                                        <input matInput (dateChange)="filterFarmers()"
-                                                            placeholder="Enter Farmer Number"
-                                                            formControlName="farmer_no">
-                                                        <mat-icon matSuffix (click)="getFarmerByFarmerNo()">search
-                                                        </mat-icon>
-                                                    </mat-form-field>
-
-                                                    <mat-form-field class="m-l-3" *ngIf="selected == 'idno'">
-                                                        <input matInput (dateChange)="filterFarmers()" placeholder="id number" formControlName="id_number">
-                                                        <mat-icon matSuffix (click)="getFarmerByIdNumber()">search</mat-icon>
-                                                    </mat-form-field>
-
-                                                    <mat-form class="m-l-3" *ngIf="selected == 'mcc'">
-                                                        <input matInput (dateChange)="filterFarmers()" formControlName="mcc" placeholder="collection center">
-                                                        <mat-icon matSuffix (click)="getFarmersByMcc()">search</mat-icon>
-                                                    </mat-form>
-
-
-
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-2">
-                                        <ul class="header-buttons">
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="XLSX">
-                                                    <img src="assets/images/icons/xlsx.png" alt="" (click)="
-                                exporter.exportTable('xlsx', {
-                                  fileName: 'all-counties',
-                                  sheet: 'sheet1'
-                                })
-                              " />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                        (click)="exporter.exportTable('csv')" />
-                                                </div>
-                                            </li>
-                                            <!-- <li>
-                                                <div class="export-button m-l-10" matTooltip="JSON">
-                                                    <img src="assets/images/icons/json.png" alt=""
-                                                        (click)="exporter.exportTable('json')" />
-                                                </div>
-                                            </li> -->
-                                            <!-- <li>
-                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                        (click)="exporter.exportTable('txt')" />
-                                                </div>
-                                            </li> -->
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
-                                #exporter="matTableExporter">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox class="form-check-input" (change)="$event ? masterToggle() : null"
-                                            [checked]="selection.hasValue() && isAllSelected()"
-                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                            [ngClass]="'tbl-checkbox'">
-                                        </mat-checkbox>
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox class="form-check-input" (click)="$event.stopPropagation()"
-                                            (change)="$event ? selection.toggle(row) : null"
-                                            [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
-                                        </mat-checkbox>
-                                    </mat-cell>
-                                </ng-container>
-                                <!-- ID Column -->
-                                <!-- <ng-container matColumnDef="id">
-                                    <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
-                                        mat-sort-header>#</mat-header-cell>
-                                    <mat-cell class="table-img tbl-col-width-per-8"
-                                        *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
-                                </ng-container> -->
-                                <ng-container matColumnDef="farmer_no">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-8">Farmer No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="table-img tbl-col-width-per-8">
-                                        {{farmer.farmer_no}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="username">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
-                                        Name</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.username}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="mobile_no">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">Phone.</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.mobile_no}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="ID No.">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">ID
-                                        No.</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.id_number}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="route">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">Route</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.route }}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="pickUpLocation">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">PickUp
-                                        Location</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{farmer.pickUpLocation }}
-                                    </mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let farmer;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, farmer)">
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="editCall(farmer)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Edit farmer"
-                                                [icon]="'edit'"></app-feather-icons>
-                                        </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteCall(farmer)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Delete farmer" [icon]="'trash-2'"
-                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="viewFarmerDetails(farmer)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="View Farmer Details" [icon]="'eye'"
-                                                [class]="'tbl-fav-eye'"></app-feather-icons>
-                                        </button>
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="viewFarmerCollections(farmer)" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="View Delivery Statements" [icon]="'book'"
-                                                [class]="'tbl-fav-eye'"></app-feather-icons>
-                                        </button>
-                                    </mat-cell>
-                                </ng-container>
-
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                                <mat-row *matRowDef="let row; columns: displayedColumns"
-                                    (click)="farmerDetailsCall(farmer)" [style.cursor]="'pointer'" matRipple>
-                                </mat-row>
-                                <mat-cell *matNoDataRow colspan="4">
-                                    No data matching the filter "{{ input.value }}"</mat-cell>
-                            </mat-table>
-
-                            <!-- Loading spinner -->
-                            <div *ngIf="isLoading" class="tbl-spinner">
-                                <mat-progress-spinner color="primary" [diameter]="50" mode="indeterminate">
-                                </mat-progress-spinner>
-                            </div>
-
-                            <div class="tbl-spinner" *ngIf="isdata==false && !isLoading">
-                                <h4>0 Records Found</h4>
-                            </div>
-
-                            <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
-                                [pageSizeOptions]="[5, 10, 25, 100]">
-                            </mat-paginator>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'All farmers / Milk Suppliers'" [items]="['Farmers']" [active_item]="'All Farmers'"></app-breadcrumb>
     </div>
+
+    <div class="row">
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <!-- Search Bar - Top Left -->
+            <div class="search-box mb-3">
+              <input id="search" placeholder="Search" type="text" (keyup)="applyFilter($event)" aria-label="Search box">
+              <button class="icon"><mat-icon>search</mat-icon></button>
+            </div>
+
+            <!-- Action Buttons and Filters Row -->
+            <div class="d-flex align-items-center mb-3">
+              <!-- Add Button -->
+              <button mat-mini-fab color="primary" (click)="addCall()" aria-label="Add Farmer" matTooltip="Add" style="margin-right: 8px;">
+                <mat-icon class="col-white">add</mat-icon>
+              </button>
+
+              <!-- Refresh Button -->
+              <button mat-mini-fab color="primary" (click)="getData()" aria-label="Refresh Data" matTooltip="Refresh" style="margin-right: 12px;">
+                <mat-icon class="col-white">refresh</mat-icon>
+              </button>
+
+              <!-- Filter Type Dropdown -->
+              <mat-form-field class="filter-select" style="margin-right: 8px;">
+                <mat-label>Filter By</mat-label>
+                <mat-select [(value)]="selected" (selectionChange)="onFilterChange()">
+                  <mat-option value="all">All Farmers</mat-option>
+                  <mat-option value="fn">Farmer Number</mat-option>
+                  <mat-option value="route">Route</mat-option>
+                  <mat-option value="PickUpLocationId">Pick-up Location</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Filter Form (Centered) -->
+              <form [formGroup]="filterform" class=" filter-form d-flex align-items-center">
+                <ng-container *ngIf="selected && selected !== 'all'">
+                  <!-- Farmer Number Input -->
+                  <mat-form-field *ngIf="selected === 'fn'" style="margin-right: 8px;">
+                    <mat-label>Farmer Number</mat-label>
+                    <input matInput formControlName="farmer_no">
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+
+                  <!-- Route Selection -->
+                  <mat-form-field *ngIf="selected === 'route'" style="margin-right: 8px;">
+                    <mat-label>Select Route</mat-label>
+                    <input matInput formControlName="route" placeholder="Select Route">
+                    <mat-icon matSuffix (click)="selectRoute()">search</mat-icon>
+                  </mat-form-field>
+
+                  <!-- PickUp Location Selection -->
+                  <mat-form-field *ngIf="selected === 'PickUpLocationId'" style="margin-right: 8px;">
+                    <mat-label>Select Pick-up Location</mat-label>
+                    <input matInput formControlName="pickUpLocation" placeholder="Pick-up Location">
+                    <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
+                  </mat-form-field>
+
+                  <!-- Month Input -->
+                  <mat-form-field class="month-input" style="margin-left: 8px;">
+                    <mat-label>Month</mat-label>
+                    <input matInput type="number" formControlName="month" min="1" max="12" required>
+                    <mat-error *ngIf="filterform.get('month')?.hasError('required')">Month is required</mat-error>
+                    <mat-error *ngIf="filterform.get('month')?.hasError('min') || filterform.get('month')?.hasError('max')">Enter valid month (1-12)</mat-error>
+                  </mat-form-field>
+                </ng-container>
+              </form>
+
+              <!-- Export Buttons -->
+              <div class="ms-2">
+                <button mat-icon-button matTooltip="Export to XLSX" (click)="exporter.exportTable('xlsx', {fileName: 'all-farmers', sheet: 'sheet1'})">
+                  <img src="assets/images/icons/xlsx.png" alt="XLSX">
+                </button>
+                <button mat-icon-button matTooltip="Export to CSV" (click)="exporter.exportTable('csv', {fileName: 'all-farmers'})">
+                  <img src="assets/images/icons/csv.png" alt="CSV">
+                </button>
+              </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-responsive">
+              <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell" #exporter="matTableExporter">
+                <ng-container matColumnDef="farmer_no">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer No.</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.farmer_no }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="username">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer Name</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.username }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="mobile_no">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.mobile_no }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="id_number">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>ID No.</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.id_number }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="route">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Route</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.route }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="pickUpLocation">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Pick-up Location</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">{{ farmer.pickUpLocation }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                  <mat-cell *matCellDef="let farmer">
+                    <button mat-icon-button color="primary" (click)="editCall(farmer)" matTooltip="Edit farmer">
+                      <app-feather-icons icon="edit"></app-feather-icons>
+                    </button>
+                    <button mat-icon-button color="accent" (click)="deleteCall(farmer)" matTooltip="Delete farmer">
+                      <app-feather-icons icon="trash-2"></app-feather-icons>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="viewFarmerDetails(farmer)" matTooltip="View Farmer Details">
+                      <app-feather-icons icon="eye"></app-feather-icons>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="viewFarmerCollections(farmer)" matTooltip="View Delivery Statements">
+                      <app-feather-icons icon="book"></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+              </mat-table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

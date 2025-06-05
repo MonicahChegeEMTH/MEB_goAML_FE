@@ -593,5 +593,18 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
     ]
-  }
+  },
+{
+  path: '/staff/payment-management',
+  title: 'Payment Management',
+  moduleName: 'payment-management',
+  iconType: 'feather',
+  icon: 'dollar-sign',
+  class: '',
+  groupTitle: false,
+  badge: '',
+  badgeClass: '',
+  role: ['ROLE_STAFF'],
+  submenu: []
+}
 ];
