@@ -1,49 +1,42 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { PaymentManagementService } from '../services/payment-management.service';
+import { SnackbarService } from '../../../shared/snackbar.service';
 
 @Component({
   selector: 'app-delete-payment-option-dialog',
   templateUrl: './delete-payment-option-dialog.component.html',
 })
 export class DeletePaymentOptionDialogComponent {
-  displayedColumns: string[] = ['select', 'name'];
-  selection = new Set<any>();
+  options: any[];
 
   constructor(
     public dialogRef: MatDialogRef<DeletePaymentOptionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { categoryName: string; options: any[] }
-  ) {}
-
-  isAllSelected(): boolean {
-    return this.selection.size === this.data.options.length;
+    @Inject(MAT_DIALOG_DATA) public data: { categoryName: string; options: any[] },
+    private paymentService: PaymentManagementService, // <-- Use PaymentManagementService here
+    private snackbar: SnackbarService
+  ) {
+    this.options = [...data.options];
   }
 
-  isSomeSelected(): boolean {
-    return this.selection.size > 0 && !this.isAllSelected();
+  onDeleteOption(option: any): void {
+    this.paymentService.deletePaymentOption(option.id).subscribe({
+      next: () => {
+        this.options = this.options.filter(o => o.id !== option.id);
+        this.snackbar.showNotification('snackbar-success', `Deleted: ${option.name}`);
+
+        if (this.options.length === 0) {
+          this.dialogRef.close(true);
+        }
+      },
+      error: (err) => {
+        console.error('Delete failed for', option.name, err);
+        this.snackbar.showNotification('snackbar-danger', err.message || 'Delete failed');
+      }
+    });
   }
 
-  toggleAllRows(event: any): void {
-    if (event.checked) {
-      this.data.options.forEach((option) => this.selection.add(option));
-    } else {
-      this.selection.clear();
-    }
-  }
-
-  toggleRow(row: any): void {
-    if (this.selection.has(row)) {
-      this.selection.delete(row);
-    } else {
-      this.selection.add(row);
-    }
-  }
-
-  onConfirm(): void {
-    const selectedOptions = Array.from(this.selection);
-    this.dialogRef.close(selectedOptions);
-  }
-
-  onCancel(): void {
-    this.dialogRef.close();
+  onClose(): void {
+    this.dialogRef.close(false);
   }
 }

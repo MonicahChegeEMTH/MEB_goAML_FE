@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { PaymentManagementService, PaymentMode, BankOption } from '../services/payment-management.service';
 
@@ -13,19 +13,18 @@ export class AddPaymentOptionDialogComponent implements OnInit, OnDestroy {
   addPaymentForm: FormGroup;
   categories: PaymentMode[] = [];
   categoryExamples: { [key: string]: string } = {};
-  isLoading: boolean = false;
+  isLoading = false;
   private subscriptions: Subscription[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AddPaymentOptionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { option?: BankOption },
     private fb: FormBuilder,
     private paymentService: PaymentManagementService
   ) {
     this.addPaymentForm = this.fb.group({
-      name: [data.option?.name || '', [Validators.required, Validators.maxLength(100)]],
-      categoryName: [data.option?.categoryName || '', [Validators.required]],
-      active: [data.option ? data.option.active : true]
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      categoryName: ['', [Validators.required]],
+      active: [true]
     });
   }
 
@@ -77,29 +76,24 @@ export class AddPaymentOptionDialogComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const formValue = this.addPaymentForm.getRawValue();
       const selectedCategory = this.categories.find(c => c.name === formValue.categoryName);
-      const option: Partial<BankOption> = {
+
+      const newOption: BankOption = {
+        id: 0, // usually backend generates ID
         name: formValue.name.trim(),
         categoryId: selectedCategory?.id,
+        categoryName: formValue.categoryName,
         active: formValue.active,
-        createdOn: this.data.option?.createdOn || new Date().toISOString()
+        createdOn: new Date().toISOString(),
+        code: ''
       };
 
-      if (this.data.option) {
-        option.id = this.data.option.id;
-        option.categoryName = formValue.categoryName;
-      }
-
-      const action = this.data.option
-        ? this.paymentService.updatePaymentOption(option as BankOption)
-        : this.paymentService.addPaymentOption(option as BankOption);
-
-      const sub = action.subscribe({
+      const sub = this.paymentService.addPaymentOption(newOption).subscribe({
         next: () => {
           this.isLoading = false;
-          this.dialogRef.close(option);
+          this.dialogRef.close(newOption); // close dialog and return the added option
         },
         error: (error) => {
-          console.error('Error saving payment option:', error);
+          console.error('Error adding payment option:', error);
           this.isLoading = false;
         }
       });

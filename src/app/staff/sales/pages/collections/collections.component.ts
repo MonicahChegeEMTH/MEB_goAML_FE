@@ -366,6 +366,25 @@ export class CollectionsComponent implements OnInit {
     });
   }
 
+getSummaryPerFarmerNo(farmerNo: any) {
+  this.isLoading = true;
+  this.subscription = this.dashboard.getFarmerCollections(farmerNo, this.fromDate, this.toDate).subscribe(res => {
+    this.data = res;
+    if (this.data) {
+      console.log('getSummaryPerFarmerNo - Data:', this.data);
+      this.isLoading = false;
+      this.dquantity = this.data.entity[0].quantity;
+      this.damount = this.data.entity[0].amount;
+      this.dcount = this.data.entity[0].count;
+    }
+  }, error => {
+    console.error('Error fetching summary per farmer:', error);
+    this.isLoading = false;
+    this.snackbar.showNotification('snackbar-danger', 'Error fetching summary data for farmer');
+  });
+}
+
+
   getAllColectionsSummary() {
     this.isLoading = true;
     this.subscription = this.dashboard.getAllCollectionsRecords().subscribe(res => {
@@ -492,17 +511,15 @@ export class CollectionsComponent implements OnInit {
       return;
     }
 
+    // Call to populate dashboard cards
+    this.getSummaryPerFarmerNo(farmerNo);
+
     this.subscription = this.service.getCollectionsByFarmerNo(farmerNo, this.fromDate, this.toDate).subscribe(
       res => {
         this.data = res;
-        console.log('API Response (Full):', JSON.stringify(this.data, null, 2));
-
-        // Handle both direct array and entity object responses
         const dataArray = this.data.entity ? this.data.entity : Array.isArray(this.data) ? this.data : [];
 
         if (dataArray.length > 0) {
-          console.log('First Record:', dataArray[0]);
-          console.log('All Records:', dataArray);
           this.isLoading = false;
           this.isdata = true;
           this.datasize = dataArray.length;
@@ -510,12 +527,10 @@ export class CollectionsComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           console.log('Data Source Data:', this.dataSource.data);
-//           this.cdr.detectChanges();
         } else {
           this.isdata = false;
           this.isLoading = false;
           this.dataSource = new MatTableDataSource([]);
-//           this.cdr.detectChanges();
           console.log('No data found for given filters');
         }
       },
@@ -524,11 +539,11 @@ export class CollectionsComponent implements OnInit {
         this.isLoading = false;
         this.isdata = false;
         this.dataSource = new MatTableDataSource([]);
-//         this.cdr.detectChanges();
         this.snackbar.showNotification('snackbar-danger', 'Error fetching farmer data');
       }
     );
   }
+
 
 
   filterByRoute() {

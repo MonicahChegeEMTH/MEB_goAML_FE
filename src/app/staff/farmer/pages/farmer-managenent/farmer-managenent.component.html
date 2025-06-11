@@ -28,18 +28,20 @@
               </button>
 
               <!-- Filter Type Dropdown -->
-              <mat-form-field class="filter-select" style="margin-right: 8px;">
-                <mat-label>Filter By</mat-label>
-                <mat-select [(value)]="selected" (selectionChange)="onFilterChange()">
-                  <mat-option value="all">All Farmers</mat-option>
-                  <mat-option value="fn">Farmer Number</mat-option>
-                  <mat-option value="route">Route</mat-option>
-                  <mat-option value="PickUpLocationId">Pick-up Location</mat-option>
-                </mat-select>
-              </mat-form-field>
+              <li class="dropdown m-l-5">
+                <mat-form-field class="filter-select" style="margin-right: 8px;">
+                  <mat-label>Filter By</mat-label>
+                  <mat-select [(value)]="selected" (selectionChange)="onFilterChange()">
+<!--                    <mat-option value="all">All Farmers</mat-option>-->
+                    <mat-option value="fn">Farmer Number</mat-option>
+                    <mat-option value="route">Route</mat-option>
+                    <mat-option value="PickUpLocationId">Pick-up Location</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </li>
 
-              <!-- Filter Form (Centered) -->
-              <form [formGroup]="filterform" class=" filter-form d-flex align-items-center">
+
+              <form [formGroup]="filterform" class="filter-form d-flex align-items-center">
                 <ng-container *ngIf="selected && selected !== 'all'">
                   <!-- Farmer Number Input -->
                   <mat-form-field *ngIf="selected === 'fn'" style="margin-right: 8px;">
@@ -62,15 +64,21 @@
                     <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
                   </mat-form-field>
 
-                  <!-- Month Input -->
-                  <mat-form-field class="month-input" style="margin-left: 8px;">
+                  <!-- Month Input (only for route or pickup location) -->
+                  <mat-form-field *ngIf="selected === 'route' || selected === 'PickUpLocationId'" class="month-input" style="margin-left: 8px;">
                     <mat-label>Month</mat-label>
                     <input matInput type="number" formControlName="month" min="1" max="12" required>
                     <mat-error *ngIf="filterform.get('month')?.hasError('required')">Month is required</mat-error>
-                    <mat-error *ngIf="filterform.get('month')?.hasError('min') || filterform.get('month')?.hasError('max')">Enter valid month (1-12)</mat-error>
+                    <mat-error *ngIf="filterform.get('month')?.hasError('min') || filterform.get('month')?.hasError('max')">
+                      Enter valid month (1–12)
+                    </mat-error>
                   </mat-form-field>
+
+                  <!-- Filter Button -->
+                  <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="filterButtonClicked()">Filter</button>
                 </ng-container>
               </form>
+
 
               <!-- Export Buttons -->
               <div class="ms-2">
@@ -116,7 +124,7 @@
                     <button mat-icon-button color="primary" (click)="editCall(farmer)" matTooltip="Edit farmer">
                       <app-feather-icons icon="edit"></app-feather-icons>
                     </button>
-                    <button mat-icon-button color="accent" (click)="deleteCall(farmer)" matTooltip="Delete farmer">
+                    <button mat-icon-button color="accent" (click)="deleteCall(farmer)" matTooltip="Delete farmer" style="color: red;">
                       <app-feather-icons icon="trash-2"></app-feather-icons>
                     </button>
                     <button mat-icon-button color="primary" (click)="viewFarmerDetails(farmer)" matTooltip="View Farmer Details">

@@ -47,23 +47,25 @@
                       <div class="col-4">
                         <ul class="header-buttons">
                           <li>
-                            <div class="export-button m-l-10" matTooltip="Export to XLSX">
-                              <mat-icon (click)="exporter?.exportTable('xlsx', { fileName: 'payment-options', sheet: 'sheet1' })" aria-label="Export to XLSX">description</mat-icon>
+                            <button mat-icon-button matTooltip="Export to XLSX" (click)="exporter.exportTable('xlsx', {fileName: 'all-farmers', sheet: 'sheet1'})">
+                              <img src="assets/images/icons/xlsx.png" alt="XLSX">
+                            </button>
+                          </li>
+                          <li>
+                            <button mat-icon-button matTooltip="Export to CSV" (click)="exporter.exportTable('csv', {fileName: 'all-farmers'})">
+                              <img src="assets/images/icons/csv.png" alt="CSV">
+                            </button>
+                          </li>
+                          <li>
+                            <div class="export-button m-l-10" matTooltip="JSON">
+                              <img src="assets/images/icons/json.png" alt=""
+                                   (click)="exporter.exportTable('json')" />
                             </div>
                           </li>
                           <li>
-                            <div class="export-button m-l-10" matTooltip="Export to CSV">
-                              <mat-icon (click)="exporter?.exportTable('csv', { fileName: 'payment-options' })" aria-label="Export to CSV">table_chart</mat-icon>
-                            </div>
-                          </li>
-                          <li>
-                            <div class="export-button m-l-10" matTooltip="Export to JSON">
-                              <mat-icon (click)="exporter?.exportTable('json', { fileName: 'payment-options' })" aria-label="Export to JSON">code</mat-icon>
-                            </div>
-                          </li>
-                          <li>
-                            <div class="export-button m-l-10" matTooltip="Export to TXT">
-                              <mat-icon (click)="exporter?.exportTable('txt', { fileName: 'payment-options' })" aria-label="Export to TXT">article</mat-icon>
+                            <div class="export-button m-l-10" matTooltip="TXT">
+                              <img src="assets/images/icons/txt.png" alt=""
+                                   (click)="exporter.exportTable('txt')" />
                             </div>
                           </li>
                         </ul>
@@ -84,10 +86,17 @@
                     </ng-container>
 
                     <!-- Payment Options Column -->
+                    <!-- Payment Options Column -->
                     <ng-container matColumnDef="name">
                       <mat-header-cell *matHeaderCellDef mat-sort-header aria-sort="none">Payment Options</mat-header-cell>
-                      <mat-cell *matCellDef="let option; let i = index" [class.odd-row]="i % 2" [class.even-row]="!(i % 2)">{{ option.name || 'N/A' }}</mat-cell>
+                      <mat-cell *matCellDef="let option; let i = index" [class.odd-row]="i % 2" [class.even-row]="!(i % 2)">
+                        <ng-container *ngIf="option.name && option.name.length; else noOptions">
+                          <div *ngFor="let opt of option.name.slice(0, 2)" style="display: block; margin-bottom: 4px;">{{ opt }}</div>
+                        </ng-container>
+                        <ng-template #noOptions>N/A</ng-template>
+                      </mat-cell>
                     </ng-container>
+
 
                     <!-- Status Column -->
                     <ng-container matColumnDef="active">
@@ -124,7 +133,13 @@
                         <button mat-icon-button color="primary" (click)="lookupPaymentOption(option)"  matTooltip="View Farmer Details">
                           <app-feather-icons icon="eye"></app-feather-icons>
                         </button>
-                        <button mat-icon-button color="accent" (click)="deleteOption(option.categoryId, option.categoryName)" matTooltip="Delete farmer">
+                        <button
+                          mat-icon-button
+                          color="accent"
+                          (click)="openDeleteDialog(option.categoryId, option.categoryName)"
+                          matTooltip="Delete payment options"
+                          style="color: red;"
+                        >
                           <app-feather-icons icon="trash-2"></app-feather-icons>
                         </button>
                       </mat-cell>

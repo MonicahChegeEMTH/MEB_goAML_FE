@@ -43,6 +43,11 @@ export class DashboardService {
       console.log("Calling api route d=id ,"+ routeId)
       return this.http.get(`${environment.apiUrl}/api/v1/collections/date-range/route-records?routeId=`+routeId+`&startDate=${from}&endDate=${to}`,httpOptions);
     }
+  public getFarmerCollections(farmerNo: any, from: any, to: any): Observable<any> {
+    console.log("Calling API for farmerNo = " + farmerNo);
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/date-range/farmer-records?farmerNo=${farmerNo}&startDate=${from}&endDate=${to}`, httpOptions);
+  }
+
 
 
 

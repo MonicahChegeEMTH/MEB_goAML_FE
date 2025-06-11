@@ -101,18 +101,24 @@ export class FarmerManagenentComponent implements OnInit {
     }
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+   applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     }
-  }
 
-  onFilterChange(): void {
-    this.filterform.reset({ month: this.filterform.get('month')?.value });
-    this.filterFarmers();
-  }
+    onFilterChange(): void {
+      this.filterform.reset({ month: this.filterform.get('month')?.value });
+      this.filterFarmers();
+    }
+
+    filterButtonClicked(): void {
+      this.filterFarmers();
+    }
+
+
 
   getData(): void {
     this.selected = 'all';

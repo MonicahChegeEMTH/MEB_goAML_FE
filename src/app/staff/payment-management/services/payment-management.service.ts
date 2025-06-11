@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 export interface PaymentMode {
   id: number;
@@ -11,7 +11,7 @@ export interface PaymentMode {
 export interface BankOption {
   id: number;
   code: string;
-  name: string;
+  name: string[];
   description?: string;
   active: boolean;
   categoryName: string;
@@ -27,39 +27,37 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class PaymentManagementService {
-  private apiUrl = `${environment.apiUrl}/api/v1/payments`;
-
   constructor(private http: HttpClient) {}
 
   getPaymentModes(): Observable<PaymentMode[]> {
-    return this.http.get<PaymentMode[]>(`${this.apiUrl}/mode`, httpOptions);
+    return this.http.get<PaymentMode[]>(`${environment.apiUrl}/api/v1/payments/mode`, httpOptions);
   }
 
   addPaymentMode(mode: PaymentMode): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mode`, mode, httpOptions);
+    return this.http.post(`${environment.apiUrl}/api/v1/payments/mode`, mode, httpOptions);
   }
 
   updatePaymentMode(mode: PaymentMode): Observable<any> {
-    return this.http.put(`${this.apiUrl}/mode/${mode.id}`, mode, httpOptions);
+    return this.http.put(`${environment.apiUrl}/api/v1/payments/mode/${mode.id}`, mode, httpOptions);
   }
 
   deletePaymentMode(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/mode/soft-delete/${id}`, httpOptions);
+    return this.http.delete(`${environment.apiUrl}/api/v1/payments/mode/soft-delete/${id}`, httpOptions);
   }
 
   getPaymentOptions(): Observable<BankOption[]> {
-    return this.http.get<BankOption[]>(`${this.apiUrl}/options`, httpOptions);
+    return this.http.get<BankOption[]>(`${environment.apiUrl}/api/v1/payments/options`, httpOptions);
   }
 
-  addPaymentOption(option: BankOption): Observable<any> {
-    return this.http.post(`${this.apiUrl}/options`, option, httpOptions);
+  addPaymentOption(option: Partial<BankOption>): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/api/v1/payments/options`, option, httpOptions);
   }
 
   updatePaymentOption(option: BankOption): Observable<any> {
-    return this.http.put(`${this.apiUrl}/options/${option.id}`, option, httpOptions);
+    return this.http.put(`${environment.apiUrl}/api/v1/payments/options/${option.id}`, option, httpOptions);
   }
 
   deletePaymentOption(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/options/soft-delete/${id}`, httpOptions);
+    return this.http.delete(`${environment.apiUrl}/api/v1/payments/options/soft-delete/${id}`, httpOptions);
   }
 }

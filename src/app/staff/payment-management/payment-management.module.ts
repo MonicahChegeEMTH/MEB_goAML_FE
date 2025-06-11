@@ -21,13 +21,15 @@ import { PaymentDetailsComponent } from './payment-details/payment-details.compo
 import { AddPaymentOptionDialogComponent } from './add-payment-option-dialog/add-payment-option-dialog.component';
 import { DeletePaymentOptionDialogComponent } from './delete-payment-option-dialog/delete-payment-option-dialog.component';
 import { LookupPaymentOptionComponent } from './lookup-payment-option/lookup-payment-option.component';
+import { EditPaymentOptionDialogComponent } from './edit-payment-option-dialog/edit-payment-option-dialog.component';
 
 @NgModule({
   declarations: [
     PaymentDetailsComponent,
     AddPaymentOptionDialogComponent,
     DeletePaymentOptionDialogComponent,
-    LookupPaymentOptionComponent
+    LookupPaymentOptionComponent,
+    EditPaymentOptionDialogComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +55,8 @@ import { LookupPaymentOptionComponent } from './lookup-payment-option/lookup-pay
   exports: [
     PaymentDetailsComponent,
     AddPaymentOptionDialogComponent,
-    DeletePaymentOptionDialogComponent
+    DeletePaymentOptionDialogComponent,
+    EditPaymentOptionDialogComponent
   ]
 })
 export class PaymentManagementModule { }

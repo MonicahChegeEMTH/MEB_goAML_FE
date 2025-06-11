@@ -11,7 +11,7 @@ import { MatTableExporterDirective } from 'mat-table-exporter';
 import { AddPaymentOptionDialogComponent } from '../add-payment-option-dialog/add-payment-option-dialog.component';
 import { DeletePaymentOptionDialogComponent } from '../delete-payment-option-dialog/delete-payment-option-dialog.component';
 import { LookupPaymentOptionComponent } from '../lookup-payment-option/lookup-payment-option.component';
-
+import { EditPaymentOptionDialogComponent } from '../edit-payment-option-dialog/edit-payment-option-dialog.component';
 
 @Component({
   selector: 'app-payment-details',
@@ -53,6 +53,11 @@ export class PaymentDetailsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const sub = this.paymentService.getPaymentOptions().subscribe({
       next: (options: BankOption[]) => {
+        const transformedOptions = options.map((opt) => ({
+          ...opt,
+          name: Array.isArray(opt.name) ? opt.name : (opt.name as string).split(',').map(n => n.trim())
+        }));
+
         const groupedOptions = this.groupOptionsByCategory(options);
         this.paymentOptions = groupedOptions;
         this.optionsDataSource.data = this.paymentOptions;
@@ -73,10 +78,10 @@ export class PaymentDetailsComponent implements OnInit, OnDestroy {
       const category = option.categoryName.toLowerCase();
       if (categoryMap.has(category)) {
         const existing = categoryMap.get(category)!;
-        const existingNames = existing.name ? existing.name.split(',').map(p => p.trim()) : [];
-        const newNames = option.name ? option.name.split(',').map(p => p.trim()) : [];
+        const existingNames = Array.isArray(existing.name) ? existing.name : (existing.name as string).split(',').map(p => p.trim());
+        const newNames = Array.isArray(option.name) ? option.name : (option.name as string).split(',').map(p => p.trim());
         const mergedNames = [...new Set([...existingNames, ...newNames])];
-        existing.name = mergedNames.join(', ');
+        existing.name = mergedNames;
         existing.createdOn = option.createdOn || existing.createdOn || new Date().toISOString();
         existing.active = option.active || existing.active;
         existing.code = existing.code || option.code;
@@ -151,20 +156,26 @@ export class PaymentDetailsComponent implements OnInit, OnDestroy {
   }
 
   editOption(option: BankOption): void {
-    const dialogRef = this.dialog.open(AddPaymentOptionDialogComponent, {
+    const dialogRef = this.dialog.open(EditPaymentOptionDialogComponent, {
       width: '500px',
       data: { option }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      // Check result is an object and has id before updating
+      if (result && typeof result === 'object' && 'id' in result) {
+        console.log('Updating option:', result);
         this.updatePaymentOption(result);
+      } else {
+        console.warn('Edit dialog returned invalid data:', result);
       }
     });
   }
 
   updatePaymentOption(option: BankOption): void {
     this.isLoading = true;
+    console.log('Updating option:', option);
+    console.log('Option ID:', option.id);
     const sub = this.paymentService.updatePaymentOption(option).subscribe({
       next: () => {
         this.snackbar.showNotification('snackbar-success', 'Payment option updated successfully');
@@ -198,90 +209,64 @@ export class PaymentDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-//   deleteOption(option: BankOption): void {
-//     const dialogRef = this.dialog.open(DeletePaymentOptionDialogComponent, {
-//       width: '400px',
-//       data: { id: option.id, name: option.name }
-//     });
-//
-//     dialogRef.afterClosed().subscribe(result => {
-//       if (result === true) {
-//         this.isLoading = true;
-//         const sub = this.paymentService.deletePaymentOption(option.id).subscribe({
-//           next: () => {
-//             this.snackbar.showNotification('snackbar-success', 'Payment option deleted successfully');
-//             this.loadPaymentOptions();
-//             this.isLoading = false;
-//           },
-//           error: (error) => {
-//             console.error('Error deleting payment option:', error);
-//             this.isLoading = false;
-//             this.snackbar.showNotification('snackbar-danger', error.message || 'Failed to delete payment option');
-//           }
-//         });
-//         this.subscriptions.push(sub);
-//       }
-//     });
-//   }
+  deleteOption(categoryId: number, categoryName: string): void {
+    const optionsForCategory = this.paymentOptions.filter(option => option.categoryId === categoryId);
 
-// In your component where deleteOption() is called:
-// Make sure to call this method with:
-// this.deleteOption(category.id, category.name);
+    if (optionsForCategory.length === 0) {
+      this.snackbar.showNotification('snackbar-info', 'No payment options to delete in this category.');
+      return;
+    }
 
-deleteOption(categoryId: number, categoryName: string): void {
-  console.log('🔍 deleteOption called with:');
-  console.log('👉 categoryId:', categoryId);
-  console.log('👉 categoryName:', categoryName);
-  console.log('📋 All paymentOptions:', this.paymentOptions);
+    const dialogRef = this.dialog.open(DeletePaymentOptionDialogComponent, {
+      width: '400px',
+      data: {
+        categoryName,
+        options: optionsForCategory
+      }
+    });
 
-  // Filter the options for the given category
-  const optionsForCategory = this.paymentOptions.filter(
-    option => option.categoryId === categoryId
-  );
+    dialogRef.afterClosed().subscribe((allDeleted: boolean) => {
+      if (allDeleted) {
+        // All options deleted in dialog, refresh list
+        this.loadPaymentOptions();
+      }
+    });
+  }
 
-  console.log('✅ Filtered options for category:', optionsForCategory);
+openDeleteDialog(categoryId: number, categoryName: string): void {
+  const optionsForCategory = this.paymentOptions.filter(option => option.categoryId === categoryId);
+
+  if (optionsForCategory.length === 0) {
+    this.snackbar.showNotification('snackbar-info', 'No payment options to delete in this category.');
+    return;
+  }
 
   const dialogRef = this.dialog.open(DeletePaymentOptionDialogComponent, {
-    width: '600px',
+    width: '400px',
     data: {
       categoryName,
       options: optionsForCategory
     }
   });
 
-  dialogRef.afterClosed().subscribe((result: BankOption[] | false) => {
-    if (result && result.length > 0) {
-      result.forEach(option => {
-        this.paymentService.deletePaymentOption(option.id).subscribe({
-          next: () => {
-            console.log('Deleted:', option.name);
-            this.snackbar.showNotification('snackbar-success', `Deleted: ${option.name}`);
-            this.loadPaymentOptions(); // Refresh the list
-          },
-          error: err => {
-            console.error('Error deleting', option.name, err);
-            this.snackbar.showNotification('snackbar-danger', err.message || 'Delete failed');
-          }
-        });
-      });
+  dialogRef.afterClosed().subscribe((allDeleted: boolean) => {
+    if (allDeleted) {
+      this.loadPaymentOptions();
     }
   });
-
-}
-
-lookupPaymentOption(data: any): void {
-  const dialogConfig = new MatDialogConfig();
-  dialogConfig.disableClose = false;
-  dialogConfig.autoFocus = true;
-  dialogConfig.width = '50%'; // adjust width as needed
-  dialogConfig.data = { paymentOption: data };
-
-  this.dialog.open(LookupPaymentOptionComponent, dialogConfig);
 }
 
 
 
+  lookupPaymentOption(data: any): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%'; // adjust width as needed
+    dialogConfig.data = { paymentOption: data };
 
+    this.dialog.open(LookupPaymentOptionComponent, dialogConfig);
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());

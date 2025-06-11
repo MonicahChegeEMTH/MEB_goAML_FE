@@ -4,59 +4,39 @@
       <div class="font-weight-bold font-17 ms-2">
         Delete Payment Options - <span class="text-primary">{{ data.categoryName }}</span>
       </div>
-      <button mat-icon-button (click)="onCancel()" aria-label="Close dialog">
+      <button mat-icon-button (click)="onClose()" aria-label="Close dialog">
         <mat-icon>close</mat-icon>
       </button>
     </div>
 
     <div mat-dialog-content>
-      <p>Select the payment options to delete:</p>
+      <p>Select a payment option to delete:</p>
 
-      <table mat-table [dataSource]="data.options" class="mat-elevation-z1" style="width: 100%;">
-
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="toggleAllRows($event)"
-              [checked]="isAllSelected()"
-              [indeterminate]="isSomeSelected()"
-            ></mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="toggleRow(row)"
-              [checked]="selection.has(row)"
-            ></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Payment Option </th>
-          <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      <div *ngIf="data.options.length === 0" class="text-muted mt-2">
-        No payment options available for this category.
+      <div *ngIf="options.length > 0; else noOptions">
+        <mat-list>
+          <mat-list-item *ngFor="let option of options" class="d-flex justify-content-between align-items-center">
+            <span>{{ option.name }}</span>
+            <button
+              mat-icon-button
+              color="warn"
+              aria-label="Delete payment option"
+              (click)="onDeleteOption(option)"
+              style="color: red;"
+              matTooltip="Delete this option"
+            >
+              <app-feather-icons icon="trash-2"></app-feather-icons>
+            </button>
+          </mat-list-item>
+        </mat-list>
       </div>
+
+      <ng-template #noOptions>
+        <div class="text-muted mt-2">No payment options available for this category.</div>
+      </ng-template>
     </div>
 
     <div mat-dialog-actions class="d-flex justify-content-end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button
-        mat-raised-button
-        color="warn"
-        (click)="onConfirm()"
-        [disabled]="selection.size === 0"
-      >
-        Delete Selected
-      </button>
+      <button mat-button (click)="onClose()">Close</button>
     </div>
   </div>
 </div>
