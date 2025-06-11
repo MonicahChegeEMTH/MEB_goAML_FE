@@ -23,6 +23,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { FarmerStatusLookupComponent } from './pages/farmer-status-lookup/farmer-status-lookup.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SalesModule } from '../sales/sales.module';
 @NgModule({
     declarations: [
         FarmerManagenentComponent,
@@ -31,7 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         UpdateFarmerComponent,
         DeleteFarmerComponent,
         FarmerLookupComponent,
-        FarmerStatusLookupComponent
+        FarmerStatusLookupComponent,
     ],
     imports: [
         CommonModule,
@@ -49,7 +50,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatSelectModule,
         MatProgressBarModule,
         MatStepperModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        SalesModule
     ]
 })
 export class FarmerModule { }
