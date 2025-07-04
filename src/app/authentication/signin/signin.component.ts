@@ -75,6 +75,7 @@ export class SigninComponent
 
         this.submitted = false;
         this.loading = false;
+        this.snackbar.showNotification('snackbar-success', "Login successful. Welcome "+res.username+"!");
 
       }, err => {
         this.error = err;

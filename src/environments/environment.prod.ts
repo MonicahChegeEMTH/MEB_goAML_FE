@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: "https://dairy.emtechhouse.co.ke:8800",
-  API: "https://dairy.emtechhouse.co.ke:8800",
+  apiUrl: "http://18.219.121.50:9400",
+  API: "http://18.219.121.50:9400",
 };
