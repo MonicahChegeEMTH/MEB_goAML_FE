@@ -63,7 +63,7 @@ export class FarmerManagenentComponent implements OnInit {
       routeId: [''],
       pickUpLocation: [''],
       pickUpLocationId: [''],
-      month: ['', [Validators.required, Validators.min(1), Validators.max(12)]]
+      month: ['', [Validators.min(1), Validators.max(12)]]
     });
 
     // Subscribe to farmer_no changes
@@ -267,113 +267,211 @@ export class FarmerManagenentComponent implements OnInit {
     }
   }
 
+  // private filterByRoute(): void {
+  //   const routeId = this.filterform.value.routeId;
+  //   const month = parseInt(this.filterform.value.month, 10);
+
+  //   if (!routeId) {
+  //     this.isLoading = false;
+  //     this.dataSource = new MatTableDataSource([]);
+  //     this.isdata = false;
+  //     this.snackbar.showNotification('error', 'Please select a route');
+  //     return;
+  //   }
+
+  //   if (!this.filterform.get('month')?.valid) {
+  //     this.isLoading = false;
+  //     this.dataSource = new MatTableDataSource([]);
+  //     this.isdata = false;
+  //     this.snackbar.showNotification('error', 'Please enter a valid month (1-12)');
+  //     return;
+  //   }
+
+  //   this.isLoading = true;
+  //   this.subscription = this.service.getRouteActiveFarmers(routeId, month).subscribe({
+  //     next: (res) => {
+  //       console.log('filterByRoute response:', JSON.stringify(res, null, 2));
+  //       this.data = res;
+  //       if (res.entity?.length > 0) {
+  //         const mappedData = res.entity.map((farmer: any) => ({
+  //           farmer_no: farmer.farmerNo || farmer.farmer_no || '',
+  //           username: farmer.username || farmer.name || '',
+  //           mobile_no: farmer.mobileNo || farmer.mobile_no || '',
+  //           id_number: farmer.idNumber || farmer.id_number || '',
+  //           route: farmer.routeName || farmer.route || '',
+  //           pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
+  //         }));
+  //         this.isLoading = false;
+  //         this.isdata = true;
+  //         this.dataSource = new MatTableDataSource(mappedData);
+  //         this.dataSource.paginator = this.paginator;
+  //         this.dataSource.sort = this.sort;
+  //       } else {
+  //         this.isdata = false;
+  //         this.isLoading = false;
+  //         this.dataSource = new MatTableDataSource([]);
+  //         this.snackbar.showNotification('error', 'No farmers found for the selected route and month');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching farmers by route:', error);
+  //       this.isLoading = false;
+  //       this.snackbar.showNotification('error', 'Failed to fetch farmers by route');
+  //     }
+  //   });
+  // }
+
   private filterByRoute(): void {
-    const routeId = this.filterform.value.routeId;
-    const month = parseInt(this.filterform.value.month, 10);
+  const routeId = this.filterform.value.routeId;
+  const monthControl = this.filterform.get('month');
+  const month = monthControl?.value ? parseInt(monthControl.value, 10) : null;
 
-    if (!routeId) {
-      this.isLoading = false;
-      this.dataSource = new MatTableDataSource([]);
-      this.isdata = false;
-      this.snackbar.showNotification('error', 'Please select a route');
-      return;
-    }
-
-    if (!this.filterform.get('month')?.valid) {
-      this.isLoading = false;
-      this.dataSource = new MatTableDataSource([]);
-      this.isdata = false;
-      this.snackbar.showNotification('error', 'Please enter a valid month (1-12)');
-      return;
-    }
-
-    this.isLoading = true;
-    this.subscription = this.service.getRouteActiveFarmers(routeId, month).subscribe({
-      next: (res) => {
-        console.log('filterByRoute response:', JSON.stringify(res, null, 2));
-        this.data = res;
-        if (res.entity?.length > 0) {
-          const mappedData = res.entity.map((farmer: any) => ({
-            farmer_no: farmer.farmerNo || farmer.farmer_no || '',
-            username: farmer.username || farmer.name || '',
-            mobile_no: farmer.mobileNo || farmer.mobile_no || '',
-            id_number: farmer.idNumber || farmer.id_number || '',
-            route: farmer.routeName || farmer.route || '',
-            pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
-          }));
-          this.isLoading = false;
-          this.isdata = true;
-          this.dataSource = new MatTableDataSource(mappedData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        } else {
-          this.isdata = false;
-          this.isLoading = false;
-          this.dataSource = new MatTableDataSource([]);
-          this.snackbar.showNotification('error', 'No farmers found for the selected route and month');
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching farmers by route:', error);
-        this.isLoading = false;
-        this.snackbar.showNotification('error', 'Failed to fetch farmers by route');
-      }
-    });
+  if (!routeId) {
+    this.isLoading = false;
+    this.dataSource = new MatTableDataSource([]);
+    this.isdata = false;
+    this.snackbar.showNotification('error', 'Please select a route');
+    return;
   }
+
+  this.isLoading = true;
+
+  this.subscription = this.service.getRouteActiveFarmers(routeId, month).subscribe({
+    next: (res) => {
+      console.log('filterByRoute response:', JSON.stringify(res, null, 2));
+      this.data = res;
+      if (res.entity?.length > 0) {
+        const mappedData = res.entity.map((farmer: any) => ({
+          farmer_no: farmer.farmerNo || farmer.farmer_no || '',
+          username: farmer.username || farmer.name || '',
+          mobile_no: farmer.mobileNo || farmer.mobile_no || '',
+          id_number: farmer.idNumber || farmer.id_number || '',
+          route: farmer.routeName || farmer.route || '',
+          pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
+        }));
+        this.isLoading = false;
+        this.isdata = true;
+        this.dataSource = new MatTableDataSource(mappedData);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      } else {
+        this.isdata = false;
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource([]);
+        this.snackbar.showNotification('error', 'No farmers found for the selected route');
+      }
+    },
+    error: (error) => {
+      console.error('Error fetching farmers by route:', error);
+      this.isLoading = false;
+      this.snackbar.showNotification('error', 'Failed to fetch farmers by route');
+    }
+  });
+}
+
+
+  // private filterByPickUpLocation(): void {
+  //   const locationId = this.filterform.value.pickUpLocationId;
+  //   const month = parseInt(this.filterform.value.month, 10);
+
+  //   if (!locationId) {
+  //     this.isLoading = false;
+  //     this.dataSource = new MatTableDataSource([]);
+  //     this.isdata = false;
+  //     this.snackbar.showNotification('error', 'Please select a pick-up location');
+  //     return;
+  //   }
+
+  //   if (!this.filterform.get('month')?.valid) {
+  //     this.isLoading = false;
+  //     this.dataSource = new MatTableDataSource([]);
+  //     this.isdata = false;
+  //     this.snackbar.showNotification('error', 'Please enter a valid month (1-12)');
+  //     return;
+  //   }
+
+  //   this.isLoading = true;
+  //   this.subscription = this.service.getCenterActiveFarmers(locationId, month).subscribe({
+  //     next: (res) => {
+  //       console.log('filterByPickUpLocation response:', JSON.stringify(res, null, 2));
+  //       this.data = res;
+  //       if (res.entity?.length > 0) {
+  //         const mappedData = res.entity.map((farmer: any) => ({
+  //           farmer_no: farmer.farmerNo || farmer.farmer_no || '',
+  //           username: farmer.username || farmer.name || '',
+  //           mobile_no: farmer.mobileNo || farmer.mobile_no || '',
+  //           id_number: farmer.idNumber || farmer.id_number || '',
+  //           route: farmer.routeName || farmer.route || '',
+  //           pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
+  //         }));
+  //         this.isLoading = false;
+  //         this.isdata = true;
+  //         this.dataSource = new MatTableDataSource(mappedData);
+  //         this.dataSource.paginator = this.paginator;
+  //         this.dataSource.sort = this.sort;
+  //       } else {
+  //         this.isdata = false;
+  //         this.isLoading = false;
+  //         this.dataSource = new MatTableDataSource([]);
+  //         this.snackbar.showNotification('error', 'No farmers found for the selected pick-up location and month');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching farmers by pick-up location:', error);
+  //       this.isLoading = false;
+  //       this.snackbar.showNotification('error', 'Failed to fetch farmers by pick-up location');
+  //     }
+  //   });
+  // }
 
   private filterByPickUpLocation(): void {
-    const locationId = this.filterform.value.pickUpLocationId;
-    const month = parseInt(this.filterform.value.month, 10);
+  const locationId = this.filterform.value.pickUpLocationId;
+  const monthControl = this.filterform.get('month');
+  const month = monthControl?.value ? parseInt(monthControl.value, 10) : null;
 
-    if (!locationId) {
-      this.isLoading = false;
-      this.dataSource = new MatTableDataSource([]);
-      this.isdata = false;
-      this.snackbar.showNotification('error', 'Please select a pick-up location');
-      return;
-    }
-
-    if (!this.filterform.get('month')?.valid) {
-      this.isLoading = false;
-      this.dataSource = new MatTableDataSource([]);
-      this.isdata = false;
-      this.snackbar.showNotification('error', 'Please enter a valid month (1-12)');
-      return;
-    }
-
-    this.isLoading = true;
-    this.subscription = this.service.getCenterActiveFarmers(locationId, month).subscribe({
-      next: (res) => {
-        console.log('filterByPickUpLocation response:', JSON.stringify(res, null, 2));
-        this.data = res;
-        if (res.entity?.length > 0) {
-          const mappedData = res.entity.map((farmer: any) => ({
-            farmer_no: farmer.farmerNo || farmer.farmer_no || '',
-            username: farmer.username || farmer.name || '',
-            mobile_no: farmer.mobileNo || farmer.mobile_no || '',
-            id_number: farmer.idNumber || farmer.id_number || '',
-            route: farmer.routeName || farmer.route || '',
-            pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
-          }));
-          this.isLoading = false;
-          this.isdata = true;
-          this.dataSource = new MatTableDataSource(mappedData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        } else {
-          this.isdata = false;
-          this.isLoading = false;
-          this.dataSource = new MatTableDataSource([]);
-          this.snackbar.showNotification('error', 'No farmers found for the selected pick-up location and month');
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching farmers by pick-up location:', error);
-        this.isLoading = false;
-        this.snackbar.showNotification('error', 'Failed to fetch farmers by pick-up location');
-      }
-    });
+  if (!locationId) {
+    this.isLoading = false;
+    this.dataSource = new MatTableDataSource([]);
+    this.isdata = false;
+    this.snackbar.showNotification('error', 'Please select a pick-up location');
+    return;
   }
+
+  this.isLoading = true;
+
+  this.subscription = this.service.getCenterActiveFarmers(locationId, month).subscribe({
+    next: (res) => {
+      console.log('filterByPickUpLocation response:', JSON.stringify(res, null, 2));
+      this.data = res;
+      if (res.entity?.length > 0) {
+        const mappedData = res.entity.map((farmer: any) => ({
+          farmer_no: farmer.farmerNo || farmer.farmer_no || '',
+          username: farmer.username || farmer.name || '',
+          mobile_no: farmer.mobileNo || farmer.mobile_no || '',
+          id_number: farmer.idNumber || farmer.id_number || '',
+          route: farmer.routeName || farmer.route || '',
+          pickUpLocation: farmer.pickUpLocationName || farmer.pickUpLocation || farmer.location || ''
+        }));
+        this.isLoading = false;
+        this.isdata = true;
+        this.dataSource = new MatTableDataSource(mappedData);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      } else {
+        this.isdata = false;
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource([]);
+        this.snackbar.showNotification('error', 'No farmers found for the selected pick-up location');
+      }
+    },
+    error: (error) => {
+      console.error('Error fetching farmers by pick-up location:', error);
+      this.isLoading = false;
+      this.snackbar.showNotification('error', 'Failed to fetch farmers by pick-up location');
+    }
+  });
+}
+
 
   addCall(): void {
     const dialogConfig = new MatDialogConfig();
