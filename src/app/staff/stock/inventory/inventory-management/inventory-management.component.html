@@ -1,396 +1,242 @@
 <section class="content">
-    <div class="content-block">
-        <div class="block-header">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Products Inventory Management'" [items]="['Home', 'Inventory']"
-                [active_item]="'Products'">
-            </app-breadcrumb>
-        </div>
-        <mat-tab-group>
-            <!-- all products available in the system -->
-             <mat-tab label="All Products">
-                <div class="card">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="boxs mail_listing">
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="body">
-                                        <div class="table-responsive">
-                                            <div class="materialTableHeader">
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <ul class="header-buttons-left ms-0">
-                                                            <li class="dropdown">
-                                                                <h2>Inventory</h2>
-                                                            </li>
-                                                            <li class="dropdown m-l-20">
-                                                                <label for="search-input"><i
-                                                                        class="material-icons search-icon">search</i></label>
-                                                                <input placeholder="Filter..." type="text"
-                                                                    (keyup)="applyFilter($event)" #filter
-                                                                    class="browser-default search-field"
-                                                                    aria-label="Search box">
-                                                            </li>
-                                                            <li>
-                                                                <div class="m-l-10" matTooltip="Add">
-                                                                    <button mat-mini-fab color="primary" (click)="addCall()">
-                                                                        <mat-icon class="col-white">add</mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="m-l-10" matTooltip="Refresh">
-                                                                    <button mat-mini-fab color="primary" (click)="refresh()">
-                                                                        <mat-icon class="col-white">refresh</mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <ul class="header-buttons">
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="XLSX">
-                                                                    <img src="assets/images/icons/xlsx.png" alt="" (click)="
-                                              exporter.exportTable('xlsx', {
-                                                fileName: 'stock',
-                                                sheet: 'sheet1'
-                                              })
-                                            " />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                                        (click)="exporter.exportTable('csv')" />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="JSON">
-                                                                    <img src="assets/images/icons/json.png" alt=""
-                                                                        (click)="exporter.exportTable('json')" />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                                        (click)="exporter.exportTable('txt')" />
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <mat-table #table matTableExporter [dataSource]="dataSource" matSort
-                                                class="mat-cell" #exporter="matTableExporter">
-                                                <!-- ID Column -->
-                                                <ng-container matColumnDef="id">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-3">Id
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-3">
-                                                        {{i+1}}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="name" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Product
-                                                        Name</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                        {{ row.name }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="price">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-12">Buying
-                                                        Price</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                        {{ row.price }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="salePrice">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Selling
-                                                        Price</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.salePrice }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="profit">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Profit</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.profit }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="discount">
-                                                    <mat-header-cell *matHeaderCellDef
-                                                        mat-sort-header>Discount</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.discount }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="discounted">
-                                                    <mat-header-cell *matHeaderCellDef
-                                                        mat-sort-header>Discounted?</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        <div *ngIf="row.discounted == 1">
-                                                            <span class="badge badge-pill badge-primary col-green">
-                                                                {{"Yes"}}</span>
-                                                        </div>
-                                                        <div *ngIf="row.discounted == 0">
-                                                            <span class="badge badge-pill badge-primary col-red">
-                                                                {{"No"}}</span>
-                                                        </div>
-                                                    </mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="Stock">
-                                                    <mat-header-cell *matHeaderCellDef
-                                                        mat-sort-header>Stock</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.stock  }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="creationDate">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Created
-                                                        On</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.creationDate | date }}</mat-cell>
-                                                </ng-container>
-        
-                                                <!-- Actions -->
-                                                <ng-container matColumnDef="actions">
-                                                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        <button mat-icon-button color="primary" (click)="editCall(row)"
-                                                            class="tbl-action-btn" matTooltip="Update Details">
-                                                            <mat-icon>launch</mat-icon>
-                                                        </button>
-        
-                                                        <!-- <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
-                                                            class="tbl-action-btn" (click)="deleteCall(row)">
-                                                            <app-feather-icons [icon]="'trash'"
-                                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                                        </button> -->
-                                                    </mat-cell>
-                                                </ng-container>
-        
-                                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                                <mat-row *matRowDef="let row; columns: displayedColumns"
-                                                    (click)="viewRoleCall(row)" [style.cursor]="'pointer'" matRipple>
-                                                </mat-row>
-                                                <mat-cell *matNoDataRow colspan="4">
-                                                    No data matching the filter "{{ input.value }}"</mat-cell>
-                                            </mat-table>
-                                            <!-- Loading spinner -->
-                                            <div *ngIf="isLoading" class="tbl-spinner">
-                                                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                                                </mat-progress-spinner>
-                                            </div>
-                                            <div class="tbl-spinner" *ngIf="isLoading==false && hasdata==false">
-                                                <h4>No Products Found</h4>
-                                            </div>
-        
-                                            <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
-                                                aria-label="Select page of users"></mat-paginator>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-             </mat-tab>
-
-             <!-- products allocated to milk collection centers -->
-              <mat-tab label="Center Allocations">
-                <div class="card">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="boxs mail_listing">
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="body">
-                                        <div class="table-responsive">
-                                            <div class="materialTableHeader">
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <ul class="header-buttons-left ms-0">
-                                                            <li class="dropdown">
-                                                                <h2>Inventory</h2>
-                                                            </li>
-                                                            <li class="dropdown m-l-20">
-                                                                <label for="search-input"><i
-                                                                        class="material-icons search-icon">search</i></label>
-                                                                <input placeholder="Filter..." type="text"
-                                                                    (keyup)="mccProductFilter($event)" #filter
-                                                                    class="browser-default search-field"
-                                                                    aria-label="Search box">
-                                                            </li>
-                                                            <li>
-                                                                <div class="m-l-10" matTooltip="Add">
-                                                                    <button mat-mini-fab color="primary" (click)="addCall()">
-                                                                        <mat-icon class="col-white">add</mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="m-l-10" matTooltip="Refresh">
-                                                                    <button mat-mini-fab color="primary" (click)="getMccAllocations()">
-                                                                        <mat-icon class="col-white">refresh</mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <ul class="header-buttons">
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="XLSX">
-                                                                    <img src="assets/images/icons/xlsx.png" alt="" (click)="
-                                              exporter.exportTable('xlsx', {
-                                                fileName: 'stock',
-                                                sheet: 'sheet1'
-                                              })
-                                            " />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                                        (click)="exporter.exportTable('csv')" />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="JSON">
-                                                                    <img src="assets/images/icons/json.png" alt=""
-                                                                        (click)="exporter.exportTable('json')" />
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                                        (click)="exporter.exportTable('txt')" />
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <mat-table #table matTableExporter [dataSource]="mccProductsDataSource" matSort
-                                                class="mat-cell" #exporter="matTableExporter">
-                                                <!-- ID Column -->
-                                                <ng-container matColumnDef="id">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-3">Id
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-3">
-                                                        {{i+1}}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="name" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Product
-                                                        Name</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                        {{ row.name }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="price">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-12">Buying
-                                                        Price</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)" class="column-nowrap psl-3 tbl-col-width-per-12">
-                                                        {{ row.price }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="salePrice">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Selling
-                                                        Price</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.salePrice }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="stock">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Stock</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.stock }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="category">
-                                                    <mat-header-cell *matHeaderCellDef
-                                                        mat-sort-header>Category</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.category  }}</mat-cell>
-                                                </ng-container>
-        
-                                                <ng-container matColumnDef="allocatedOn">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Allocated
-                                                        On</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.allocatedOn | date }}</mat-cell>
-                                                </ng-container>
-
-                                                <ng-container matColumnDef="mcc">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Center</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        {{ row.mcc }}</mat-cell>
-                                                </ng-container>
-        
-                                                <!-- Actions -->
-                                                <ng-container matColumnDef="actions">
-                                                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                        [class.even-row]="!(i % 2)">
-                                                        <button mat-icon-button color="primary" (click)="editCall(row)"
-                                                            class="tbl-action-btn" matTooltip="Update Details">
-                                                            <mat-icon>launch</mat-icon>
-                                                        </button>
-        
-                                                        <!-- <button mat-icon-button color="warn" (click)="$event.stopPropagation()"
-                                                            class="tbl-action-btn" (click)="deleteCall(row)">
-                                                            <app-feather-icons [icon]="'trash'"
-                                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                                        </button> -->
-                                                    </mat-cell>
-                                                </ng-container>
-        
-                                                <mat-header-row *matHeaderRowDef="displayedMccColumns"></mat-header-row>
-                                                <mat-row *matRowDef="let row; columns: displayedMccColumns"
-                                                    (click)="viewRoleCall(row)" [style.cursor]="'pointer'" matRipple>
-                                                </mat-row>
-                                                <mat-cell *matNoDataRow colspan="4">
-                                                    No data matching the filter "{{ input.value }}"</mat-cell>
-                                            </mat-table>
-                                            <!-- Loading spinner -->
-                                            <div *ngIf="isLoading" class="tbl-spinner">
-                                                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                                                </mat-progress-spinner>
-                                            </div>
-                                            <div class="tbl-spinner" *ngIf="!isLoading && mccdata==false">
-                                                <h4>No Mcc Allocations Found</h4>
-                                            </div>
-        
-                                            <mat-paginator #mccPaginator [pageSize]="5" [pageSizeOptions]="[1, 2, 5, 10, 20, 30, 40, 50, 100]"
-                                                aria-label="Select page of users"></mat-paginator>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-              </mat-tab>
-        </mat-tab-group>
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="'Inventory Management'"
+        [items]="['Home', 'Directory']"
+        [active_item]="'Centers List'">
+      </app-breadcrumb>
     </div>
+
+    <div class="card">
+      <div class="col-12">
+        <div class="boxs mail_listing">
+          <div class="row">
+            <div class="col-12">
+              <div class="body">
+
+                <!-- Spinner -->
+                <div *ngIf="isLoading" class="tbl-spinner text-center">
+                  <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+                </div>
+
+                <!-- Error -->
+                <div *ngIf="error" class="alert alert-danger text-center">
+                  Error: {{ error.message || error }}
+                </div>
+
+                <!-- Centers List View -->
+                <div *ngIf="!selectedCenter && !isLoading">
+                  <div class="materialTableHeader">
+                    <div class="row">
+                      <div class="col-8">
+                        <ul class="header-buttons-left ms-0">
+                          <li class="dropdown">
+                            <h2>Centers</h2>
+                          </li>
+                          <li class="dropdown m-l-20">
+                            <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                            <input
+                              id="search-input"
+                              placeholder="Search by name, ward, etc."
+                              type="text"
+                              (keyup)="centerFilter($event)"
+                              class="browser-default search-field"
+                              aria-label="Search box"
+                            />
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Centers Table -->
+                  <div class="table-responsive">
+                    <mat-table [dataSource]="centersDataSource" matSort class="mat-cell w-100">
+                      <!-- ID Column -->
+                      <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-10 column-nowrap" >ID</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="tbl-col-width-per-10 column-wrap">{{ element.id }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <mat-header-cell
+                          *matHeaderCellDef
+                          mat-sort-header
+                          style="min-width: 200px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        >
+                          Name
+                        </mat-header-cell>
+                        <mat-cell
+                          *matCellDef="let element"
+                          style="min-width: 200px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        >
+                          {{ element.name }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Landmark Column -->
+                      <ng-container matColumnDef="landmark">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Landmark</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.landmark }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Subcounty Column -->
+                      <ng-container matColumnDef="subcounty">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Subcounty</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.subcounty }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Ward Column -->
+                      <ng-container matColumnDef="ward">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Ward</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.ward }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Actions Column -->
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>View Products</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <button mat-icon-button color="primary" (click)="onSelectCenter(element)">
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="['id', 'name', 'landmark', 'subcounty', 'ward', 'actions']"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: ['id', 'name', 'landmark', 'subcounty', 'ward', 'actions']"></mat-row>
+                    </mat-table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+                  </div>
+                </div>
+
+                <!-- Selected Center Inventory View and Products Table -->
+                <div *ngIf="selectedCenter && !isLoading">
+                  <h3>Allocated Products for {{ selectedCenter.name }}</h3>
+
+                  <!-- Back & Search Row -->
+                  <div class="materialTableHeader mb-3">
+                    <div class="row align-items-center">
+                      <div class="col-8">
+                        <ul class="header-buttons-left ms-0">
+                          <li class="dropdown">
+                            <label for="product-search-input"><i class="material-icons search-icon">search</i></label>
+                            <input
+                              id="product-search-input"
+                              placeholder="Filter products"
+                              type="text"
+                              (input)="applyFilter($event)"
+                              class="browser-default search-field"
+                              aria-label="Product Search box"
+                            />
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-4 text-end">
+                        <button mat-stroked-button color="accent" (click)="goBack()">Back to Centers</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Products Table -->
+                  <div *ngIf="hasdata; else noProducts">
+                    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
+
+                      <!-- ID Column -->
+                      <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.id }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <mat-header-cell
+                          *matHeaderCellDef
+                          mat-sort-header
+                          style="min-width: 200px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        >
+                          Name
+                        </mat-header-cell>
+                        <mat-cell
+                          *matCellDef="let element"
+                          style="min-width: 200px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        >
+                          {{ element.name }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Price Column -->
+                      <ng-container matColumnDef="price">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Buying Price</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.price }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Sale Price Column -->
+                      <ng-container matColumnDef="salePrice">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Selling Price</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.salePrice }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Profit Column -->
+                      <ng-container matColumnDef="profit">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Profit</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.profit }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Discounted Column -->
+                      <ng-container matColumnDef="discounted">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Discounted</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.discounted }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Discount Column -->
+                      <ng-container matColumnDef="discount">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Discount (%)</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.discount }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Stock Column -->
+                      <ng-container matColumnDef="Stock">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Stock</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.stock }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Creation Date Column -->
+                      <ng-container matColumnDef="creationDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.creationDate | date }}</mat-cell>
+                      </ng-container>
+
+                      <!-- Actions Column -->
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <button mat-icon-button (click)="editProduct(element)">
+                            <mat-icon style="color: grey;">launch</mat-icon>
+                          </button>
+                          <button mat-icon-button (click)="deleteProduct(element)">
+                            <mat-icon style="color: red;">delete_outline</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    </mat-table>
+                    <mat-paginator  #centerPaginator [pageSizeOptions]="[2,5, 10, 25]" showFirstLastButtons></mat-paginator>
+                  </div>
+
+                  <ng-template #noProducts>
+                    <p>No products found for this center.</p>
+                  </ng-template>
+                </div>
+
+              </div> 
+            </div> 
+          </div> 
+        </div> 
+      </div> 
+    </div> 
+  </div> 
 </section>

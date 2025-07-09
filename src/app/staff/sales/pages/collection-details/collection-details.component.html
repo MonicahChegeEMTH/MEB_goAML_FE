@@ -590,19 +590,30 @@
                                                 <div class="table-responsive">
                                                     <div class="materialTableHeader">
                                                         <div class="row">
+                                                            
                                                             <div class="col-8">
-                                                                <ul class="header-buttons-left ms-0">
+                                                                <ul class="header-buttons-left ms-0 d-flex align-items-center flex-wrap">
                                                                     <li class="dropdown">
                                                                         <h2>Products</h2>
                                                                     </li>
-                                                                    <li class="dropdown m-l-20">
+                                                                   <li class="dropdown m-l-20 d-flex align-items-center gap-2">
+                                                                     <div class="d-flex align-items-center me-2">
                                                                         <label for="search-input"><i
                                                                                 class="material-icons search-icon">search</i></label>
                                                                         <input placeholder="Filter..." type="text"
                                                                             (keyup)="applyAllocationFilter($event)" #filter
                                                                             class="browser-default search-field"
                                                                             aria-label="Search box" />
-                                                                    </li>
+                                                                            </div>
+                                                                   
+                                                                    <div class = "dropdown me-1 d-flex align-items-center">
+                                                                        <label for ="startDate" class="me-1"> From:</label>
+                                                                        <input id="startDate" type="date" class="browser-default" (change)="filterByDateRange()" [(ngModel)]="startDate" style="max-width: 140px; color: grey; border: none; background: transparent; padding: 0; font-size: 14px;" />
+                                                                   </div>
+                                                                    <div class = "dropdown me-1 d-flex align-items-center">
+                                                                        <label for ="endDate" class="me-1"> To:</label>
+                                                                        <input id="endDate" type="date" class="browser-default" (change)="filterByDateRange()" [(ngModel)]="endDate" style="max-width: 140px; color: grey; border: none; background: transparent; padding: 0; font-size: 14px;" />
+                                                                    </div>
                                                                     <li>
                                                                         <div class="m-l-10"
                                                                             matTooltip="REFRESH">
@@ -699,15 +710,15 @@
                                             <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.amount | currency:'KES'}}
+                                                {{ row.amount | currency:'KES '}}
                                             </mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="allocationDate">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Sold On</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Aprroval Date</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.allocationDate | date}}
+                                                {{ (row.allocationDate || row.approvalDate) ? (row.allocationDate || row.approvalDate | date: 'medium') : 'N/A'}}
                                             </mat-cell>
                                         </ng-container>
 
@@ -755,9 +766,16 @@
                                                     No allocations for this farmer
                                                 </p>
                                             </div>
-                                            <mat-paginator [pageSize]="2" #collectorsPaginator="matPaginator"
+                                           <!--<mat-paginator [pageSize]="2" #collectorsPaginator="matPaginator"
                                                 [pageSizeOptions]="[2, 5, 10, 20, 30, 40, 50, 100]"
-                                                aria-label="Select page of users"></mat-paginator>
+                                                aria-label="Select page of users"></mat-paginator>-->
+
+                                            <mat-paginator [pageSize]="5"   #allocationsPaginator="matPaginator"
+                                                 [pageSizeOptions]="[5, 10, 25, 100]"
+                                                aria-label="Select page of allocations"></mat-paginator>
+
+
+
                                         </div>
                                     </div>
                                 </div>
