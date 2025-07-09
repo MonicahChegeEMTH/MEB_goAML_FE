@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { StockCategoriesLookupComponent } from '../../stock-categories/stock-categories-lookup/stock-categories-lookup.component';
-import { InventoryManagementComponent } from '../inventory-management/inventory-management.component';
 import { InventoryService } from '../inventory.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-stock',
@@ -21,24 +21,24 @@ export class EditStockComponent implements OnInit {
     private service: InventoryService,
     private snackbar: SnackbarService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<InventoryManagementComponent>,
+    private router: Router,
+    public dialogRef: MatDialogRef<EditStockComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    console.log("passed data", this.data.stock)
-    this.productsForm = this.fb.group({
-      name: [this.data.stock.name, [Validators.required]],
-      description: [this.data.stock.description, [Validators.required]],
-      // category: [this.data.stock.category, [Validators.required]],
-      price: [this.data.stock.price, [Validators.required]],
-      salePrice: [this.data.stock.salePrice, [Validators.required]],
-      stock: [this.data.stock.stock],
-      categoryName: [this.data.stock.category],
-      priceType: [this.data.stock.priceType],
-      type: [this.data.stock.type]
-    });
+    console.log("passed data", this.data); // Fixed: using this.data directly
 
+    this.productsForm = this.fb.group({
+      name: [this.data.name, [Validators.required]],
+      description: [this.data.description, [Validators.required]],
+      price: [this.data.price, [Validators.required]],
+      salePrice: [this.data.salePrice, [Validators.required]],
+      stock: [this.data.stock],
+      categoryName: [this.data.category],
+      priceType: [this.data.priceType],
+      type: [this.data.type]
+    });
   }
 
   pickCategory() {
@@ -60,22 +60,18 @@ export class EditStockComponent implements OnInit {
 
   onCancel() {
     this.dialogRef.close();
+    
   }
 
   onSubmit() {
     this.loading = true;
-    console.log("saleprice", this.productsForm.value)
-    this.service.updateProduct(this.data.stock.id,this.productsForm.value).subscribe(
+    console.log("Submitted form value:", this.productsForm.value);
+    this.service.updateProduct(this.data.id, this.productsForm.value).subscribe(
       (res) => {
         this.loading = false;
         this.snackbar.showNotification("snackbar-success", "Successful!");
         this.productsForm.reset();
         this.dialogRef.close();
-        // this.dialogRef.afterClosed().subscribe({
-        //   next: () => {
-        //     this.ngOnInit();
-        //   }
-        // })
       },
       (err) => {
         this.loading = false;

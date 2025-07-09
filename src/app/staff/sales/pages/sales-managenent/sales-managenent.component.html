@@ -1,207 +1,169 @@
 <section class="content">
-    <div class="content-block">
-        <div class="block-header">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Payment Records'" [items]="['Payments']" [active_item]="'Payment Records'">
-            </app-breadcrumb>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="body">
-                        <div class="table-responsive">
-                            <div class="materialTableHeader">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul class="header-buttons-left ms-0">
-                                            <li class="dropdown">
-                                                <h2>Counties</h2>
-                                            </li>
-                                            <li class="dropdown m-l-20">
-                                                <label for="search-input"><i
-                                                        class="material-icons search-icon">search</i></label>
-                                                <input placeholder="Search" type="text"
-                                                    style="text-transform: capitalize;" (keyup)="applyFilter($event)"
-                                                    class="browser-default search-field" aria-label="Search box" />
-                                            </li>
-
-                                            <li>
-                                                <div class="m-l-10" matTooltip="Refresh">
-                                                    <button mat-mini-fab color="primary" (click)="getData()">
-                                                        <mat-icon class="col-white">refresh</mat-icon>
-                                                    </button>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <ul class="header-buttons">
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="XLSX">
-                                                    <img src="assets/images/icons/xlsx.png" alt="" (click)="
-                                exporter.exportTable('xlsx', {
-                                  fileName: 'all-counties',
-                                  sheet: 'sheet1'
-                                })
-                              " />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="CSV">
-                                                    <img src="assets/images/icons/csv.png" alt=""
-                                                        (click)="exporter.exportTable('csv')" />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="JSON">
-                                                    <img src="assets/images/icons/json.png" alt=""
-                                                        (click)="exporter.exportTable('json')" />
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="export-button m-l-10" matTooltip="TXT">
-                                                    <img src="assets/images/icons/txt.png" alt=""
-                                                        (click)="exporter.exportTable('txt')" />
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
-                                #exporter="matTableExporter">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox (change)="$event ? masterToggle() : null"
-                                            [checked]="selection.hasValue() && isAllSelected()"
-                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                            [ngClass]="'tbl-checkbox'">
-                                        </mat-checkbox>
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
-                                        <mat-checkbox (click)="$event.stopPropagation()"
-                                            (change)="$event ? selection.toggle(row) : null"
-                                            [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
-                                        </mat-checkbox>
-                                    </mat-cell>
-                                </ng-container>
-                                <!-- ID Column -->
-                                <ng-container matColumnDef="id">
-                                    <mat-header-cell class="table-img tbl-col-width-per-8" *matHeaderCellDef
-                                        mat-sort-header>#</mat-header-cell>
-                                    <mat-cell class="table-img tbl-col-width-per-8"
-                                        *matCellDef="let element; let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)">{{i + 1}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="farmer_no">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Farmer
-                                        No</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.farmer_no}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="username">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">username</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.username}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="payment_mode">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">payment_mode</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.payment_mode}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="freequency">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">freequency</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.freequency}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="mobileNo">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="column-nowrap">mobileNo</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.mobileNo}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="allocationAmount">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Expenses
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.allocationAmount | number : '1.2-2'}}
-                                    </mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="collectionAmount">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Income
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.collectionAmount | number : '1.2-2'}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="netPay">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap">Net Pay
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" class="column-nowrap">
-                                        {{request.netPay | number : '1.2-2'}}
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let request;let i = index" [class.odd-row]="i % 2"
-                                        [class.even-row]="!(i % 2)" (contextmenu)="onContextMenu($event, request)">
-                                        <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                                            (click)="pay()" class="tbl-action-btn">
-                                            <app-feather-icons matTooltip="Pay"
-                                                [icon]="'send'"></app-feather-icons>
-                                        </button>
-                                        <!-- <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
-                                            <mat-icon>payment</mat-icon>
-                                          </button>
-                                         -->
-                                    </mat-cell>
-                                </ng-container>
-
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                                <mat-row *matRowDef="let row; columns: displayedColumns"
-                                    (click)="requestDetailsCall(request)" [style.cursor]="'pointer'" matRipple>
-                                </mat-row>
-                                <mat-cell *matNoDataRow colspan="4">
-                                    No data matching the filter "{{ input.value }}"</mat-cell>
-                            </mat-table>
-
-                            <!-- Loading spinner -->
-                            <div *ngIf="isLoading" class="tbl-spinner">
-                                <mat-progress-spinner color="primary" [diameter]="50" mode="indeterminate">
-                                </mat-progress-spinner>
-                            </div>
-
-                            <div class="tbl-spinner" *ngIf="isdata==false && !isLoading">
-                                <h4>0 Records Found</h4>
-                            </div>
-
-                            <mat-paginator #paginator [pageIndex]="0" [pageSize]="5"
-                                [pageSizeOptions]="[5, 10, 25, 100]">
-                            </mat-paginator>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Payment Records'" [items]="['Payments']" [active_item]="'Payment Records'"></app-breadcrumb>
     </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0 d-flex align-items-center flex-wrap">
+                      <li class="dropdown me-3"><h2>Payments</h2></li>
+
+                      <!-- Search -->
+                      <li class="dropdown me-3 d-flex align-items-center">
+                        <label for="search-input" class="me-1"><i class="material-icons search-icon">search</i></label>
+                        <input id="search-input" placeholder="Search" type="text" style="text-transform: capitalize;" (keyup)="applyFilter($event)" class="browser-default search-field" aria-label="Search box" />
+                      </li>
+
+                      <!-- Date Filters -->
+                     <!-- <li class="dropdown me-3 d-flex align-items-center">
+                        <label for="startDate" class="me-1">From:</label>
+                        <input id="startDate" type="date" class="browser-default" (change)="filterByDateRange()" [(ngModel)]="startDate" style="max-width: 140px; color: grey; border: none; background: transparent; padding: 0; font-size: 14px;" />
+                      </li>
+                      <li class="dropdown me-3 d-flex align-items-center">
+                        <label for="endDate" class="me-1">To:</label>
+                        <input id="endDate" type="date" class="browser-default" (change)="filterByDateRange()" [(ngModel)]="endDate" style="max-width: 140px; color: grey; border: none; background: transparent; padding: 0; font-size: 14px;" />
+                      </li>-->
+
+                      <li>
+                        <div class="m-l-10" matTooltip="Refresh">
+                          <button mat-mini-fab color="primary" (click)="getData()"><mat-icon class="col-white">refresh</mat-icon></button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="XLSX">
+                          <img src="assets/images/icons/xlsx.png" alt="" (click)="exporter.exportTable('xlsx', { fileName: 'all-counties', sheet: 'sheet1' })" />
+                        </div>
+                      </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="CSV">
+                          <img src="assets/images/icons/csv.png" alt="" (click)="exporter.exportTable('csv')" />
+                        </div>
+                      </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="JSON">
+                          <img src="assets/images/icons/json.png" alt="" (click)="exporter.exportTable('json')" />
+                        </div>
+                      </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="TXT">
+                          <img src="assets/images/icons/txt.png" alt="" (click)="exporter.exportTable('txt')" />
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Table -->
+              <mat-table
+                #table
+                matTableExporter
+                [dataSource]="dataSource"
+                matSort
+                class="mat-cell"
+                #exporter="matTableExporter"
+              >
+                <!-- Selection -->
+                <ng-container matColumnDef="select">
+                  <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-6">
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" class="tbl-checkbox"></mat-checkbox>
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" class="tbl-col-width-per-6">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" class="tbl-checkbox"></mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Other Columns -->
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+                  <mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="farmer_no">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Farmer No</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.farmer_no }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="username">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Username</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.username }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="payment_mode">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Payment Mode</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.payment_mode }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="freequency">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Frequency</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.freequency }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="mobileNo">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile No</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.mobileNo }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="allocationAmount">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Expenses</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.allocationAmount | number: '1.2-2' }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="collectionAmount">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Income</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.collectionAmount | number: '1.2-2' }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="netPay">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Net Pay</mat-header-cell>
+                  <mat-cell *matCellDef="let request">{{ request.netPay | number: '1.2-2' }}</mat-cell>
+                </ng-container>
+
+                <!-- Actions -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                  <mat-cell *matCellDef="let request">
+                    <button mat-icon-button color="primary" (click)="pay(); $event.stopPropagation()" class="tbl-action-btn">
+                      <app-feather-icons matTooltip="Pay" [icon]="'send'"></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Header & Row Declarations -->
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns" (click)="requestDetailsCall(row)" [style.cursor]="'pointer'" matRipple></mat-row>
+                <mat-cell *matNoDataRow colspan="4">No data matching the filter "{{ input?.value }}"</mat-cell>
+              </mat-table>
+
+              <!-- Spinner -->
+              <div *ngIf="isLoading" class="tbl-spinner">
+                <mat-progress-spinner [diameter]="50" color="primary" mode="indeterminate"></mat-progress-spinner>
+              </div>
+
+              <!-- Paginator -->
+              <mat-paginator
+                [length]="dataSource?.filteredData?.length || 0"
+                [pageSize]="5"
+                [pageIndex]="0"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                showFirstLastButtons
+              ></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

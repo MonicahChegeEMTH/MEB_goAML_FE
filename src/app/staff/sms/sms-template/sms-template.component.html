@@ -81,16 +81,16 @@
                                         class="mat-cell" #exporter="matTableExporter">
                                         <!-- ID Column -->
                                         <ng-container matColumnDef="id">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header   class="column-nowrap tbl-col-width-per-10">Id
                                             </mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-10">
                                                 {{i+1}}</mat-cell>
                                         </ng-container>
 
 
                                         <ng-container matColumnDef="templateName">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header >Name</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
                                                 {{ row.templateName }}</mat-cell>
@@ -98,23 +98,23 @@
 
                                         <ng-container matColumnDef="createdBy">
                                             <mat-header-cell *matHeaderCellDef
-                                                mat-sort-header>Created By</mat-header-cell>
+                                                mat-sort-header class="column-nowrap tbl-col-width-per-15" > Created By</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-15">
                                                 {{ row.createdBy }}</mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="createdOn">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Created On</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap tbl-col-width-per-20">Created On</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
-                                                [class.even-row]="!(i % 2)">
+                                                [class.even-row]="!(i % 2)" class="column-nowrap tbl-col-width-per-20">
                                                 {{ row.createdOn | date}}
                                             </mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header >Actions</mat-header-cell>
+                                            <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 1"
                                                 [class.even-row]="!(i % 2)">
                                                 <button mat-icon-button color="primary"
                                                     (click)="viewCall(row)" class="tbl-action-btn">
