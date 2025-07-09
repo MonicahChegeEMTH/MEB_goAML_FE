@@ -27,16 +27,21 @@ export class LookupPaymentOptionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data && this.data.paymentOption) {
-      this.paymentForm.patchValue({
-        categoryName: this.data.paymentOption.categoryName,
-        code: this.data.paymentOption.code,
-        name: this.data.paymentOption.name,
-        active: this.data.paymentOption.active,
-        createdOn: this.data.paymentOption.createdOn
-      });
-    }
+  if (this.data && this.data.paymentOption) {
+    const createdDateOnly = this.data.paymentOption.createdOn
+      ? new Date(this.data.paymentOption.createdOn).toISOString().split('T')[0]
+      : '';
+
+    this.paymentForm.patchValue({
+      categoryName: this.data.paymentOption.categoryName,
+      code: this.data.paymentOption.code,
+      name: this.data.paymentOption.name,
+      active: this.data.paymentOption.active,
+      createdOn: createdDateOnly
+    });
   }
+}
+
 
   close(): void {
     this.dialogRef.close();

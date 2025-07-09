@@ -50,27 +50,29 @@ export class PaymentDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadPaymentOptions(): void {
-    this.isLoading = true;
-    const sub = this.paymentService.getPaymentOptions().subscribe({
-      next: (options: BankOption[]) => {
-        const transformedOptions = options.map((opt) => ({
-          ...opt,
-          name: Array.isArray(opt.name) ? opt.name : (opt.name as string).split(',').map(n => n.trim())
-        }));
+  this.isLoading = true;
+  const sub = this.paymentService.getPaymentOptions().subscribe({
+    next: (options: BankOption[]) => {
+      const transformedOptions = options.map((opt) => ({
+        ...opt,
+        name: Array.isArray(opt.name) ? opt.name : (opt.name as string).split(',').map(n => n.trim())
+      }));
 
-        const groupedOptions = this.groupOptionsByCategory(options);
-        this.paymentOptions = groupedOptions;
-        this.optionsDataSource.data = this.paymentOptions;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching payment options:', error);
-        this.isLoading = false;
-        this.snackbar.showNotification('snackbar-danger', 'Failed to load payment options');
-      }
-    });
-    this.subscriptions.push(sub);
-  }
+      const groupedOptions = this.groupOptionsByCategory(transformedOptions);
+
+      this.paymentOptions = groupedOptions;
+      this.optionsDataSource.data = this.paymentOptions;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error fetching payment options:', error);
+      this.isLoading = false;
+      this.snackbar.showNotification('snackbar-danger', 'Failed to load payment options');
+    }
+  });
+  this.subscriptions.push(sub);
+}
+
 
   groupOptionsByCategory(options: BankOption[]): BankOption[] {
     const categoryMap = new Map<string, BankOption>();
