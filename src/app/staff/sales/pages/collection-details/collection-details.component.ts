@@ -1,46 +1,17 @@
+import { SelectionModel } from '@angular/cdk/collections';
+import { DatePipe, Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { SelectionModel } from '@angular/cdk/collections';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Location } from '@angular/common';
-import { DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ReportsService } from 'src/app/reports/services/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { SalesService } from '../../services/sales.service';
-
-interface Collection {
-  quantity: number;
-  amount: number;
-  collector: string;
-  collection_date: string;
-  paymentStatus: string;
-}
-
-interface Allocation {
-  id: string;
-  time: string;
-  product: string;
-  username: string;
-  amount: number;
-  paymentStatus: string;
-  quantity: number;
-  allocationDate: string;
-}
-
-interface Farmer {
-  id: string;
-  username: string;
-  [key: string]: any;
-}
-
-interface ApiResponse<T> {
-  entity: T;
-}
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-collection-details',
@@ -50,8 +21,6 @@ interface ApiResponse<T> {
 export class CollectionDetailsComponent implements OnInit {
   today: Date = new Date();
   formattedDate: string = this.today.toISOString().slice(0, 10);
-
-  form: FormGroup;
 
   displayedColumns: string[] = [
     'select',
@@ -80,11 +49,53 @@ export class CollectionDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private datePipe: DatePipe
   ) {
-    this.form = this.fb.group({
-      from: ['', Validators.required],
-      to: ['', Validators.required],
-    });
+    this.today = this.getCurrentDate();
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  dataSource!: MatTableDataSource<any>;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('filter', { static: true }) filter: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
+
+  allocationsDataSource!: MatTableDataSource<any>;
+  @ViewChild('allocationsPaginator', { static: false })
+  allocationsPaginator!: MatPaginator;
+  @ViewChild('allocationSort', { static: false }) collectorsSort!: MatSort;
+  allocationsDisplayedColumns: string[] = [
+    'id',
+    'time',
+    'product',
+    'username',
+    'amount',
+    // 'revokeStatus',
+    'paymentStatus',
+    // 'allocatedBy',
+    'quantity',
+    'allocationDate',
+  ];
+  allocationsArray: any[] = [];
+  allocationsNotAdded: boolean = true;
+  allocationsIndex: any;
+  updateCollectorsSelected: boolean = false;
+  payedAccruals: number = 0;
+  notPayedAccruals: number = 0;
+  amountOnAllocatedItems: number = 0;
+  totalAmountOnMilkDelivered: number = 0;
+  amountPayedOnCollections: number = 0;
+  amountNotPayedOnCollections: number = 0;
+  quantity: number = 0.0
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -94,41 +105,47 @@ export class CollectionDetailsComponent implements OnInit {
 
     this.route.params.subscribe((params: Params) => {
       this.farmerNo = params['fno'];
-      console.log('FarmerNo from route:', this.farmerNo);
-      this.initializeData();
+      // Use the id parameter in your component logic
     });
-  }
 
-  initializeData(): void {
-    console.log('Initializing data...');
     this.getByFarmerNo(this.farmerNo);
     this.getTodaysCollections();
     this.getFarmerAllocations(this.farmerNo);
     this.getPayedFarmerAccruals(this.farmerNo);
     this.getNonPayedFarmerAccruals(this.farmerNo);
-    this.getFarmerAmountOnPayedCollections(this.farmerNo);
     this.getFarmerAmountOnNotPayedCollections(this.farmerNo);
+    this.getFarmerAmountOnPayedCollections(this.farmerNo);
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  getCurrentDate(): any {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
   }
 
-  getByFarmerNo(farmerNo: string): void {
-    console.log('Fetching farmer by number:', farmerNo);
-    this.service.getByFarmerNo(farmerNo).subscribe((res: ApiResponse<Farmer>) => {
-      console.log('Farmer response:', res);
+  farmer: any;
+  present: boolean = false;
+  found: boolean = false;
+  selection = new SelectionModel<any>(true, []);
+
+  getByFarmerNo(farmerNo: any) {
+    this.service.getByFarmerNo(farmerNo).subscribe((res) => {
       this.farmer = res.entity;
-      this.present = !!this.farmer?.username;
-      console.log('Farmer set:', this.farmer, 'Present:', this.present);
+      if (this.farmer.username != null || this.farmer.username != undefined) {
+        this.present = true;
+        console.log("farmer data ", this.farmer)
+      } else {
+        this.present = false;
+      }
     });
   }
 
-  getTodaysCollections(): void {
+
+  getTodaysCollections() {
     this.isLoading = true;
     this.service.filterCollections(this.farmerNo, this.today, this.today).subscribe((res) => {
       this.data = res;
@@ -143,16 +160,16 @@ export class CollectionDetailsComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+      } else {
+        this.isdata = false;
         this.isLoading = false;
-        console.log('Collections loaded. Total quantity:', this.quantity);
-      });
+        // this.dataSource = new MatTableDataSource<any>(this.data);
+      }
+    });
   }
 
-  filterCollections(): void {
+  filterCollections() {
     if (this.form.valid) {
-      const from = this.datePipe.transform(this.form.value.from, 'yyyy-MM-dd')!;
-      const to = this.datePipe.transform(this.form.value.to, 'yyyy-MM-dd')!;
-      console.log('Filtering collections from', from, 'to', to);
       this.isLoading = true;
       const from = this.datePipe.transform(this.form.value.from, "yyyy-MM-dd")
       const to = this.datePipe.transform(this.form.value.to, "yyyy-MM-dd")
@@ -169,10 +186,14 @@ export class CollectionDetailsComponent implements OnInit {
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+        } else {
+          this.isdata = false;
           this.isLoading = false;
-        });
+          // this.dataSource = new MatTableDataSource<any>(this.data);
+        }
+      });
     } else {
-      this.snackbar.showNotification('snackbar-danger', 'From and To dates are required');
+      this.snackbar.showNotification('snackbar-danger', "from and to date required");
     }
   }
 
@@ -202,24 +223,42 @@ export class CollectionDetailsComponent implements OnInit {
 
 
 
-  generateSTatement(farmerId: string, from: string, to: string): void {
-    console.log('Generating statement for:', farmerId, 'from', from, 'to', to);
-    this.reportservice.generatefarmerCollections(farmerId, from, to).subscribe({
-      next: (response) => {
-        console.log('Statement generation successful');
-        const url = window.URL.createObjectURL(response.data);
-        const a = document.createElement('a');
+  generateSTatement(farmerId: any, from: any, to: any) {
+    this.reportservice.generatefarmerCollections(farmerId, from, to).subscribe(
+      (response) => {
+        console.log(response);
+        let url = window.URL.createObjectURL(response.data);
+
+        // if you want to open PDF in new tab
+        window.open(url);
+
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.setAttribute('target', 'blank');
         a.href = url;
         a.download = response.filename;
         a.click();
         window.URL.revokeObjectURL(url);
-        this.snackbar.showNotification('snackbar-success', 'Report generated successfully');
+        a.remove();
+
+        this.isLoading = false;
+
+        this.snackbar.showNotification(
+          'Report generated successfully',
+          'snackbar-success'
+        );
       },
-      error: (err) => {
-        console.error('Error generating statement:', err);
-        this.snackbar.showNotification('snackbar-danger', 'Report could not be generated');
+      (err) => {
+        console.log(err);
+        this.isLoading = false;
+
+        this.snackbar.showNotification(
+          'Report could not be generated successfully',
+          'snackbar-danger'
+        );
       }
-    });
+    );
   }
 
   // accruals: any;
@@ -273,6 +312,7 @@ export class CollectionDetailsComponent implements OnInit {
     });
   }
 
+
   getFarmerAmountOnNotPayedCollections(id){
     this.service.getFarmerPayments(id, "N").subscribe((res) => {
 
@@ -285,27 +325,34 @@ export class CollectionDetailsComponent implements OnInit {
     });
   }
 
-  isAllSelected(): boolean {
+
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource?.data?.length || 0;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  masterToggle(): void {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach(row => this.selection.select(row));
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
   }
 
   navigateBackToFarmers() {
     this.location.back();
   }
 
- applyAllocationFilter(event: Event): void {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.allocationsDataSource.filter = filterValue.trim().toLowerCase();
-  if (this.allocationsDataSource.paginator) {
-    this.allocationsDataSource.paginator.firstPage();
+  applyAllocationFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.allocationsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.allocationsDataSource.paginator) {
+      this.allocationsDataSource.paginator.firstPage();
+    }
   }
-}
 }
