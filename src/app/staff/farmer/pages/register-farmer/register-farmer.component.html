@@ -383,80 +383,107 @@
 
       <!--Bank Details-->
       <div class="row">
-  <mat-card>
-    <mat-card-title style="font-size: x-small">
-      Bank Details & Payment Frequency
-    </mat-card-title>
-    <mat-card-content>
-      <!-- Bind paymentMode to the parent form -->
-      <form [formGroup]="farmerRegirstartionForm">
-        <div class="row">
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px">
-              <mat-label>Select Payment Mode</mat-label>
-              <mat-select formControlName="paymentMode" required>
-                <mat-option *ngFor="let option of paymentModes" [value]="option.name">
-                  {{ option.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        
-      </form>
+        <mat-card>
+          <mat-card-title style="font-size: x-small"
+            >Bank Details & Payment Frequency</mat-card-title
+          >
+          <mat-card-content>
+            <form [formGroup]="bankDetailsForm">
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 100%; margin-bottom: 12px"
+                  >
+                    <mat-label>Select Payment Mode</mat-label>
+                    <mat-select formControlName="paymentMode" required>
+                      <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
+                      <mat-option value="Bank">Bank</mat-option>
+                      <mat-option value="Cash">Cash</mat-option>
+                      <mat-option value="Pesalink">Pesalink</mat-option>
+                      <mat-option value="cooperative saccos"
+                        >Cooperative Saccos</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 100%; margin-bottom: 12px"
+                  >
+                    <mat-label>Select Bank Name</mat-label>
+                    <mat-select formControlName="bankName" required>
+                      <mat-option
+                        *ngFor="let bank of bankOptions"
+                        [value]="bank.name"
+                      >
+                        {{ bank.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="
+                        bankDetailsForm.get('bankName').hasError('required')
+                      "
+                    >
+                      Bank Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 100%; margin-bottom: 12px"
+                  >
+                    <mat-label>Bank Account Number</mat-label>
+                    <input matInput formControlName="accountNumber" required />
+                    <mat-error
+                      *ngIf="
+                        bankDetailsForm
+                          .get('accountNumber')
+                          .hasError('required')
+                      "
+                    >
+                      Bank Account No is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-      <!-- Bank details are part of separate form -->
-      <form [formGroup]="bankDetailsForm">
-        <div class="row">
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px">
-              <mat-label>Select Bank Name</mat-label>
-              <mat-select formControlName="bankName" required>
-                <mat-option *ngFor="let option of filteredBankOptions" [value]="option.name">
-                  {{ option.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="bankDetailsForm.get('bankName')?.hasError('required')">
-                Bank Name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px">
-              <mat-label>Bank Account Number</mat-label>
-              <input matInput formControlName="accountNumber" required />
-              <mat-error *ngIf="bankDetailsForm.get('accountNumber')?.hasError('required')">
-                Bank Account No is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px">
-              <mat-label>Bank Account Name</mat-label>
-              <input matInput formControlName="accountName" required />
-              <mat-error *ngIf="bankDetailsForm.get('accountName')?.hasError('required')">
-                Bank Account name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
-            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 12px">
-              <mat-label>Branch Name</mat-label>
-              <input matInput formControlName="branch" required />
-              <mat-error *ngIf="bankDetailsForm.get('branch')?.hasError('required')">
-                Bank branch name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
-
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 100%; margin-bottom: 12px"
+                  >
+                    <mat-label>Bank Account Name</mat-label>
+                    <input matInput formControlName="accountName" required />
+                    <mat-error
+                      *ngIf="
+                        bankDetailsForm.get('accountName').hasError('required')
+                      "
+                    >
+                      Bank Account name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 100%; margin-bottom: 12px"
+                  >
+                    <mat-label>Branch Name</mat-label>
+                    <input matInput formControlName="branch" required />
+                    <mat-error
+                      *ngIf="bankDetailsForm.get('branch').hasError('required')"
+                    >
+                      Bank branch name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
 
       <!--Transportation & Payment Frequency-->
       <div class="row">
