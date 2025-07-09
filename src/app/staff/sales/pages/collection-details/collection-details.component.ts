@@ -95,9 +95,7 @@ export class CollectionDetailsComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
   originalAllocations: any[] = [];
- 
 
- 
   allData: any[] = [];
 
   quantity = 0;
@@ -108,6 +106,9 @@ export class CollectionDetailsComponent implements OnInit {
   notPayedAccruals = 0;
   amountPayedOnCollections = 0;
   amountNotPayedOnCollections = 0;
+
+  // Declare the missing 'data' property
+  data!: ApiResponse<Collection[]>;
 
   constructor(
     private route: ActivatedRoute,
@@ -128,9 +129,9 @@ export class CollectionDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       from: ['', [Validators.required]],
-      to: ['', [Validators.required]]
-    })
-    
+      to: ['', [Validators.required]],
+    });
+
     this.route.params.subscribe((params: Params) => {
       this.farmerNo = params['fno'];
       console.log('FarmerNo from route:', this.farmerNo);
@@ -169,7 +170,7 @@ export class CollectionDetailsComponent implements OnInit {
 
   getTodaysCollections(): void {
     this.isLoading = true;
-    this.service.filterCollections(this.farmerNo, this.today, this.today).subscribe((res) => {
+    this.service.filterCollections(this.farmerNo, this.today, this.today).subscribe((res: ApiResponse<Collection[]>) => {
       this.data = res;
 
       if (this.data.entity.length > 0) {
@@ -177,14 +178,15 @@ export class CollectionDetailsComponent implements OnInit {
         this.isdata = true;
         this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
 
-      
         // Binding with the datasource
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.isLoading = false;
         console.log('Collections loaded. Total quantity:', this.quantity);
-      });
+      }
+      this.isLoading = false; // Ensure isLoading is set to false even if no data
+    });
   }
 
   filterCollections(): void {
@@ -193,25 +195,53 @@ export class CollectionDetailsComponent implements OnInit {
       const to = this.datePipe.transform(this.form.value.to, 'yyyy-MM-dd')!;
       console.log('Filtering collections from', from, 'to', to);
       this.isLoading = true;
-      const from = this.datePipe.transform(this.form.value.from, "yyyy-MM-dd")
-      const to = this.datePipe.transform(this.form.value.to, "yyyy-MM-dd")
-      this.service.filterCollections(this.farmerNo, from, to).subscribe((res) => {
+      this.service.filterCollections(this.farmerNo, from, to).subscribe((res: ApiResponse<Collection[]>) => {
         this.data = res;
-  
+
         if (this.data.entity.length > 0) {
           this.isLoading = false;
           this.isdata = true;
           this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
-  
-        
+
           // Binding with the datasource
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.isLoading = false;
-        });
+        }
+        this.isLoading = false; // Ensure isLoading is set to false even if no data
+      });
     } else {
       this.snackbar.showNotification('snackbar-danger', 'From and To dates are required');
+    }
+  }
+
+  // Add the missing filterByDateRange method
+  filterByDateRange(): void {
+    if (this.startDate && this.endDate) {
+      const from = this.datePipe.transform(this.startDate, 'yyyy-MM-dd')!;
+      const to = this.datePipe.transform(this.endDate, 'yyyy-MM-dd')!;
+      console.log('Filtering allocations from', from, 'to', to);
+      this.isLoading = true;
+      this.service.getFarmerAllocations(this.farmerNo).subscribe((res) => {
+        this.allocationsArray = res.entity.filter((allocation: Allocation) => {
+          const allocationDate = this.datePipe.transform(allocation.allocationDate, 'yyyy-MM-dd')!;
+          return allocationDate >= from && allocationDate <= to;
+        });
+
+        if (this.allocationsArray.length > 0) {
+          this.allocationsNotAdded = false;
+          this.amountOnAllocatedItems = this.allocationsArray.reduce((sum, allocation) => sum + allocation.amount, 0);
+          this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
+          this.allocationsDataSource.paginator = this.allocationsPaginator;
+        } else {
+          this.allocationsNotAdded = true;
+          this.allocationsDataSource = new MatTableDataSource([]);
+        }
+        this.isLoading = false;
+      });
+    } else {
+      this.snackbar.showNotification('snackbar-danger', 'Please select both start and end dates');
     }
   }
 
@@ -239,8 +269,6 @@ export class CollectionDetailsComponent implements OnInit {
     this.getFarmerAllocations(this.farmerNo)
   }
 
-
-
   generateSTatement(farmerId: string, from: string, to: string): void {
     console.log('Generating statement for:', farmerId, 'from', from, 'to', to);
     this.reportservice.generatefarmerCollections(farmerId, from, to).subscribe({
@@ -261,16 +289,6 @@ export class CollectionDetailsComponent implements OnInit {
     });
   }
 
-  // accruals: any;
-  // getAccruals() {
-  //   this.service.getFarmerAccruals(this.farmerid).subscribe((res) => {
-  //     this.accruals = res.entity;
-  //     if (this.accruals != null) {
-  //       this.found = true;
-  //     }
-  //   });
-  // }
-
   getPayedFarmerAccruals(id){
     this.service.getFarmerAllocationAccruals(id, "Y").subscribe((res) => {
           this.payedAccruals = res.entity.accruedamount;
@@ -282,9 +300,6 @@ export class CollectionDetailsComponent implements OnInit {
           }
 
           console.log("Payed Accruals", res)
-          // if (this.accruals != null) {
-          //   this.found = true;
-          // }
         });    
   }
 
@@ -340,11 +355,11 @@ export class CollectionDetailsComponent implements OnInit {
     this.location.back();
   }
 
- applyAllocationFilter(event: Event): void {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.allocationsDataSource.filter = filterValue.trim().toLowerCase();
-  if (this.allocationsDataSource.paginator) {
-    this.allocationsDataSource.paginator.firstPage();
+  applyAllocationFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.allocationsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.allocationsDataSource.paginator) {
+      this.allocationsDataSource.paginator.firstPage();
+    }
   }
-}
 }
