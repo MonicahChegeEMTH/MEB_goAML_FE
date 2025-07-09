@@ -36,13 +36,17 @@ export class FarmerService {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/all?months=${months}`, httpOptions);
   }
 
-  public getRouteActiveFarmers(routeId: number, months: number): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/route?routeId=${routeId}&months=${months}`, httpOptions);
-  }
+  public getRouteActiveFarmers(routeId: number, months?: number): Observable<any> {
+  const monthParam = months ? `&months=${months}` : '';
+  return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/route?routeId=${routeId}${monthParam}`, httpOptions);
+}
 
-  public getCenterActiveFarmers(locationId: number, months: number): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/location?locationId=${locationId}&months=${months}`, httpOptions);
-  }
+
+  public getCenterActiveFarmers(locationId: number, months?: number): Observable<any> {
+  const monthParam = months ? `&months=${months}` : '';
+  return this.http.get(`${environment.apiUrl}/api/v1/farmer/active/location?locationId=${locationId}${monthParam}`, httpOptions);
+}
+
 
   public getByFarmersByFarmerNo(farmer_no: any): Observable<any> {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/membernumber?farmer_number=${farmer_no}`, httpOptions);

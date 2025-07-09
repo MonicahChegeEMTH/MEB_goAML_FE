@@ -118,7 +118,7 @@ export class RegisterFarmerComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const sub = this.service.getPaymentModes().subscribe({
       next: (res: any) => {
-        this.paymentModes = res.entity || res;
+      this.paymentModes = res?.entity || res?.data || res || [];
         console.log('Payment Modes:', this.paymentModes);
         this.isLoading = false;
       },
@@ -138,12 +138,12 @@ export class RegisterFarmerComponent implements OnInit, OnDestroy {
         console.log('Raw API response for bank options:', res);
         this.bankOptions = res.entity || res;
         // Temporary hardcoded options to include BANK and SACCO
-        this.bankOptions = [
-          ...this.bankOptions,
-          { id: 12, name: "EQUITY BANK", code: "68", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
-          { id: 13, name: "KCB BANK", code: "69", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
-          { id: 14, name: "SACCO XYZ", code: "123", description: "Sacco", active: true, categoryId: 3, categoryName: "SACCO" }
-        ];
+        // this.bankOptions = [
+        //   ...this.bankOptions,
+        //   { id: 12, name: "EQUITY BANK", code: "68", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
+        //   { id: 13, name: "KCB BANK", code: "69", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
+        //   { id: 14, name: "SACCO XYZ", code: "123", description: "Sacco", active: true, categoryId: 3, categoryName: "SACCO" }
+        // ];
         console.log('Processed bankOptions:', this.bankOptions);
         this.updateFilteredBankOptions(this.farmerRegirstartionForm.get('paymentMode')?.value);
         this.isLoading = false;
