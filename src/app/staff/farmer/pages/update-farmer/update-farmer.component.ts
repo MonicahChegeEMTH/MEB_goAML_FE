@@ -26,7 +26,7 @@ export class UpdateFarmerComponent implements OnInit {
   wards: any;
   counties: any;
   routes: any;
-  banks: any = { "count": 45, 
+  banks: any = { "count": 45,
     "list": [
       {
         name: 'MPESA',
@@ -173,6 +173,7 @@ export class UpdateFarmerComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
+    console.log("Data received from dialog ", this.data)
     console.log("Farmer id " + this.data.farmer.id)
     this.isLoading = true;
     this.service.getByFarmersByFarmerNo(this.data.farmer.id).subscribe(res => {
@@ -185,7 +186,7 @@ export class UpdateFarmerComponent implements OnInit {
       this.getWards(this.farmer.subcounty_fk)
 
       this.bankDetailsForm = this.fb.group({
-        
+
         branch: [this.farmer.bankDetails?.branch ?? "NAN", [Validators.required]],
         bankName: [this.farmer.bankDetails?.bankName ?? "NAN", [Validators.required]],
         accountNumber: [this.farmer.bankDetails?.accountNumber ?? "NAN", [Validators.required]],
@@ -292,6 +293,6 @@ export class UpdateFarmerComponent implements OnInit {
       }
     })
   }
-  
+
 }
 
