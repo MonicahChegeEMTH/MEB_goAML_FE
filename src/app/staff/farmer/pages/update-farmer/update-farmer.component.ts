@@ -176,7 +176,7 @@ export class UpdateFarmerComponent implements OnInit {
     console.log("Data received from dialog ", this.data)
     console.log("Farmer id " + this.data.farmer.id)
     this.isLoading = true;
-    this.service.getByFarmersByFarmerNo(this.data.farmer.id).subscribe(res => {
+    this.service.getFarmersById(this.data.farmer.id).subscribe(res => {
       this.data = res;
       this.isLoading = false;
       this.farmer = this.data.entity
@@ -295,4 +295,3 @@ export class UpdateFarmerComponent implements OnInit {
   }
 
 }
-
