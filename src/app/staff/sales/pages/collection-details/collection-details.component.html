@@ -688,7 +688,7 @@
 
                                         <ng-container matColumnDef="quantity">
                                             <mat-header-cell *matHeaderCellDef
-                                                mat-sort-header>Quantity</mat-header-cell>
+                                                mat-sort-header>Qty</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
                                                 {{ row.quantity }}
@@ -704,18 +704,18 @@
                                         </ng-container>
 
                                         <ng-container matColumnDef="allocationDate">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Sold On</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Approval date</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.allocationDate | date}}
+                                                {{ row.approvalDate | date:'medium'}}
                                             </mat-cell>
                                         </ng-container>
 
                                         <ng-container matColumnDef="time">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header>Requested On</mat-header-cell>
                                             <mat-cell *matCellDef="let row;let i = index" [class.odd-row]="i % 2"
                                                 [class.even-row]="!(i % 2)">
-                                                {{ row.time}}
+                                                {{ row.requestedOn | date:'medium' }}
                                             </mat-cell>
                                         </ng-container>
 
@@ -755,8 +755,8 @@
                                                     No allocations for this farmer
                                                 </p>
                                             </div>
-                                            <mat-paginator [pageSize]="2" #collectorsPaginator="matPaginator"
-                                                [pageSizeOptions]="[2, 5, 10, 20, 30, 40, 50, 100]"
+                                            <mat-paginator [pageIndex]="0" #allocationsPaginator
+                                                [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 100]"
                                                 aria-label="Select page of users"></mat-paginator>
                                         </div>
                                     </div>
