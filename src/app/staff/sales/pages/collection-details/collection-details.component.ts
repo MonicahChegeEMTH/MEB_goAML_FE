@@ -155,7 +155,6 @@ export class CollectionDetailsComponent implements OnInit {
         this.isdata = true;
         this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
 
-
         // Binding with the datasource
         this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
@@ -180,7 +179,6 @@ export class CollectionDetailsComponent implements OnInit {
           this.isLoading = false;
           this.isdata = true;
           this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
-
 
           // Binding with the datasource
           this.dataSource = new MatTableDataSource(this.data.entity);
@@ -311,7 +309,6 @@ export class CollectionDetailsComponent implements OnInit {
 
     });
   }
-
 
   getFarmerAmountOnNotPayedCollections(id){
     this.service.getFarmerPayments(id, "N").subscribe((res) => {

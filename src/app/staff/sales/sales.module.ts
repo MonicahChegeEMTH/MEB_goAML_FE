@@ -55,7 +55,7 @@ import { ReturnDeliveryComponent } from './pages/return-delivery/return-delivery
         LookupPickUpLocationsComponent,
         RoutesLookUpComponent,
         VerifyproductAllocationsComponent,
-        ReturnDeliveryComponent
+        ReturnDeliveryComponent,
     ],
     imports: [
         CommonModule,

@@ -180,6 +180,7 @@ export class UpdateFarmerComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
+    console.log("Data received from dialog ", this.data)
     console.log("Farmer id " + this.data.farmer.id)
     this.isLoading = true;
     this.service.getFarmersById(this.data.farmer.id).subscribe(res => {
