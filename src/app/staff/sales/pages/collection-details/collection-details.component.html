@@ -240,39 +240,39 @@
                                         <div class="row mt-2">
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Farmer name </div>
+                                                    <div class="chat-with col-green">Farmer name </div>
                                                     <div class="chat-num-messages">{{farmer.username}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Member Code </div>
+                                                    <div class="chat-with col-green">Member Code </div>
                                                     <div class="chat-num-messages">{{farmer.fno }}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="Subcounty" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">ID Number </div>
+                                                    <div class="chat-with col-green">ID Number </div>
                                                     <div class="chat-num-messages">{{farmer.idno}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Gender </div>
+                                                    <div class="chat-with col-green">Gender </div>
                                                     <div class="chat-num-messages">{{farmer.gender}}</div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-6">
+                                            <div class="col-lg-2 col-sm-15">
                                                 <div matTooltip="Route" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">Route</div>
+                                                    <div class="chat-with col-green">Route</div>
                                                     <div class="chat-num-messages">{{farmer.route}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Center </div>
+                                                    <div class="chat-with col-green">Center </div>
                                                     <div class="chat-num-messages">{{farmer.mcc}}</div>
                                                 </div>
                                             </div>
@@ -282,27 +282,27 @@
                                         <div class="row mt-2">
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Bank</div>
+                                                    <div class="chat-with col-green">Bank</div>
                                                     <div class="chat-num-messages">{{farmer.bank}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="" class="chat-about" *ngIf="present==true">
-                                                    <div class="chat-with">Account Number</div>
+                                                    <div class="chat-with col-green">Account Number</div>
                                                     <div class="chat-num-messages">{{farmer.accno}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="Acc No" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">Account Name</div>
+                                                    <div class="chat-with col-green">Account Name</div>
                                                     <div class="chat-num-messages">{{farmer.username}}</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-6">
                                                 <div matTooltip="Branch" class="chat-about"
                                                     *ngIf="present==true">
-                                                    <div class="chat-with">Branch</div>
+                                                    <div class="chat-with col-green">Branch</div>
                                                     <div class="chat-num-messages">{{farmer.branch}}</div>
                                                 </div>
                                             </div>
@@ -398,7 +398,8 @@
                                                                                 </button>
                                                                             </div>
                                                                         </li>
-                                                                        <li>
+                                                                        <!-- Delete Not Required Currently -->
+                                                                        <!-- <li>
                                                                             <div class="m-l-10"
                                                                                 [hidden]="!selection.hasValue()"
                                                                                 matTooltip="DELETE">
@@ -407,7 +408,7 @@
                                                                                         class="col-white">check_circle</mat-icon>
                                                                                 </button>
                                                                             </div>
-                                                                        </li>
+                                                                        </li> -->
                                                                     </ul>
                                                                 </form>
                                                             </div>
@@ -497,7 +498,7 @@
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                                         class="column-nowrap">
-                                                        {{response.amount | currency:'KES':'symbol':'4.2-2'}}
+                                                        {{response.amount | currency:'KES ':'symbol':'4.2-2'}}
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -511,6 +512,14 @@
                                                         {{response.collector}}
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="session">
+                                                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                                                      class="column-nowrap">Session</mat-header-cell>
+                                                  <mat-cell *matCellDef="let response;let i = index" [class.odd-row]="i % 2"
+                                                      [class.even-row]="!(i % 2)" class="column-nowrap">
+                                                      {{response.session === "Session 1" ? "Morning" : (response.session === "Session 2" ? "Afternoon" : "Evening")}}
+                                                  </mat-cell>
+                                              </ng-container>
                                                 <ng-container matColumnDef="pickUpLocation">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                                         class="column-nowrap">PickUp
@@ -527,11 +536,11 @@
                                                         Date</mat-header-cell>
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
-                                                        class="column-nowrap">
+                                                        class="column-wrap">
                                                         {{response.date | date:'medium'}}
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="paymentStatus">
+                                                <ng-container matColumnDef="paid">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                                         class="column-nowrap">Payment
                                                         Status
@@ -539,9 +548,9 @@
                                                     <mat-cell *matCellDef="let response;let i = index"
                                                         [class.odd-row]="i % 2" [class.even-row]="!(i % 2)"
                                                         class="column-nowrap">
-                                                        <span *ngIf="response.paymentStatus == 'N'"
+                                                        <span *ngIf="response.paid == 'N'"
                                                             class="badge badge-pill badge-primary col-red"><b>No</b></span>
-                                                        <span *ngIf="response.paymentStatus == 'Y'"
+                                                        <span *ngIf="response.paid == 'Y'"
                                                             class="badge badge-pill badge-primary col-green"><b>Yes</b></span>
                                                     </mat-cell>
                                                 </ng-container>

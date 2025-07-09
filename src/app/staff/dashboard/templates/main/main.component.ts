@@ -57,7 +57,7 @@ export class MainComponent implements OnInit {
       }
     )
 
-    this.getDateSummary(this.currentDate)
+    this.getDateSummary(this.currentDate, this.currentDate)
     // this.getAllColectionsSummary();
     this.getAllFarmers();
     this.smallChart2()
@@ -108,11 +108,10 @@ export class MainComponent implements OnInit {
     })
   }
 
-  getDateSummary(date) {
+  getDateSummary(from: any, to: any) {
     this.isloading = true
     // this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", date)
-    this.service.getDateCollections(date).subscribe(res => {
+    this.service.getDateCollections(from, to).subscribe(res => {
       if (res) {
         this.isloading = false
         this.isloading = true;

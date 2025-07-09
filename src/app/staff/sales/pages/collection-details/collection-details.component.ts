@@ -58,56 +58,18 @@ export class CollectionDetailsComponent implements OnInit {
     'quantity',
     'amount',
     'collector',
+    'session',
+    // 'pickUpLocation',
     'collection_date',
-    'paymentStatus',
+    'paid',
   ];
 
-  allocationsDisplayedColumns: string[] = [
-    'id',
-    //'time',
-    'product',
-    'username',
-    'amount',
-    'paymentStatus',
-    'quantity',
-    'allocationDate',
-  ];
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('filter') filter!: ElementRef;
-  @ViewChild(MatMenuTrigger) contextMenu!: MatMenuTrigger;
-  @ViewChild('allocationsPaginator') allocationsPaginator!: MatPaginator;
-  @ViewChild('allocationSort') collectorsSort!: MatSort;
-
-  contextMenuPosition = { x: '0px', y: '0px' };
-
-  selection = new SelectionModel<Collection>(true, []);
-  dataSource!: MatTableDataSource<Collection>;
-  allocationsDataSource!: MatTableDataSource<Allocation>;
-
-  farmer: Farmer | null = null;
-  farmerNo: string = '';
-  isdata = false;
-  isLoading = false;
-  present = false;
-  startDate: string = '';
-  endDate: string = '';
-  originalAllocations: any[] = [];
- 
-
- 
-  allData: any[] = [];
-
-  quantity = 0;
-  allocationsArray: Allocation[] = [];
-  allocationsNotAdded = true;
-  amountOnAllocatedItems = 0;
-  payedAccruals = 0;
-  notPayedAccruals = 0;
-  amountPayedOnCollections = 0;
-  amountNotPayedOnCollections = 0;
-
+  subscription!: Subscription;
+  data: any;
+  isdata: boolean = false;
+  isLoading: boolean = false;
+  farmerNo: any;
+  form: FormGroup
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -125,6 +87,11 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      from: ['', [Validators.required]],
+      to: ['', [Validators.required]]
+    })
+
     this.route.params.subscribe((params: Params) => {
       this.farmerNo = params['fno'];
       console.log('FarmerNo from route:', this.farmerNo);
@@ -163,14 +130,17 @@ export class CollectionDetailsComponent implements OnInit {
 
   getTodaysCollections(): void {
     this.isLoading = true;
-    console.log('Fetching today\'s collections for:', this.farmerNo, 'on', this.formattedDate);
-    this.service.filterCollections(this.farmerNo, this.formattedDate, this.formattedDate)
-      .subscribe((res: ApiResponse<Collection[]>) => {
-        console.log('Today\'s collections response:', res);
-        const collections = res.entity || [];
-        this.isdata = collections.length > 0;
-        this.quantity = collections.reduce((sum, col) => sum + col.quantity, 0);
-        this.dataSource = new MatTableDataSource(collections);
+    this.service.filterCollections(this.farmerNo, this.today, this.today).subscribe((res) => {
+      this.data = res;
+
+      if (this.data.entity.length > 0) {
+        this.isLoading = false;
+        this.isdata = true;
+        this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
+
+
+        // Binding with the datasource
+        this.dataSource = new MatTableDataSource(this.data.entity);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.isLoading = false;
@@ -184,13 +154,19 @@ export class CollectionDetailsComponent implements OnInit {
       const to = this.datePipe.transform(this.form.value.to, 'yyyy-MM-dd')!;
       console.log('Filtering collections from', from, 'to', to);
       this.isLoading = true;
-      this.service.filterCollections(this.farmerNo, from, to)
-        .subscribe((res: ApiResponse<Collection[]>) => {
-          console.log('Filtered collections response:', res);
-          const collections = res.entity || [];
-          this.isdata = collections.length > 0;
-          this.quantity = collections.reduce((sum, col) => sum + col.quantity, 0);
-          this.dataSource = new MatTableDataSource(collections);
+      const from = this.datePipe.transform(this.form.value.from, "yyyy-MM-dd")
+      const to = this.datePipe.transform(this.form.value.to, "yyyy-MM-dd")
+      this.service.filterCollections(this.farmerNo, from, to).subscribe((res) => {
+        this.data = res;
+
+        if (this.data.entity.length > 0) {
+          this.isLoading = false;
+          this.isdata = true;
+          this.quantity = this.data.entity.reduce((sum, current) => sum + current.quantity, 0.0);
+
+
+          // Binding with the datasource
+          this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.isLoading = false;
@@ -199,53 +175,32 @@ export class CollectionDetailsComponent implements OnInit {
       this.snackbar.showNotification('snackbar-danger', 'From and To dates are required');
     }
   }
-  filterByDateRange(): void {
-  if (!this.startDate && !this.endDate) {
-    this.allocationsArray = [...this.originalAllocations];
-  } else {
-    this.allocationsArray = this.originalAllocations.filter(a => {
-      const approval = new Date(new Date(a.approvalDate).toDateString());
-      const start = this.startDate ? new Date(this.startDate) : null;
-      const end = this.endDate ? new Date(this.endDate) : null;
-      if (start && end) return approval >= start && approval <= end;
-      if (start) return approval >= start;
-      if (end) return approval <= end;
-      return true;
+
+  getFarmerAllocations(id) {
+    this.service.getFarmerAllocations(id).subscribe((res) => {
+      this.allocationsArray = res.entity;
+
+      if (this.allocationsArray.length > 0) {
+        this.allocationsNotAdded = false;
+
+        this.allocationsArray.forEach(allocation => {
+          this.amountOnAllocatedItems = this.amountOnAllocatedItems + allocation.amount;
+        })
+
+        this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
+        this.allocationsDataSource.paginator = this.allocationsPaginator;
+      } else {
+        this.isdata = false;
+        this.isLoading = false;
+      }
     });
   }
 
-  this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
-  this.allocationsDataSource.paginator = this.allocationsPaginator;
-  this.allocationsDataSource.sort = this.collectorsSort;
-}
-
-  getFarmerAllocations(farmerNo: string): void {
-    console.log('Fetching allocations for:', farmerNo);
-    this.service.getFarmerAllocations(farmerNo).subscribe((res: ApiResponse<Allocation[]>) => {
-      console.log('Allocations response:', res); // Log entire response
-      this.allocationsArray = res.entity || [];
-        this.originalAllocations = [...this.allocationsArray];
-      console.log('Parsed allocations:', this.allocationsArray); // Log parsed data
-
-      this.allocationsNotAdded = this.allocationsArray.length === 0;
-      this.amountOnAllocatedItems = this.allocationsArray.reduce((sum, a) => sum + a.amount, 0);
-      this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
-      this.allocationsDataSource.paginator = this.allocationsPaginator;
-      this.allocationsDataSource.sort = this.collectorsSort;
-      console.log('Allocations loaded. Count:', this.allocationsArray.length);
-    });
+  refreshAllocations(){
+    this.getFarmerAllocations(this.farmerNo)
   }
 
-refreshAllocations(): void {
-    this.startDate = '';
-    this.endDate = '';
-    const input: HTMLInputElement | null = document.querySelector('.search-field');
-    if (input) input.value = '';
-    this.allocationsArray = [...this.originalAllocations];
-    this.allocationsDataSource = new MatTableDataSource(this.allocationsArray);
-    this.allocationsDataSource.paginator = this.allocationsPaginator;
-    this.allocationsDataSource.sort = this.collectorsSort;
-  }
+
 
   generateSTatement(farmerId: string, from: string, to: string): void {
     console.log('Generating statement for:', farmerId, 'from', from, 'to', to);
@@ -267,35 +222,66 @@ refreshAllocations(): void {
     });
   }
 
-  getPayedFarmerAccruals(farmerNo: string): void {
-    console.log('Fetching payed accruals...');
-    this.service.getFarmerAllocationAccruals(farmerNo, "Y").subscribe((res: ApiResponse<{ accruedamount: number }>) => {
-      console.log('Payed accruals:', res);
-      this.payedAccruals = res.entity?.accruedamount || 0;
+  // accruals: any;
+  // getAccruals() {
+  //   this.service.getFarmerAccruals(this.farmerid).subscribe((res) => {
+  //     this.accruals = res.entity;
+  //     if (this.accruals != null) {
+  //       this.found = true;
+  //     }
+  //   });
+  // }
+
+  getPayedFarmerAccruals(id){
+    this.service.getFarmerAllocationAccruals(id, "Y").subscribe((res) => {
+          this.payedAccruals = res.entity.accruedamount;
+
+          if(res.entity.accruedamount != null){
+            this.payedAccruals = res.entity.accruedamount;
+          }else {
+            this.payedAccruals = 0;
+          }
+
+          console.log("Payed Accruals", res)
+          // if (this.accruals != null) {
+          //   this.found = true;
+          // }
+        });
+  }
+
+  getNonPayedFarmerAccruals(id){
+    this.service.getFarmerAllocationAccruals(id, "N").subscribe((res) => {
+
+      if(res.entity.accruedamount != null){
+        this.notPayedAccruals = res.entity.accruedamount;
+      }else {
+        this.notPayedAccruals = 0;
+      }
+
     });
   }
 
-  getNonPayedFarmerAccruals(farmerNo: string): void {
-    console.log('Fetching unpaid accruals...');
-    this.service.getFarmerAllocationAccruals(farmerNo, "N").subscribe((res: ApiResponse<{ accruedamount: number }>) => {
-      console.log('Unpaid accruals:', res);
-      this.notPayedAccruals = res.entity?.accruedamount || 0;
+  getFarmerAmountOnPayedCollections(id){
+    this.service.getFarmerPayments(id, "Y").subscribe((res) => {
+
+      if(res.entity != null){
+        this.amountPayedOnCollections = res.entity;
+      }else {
+        this.amountPayedOnCollections = 0;
+      }
+
     });
   }
 
-  getFarmerAmountOnPayedCollections(farmerNo: string): void {
-    console.log('Fetching payed collection amount...');
-    this.service.getFarmerPayments(farmerNo, "Y").subscribe((res: ApiResponse<number>) => {
-      console.log('Payed collection amount:', res);
-      this.amountPayedOnCollections = res.entity || 0;
-    });
-  }
+  getFarmerAmountOnNotPayedCollections(id){
+    this.service.getFarmerPayments(id, "N").subscribe((res) => {
 
-  getFarmerAmountOnNotPayedCollections(farmerNo: string): void {
-    console.log('Fetching not-payed collection amount...');
-    this.service.getFarmerPayments(farmerNo, "N").subscribe((res: ApiResponse<number>) => {
-      console.log('Not payed collection amount:', res);
-      this.amountNotPayedOnCollections = res.entity || 0;
+      if(res.entity != null){
+        this.amountNotPayedOnCollections = res.entity;
+      }else {
+        this.amountNotPayedOnCollections = 0;
+      }
+
     });
   }
 

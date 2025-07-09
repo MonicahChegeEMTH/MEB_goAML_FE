@@ -78,26 +78,16 @@
                 </li>
 
                 <li (click)="collectionsPerLocation('Report For Single User Action Items')" class="d-flex mb-3">
-
-
-                  <!-- <div class="example-action-buttons">
-                            <button mat-button (click)="accordion.openAll()">Expand All</button>
-                            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
-                          </div> -->
                   <mat-accordion class="example-headers-align" multi>
                     <mat-progress-bar mode="indeterminate" *ngIf="isloading"></mat-progress-bar>
                     <mat-expansion-panel>
                       <mat-expansion-panel-header>
                         <mat-panel-title>
-                          Daily Farmer Deliveries Per Mcc
+                          Center Deliveries per Date Range
                         </mat-panel-title>
-                        <!-- <mat-panel-description>
-                                Inform the date you wish to travel
-                                <mat-icon>date_range</mat-icon>
-                              </mat-panel-description> -->
                       </mat-expansion-panel-header>
 
-                      <form class="register-form" [formGroup]="collectionPerpLocationsForm">
+                      <form class="register-form" [formGroup]="collectionsPerLocationsForm">
 
                         <div class="row">
                           <!-- <div>
@@ -111,24 +101,33 @@
                             <mat-label>Select PickUpLocation</mat-label>
                             <input matInput formControlName="pul" required readonly />
                             <mat-icon matSuffix (click)="selectPickUpLocation()">search</mat-icon>
-                            <mat-error *ngIf="collectionPerpLocationsForm.get('pul').hasError('required')">
+                            <mat-error *ngIf="collectionsPerLocationsForm.get('pul').hasError('required')">
                               Pick-Up Location is required
                             </mat-error>
                           </mat-form-field>
+                          <!-- <mat-error *ngIf="collectionsPerLocationsForm.get('date').hasError('required')">
+                            Date is required
+                          </mat-error> -->
+                        <div class="row">
                           <mat-form-field class="m-l-5">
-                            <input matInput [matDatepicker]="picker4" placeholder="Choose a date"
+                            <input matInput [matDatepicker]="picker4" placeholder="Choose from date"
                               formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                             <mat-datepicker #picker4></mat-datepicker>
                           </mat-form-field>
-                          <!-- <mat-error *ngIf="collectionPerpLocationsForm.get('date').hasError('required')">
-                            Date is required
-                          </mat-error> -->
-
+                        </div>
+                        <div class="row">
+                          <mat-form-field class="m-l-5">
+                            <input matInput [matDatepicker]="picker5" placeholder="Choose to date"
+                              formControlName="to">
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5></mat-datepicker>
+                          </mat-form-field>
+                        </div>
 
                           <div class="example-button-row">
 
-                            <button mat-raised-button color="primary" [disabled]="!collectionPerpLocationsForm.valid"
+                            <button mat-raised-button color="primary" [disabled]="!collectionsPerLocationsForm.valid"
                               (click)="generateCollectionsPerPickUpLocations()">
                               <span *ngIf="isloading" class="spinner-border spinner-border-sm mr-1"></span>
                               <b>Generate</b>
@@ -142,7 +141,7 @@
                   </mat-accordion>
                 </li>
 
-                
+
                 <li (click)="collectionsPerCollector('Report For Single User Action Items')" class="d-flex mb-3">
 
                   <!-- <div class="example-action-buttons">
@@ -220,7 +219,7 @@
                               mcc is required
                             </mat-error>
                           </mat-form-field>
-                          
+
 
                           <mat-form-field class="m-l-5">
                             <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
@@ -248,7 +247,7 @@
 
 
                 </li>
-                
+
 
               </ul>
             </div>
@@ -348,7 +347,7 @@
                     <mat-expansion-panel>
                       <mat-expansion-panel-header>
                         <mat-panel-title>
-                          Route Monthly Summary 
+                          Route Monthly Summary
                         </mat-panel-title>
                       </mat-expansion-panel-header>
 
@@ -400,10 +399,9 @@
 
                     </mat-expansion-panel>
                   </mat-accordion>
-
-
                 </li>
-                
+
+
 
                 <!-- Monthly Route Summary For MCC Routes -->
                 <li (click)="collectionsPerLocation('Report For Single User Action Items')" class="d-flex mb-3">
@@ -459,7 +457,7 @@
 
 
                 </li>
-                
+
 
               </ul>
             </div>
@@ -473,7 +471,7 @@
             <h2>Farmer Reports</h2>
           </div>
           <div class="body">
-            <div class="doc-file-type"> 
+            <div class="doc-file-type">
               <ul class="list-unstyled" style="position: relative; height: 300px;" [perfectScrollbar]>
 
                 <li (click)="farmerCollectionsReport()" class="d-flex mb-3">
@@ -579,16 +577,6 @@
                               Month Is required
                             </mat-error>
                           </mat-form-field>
-                          <mat-form-field class="example-full-width mb-1" appearance="outline">
-                            <mat-label>Select Year</mat-label>
-                            <mat-select formControlName="year" required>
-                              <mat-option *ngFor="let year of years" [value]="year.value">{{ year.name
-                                }}</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="paymentFileForm.get('year').hasError('required')">
-                              Year Is required
-                            </mat-error>
-                        </mat-form-field>
                           <!-- <mat-form-field class="example-full-width mb-1" appearance="outline">
                             <mat-label>Select Payment Mode</mat-label>
                             <mat-select formControlName="mode" required>
@@ -601,6 +589,19 @@
                               Payment mode Is required
                             </mat-error>
                           </mat-form-field> -->
+                        </div>
+
+                        <div class="row">
+                            <mat-form-field class="example-full-width mb-1" appearance="outline">
+                              <mat-label>Select Year</mat-label>
+                              <mat-select formControlName="year" required>
+                                <mat-option *ngFor="let year of years" [value]="year.value">{{ year.name
+                                  }}</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="paymentFileForm.get('year').hasError('required')">
+                                Year Is required
+                              </mat-error>
+                        </mat-form-field>
                         </div>
 
                         <div class="example-button-row">
@@ -680,14 +681,14 @@
 
 
                 </li> -->
-                
+
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+
 
   </div>
 </section>

@@ -24,11 +24,11 @@ export class DashboardService {
     return this.http.get(`${environment.apiUrl}/api/v1/farmer/get`,httpOptions);
   }
 
-  public getDateCollections(date:any): Observable<any> {
+  public getDateCollections(from:any, to: any): Observable<any> {
     console.log("Calling api..")
-    return this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions)
+    return this.http.get(`${environment.apiUrl}/api/v1/collections/date-range/totals?from=${from}&to=${to}` ,httpOptions)
     return timer(0, 5000).pipe(
-      switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/day/records?date=`+date,httpOptions))
+      switchMap(() => this.http.get(`${environment.apiUrl}/api/v1/collections/date-range/totals?from=${from}&to=${to}`, httpOptions))
     )
   }
 

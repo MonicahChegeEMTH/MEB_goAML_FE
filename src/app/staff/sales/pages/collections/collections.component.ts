@@ -191,13 +191,14 @@ export class CollectionsComponent implements OnInit {
     else if (this.selected == 'sd') {
       this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
       this.isLoading = true;
-      this.getDateSummary(this.date)
+      this.getDateSummary(this.date, this.date)
       this.subscription = this.service.getCollections(this.date).subscribe(res => {
         this.data = res;
         if (this.data.entity.length > 0) {
           this.isLoading = false;
           this.isdata = true;
           // Binding with the datasource
+
           this.datasize=this.data.entity.length
           this.dataSource = new MatTableDataSource(this.data.entity);
           this.dataSource.paginator = this.paginator;
@@ -282,7 +283,7 @@ export class CollectionsComponent implements OnInit {
 
   getTodaysData() {
     this.isLoading = true;
-     this.getDateSummary(this.currentDate)
+     this.getDateSummary(this.currentDate, this.currentDate)
       this.subscription = this.service.getTodaysCollections(this.currentDate).subscribe(res => {
       this.data = res;
       if (this.data.entity.length > 0) {
@@ -305,13 +306,12 @@ export class CollectionsComponent implements OnInit {
   }
 
   viewFarmerCollections(row) {
-    this.router.navigate(['/staff/sales/farmer', row.farmerId]);
+    this.router.navigate(['/staff/sales/farmer', row.farmer_no]);
   }
-  getDateSummary(date) {
+  getDateSummary(from, to) {
     this.isLoading = true
     // this.date = this.datePipe.transform(this.form.value.date, 'yyyy-MM-dd');
-    console.log("Formated date is ", date)
-    this.subscription = this.dashboard.getDateCollections(date).subscribe(res => {
+    this.subscription = this.dashboard.getDateCollections(from, to).subscribe(res => {
       this.data = res;
       if (this.data) {
         this.isLoading = false
