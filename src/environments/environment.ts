@@ -9,8 +9,8 @@ export const environment = {
 // apiUrl: "http://172.16.9.84:9600",
 //    API: "http://172.16.9.84:9600",
 
-apiUrl: "http://172.16.9.198:8082",
-API: "http://172.16.9.198:8082"
+apiUrl: "http://localhost:9600",
+API: "http://localhost:9600",
 };
 
 /*
