@@ -129,6 +129,7 @@ export class FarmerManagenentComponent implements OnInit {
         this.data = res;
         if (res.entity?.length > 0) {
           const mappedData = res.entity.map((farmer: any) => ({
+            id: farmer.id || farmer.farmerId || '',
             farmer_no: farmer.farmerNo || farmer.farmer_no || '',
             username: farmer.username || farmer.name || '',
             mobile_no: farmer.mobileNo || farmer.mobile_no || '',
