@@ -1,11 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CountiesService } from 'src/app/admin/counties/counties.service';
 import { PickupService } from 'src/app/admin/pick-up-locations/pickup.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
-import { FarmerService } from '../../services/farmer.service';
+import { FarmerService, PaymentMode, BankOption } from '../../services/farmer.service';
 import { FarmerManagenentComponent } from '../farmer-managenent/farmer-managenent.component';
 import { RoutesService } from 'src/app/admin/routes/routes.service';
 
@@ -14,161 +14,20 @@ import { RoutesService } from 'src/app/admin/routes/routes.service';
   templateUrl: './register-farmer.component.html',
   styleUrls: ['./register-farmer.component.scss'],
 })
-export class RegisterFarmerComponent implements OnInit {
+export class RegisterFarmerComponent implements OnInit, OnDestroy {
   farmerRegirstartionForm: FormGroup;
   bankDetailsForm: FormGroup;
   loading = false;
-  isLoading: Boolean;
-  isdata: Boolean;
+  isLoading: boolean = false;
+  isdata: boolean = false;
   subcounties: any[] = [];
   wards: any;
   counties: any;
   routes: any;
-  banks: any = {
-    count: 45,
-    list: [
-      {
-        name: 'MPESA',
-        code: '68',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 649,
-      },
-      {
-        name: 'EQUITY BANK',
-        code: '68',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 609,
-      },
-      {
-        name: 'ABSA BANK',
-        code: '3',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 611,
-      },
-      {
-        name: 'COOPERATIVE BANK',
-        code: '11',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 616,
-      },
-      {
-        name: 'FAMILY BANK',
-        code: '70',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 625,
-      },
-      {
-        name: 'WANANCHI SACCO LTD',
-        code: '70',
-        payPointType: 'SACCO',
-        status: 'ACTIVE',
-        id: 547
-      },
-      {
-        name: 'Boresha Sacco',
-        code: '70',
-        payPointType: 'SACCO',
-        status: 'ACTIVE',
-        id: 547
-      },
-      {
-        name: 'TOWER SACCO',
-        code: '70',
-        payPointType: 'SACCO',
-        status: 'ACTIVE',
-        id: 547
-      },
-      {
-        name: 'CONSOLIDATED BANK OF KENYA LTD',
-        code: '23',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 618,
-      },
-      {
-        name: 'SMEP Bank',
-        code: '21',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 637
-      },
-      {
-        name: 'DIAMOND TRUST BANK',
-        code: '63',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 621,
-      },
-      {
-        name: 'ECOBANK KENYA LTD',
-        code: '43',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 623,
-      },
-      {
-        name: 'JAMII BORA BANK LTD',
-        code: '51',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 636,
-      },
-      {
-        name: 'KCB Bank',
-        code: '1',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 650,
-      },
-      {
-        name: 'NATIONAL BANK OF KENYA',
-        code: '12',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 639,
-      },
-      {
-        name: 'PRIME BANK LIMITED',
-        code: '10',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 643,
-      },
-      {
-        name: 'SIDIAN BANK',
-        code: '66',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 637,
-      },
-      {
-        name: 'STANBIC BANK KENYA LIMITED',
-        code: '31',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 644,
-      },
-      {
-        name: 'STANDARD CHARTERED',
-        code: '2',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 645,
-      },
-      {
-        name: 'VICTORIA COMMERCIAL BANK LTD',
-        code: '54',
-        payPointType: 'BANK',
-        status: 'ACTIVE',
-        id: 648,
-      },
-    ],
-  };
+  paymentModes: PaymentMode[] = [];
+  bankOptions: BankOption[] = [];
+  filteredBankOptions: BankOption[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<FarmerManagenentComponent>,
@@ -178,19 +37,17 @@ export class RegisterFarmerComponent implements OnInit {
     private countiesService: CountiesService,
     private routesService: PickupService,
     private service: FarmerService,
-
     private routeService: RoutesService
   ) {}
-  subscription!: Subscription;
 
   ngOnInit(): void {
     this.getSubcounties();
     this.getCounties();
     this.getRoutes();
-
+    this.getPaymentModes();
+    this.getBankOptions();
 
     this.bankDetailsForm = this.fb.group({
-
       branch: ['', [Validators.required]],
       bankName: ['', [Validators.required]],
       accountNumber: ['', [Validators.required]],
@@ -198,7 +55,7 @@ export class RegisterFarmerComponent implements OnInit {
     });
 
     this.farmerRegirstartionForm = this.fb.group({
-      bankDetails: ['',],
+      bankDetails: [''],
       transportMeans: [''],
       firstName: ['', [Validators.required]],
       middleName: [''],
@@ -209,106 +66,202 @@ export class RegisterFarmerComponent implements OnInit {
       wardFk: ['', [Validators.required]],
       memberType: ['', [Validators.required]],
       alternativeMobileNo: [''],
-      noOfCows: ['',],
-      paymentMode:['',[Validators.required]],
+      noOfCows: [''],
+      paymentMode: ['', [Validators.required]],
       county_fk: [''],
       location: [''],
       subLocation: [''],
       village: [''],
-      paymentFreequency: ['',[Validators.required]],
+      paymentFreequency: ['', [Validators.required]],
       gender: [''],
       routeFk: [''],
     });
+
+    this.farmerRegirstartionForm.get('paymentMode')?.valueChanges.subscribe((value) => {
+      this.updateFilteredBankOptions(value);
+      if (['BANK', 'COOPORATIVE SACCOS'].includes(value)) {
+        this.bankDetailsForm.get('bankName')?.setValidators([Validators.required]);
+        this.bankDetailsForm.get('branch')?.setValidators([Validators.required]);
+        this.bankDetailsForm.get('accountNumber')?.setValidators([Validators.required]);
+        this.bankDetailsForm.get('accountName')?.setValidators([Validators.required]);
+      } else {
+        this.bankDetailsForm.get('bankName')?.clearValidators();
+        this.bankDetailsForm.get('branch')?.clearValidators();
+        this.bankDetailsForm.get('accountNumber')?.clearValidators();
+        this.bankDetailsForm.get('accountName')?.clearValidators();
+      }
+      this.bankDetailsForm.get('bankName')?.updateValueAndValidity();
+      this.bankDetailsForm.get('branch')?.updateValueAndValidity();
+      this.bankDetailsForm.get('accountNumber')?.updateValueAndValidity();
+      this.bankDetailsForm.get('accountName')?.updateValueAndValidity();
+    });
   }
 
+  updateFilteredBankOptions(paymentMode: string) {
+    console.log('Selected paymentMode:', paymentMode);
+    const categoryMap: { [key: string]: string } = {
+      'MOBILE MONEY': 'MOBILE MONEY',
+      'BANK': 'BANK',
+      'CASH': 'CASH',
+      'COOPORATIVE SACCOS': 'SACCO'
+    };
+    const category = categoryMap[paymentMode] || '';
+    console.log('Mapped category:', category);
+    console.log('Available bankOptions:', this.bankOptions);
+    this.filteredBankOptions = this.bankOptions.filter(option =>
+      option.categoryName?.toUpperCase() === category.toUpperCase()
+    );
+    console.log('Filtered bankOptions:', this.filteredBankOptions);
+  }
+
+  getPaymentModes() {
+    this.isLoading = true;
+    const sub = this.service.getPaymentModes().subscribe({
+      next: (res: any) => {
+        this.paymentModes = res.entity || res;
+        console.log('Payment Modes:', this.paymentModes);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching payment modes:', error);
+        this.isLoading = false;
+        this.snackbar.showNotification('snackbar-danger', 'Failed to load payment modes');
+      },
+    });
+    this.subscriptions.push(sub);
+  }
+
+  getBankOptions() {
+    this.isLoading = true;
+    const sub = this.service.getPaymentOptions().subscribe({
+      next: (res: any) => {
+        console.log('Raw API response for bank options:', res);
+        this.bankOptions = res.entity || res;
+        // Temporary hardcoded options to include BANK and SACCO
+        this.bankOptions = [
+          ...this.bankOptions,
+          { id: 12, name: "EQUITY BANK", code: "68", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
+          { id: 13, name: "KCB BANK", code: "69", description: "Bank", active: true, categoryId: 1, categoryName: "BANK" },
+          { id: 14, name: "SACCO XYZ", code: "123", description: "Sacco", active: true, categoryId: 3, categoryName: "SACCO" }
+        ];
+        console.log('Processed bankOptions:', this.bankOptions);
+        this.updateFilteredBankOptions(this.farmerRegirstartionForm.get('paymentMode')?.value);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching bank options:', error);
+        this.isLoading = false;
+        this.snackbar.showNotification('snackbar-danger', 'Failed to load bank options');
+      },
+    });
+    this.subscriptions.push(sub);
+  }
 
   onSubmit() {
     this.loading = true;
     this.farmerRegirstartionForm.value.bankDetails = this.bankDetailsForm.value;
 
-    console.log("Farmer Registration Details ", this.farmerRegirstartionForm.value)
-    this.subscription = this.service
-      .registerFarmer(this.farmerRegirstartionForm.value)
-      .subscribe({
-        next: (res: any) => {
-          console.log("response", res)
-          const farmer = res.entity
-          this.snackbar.showNotification('snackbar-success', 'Farmer No: ' +farmer.farmerNo + ', '+farmer.username+ ' added Successfully');
-          this.loading = false;
-          this.farmerRegirstartionForm.reset();
-          this.dialogRef.close();
-        },
-        error: (error) => {
-          console.log("reg error", error)
-          this.loading = false;
-          this.snackbar.showNotification("snackbar-danger", error)
-        }
-      });
+    console.log('Farmer Registration Details ', this.farmerRegirstartionForm.value);
+    const sub = this.service.registerFarmer(this.farmerRegirstartionForm.value).subscribe({
+      next: (res: any) => {
+        console.log('response', res);
+        const farmer = res.entity;
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'Farmer No: ' + farmer.farmerNo + ', ' + farmer.username + ' added Successfully'
+        );
+        this.loading = false;
+        this.farmerRegirstartionForm.reset();
+        this.dialogRef.close();
+      },
+      error: (error) => {
+        console.error('reg error', error);
+        this.loading = false;
+        this.snackbar.showNotification('snackbar-danger', error.message || 'Failed to register farmer');
+      },
+    });
+    this.subscriptions.push(sub);
   }
 
   onClick() {
     this.dialogRef.close();
   }
 
-
-
   getSubcounties() {
     this.isLoading = true;
-
-
-    this.subscription = this.service.getSubCounties().subscribe(res => {
-
-      console.log(res)
-
-      if (res.entity.length > 0) {
-        this.subcounties = res.entity;
-      } else {
-        this.subcounties = [];
-      }
+    const sub = this.service.getSubCounties().subscribe({
+      next: (res) => {
+        console.log(res);
+        if (res.entity.length > 0) {
+          this.subcounties = res.entity;
+        } else {
+          this.subcounties = [];
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching subcounties:', error);
+        this.isLoading = false;
+        this.snackbar.showNotification('snackbar-danger', 'Failed to load subcounties');
+      },
     });
+    this.subscriptions.push(sub);
   }
 
   getCounties() {
-    this.subscription = this.countiesService.getCounties().subscribe((res) => {
-      if (res.entity.length > 0) {
-        this.counties = res.entity;
-      } else {
-        this.counties = [];
-      }
+    const sub = this.countiesService.getCounties().subscribe({
+      next: (res) => {
+        if (res.entity.length > 0) {
+          this.counties = res.entity;
+        } else {
+          this.counties = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching counties:', error);
+        this.snackbar.showNotification('snackbar-danger', 'Failed to load counties');
+      },
     });
+    this.subscriptions.push(sub);
   }
 
-  // getPickUpLocations() {
-  //   this.subscription = this.routesService.getLocations().subscribe((res) => {
-  //     if (res.entity.length > 0) {
-  //       this.routes = res.entity;
-  //     } else {
-  //       this.routes = [];
-  //     }
-  //   });
-  // }
-
   getRoutes() {
-    this.subscription = this.routeService.getRoutes().subscribe((res) => {
-      if (res.entity.length > 0) {
-        this.routes = res.entity;
-
-        console.log("Routes ", this.routes)
-      } else {
-        this.routes = [];
-      }
+    const sub = this.routeService.getRoutes().subscribe({
+      next: (res) => {
+        if (res.entity.length > 0) {
+          this.routes = res.entity || [];
+          console.log('Routes ', this.routes);
+        } else {
+          this.routes = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching routes:', error);
+        this.snackbar.showNotification('error', 'Failed to load routes');
+      },
     });
+    this.subscriptions.push(sub);
   }
 
   getWards(id: any) {
-    this.subscription = this.service
-      .getSubCountyById(id.value)
-      .subscribe((res) => {
+    const sub = this.service.getSubCountyById(id.value).subscribe({
+      next: (res) => {
         this.data = res;
-        if (this.data.entity.wards.length > 0) {
-          this.wards = this.data.entity.wards;
+        if (this.data.wards.length > 0) {
+          this.wards = res.data.wards || [];
         } else {
+          this.wards = [];
         }
-      });
+      },
+      error: (error: any) => {
+        console.error('Error fetching wards:', error);
+        this.snackbar.showNotification('error', 'Failed to fetch wards');
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub => sub.unsubscribe()));
   }
 }
