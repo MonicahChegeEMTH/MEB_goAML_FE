@@ -179,58 +179,83 @@ export class UpdateFarmerComponent implements OnInit {
     private service: FarmerService) { }
   subscription!: Subscription;
 
-  ngOnInit(): void {
-    console.log("Data received from dialog ", this.data)
-    console.log("Farmer id " + this.data.farmer.id)
-    this.isLoading = true;
-    this.service.getFarmersById(this.data.farmer.id).subscribe(res => {
-      this.data = res;
-      this.isLoading = false;
-      this.farmer = this.data.entity
-      console.log("Farmer details ", this.farmer)
-      console.log("Farmer Name ", this.farmer.firstName)
+ ngOnInit(): void {
+   console.log('Data received from dialog:', JSON.stringify(this.data, null, 2));
+   console.log('Farmer ID:', this.data.farmer?.id);
 
-      this.getWards(this.farmer.subcounty_fk)
+   if (!this.data.farmer?.id) {
+     this.snackbar.showNotification('error', 'Invalid farmer ID');
+     this.isLoading = false;
+     this.dialogRef.close();
+     return;
+   }
 
-      this.bankDetailsForm = this.fb.group({
+   this.isLoading = true;
+   this.subscription = this.service.getFarmersById(this.data.farmer.id).subscribe({
+     next: (res) => {
+       console.log('getFarmersById response:', JSON.stringify(res, null, 2));
+       this.isLoading = false;
+       if (!res?.entity) {
+         this.snackbar.showNotification('error', 'No farmer data found');
+         this.dialogRef.close();
+         return;
+       }
 
-        branch: [this.farmer.bankDetails?.branch ?? "NAN", [Validators.required]],
-        bankName: [this.farmer.bankDetails?.bankName ?? "NAN", [Validators.required]],
-        accountNumber: [this.farmer.bankDetails?.accountNumber ?? "NAN", [Validators.required]],
-        accountName: [this.farmer.bankDetails?.accountName ?? "NAN", [Validators.required]],
-      });
+       this.farmer = res.entity;
+       console.log('Farmer details:', JSON.stringify(this.farmer, null, 2));
 
-      this.farmerEditForm = this.fb.group({
-        id: [this.farmer.id],
-        bankDetails: [""],
-        transportMeans: [this.farmer.transportMeans],
-        firstName: [this.farmer.firstName, [Validators.required]],
-        lastName: [this.farmer.lastName, [Validators.required]],
-        idNumber: [this.farmer.idNumber, [Validators.required]],
-        farmerNo: [this.farmer.farmerNo, [Validators.required]],
-        mobileNo: [this.farmer.mobileNo, [Validators.required]],
-        address: [""],
-        subcounty_fk: [this.farmer.subcounty_fk, [Validators.required]],
-        wardFk: [this.farmer.wardFk, [Validators.required]],
-        memberType: [this.farmer.memberType, [Validators.required]],
-        alternativeMobileNo: [this.farmer.alternativeMobileNo],
-        noOfCows: [this.farmer.noOfCows, [Validators.required]],
-        county_fk: [this.farmer.county_fk],
-        location: [this.farmer.location],
-        subLocation: [this.farmer.subLocation],
-        village: [this.farmer.village],
-        paymentFreequency: [this.farmer.paymentFreequency],
-        paymentMode: [this.farmer.paymentMode],
-        gender: [this.farmer.gender],
-        route: [this.farmer.routeFk],
-        routeFk: [this.farmer.routeFk]
-      })
+       // Initialize bankDetailsForm with default values
+       this.bankDetailsForm = this.fb.group({
+         branch: [this.farmer.bankDetails?.branch || '', [Validators.required]],
+         bankName: [this.farmer.bankDetails?.bankName || '', [Validators.required]],
+         accountNumber: [this.farmer.bankDetails?.accountNumber || '', [Validators.required]],
+         accountName: [this.farmer.bankDetails?.accountName || '', [Validators.required]],
+       });
 
-    })
-    this.getSubcounties();
-    this.getCounties();
-    this.getRoutes();
-  }
+       // Initialize farmerEditForm with fallback values
+       this.farmerEditForm = this.fb.group({
+         id: [this.farmer.id || this.data.farmer.id || ''],
+         bankDetails: [''],
+         transportMeans: [this.farmer.transportMeans || ''],
+         firstName: [this.farmer.firstName || this.data.farmer.username?.split(' ')[0] || '', [Validators.required]],
+         lastName: [this.farmer.lastName || this.data.farmer.username?.split(' ')[1] || '', [Validators.required]],
+         idNumber: [this.farmer.idNumber || this.farmer.id_number || this.data.farmer.id_number || '', [Validators.required]],
+         farmerNo: [this.farmer.farmerNo || this.farmer.farmer_no || this.data.farmer.farmer_no || '', [Validators.required]],
+         mobileNo: [this.farmer.mobileNo || this.farmer.mobile_no || this.data.farmer.mobile_no || '', [Validators.required]],
+         address: [this.farmer.address || ''],
+         subcounty_fk: [this.farmer.subcounty_fk || '', [Validators.required]],
+         wardFk: [this.farmer.wardFk || '', [Validators.required]],
+         memberType: [this.farmer.memberType || '', [Validators.required]],
+         alternativeMobileNo: [this.farmer.alternativeMobileNo || ''],
+         noOfCows: [this.farmer.noOfCows || '', [Validators.required]],
+         county_fk: [this.farmer.county_fk || '', [Validators.required]],
+         location: [this.farmer.location || '', [Validators.required]],
+         subLocation: [this.farmer.subLocation || '', [Validators.required]],
+         village: [this.farmer.village || '', [Validators.required]],
+         paymentFreequency: [this.farmer.paymentFreequency || ''],
+         paymentMode: [this.farmer.paymentMode || '', [Validators.required]],
+         gender: [this.farmer.gender || '', [Validators.required]],
+         route: [this.farmer.routeFk || this.farmer.route || this.data.farmer.route || ''],
+         routeFk: [this.farmer.routeFk || '']
+       });
+
+       // Fetch wards only if subcounty_fk exists
+       if (this.farmer.subcounty_fk) {
+         this.getWards(this.farmer.subcounty_fk);
+       }
+
+       this.getSubcounties();
+       this.getCounties();
+       this.getRoutes();
+     },
+     error: (err) => {
+       console.error('Error fetching farmer by ID:', err);
+       this.isLoading = false;
+       this.snackbar.showNotification('error', 'Failed to load farmer data: ' + (err.message || 'Unknown error'));
+       this.dialogRef.close();
+     }
+   });
+ }
 
   onSubmit() {
     this.loading = true;
@@ -262,6 +287,7 @@ export class UpdateFarmerComponent implements OnInit {
       else {
         this.subcounties = [];
       }
+    this.isLoading = false;
     })
   }
 

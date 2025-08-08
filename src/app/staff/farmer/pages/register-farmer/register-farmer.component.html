@@ -20,12 +20,16 @@
     </button>
   </div>
   <div mat-dialog-content>
-    <form class="register-form m-4" [formGroup]="farmerRegirstartionForm">
+    <form
+      class="register-form m-4"
+      [formGroup]="farmerRegirstartionForm"
+      (ngSubmit)="onSubmit()"
+    >
       <!--Supplier Details-->
       <div class="row">
         <mat-card>
           <mat-card-title style="font-size: x-small"
-            >Supplier/Farmer Details</mat-card-title
+          >Supplier/Farmer Details</mat-card-title
           >
           <mat-card-content>
             <div class="row">
@@ -171,7 +175,7 @@
                     <mat-option value="Individual">Individual</mat-option>
                     <mat-option value="Group">Farmers Group</mat-option>
                     <mat-option value="Co-Operative"
-                      >Co-Operative Society</mat-option
+                    >Co-Operative Society</mat-option
                     >
                   </mat-select>
                   <mat-error
@@ -214,7 +218,7 @@
       <div class="row">
         <mat-card>
           <mat-card-title style="font-size: x-small"
-            >Area Of Residence & Milk Collection</mat-card-title
+          >Area Of Residence & Milk Collection</mat-card-title
           >
           <mat-card-content>
             <div class="row">
@@ -259,7 +263,7 @@
                       *ngFor="let subcounty of subcounties"
                       [value]="subcounty.id"
                     >
-                      {{ subcounty.subcounty }}
+                      {{ subcounty.name }}
                     </mat-option>
                   </mat-select>
                   <mat-error
@@ -385,28 +389,50 @@
       <div class="row">
         <mat-card>
           <mat-card-title style="font-size: x-small"
-            >Bank Details & Payment Frequency</mat-card-title
+          >Bank Details & Payment Frequency</mat-card-title
           >
           <mat-card-content>
+            <form [formGroup]="farmerRegirstartionForm">
+              <mat-form-field appearance="outline">
+                <mat-label>Payment Mode</mat-label>
+                <mat-select formControlName="paymentMode" required>
+                  <mat-option
+                    *ngFor="let mode of paymentModes"
+                    [value]="mode.name"
+                  >
+                    {{ mode.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    farmerRegirstartionForm
+                      .get('paymentMode')
+                      ?.hasError('required')
+                  "
+                >
+                  Payment mode is required
+                </mat-error>
+              </mat-form-field>
+            </form>
+
             <form [formGroup]="bankDetailsForm">
               <div class="row">
-                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
+                <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                   <mat-form-field
                     appearance="outline"
                     style="width: 100%; margin-bottom: 12px"
                   >
                     <mat-label>Select Payment Mode</mat-label>
                     <mat-select formControlName="paymentMode" required>
-                      <mat-option value="M-Pesa">M-Pesa Payments</mat-option>
-                      <mat-option value="Bank">Bank</mat-option>
-                      <mat-option value="Cash">Cash</mat-option>
-                      <mat-option value="Pesalink">Pesalink</mat-option>
-                      <mat-option value="cooperative saccos"
-                        >Cooperative Saccos</mat-option
+                      <mat-option
+                        *ngFor="let mode of paymentModes"
+                        [value]="mode.name"
                       >
+                        {{ mode.name }}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-0">
                   <mat-form-field
                     appearance="outline"
@@ -489,7 +515,7 @@
       <div class="row">
         <mat-card>
           <mat-card-title style="font-size: x-small"
-            >Transportation & Payment Frequency</mat-card-title
+          >Transportation & Payment Frequency</mat-card-title
           >
           <mat-card-content>
             <div class="row">
@@ -562,7 +588,7 @@
                   [disabled]="
                     !farmerRegirstartionForm.valid || !bankDetailsForm.valid
                   "
-                  (click)="onSubmit()"
+                  type="submit"
                 >
                   <span
                     *ngIf="loading"

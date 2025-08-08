@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FarmerService } from '../../services/farmer.service';
 import { DeleteFarmerComponent } from '../delete-farmer/delete-farmer.component';
 import { FarmerDetailsComponent } from '../farmer-details/farmer-details.component';
@@ -67,11 +68,16 @@ export class FarmerManagenentComponent implements OnInit {
     });
 
     // Subscribe to farmer_no changes
-    this.filterform.get('farmer_no')?.valueChanges.subscribe(() => {
-      if (this.selected === 'fn') {
-        this.filterFarmers();
-      }
-    });
+    this.filterform.get('farmer_no')?.valueChanges.pipe(
+          debounceTime(500),
+          distinctUntilChanged()
+        ).subscribe((value) => {
+          if (this.selected === 'fn' && this.filterform.get('farmer_no')?.valid && value) {
+            this.filterFarmers();
+          } else if (this.selected === 'fn' && !value) {
+            this.snackbar.showNotification('error', 'Please enter a valid farmer number');
+          }
+        });
 
     // Subscribe to routeId changes
     this.filterform.get('routeId')?.valueChanges.subscribe(() => {
@@ -235,6 +241,7 @@ export class FarmerManagenentComponent implements OnInit {
           this.data = res;
           if (res.entity) {
             const result = [{
+              id: res.entity.id || res.entity.farmerId || res.entity.farmer_no,
               farmer_no: res.entity.farmerNo || res.entity.farmer_no || '',
               username: res.entity.username || res.entity.name || '',
               mobile_no: res.entity.mobileNo || res.entity.mobile_no || '',
@@ -342,6 +349,7 @@ export class FarmerManagenentComponent implements OnInit {
       this.data = res;
       if (res.entity?.length > 0) {
         const mappedData = res.entity.map((farmer: any) => ({
+          id: farmer.farmerId || farmer.id || farmer.farmer_no,
           farmer_no: farmer.farmerNo || farmer.farmer_no || '',
           username: farmer.username || farmer.name || '',
           mobile_no: farmer.mobileNo || farmer.mobile_no || '',
@@ -445,6 +453,7 @@ export class FarmerManagenentComponent implements OnInit {
       this.data = res;
       if (res.entity?.length > 0) {
         const mappedData = res.entity.map((farmer: any) => ({
+          id: farmer.farmerId || farmer.id || farmer.farmer_no,
           farmer_no: farmer.farmerNo || farmer.farmer_no || '',
           username: farmer.username || farmer.name || '',
           mobile_no: farmer.mobileNo || farmer.mobile_no || '',

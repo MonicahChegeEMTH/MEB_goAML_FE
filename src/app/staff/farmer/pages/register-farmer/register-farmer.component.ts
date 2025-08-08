@@ -147,7 +147,7 @@ export class RegisterFarmerComponent implements OnInit, OnDestroy {
         console.log('Processed bankOptions:', this.bankOptions);
         this.updateFilteredBankOptions(this.farmerRegirstartionForm.get('paymentMode')?.value);
         this.isLoading = false;
-      }, 
+      },
       error: (error) => {
         console.error('Error fetching bank options:', error);
         this.isLoading = false;
