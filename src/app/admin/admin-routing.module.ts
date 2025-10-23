@@ -7,16 +7,17 @@ const routes: Routes = [
     loadChildren: () =>
       import("./dashboard/dashboard.module").then((m) => m.AdminDashboardModule),
   },
+
   {
-    path: "administrator",
-    loadChildren: () => import("./administration/administration.module").then((m) => m.AdministrationModule),
-  },
-  {
-    path: "roles",
+    path: "reports",
     loadChildren: () =>
-      import("./roles/roles.module").then(
-        (m) => m.RolesModule
-      ),
+      import("./reports/reports.module").then((m) => m.ReportsModule),
+  },
+
+  {
+    path: "logs",
+    loadChildren: () =>
+      import("./logs/logs.module").then((m) => m.LogsModule),
   },
 
   {
@@ -29,57 +30,6 @@ const routes: Routes = [
   {
     path: "user-accounts",
     loadChildren: () => import("./users/users.module").then((m) => m.UsersModule)
-  },
-  {
-    path: "counties",
-    loadChildren: () =>
-      import("./counties/counties.module").then(
-        (m) => m.CountiesModule
-      ),
-  },
-
-  {
-    path: "sub-counties",
-    loadChildren: () =>
-      import("./sub-counties/subcounties.module").then(
-        (m) => m.SubcountiesModule
-      ),
-  },
-  {
-    path: "business-profile",
-    loadChildren: () =>
-      import("./profile/profile.module").then(
-        (m) => m.ProfileModule
-      ),
-  },
-
-  {
-    path: "departments",
-    loadChildren: () =>
-      import("./departments/departments.module").then(
-        (m) => m.DepartmentsModule
-      ),
-  },
-
-  {
-    path: "transporters",
-    loadChildren: () => import("./transporters/transporters.module").then((m) => m.TransportersModule)
-  },
-
-  {
-    path: "pickup-locations",
-    loadChildren: () =>
-      import("./pick-up-locations/pickup.module").then(
-        (m) => m.PickupModule
-      ),
-  },
-
-  {
-    path: "routes",
-    loadChildren: () =>
-      import("./routes/routes.module").then(
-        (m) => m.RoutesModule
-      ),
   },
 
 ];

@@ -8,7 +8,7 @@ import { Account } from '../../data/types/account';
 @Component({
   selector: 'app-user-widgets',
   templateUrl: './user-widgets.component.html',
-  styleUrls: ['./user-widgets.component.sass'],
+  styleUrls: ['./user-widgets.component.scss'],
 })
 export class UserWidgetsComponent extends BaseComponent implements OnInit {
   activeAccounts: number = 0;

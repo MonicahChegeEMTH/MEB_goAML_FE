@@ -1,39 +1,39 @@
 @use '@angular/material' as mat;
 
-
+// Initialize Material core styles
 @include mat.core();
 
-$equity-brown-palette: (
-  50: #66716C,
-  100: #5A7167,
-  200: #4F7161,
-  300: #44715C,
-  400: #397157,
-  500: #2D7152,
-  600: #22714D,
-  700: #177147,
-  800:  	#0B7142,
-  900:  	 	#046307,
+// =============================
+// 🎨 Custom Color Palettes
+// =============================
+
+// Primary palette (deep navy blue)
+$meeting-master-primary-palette: (
+  50: #f4f0e6,
+  100: #e4d7b7,
+  200: #d3bd87,
+  300: #c2a358,
+  400: #b89037,
+  500: #b08b2e, // 🟤 main brand color
+  600: #9e7e2a,
+  700: #8c7125,
+  800: #7a6420,
+  900: #5c4a17,
   contrast: (
     50: rgba(black, 0.87),
     100: rgba(black, 0.87),
     200: rgba(black, 0.87),
-    300: rgba(black, 0.87),
-    400: rgba(black, 0.87),
+    300: white,
+    400: white,
     500: white,
     600: white,
     700: white,
     800: white,
     900: white,
-    A100: rgba(black, 0.87),
-    A200: rgba(black, 0.87),
-
-
-    A400: white,
-    A700: white,
   )
 );
 
+// Accent palette (your stone brown)
 $equity-stone-brown-palette: (
   50: #ededed,
   100: #d0d0d0,
@@ -56,29 +56,36 @@ $equity-stone-brown-palette: (
     700: white,
     800: white,
     900: white,
-    A100: rgba(black, 0.87),
-    A200: rgba(black, 0.87),
-    A400: white,
-    A700: white,
   )
 );
 
-$meeting-master-primary: mat.define-palette($equity-brown-palette, 900);
+// =============================
+// 🧩 Define Palettes
+// =============================
+$meeting-master-primary: mat.define-palette($meeting-master-primary-palette, 500);
 $meeting-master-accent: mat.define-palette($equity-stone-brown-palette, 400);
+$meeting-master-warn: mat.define-palette(mat.$red-palette);
 
-
+// =============================
+// 🌗 Define Theme
+// =============================
 $meeting-master-theme: mat.define-light-theme((
- color: (
-   primary: $meeting-master-primary,
-   accent: $meeting-master-accent,
- ),
- density: 0,
+  color: (
+    primary: $meeting-master-primary,
+    accent: $meeting-master-accent,
+    warn: $meeting-master-warn,
+  ),
+  density: 0,
 ));
 
-
+// =============================
+// 🧱 Apply Component Themes
+// =============================
 @include mat.core-theme($meeting-master-theme);
 @include mat.button-theme($meeting-master-theme);
 @include mat.form-field-theme($meeting-master-theme);
 @include mat.input-theme($meeting-master-theme);
 @include mat.icon-theme($meeting-master-theme);
-
+@include mat.toolbar-theme($meeting-master-theme);
+@include mat.card-theme($meeting-master-theme);
+@include mat.sidenav-theme($meeting-master-theme);

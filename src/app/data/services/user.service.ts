@@ -42,7 +42,7 @@ export class UserService {
   }
 
   fetchAllUserAccounts(): Observable<any> {
-    const fetchAllUserAccountsUrl = `${environment.apiUrl}/admin/api/v1/users/all-accounts`;
+    const fetchAllUserAccountsUrl = `${environment.apiUrl}/api/users/all`;
 
     return this.http.get<any>(fetchAllUserAccountsUrl, {
       headers: this.getTenantHeaders(),

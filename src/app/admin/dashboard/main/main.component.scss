@@ -200,6 +200,7 @@
   width: 260px;
   min-height: 130px;
   overflow: hidden;
+  margin-right: 20px;
 }
 
 /* gold accent line on right side */
@@ -369,4 +370,19 @@
       cursor: pointer;
     }
   }
+
+  .chart-section {
+  margin: 40px 0;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
 }

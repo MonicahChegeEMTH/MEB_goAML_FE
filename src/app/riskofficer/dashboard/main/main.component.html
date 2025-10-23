@@ -1,0 +1,76 @@
+<section class="content">
+  <div class="content-block">
+    <!-- Main Content -->
+
+    <div class="dashboard-content">
+      <!-- Header cards section -->
+      <div class="header-cards">
+        <!-- Large card -->
+        <div class="header-card large-card">
+          <div class="welcome">
+            <p class="greeting">Welcome Back</p>
+            <h3>Jairus Mokaya</h3>
+            <h2 class="system-title">goAML Reporting System</h2>
+          </div>
+          <div class="illustration">
+            <img
+              src="assets/images/login/dashboard_img.png"
+              alt="illustration"
+            />
+          </div>
+        </div>
+
+        <!-- Small Total Reports Card -->
+        <div class="reports-summary-card">
+          <div class="reports-summary-header">
+            <h2>Total Reports</h2>
+          </div>
+
+          <div class="reports-summary-body">
+            <h1>1000</h1>
+            <a routerLink="/reports" class="view-all">VIEW ALL →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions">
+        <button>New STR/SAR <i class="fas fa-arrow-right"></i></button>
+        <button>New STAR <i class="fas fa-arrow-right"></i></button>
+        <button>New CTR <i class="fas fa-arrow-right"></i></button>
+        <button>New MID <i class="fas fa-arrow-right"></i></button>
+      </div>
+
+      <!-- Recent Reports Table -->
+      <div class="recent-section">
+        <div class="section-header">
+          <h3>Recent Reports</h3>
+          <a href="#" class="view-all">VIEW ALL →</a>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Account Number</th>
+                <th>Transaction Type</th>
+                <th>Amount</th>
+                <th>File</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let report of reports">
+                <td>{{ report.date }}</td>
+                <td>{{ report.account }}</td>
+                <td>{{ report.type }}</td>
+                <td>{{ report.amount }}</td>
+                <td><i class="fas fa-folder-open"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

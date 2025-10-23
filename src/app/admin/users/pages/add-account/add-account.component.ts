@@ -60,42 +60,55 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
     this.router.navigate([`/admin/user-accounts/all`]);
   }
 
-  addUser() {
-    if (this.userForm.invalid) {
-      this.snackbar.showNotification('snackbar-danger', 'Please fill in all required fields.');
-      this.userForm.markAllAsTouched();
-      return;
-    }
-
-    this.loading = true;
-
-    const payload = {
-      ...this.userForm.value,
-      roleId: this.userForm.value.role, // send roleId to backend
-    };
-
-    this.userService
-      .createUserAccounts(payload)
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          this.loading = false;
-
-          if (res.statusCode === 200 || res.statusCode === 201) {
-            this.snackbar.showNotification('snackbar-success', res.message);
-            this.router.navigate(['/admin/user-accounts/all']);
-          } else {
-            this.snackbar.showNotification('snackbar-danger', res.message);
-          }
-        },
-        (err) => {
-          this.loading = false;
-
-          let errorMsg = 'User creation failed. Please try again.';
-          if (err?.error?.message) errorMsg = err.error.message;
-
-          this.snackbar.showNotification('snackbar-danger', errorMsg);
-        }
-      );
+ addUser() {
+  if (this.userForm.invalid) {
+    this.snackbar.showNotification('snackbar-danger', 'Please fill in all required fields.');
+    this.userForm.markAllAsTouched();
+    return;
   }
+
+  this.loading = true;
+
+  const payload = { ...this.userForm.value };
+
+  this.userService
+    .createUserAccounts(payload)
+    .pipe(takeUntil(this.subject))
+    .subscribe({
+      next: (res) => {
+        this.loading = false;
+
+        // 🧩 Safely extract a message no matter what backend returns
+        // let message: string;
+
+        // if (!res) {
+        //   message = 'User added successfully!';
+        // } else if (typeof res === 'string') {
+        //   message = res;
+        // } else if (typeof res === 'object' && res.message) {
+        //   message = res.message;
+        // } else {
+        //   message = 'User added successfully!';
+        // }
+
+        // ✅ Always show success — request itself succeeded
+        this.snackbar.showNotification('snackbar-success', 'User added successfully!');
+
+        // Navigate only after showing the message
+        this.router.navigate(['/admin/user-accounts/all']);
+      },
+      error: (err) => {
+        this.loading = false;
+
+        const errorMsg =
+          err?.error?.message ||
+          (typeof err?.error === 'string' ? err.error : 'User creation failed. Please try again.');
+
+        this.snackbar.showNotification('snackbar-danger', errorMsg);
+      },
+    });
+}
+
+
+
 }

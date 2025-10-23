@@ -12,7 +12,6 @@ import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { AccountDetailsComponent } from '../account-details/account-details.component';
 import { DeleteAccountComponent } from '../delete-account/delete-account.component';
-import { AdminUpdateUserPasswordComponent } from '../dialogs/admin-update-user-password/admin-update-user-password.component';
 import { LockAccountComponent } from '../lock-account/lock-account.component';
 import { ModifyAccountComponent } from '../modify-account/modify-account.component';
 import { RestoreAccountComponent } from '../restore-account/restore-account.component';
@@ -31,13 +30,12 @@ import jsPDF from 'jspdf';
 export class UsersComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'username',
+    'employeeNumber',
     'firstname',
     'lastname',
+    'email',
     'phonenumber',
-    'status',
-    'update',
-    'updatePassword',
+    'role',
     'actions',
   ];
   users: any[] = [];
@@ -69,6 +67,17 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsers();
+
+    this.dataSource.filterPredicate = (data, filter) => {
+    const f = filter.trim().toLowerCase();
+    return (
+      data.firstname?.toLowerCase().includes(f) ||
+      data.lastname?.toLowerCase().includes(f) ||
+      data.phone?.toLowerCase().includes(f) ||
+      data.employeeNumber?.toLowerCase().includes(f) ||
+      data.role?.toLowerCase().includes(f)
+    );
+  };
   }
 
   clearSearch() {
@@ -78,74 +87,81 @@ export class UsersComponent extends BaseComponent implements OnInit {
 }
 
   exportAsPDF(): void {
-    const doc = new jsPDF();
+  const doc = new jsPDF();
+  autoTable(doc, {
+    head: [['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role']],
+    body: this.dataSource.data.map((u) => [
+      u.employeeNumber,
+      u.firstname,
+      u.lastname,
+      u.phone,
+      u.role
+    ]),
+  });
+  doc.save('users.pdf');
+}
 
-    autoTable(doc, {
-      head: [['First Name', 'Last Name', 'Phone number', 'Status']],
-      body: this.dataSource.data.map((t) => [
-        t.firstName,
-        t.lastName,
-        t.mobile,
-        t.status,
-      ]), // rows
-    });
-
-    doc.save('users.pdf');
-  }
 
   refresh() {
     this.getAllUsers();
   }
 
   getAllUsers() {
-    this.isLoading = true;
-    const tenantId = localStorage.getItem('tenantId') || '000';
-    this.userService
-      .fetchAllUserAccounts()
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          this.users = res.userData || [];
+  this.isLoading = true;
+  const tenantId = localStorage.getItem('tenantId') || '000';
 
-          if (this.users.length > 0) {
-            // Filter users by tenantId
-            const filteredUsers = this.users.filter(
-              (user) => user.tenantId === tenantId
-            );
-            this.dataSource = new MatTableDataSource<any>(filteredUsers);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
+  this.userService
+    .fetchAllUserAccounts()
+    .pipe(takeUntil(this.subject))
+    .subscribe({
+      next: (res) => {
+         console.log('Raw response from backend:', res);
+        // if your backend returns { userData: [...] }
+        const rawUsers = res.data || [];
 
-            // Calculate active users count for the tenant
-            this.activeAccounts = filteredUsers.filter(
-              (user) => user.status === 'Active'
-            ).length;
-          } else {
-            this.dataSource = new MatTableDataSource<any>([]);
-            this.activeAccounts = 0;
-            this.snackbar.showNotification(
-              'snackbar-danger',
-              'No users found for this cooperative.'
-            );
-          }
-          this.isLoading = false;
-        },
-        (err) => {
-          this.isLoading = false;
-          if (err.status === 403) {
-            this.snackbar.showNotification(
-              'snackbar-danger',
-              'Access Denied: Insufficient permissions to fetch users.'
-            );
-          } else {
-            this.snackbar.showNotification(
-              'snackbar-danger',
-              err.error?.message || 'Failed to fetch users'
-            );
-          }
+        // Normalize property names so Angular knows what to display
+        this.users = rawUsers.map((u, index) => ({
+          id: index + 1,
+          employeeNumber: u.employeeNumber,
+          firstname: u.firstname || u.firstName || '',
+          lastname: u.lastname || u.lastName || '',
+          phone: u.phone || u.mobile || '',
+          email: u.email || '',
+          role: u.role || '',
+          tenantId: u.tenantId || tenantId,
+          status: u.status || 'Active', // default fallback
+        }));
+
+        // Filter for tenant if applicable
+        const filteredUsers = this.users.filter(
+          (user) => user.tenantId === tenantId
+        );
+
+        this.dataSource = new MatTableDataSource<any>(filteredUsers);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.activeAccounts = filteredUsers.filter(
+          (user) => user.status === 'Active'
+        ).length;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err.status === 403) {
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            'Access Denied: Insufficient permissions to fetch users.'
+          );
+        } else {
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error?.message || 'Failed to fetch users'
+          );
         }
-      );
-  }
+      },
+    });
+}
+
 
   editCall(user) {
     const dialogConfig = new MatDialogConfig();
@@ -155,23 +171,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
     dialogConfig.data = { user };
 
     const dialogRef = this.dialog.open(UpdateAccountComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
-    });
-  }
-
-  updateUserpassword(user) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '500px';
-    dialogConfig.data = { user };
-
-    const dialogRef = this.dialog.open(
-      AdminUpdateUserPasswordComponent,
-      dialogConfig
-    );
 
     dialogRef.afterClosed().subscribe(() => {
       this.getAllUsers();

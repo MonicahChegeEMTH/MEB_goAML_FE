@@ -29,7 +29,7 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
-    path: '/admin/dashboard/main',
+    path: '/admin/reports/reports',
     title: 'Reports',
     moduleName: 'dashboard',
     iconType: 'feather',
@@ -43,7 +43,7 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
-    path: '/admin/dashboard/main',
+    path: '/admin/logs/logs',
     title: 'Logs',
     moduleName: 'dashboard',
     iconType: 'feather',

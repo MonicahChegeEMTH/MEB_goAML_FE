@@ -7,7 +7,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { HeaderComponent } from "./layout/header/header.component";
 import { PageLoaderComponent } from "./layout/page-loader/page-loader.component";
 import { SidebarComponent } from "./layout/sidebar/sidebar.component";
 import { RightSidebarComponent } from "./layout/right-sidebar/right-sidebar.component";
@@ -34,7 +33,6 @@ import {
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
 import { FooterComponent } from "./layout/footer/footer.component";
 import { NgApexchartsModule } from "ng-apexcharts";
-import { LoginComponent } from './auth/login/login.component';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -62,17 +60,16 @@ export function createTranslateLoader(http: HttpClient): any {
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     PageLoaderComponent,
     SidebarComponent,
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
     FooterComponent,
-    LoginComponent,
   ],
   imports: [
     BrowserModule,
+    PerfectScrollbarModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,

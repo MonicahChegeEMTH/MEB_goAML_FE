@@ -22,34 +22,7 @@ const routes: Routes = [
           import("./admin/admin.module").then((m) => m.AdminModule),
       },
       { path: "", redirectTo: "/authentication/signin", pathMatch: "full" },
-      {
-        path: "staff",
-        canActivate: [AuthGuard],
-        data: {
-          role: Role.Staff,
-        },
-        loadChildren: () =>
-          import("./staff/staff.module").then((m)=>m.StaffModule),
-      },
-
-      {
-        path: "user",
-        canActivate: [AuthGuard],
-        data: {
-          role: Role.Collector,
-        },
-        loadChildren: () =>
-          import("./user/user.module").then((m) => m.UserModule),
-      },
-      {
-        path: "reports",
-        canActivate: [AuthGuard],
-        data: {
-          role: Role.Staff,
-        },
-        loadChildren: () =>
-          import("./reports/reports.module").then((m)=>m.ReportsModule),
-      },
+     
     ],
   },
   {
