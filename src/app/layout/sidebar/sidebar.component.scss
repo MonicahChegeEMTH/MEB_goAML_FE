@@ -1,24 +1,24 @@
 .sidebar {
   position: fixed;
-  top: 10px;                   /* start at very top */
-  left: 10px;                  /* attach to the left edge */
-  height: 100vh;            /* full viewport height */
-   margin: 0;                 /* remove outer margin */
+  top: 10px;                 
+  left: 10px;                 
+  height: 100vh;           
+   margin: 0;               
   width: 250px;
   margin-right: 20px;
   background: #fff;
-  border-radius: 20px 20px 20px 20px; /* rounded only on right edge */
+  border-radius: 20px 20px 20px 20px; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  z-index: 100; /* make sure it stays above content */
+  z-index: 100; 
 }
 
 
 .sidebar-logo {
-  padding: 40px 0 20px;
+  padding: 45px 0 0px;
   flex: 0 0 auto;
   display: flex;
   justify-content: center;
@@ -27,8 +27,8 @@
 }
 
 .sidebar-logo img {
-  width: 100%; /* Increased to match the photo's larger logo */
-  height: 150px;
+  width: 170px; 
+  height: auto;
   object-fit: contain;
 }
 
@@ -63,32 +63,62 @@
   border-radius: 0;
   text-decoration: none;
   transition: color 0.3s ease;
-  border-bottom: 2px solid transparent; /* Soft underline */
+  border-bottom: 2px solid transparent;
 }
 
 .list li a:hover {
-  color: #f8e200; /* Yellow text on hover */
-  border-bottom: 2px solid #f8e200; /* Soft underline on hover */
+  color: #f8e200; 
+  border-bottom: 2px solid #f8e200; 
 }
 
 .list li.active > a {
-  color: #f8e200; /* Yellow text for active state */
-  border-bottom: 2px solid #f8e200; /* Soft underline for active state */
+  color: #f8e200; 
+  border-bottom: 2px solid #f8e200; 
   font-weight: 600;
 }
 
 .logout-container {
   flex: 0 0 auto;
-  padding: 16px 20px;
+  padding: 12px 20px 35px;
   margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: #fff;
   position: sticky;
   bottom: 0;
   z-index: 1;
-  border-top: 1px solid #e0e0e0;
+}
+
+.logout-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center; 
+  background-color: #001e3c;
+  color: #fff;
+  width: 100%; 
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  cursor: pointer;
+  font-family: "Futura", sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #00225a;
+}
+
+.logout-text {
+  flex: 1;
+  text-align: left;
+}
+
+.logout-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .logout-bg {
@@ -96,8 +126,8 @@
   height: 61px;
   border-radius: 10px;
   display: block;
-  background: #003087; /* Dark blue to match Victoria theme */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for button */
+  background: #003087; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .logout-content {

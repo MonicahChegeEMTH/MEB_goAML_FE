@@ -8,9 +8,8 @@
   >
     <!-- Logo (Fixed at Top) -->
     <div class="sidebar-logo">
-      <img src="assets/images/sidebar/vcb_logo1.png" alt="Logo" />
+      <img src="assets/images/sidebar/vcb_logo2.png" alt="Logo" />
     </div>
-    
 
     <!-- Scrollable Menu -->
     <div class="menu" [perfectScrollbar]>
@@ -113,27 +112,10 @@
       </ul>
     </div>
 
-    <!-- Logout (Fixed at Bottom) -->
     <div class="logout-container" (click)="logout()">
-      <img
-        src="assets/images/sidebar/logout.png"
-        alt="Logout background"
-        class="logout-bg"
-      />
-
-      <!-- wrapper for icon + text -->
-      <div class="logout-content">
-        <img
-          src="assets/images/sidebar/logoutLeft.png"
-          alt="Logout icon"
-          class="logout-icon"
-        />
-        <img
-          src="assets/images/sidebar/logoutName.png"
-          alt="Logout text"
-          class="logout-text"
-        />
-      </div>
+      <button mat-raised-button class="logout-btn" type="submit">
+        <span class="logout-text">LOG OUT</span>
+      </button>
     </div>
   </aside>
 </div>
