@@ -1,29 +1,29 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { takeUntil } from "rxjs";
-import { UserService } from "src/app/data/services/user.service";
-import { BaseComponent } from "src/app/shared/components/base/base.component";
-import { SnackbarService } from "src/app/shared/services/snackbar.service";
-import { AccountService } from "../../data/services/account.service";
-import { Account } from "../../data/types/account";
-import { ActiveAccountsComponent } from "../active-accounts/active-accounts.component";
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs';
+import { UserService } from 'src/app/data/services/user.service';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { AccountService } from '../../data/services/account.service';
+import { Account } from '../../data/types/account';
+import { ActiveAccountsComponent } from '../active-accounts/active-accounts.component';
 
 @Component({
-  selector: "app-lock-account",
-  templateUrl: "./lock-account.component.html",
-  styleUrls: ["./lock-account.component.sass"],
+  selector: 'app-lock-account',
+  templateUrl: './lock-account.component.html',
+  styleUrls: ['./lock-account.component.sass'],
 })
 export class LockAccountComponent extends BaseComponent implements OnInit {
   account: Account;
   userId: number;
   loading: boolean;
+  reason: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<ActiveAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackbar: SnackbarService,
     private userService: UserService
-    // private accountService: AccountService
   ) {
     super();
   }
@@ -37,23 +37,24 @@ export class LockAccountComponent extends BaseComponent implements OnInit {
   confirmLock() {
     this.loading = true;
     this.userService
-      .lockUserAccount(this.userId)
+      .lockUserAccount(this.userId, this.reason)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification(res.message, "snackbar-success");
+          if (res.statusCode == 200 || res.statusCode == 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
 
-             this.dialogRef.close();
-          }else {
-            this.snackbar.showNotification(res.message, "snackbar-danger")
+             this.userService.triggerWidgetsRefresh();
+
+            this.dialogRef.close(true);
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
 
             this.loading = false;
           }
         },
         (err) => {
-          this.snackbar.showNotification(err.error.error, "snackbar-danger");
-          console.log(err);
+          this.snackbar.showNotification(err.error.error, 'snackbar-danger');
           this.loading = false;
         }
       );

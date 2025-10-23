@@ -24,7 +24,6 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
     public dialogRef: MatDialogRef<ActiveAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    // private accountService: AccountService,
     private userService: UserService,
     private snackbar: SnackbarService,
     private router: Router
@@ -32,22 +31,29 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
     super();
 
     this.user = data.user;
-
     this.userId = this.user.id;
   }
 
   ngOnInit(): void {
-    console.log('User Data', this.data);
-    console.log(this.data.user.roles[0].name);
     this.updateAccountForm();
-    // this.getRoles();
   }
 
   updateAccountForm() {
     this.accountForm = this.fb.group({
-      firstName: [this.user.firstName, [Validators.required]],
-      lastName: [this.user.lastName, [Validators.required]],
+      username: [this.user.username || '', [Validators.required]],
+      firstName: [this.user.firstName || '', [Validators.required]],
+      lastName: [this.user.lastName || '', [Validators.required]],
+      email: [this.user.email || '', [Validators.email]],
+      role: [
+        this.user.roles && this.user.roles[0] ? this.user.roles[0].name : '',
+        [],
+      ],
+      mobile: [this.user.mobile || '', [Validators.required]],
     });
+  }
+
+  roleLookup() {
+    // Implement role lookup logic here
   }
 
   updateAccount() {
@@ -58,21 +64,16 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          // this.updateDepartment();
-
           if (res.statusCode == 200 || res.statusCode == 201) {
             this.snackbar.showNotification(res.message, 'snackbar-success');
-
             this.dialogRef.close();
           } else {
             this.snackbar.showNotification(res.message, 'snackbar-danger');
-
             this.loading = false;
           }
         },
-        (err) => {
+        (err: HttpErrorResponse) => {
           this.snackbar.showNotification(err.error.error, 'snackbar-danger');
-          console.log(err);
           this.loading = false;
         }
       );

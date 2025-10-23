@@ -18,6 +18,7 @@ export class UnlockAccountComponent extends BaseComponent implements OnInit {
   account: Account;
   userId: number;
   loading: boolean;
+  reason: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<LockedAccountsComponent>,
@@ -38,25 +39,26 @@ export class UnlockAccountComponent extends BaseComponent implements OnInit {
   unlockAccount() {
     this.loading = true
     this.userService
-      .unlockUserAccount(this.userId)
+      .unlockUserAccount(this.userId, this.reason)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
 
           if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification(res.message, "snackbar-success");
+            this.snackbar.showNotification("snackbar-success", res.message);
+
+             this.userService.triggerWidgetsRefresh();
 
              this.dialogRef.close();
           }else {
-            this.snackbar.showNotification(res.message, "snackbar-danger")
+            this.snackbar.showNotification("snackbar-danger", res.message)
 
             this.loading = false;
           }
 
         },
         (err) => {
-          this.snackbar.showNotification(err.error.error, "snackbar-danger");
-          console.log(err);
+          this.snackbar.showNotification("snackbar-danger", err.error.error);
           this.loading = false;
         }
       );

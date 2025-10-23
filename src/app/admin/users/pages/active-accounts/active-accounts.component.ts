@@ -67,25 +67,28 @@ export class ActiveAccountsComponent extends BaseComponent implements OnInit {
   }
 
   getLockedAccounts() {
-    this.userService.fetchAllActiveAccounts()
+    this.isLoading = true;
+
+    this.userService
+      .fetchAllActiveAccounts()
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          this.lockedAccounts = res.userData;
+          this.lockedAccounts = res?.userData || [];
 
-          if (this.lockedAccounts.length > 0) {
-            this.isLoading = false;
+          this.dataSource = new MatTableDataSource<Account>(
+            this.lockedAccounts
+          );
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
 
-            this.dataSource = new MatTableDataSource<Account>(
-              this.lockedAccounts
-            );
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }
-          
+          this.isLoading = false;
         },
         (err) => {
-          console.log(err);
+          console.error(err);
+          this.lockedAccounts = [];
+          this.dataSource = new MatTableDataSource<Account>([]);
+          this.isLoading = false;
         }
       );
   }

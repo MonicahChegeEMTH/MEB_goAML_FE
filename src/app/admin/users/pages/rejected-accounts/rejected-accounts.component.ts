@@ -95,8 +95,6 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
       user,
     };
     this.dialog.open(UpdateAccountComponent, dialogConfig);
-
-    console.log(user);
   }
 
   detailsCall(account) {
@@ -139,7 +137,6 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
       .subscribe((result) => {
         let url = window.URL.createObjectURL(result.data);
 
-        // if you want to open PDF in new tab
         window.open(url);
 
         let a = document.createElement('a');
@@ -153,8 +150,8 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
         a.remove();
 
         this.snackbar.showNotification(
-          'Purchase Order generated successfully',
-          'snackbar-success'
+          'snackbar-success',
+          'Purchase Order generated successfully'
         );
       });
   }
@@ -179,7 +176,6 @@ export class RejectedAccountsComponent extends BaseComponent implements OnInit {
     }
   }
 
-  // context menu
   onContextMenu(event: MouseEvent, item: any) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';

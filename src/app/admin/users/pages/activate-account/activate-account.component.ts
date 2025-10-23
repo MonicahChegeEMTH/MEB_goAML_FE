@@ -11,52 +11,48 @@ import { InactiveAccountsComponent } from '../inactive-accounts/inactive-account
 @Component({
   selector: 'app-activate-account',
   templateUrl: './activate-account.component.html',
-  styleUrls: ['./activate-account.component.sass']
+  styleUrls: ['./activate-account.component.sass'],
 })
 export class ActivateAccountComponent extends BaseComponent implements OnInit {
- account: Account
+  account: Account;
   userId: number;
 
-  constructor(public dialogRef: MatDialogRef<InactiveAccountsComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<InactiveAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackbar: SnackbarService,
-    private accountService: AccountService) {
-      super();
-     }
+    private accountService: AccountService
+  ) {
+    super();
+  }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.account = this.data.user;
 
     this.userId = this.data.user.id;
   }
 
   confirmActivateAccount() {
-    console.log({ username: this.account.username, status: true });
     this.accountService
       .activateUserAccount({ username: this.account.username, status: true })
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          this.snackbar.showNotification(res.message, "snackbar-success");
+          this.snackbar.showNotification('snackbar-success', res.message);
           this.dialogRef.close();
-         // console.log(res);
         },
-        (err) => {
-          console.log(err);
-        }
+        (err) => {}
       );
   }
 
   confirmRestoreAccount() {
-    console.log({ username: this.account.username })
     this.accountService
       .restoreDeletedAccount({ username: this.account.username })
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          this.snackbar.showNotification(res.message, "snackbar-success");
+          this.snackbar.showNotification('snackbar-success', res.message);
           this.dialogRef.close();
-          console.log(res);
         },
         (err) => {
           console.log(err);
@@ -67,5 +63,4 @@ export class ActivateAccountComponent extends BaseComponent implements OnInit {
   onNoClick() {
     this.dialogRef.close();
   }
-
 }

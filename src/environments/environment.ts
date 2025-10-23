@@ -4,14 +4,14 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://18.219.121.50:9400",
-  API: "http://18.219.121.50:9400",
+  // apiUrl: "http://18.219.121.50:9400",
+  // API: "http://18.219.121.50:9400",
   // apiUrl: "http://localhost:9600",
   // API: "http://localhost:9600",
-//   apiUrl: "http://172.16.9.84:9600",
-//   API: "http://172.16.9.84:9600",
-//   apiUrl: "http://172.16.10.215:9600",
-//   API: "http://172.16.10.215:9600",
+  apiUrl: 'http://172.16.1.227:9600',
+  API: 'http://172.16.1.227:9600',
+  //  apiUrl: "http://172.16.10.215:9600",
+  //  API: "http://172.16.10.215:9600",
 };
 
 /*
@@ -22,4 +22,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
-

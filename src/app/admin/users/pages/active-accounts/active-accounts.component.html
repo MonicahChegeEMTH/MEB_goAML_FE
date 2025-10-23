@@ -24,7 +24,7 @@
                   <div class="col-8">
                     <ul class="header-buttons-left ms-0">
                       <li class="dropdown">
-                        <h2>Locked Accounts</h2>
+                        <h2>Active Accounts</h2>
                       </li>
                       <li class="dropdown m-l-20">
                         <label for="search-input"
@@ -70,33 +70,6 @@
                           />
                         </div>
                       </li>
-                      <li>
-                        <div class="export-button m-l-10" matTooltip="CSV">
-                          <img
-                            src="assets/images/icons/csv.png"
-                            alt=""
-                            (click)="exporter.exportTable('csv')"
-                          />
-                        </div>
-                      </li>
-                      <li>
-                        <div class="export-button m-l-10" matTooltip="JSON">
-                          <img
-                            src="assets/images/icons/json.png"
-                            alt=""
-                            (click)="exporter.exportTable('json')"
-                          />
-                        </div>
-                      </li>
-                      <li>
-                        <div class="export-button m-l-10" matTooltip="TXT">
-                          <img
-                            src="assets/images/icons/txt.png"
-                            alt=""
-                            (click)="exporter.exportTable('txt')"
-                          />
-                        </div>
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -139,8 +112,8 @@
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-2">Id</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-2">{{ user.id
+                    class="column-nowrap psl-3 tbl-col-width-per-3">Id</mat-header-cell>
+                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">{{ user.id
                     }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="username">
@@ -238,6 +211,16 @@
                 >
                 </mat-row>
               </mat-table>
+
+              <div
+                *ngIf="!isLoading && dataSource?.data?.length === 0"
+                class="no-records text-center p-3"
+                style="font-size: 20px; color: #000000"
+              >
+                <h4>0 Records Found.</h4>
+              </div>
+
+              
               <!-- Loading spinner -->
               <div *ngIf="isLoading" class="tbl-spinner">
                 <mat-progress-spinner

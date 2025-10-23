@@ -34,6 +34,7 @@ import {
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
 import { FooterComponent } from "./layout/footer/footer.component";
 import { NgApexchartsModule } from "ng-apexcharts";
+import { LoginComponent } from './auth/login/login.component';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -68,6 +69,7 @@ export function createTranslateLoader(http: HttpClient): any {
     AuthLayoutComponent,
     MainLayoutComponent,
     FooterComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

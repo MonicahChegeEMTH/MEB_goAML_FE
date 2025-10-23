@@ -11,20 +11,18 @@ import { AuthService } from 'src/app/core/service/auth.service';
 @Component({
   selector: 'app-lookup-milk-collectors',
   templateUrl: './lookup-milk-collectors.component.html',
-  styleUrls: ['./lookup-milk-collectors.component.sass']
+  styleUrls: ['./lookup-milk-collectors.component.sass'],
 })
 export class LookupMilkCollectorsComponent implements OnInit {
-
   users: any;
   isLoading: boolean = true;
 
-  
-  displayedColumns: string[] = ["select", "username", "email"];
+  displayedColumns: string[] = ['select', 'username', 'email'];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   selection = new SelectionModel<any>(true, []);
 
@@ -34,31 +32,28 @@ export class LookupMilkCollectorsComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPickupComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
-    private accountService: AuthService,
-  ) {
-
-  }
+    private accountService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.getActiveAccounts();
   }
 
   getActiveAccounts() {
-    this.accountService.allActiveUsers()
-      .subscribe(
-        (res) => {
-          this.users = res.userData;
-          if (this.users.length > 0) {
-            this.isLoading = false;
-            this.dataSource = new MatTableDataSource<any>(this.users);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }
-        },
-        (err) => {
-          console.log(err);
+    this.accountService.allActiveUsers().subscribe(
+      (res) => {
+        this.users = res.userData;
+        if (this.users.length > 0) {
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource<any>(this.users);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         }
-      );
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -78,7 +73,6 @@ export class LookupMilkCollectorsComponent implements OnInit {
     this.selection.select(...this.dataSource.data);
   }
 
-
   username: any;
   email: any;
 
@@ -90,14 +84,12 @@ export class LookupMilkCollectorsComponent implements OnInit {
       items.push(milkCollectors);
     });
 
-    this.dialogRef.close({ event: "close", data: items });
+    this.dialogRef.close({ event: 'close', data: items });
   }
 
   onNoClick() {
     this.dialogRef.close();
   }
-
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -106,8 +98,6 @@ export class LookupMilkCollectorsComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-
 }
 
 export class MilkCollectors {

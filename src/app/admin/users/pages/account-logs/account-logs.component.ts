@@ -1,31 +1,31 @@
-import { SelectionModel } from "@angular/cdk/collections";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { MatMenuTrigger } from "@angular/material/menu";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
-import { ActivatedRoute } from "@angular/router";
-import { takeUntil } from "rxjs";
-import { BaseComponent } from "src/app/shared/components/base/base.component";
-import { AccountService } from "../../data/services/account.service";
-import { Log } from "../../data/types/log";
-import { MatDatepickerInputEvent } from "@angular/material/datepicker";
-import { DatePipe } from "@angular/common";
-import { TokenStorageService } from "src/app/core/service/token-storage.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { AccountService } from '../../data/services/account.service';
+import { Log } from '../../data/types/log';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { DatePipe } from '@angular/common';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: "app-account-logs",
-  templateUrl: "./account-logs.component.html",
-  styleUrls: ["./account-logs.component.sass"],
+  selector: 'app-account-logs',
+  templateUrl: './account-logs.component.html',
+  styleUrls: ['./account-logs.component.sass'],
 })
 export class AccountLogsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
-    "id",
-    "time",
-    "username",
-    "requesttip",
-    "activity",
+    'id',
+    'time',
+    'username',
+    'requesttip',
+    'activity',
   ];
   accountId: number;
   username: string;
@@ -54,28 +54,21 @@ export class AccountLogsComponent extends BaseComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild("filter", { static: true }) filter: ElementRef;
+  @ViewChild('filter', { static: true }) filter: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   ngOnInit(): void {
-    //this.currentUserName = this.tokenStorage.getUser().username;
-
     this.Form = this.fb.group({
       stime: [this.currentDate, Validators.required],
     });
 
     this.activatedRoute.params.subscribe((param) => {
       this.accountId = param.id;
-      console.log(this.accountId);
     });
 
     this.getAccountUsername(this.accountId);
-    // this.transCurrentDate = this.datepipe.transform(
-    //   this.currentDate,
-    //   "yyyy/MM/dd"
-    // );
   }
 
   getAccountUsername(id) {
@@ -84,17 +77,12 @@ export class AccountLogsComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          //console.log(res);
-
           this.username = res.username;
-          console.log(this.username);
 
           let event = { value: this.Form.value.stime };
           this.selectDate(event);
         },
-        (err) => {
-          console.log(err);
-        }
+        (err) => {}
       );
   }
 
@@ -102,16 +90,13 @@ export class AccountLogsComponent extends BaseComponent implements OnInit {
     this.dataSource = null;
     this.isLoading = true;
 
-    this.transCurrentDate = this.datepipe.transform(event.value, "yyyy-MM-dd");
-    console.log(this.username);
-    console.log(this.transCurrentDate);
+    this.transCurrentDate = this.datepipe.transform(event.value, 'yyyy-MM-dd');
 
     this.accountService
       .getDailyAccountLogs(this.username, this.transCurrentDate)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          console.log(res);
           this.dialyLogs = res;
 
           if (this.dialyLogs) {
@@ -122,12 +107,8 @@ export class AccountLogsComponent extends BaseComponent implements OnInit {
             this.dataSource.sort = this.sort;
           }
         },
-        (err) => {
-          console.log(err);
-        }
+        (err) => { this.isLoading = false; }
       );
-
-    //console.log();
   }
 
   applyFilter(event: Event) {
@@ -138,13 +119,12 @@ export class AccountLogsComponent extends BaseComponent implements OnInit {
     }
   }
 
-  // context menu
   onContextMenu(event: MouseEvent, item: Log) {
     event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + "px";
-    this.contextMenuPosition.y = event.clientY + "px";
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = { item: item };
-    this.contextMenu.menu.focusFirstItem("mouse");
+    this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
 }

@@ -2,7 +2,11 @@
   <div class="content-block">
     <div class="block-header">
       <!-- breadcrumb -->
-      <app-breadcrumb [title]="'Active Users'" [items]="['Users']" [active_item]="'Active Users'">
+      <app-breadcrumb
+        [title]="'Active Users'"
+        [items]="['Users']"
+        [active_item]="'Active Users'"
+      >
       </app-breadcrumb>
     </div>
 
@@ -22,21 +26,48 @@
                       <li class="dropdown">
                         <h2>All Accounts</h2>
                       </li>
-                      <li class="dropdown m-l-20">
-                        <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                        <input placeholder="Search" type="text" (keyup)="applyFilter($event)" #filter
-                          class="browser-default search-field" aria-label="Search box" />
+                      <li class="searchbox m-l-20">
+                        <label for="search-input">
+                          <i class="material-icons search-icon">search</i>
+                        </label>
+
+                        <input
+                          id="search-input"
+                          placeholder="Search"
+                          type="text"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                          [(ngModel)]="searchText"
+                          (keyup)="applyFilter($event)"
+                        />
+
+                        <!-- Clear (X) icon -->
+                        <i
+                          class="material-icons clear-icon"
+                          *ngIf="searchText"
+                          (click)="clearSearch()"
+                        >
+                          close
+                        </i>
                       </li>
                       <li>
                         <div class="m-l-10" matTooltip="ADD">
-                          <button mat-mini-fab color="primary" (click)="addNew()">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="addNew()"
+                          >
                             <mat-icon class="col-white">add</mat-icon>
                           </button>
                         </div>
                       </li>
                       <li>
                         <div class="m-l-10" matTooltip="REFRESH">
-                          <button mat-mini-fab color="primary" (click)="refresh()">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="refresh()"
+                          >
                             <mat-icon class="col-white">refresh</mat-icon>
                           </button>
                         </div>
@@ -45,187 +76,317 @@
                   </div>
                   <div class="col-4">
                     <ul class="header-buttons">
-                      <!-- <li>
-                        <button type="button" class="btn btn-success waves-effect m-l-10"
-                          (click)="generateAccountsReports()">
-                          <i class="fas fa-file-download"></i> Export PDF
-                        </button>
-                      </li> -->
                       <li>
                         <div class="export-button m-l-10" matTooltip="XLSX">
-                          <img src="assets/images/icons/xlsx.png" alt="" (click)="
+                          <img
+                            src="assets/images/icons/xlsx.png"
+                            alt=""
+                            (click)="
                               exporter.exportTable('xlsx', {
-                                fileName: 'assets-list',
+                                fileName: 'users',
                                 sheet: 'sheet1'
                               })
-                            " />
+                            "
+                          />
                         </div>
                       </li>
                       <li>
-                        <div class="export-button m-l-10" matTooltip="CSV">
-                          <img src="assets/images/icons/csv.png" alt="" (click)="exporter.exportTable('csv')" />
-                        </div>
-                      </li>
-                      <li>
-                        <div class="export-button m-l-10" matTooltip="JSON">
-                          <img src="assets/images/icons/json.png" alt="" (click)="exporter.exportTable('json')" />
-                        </div>
-                      </li>
-                      <li>
-                        <div class="export-button m-l-10" matTooltip="TXT">
-                          <img src="assets/images/icons/txt.png" alt="" (click)="exporter.exportTable('txt')" />
-                        </div>
-                      </li>
+                            <div class="export-button m-l-10" matTooltip="PDF">
+                              <img
+                                src="assets/images/icons/pdf.png"
+                                alt="Export to PDF"
+                                (click)="exportAsPDF()"
+                              />
+                            </div>
+                          </li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
-                #exporter="matTableExporter">
+              <mat-table
+                #table
+                matTableExporter
+                [dataSource]="dataSource"
+                matSort
+                class="mat-cell"
+                #exporter="matTableExporter"
+              >
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-3">Id</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">{{ user.id
-                    }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >Id</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user; let i = index"
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >{{
+                      paginator
+                        ? paginator.pageIndex * paginator.pageSize + i + 1
+                        : i + 1
+                    }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="username">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Username</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-12">{{ user.username
-                    }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Username</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >{{ user.username }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="firstname">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Firstname</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-12">
-                    {{ user.firstName }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Firstname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.firstName }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="lastname">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Lastname</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-12">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Lastname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
                     {{ user.lastName }}
                   </mat-cell>
                 </ng-container>
-                <!-- <ng-container matColumnDef="department">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-10">Department</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-10">
-                    {{ user.department }}
-                  </mat-cell>
-                </ng-container> -->
-                <!-- <ng-container matColumnDef="PickupLocation">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-10">Center</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-10">
-                    {{ user.pickUpLocation }}
-                  </mat-cell>
-                </ng-container> -->
                 <ng-container matColumnDef="phonenumber">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-15">Phonenumber</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-15">
-                    {{ user.mobile }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Phonenumber</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    {{ user.mobile }}</mat-cell
+                  >
                 </ng-container>
-               
                 <ng-container matColumnDef="status">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="psl-3 tbl-col-width-per-8">Status
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="psl-3 tbl-col-width-per-8"
+                    >Status
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-8">
+                  <mat-cell
+                    *matCellDef="let row"
+                    class="column-nowrap psl-3 tbl-col-width-per-8"
+                  >
                     <div *ngIf="row.status == 'Locked'">
                       <span class="badge badge-pill badge-primary col-purple">
-                        {{ "Locked" }}</span>
+                        {{ "Locked" }}</span
+                      >
                     </div>
                     <div *ngIf="row.status == 'Active'">
                       <span class="badge badge-pill badge-primary col-green">
-                        {{ "Active" }}</span>
+                        {{ "Active" }}</span
+                      >
+                    </div>
+                    <div *ngIf="row.status == 'Inactive'">
+                      <span class="badge badge-pill badge-primary col-orange">
+                        {{ "Inactive" }}</span
+                      >
                     </div>
                     <div *ngIf="row.status == 'Deleted'">
                       <span class="badge badge-pill badge-primary col-red">
-                        {{ "Deleted" }}</span>
+                        {{ "Deleted" }}</span
+                      >
                     </div>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="update">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-15">Update Role</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-15">
-                    <button class="badge badge-solid-blue btn blue btn btn-sm m-1" (click)="updateUser(user)">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Update Role</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    <button
+                      class="badge badge-solid-blue btn blue btn btn-sm m-1"
+                      (click)="updateUser(user)"
+                    >
                       Update Role
                     </button>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="updatePassword">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-15">Update Password</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-15">
-                    <button class="badge badge-solid-green btn purple btn btn-sm m-1" (click)="updateUserpassword(user)">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Update Password</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    <button
+                      class="badge badge-solid-green btn purple btn btn-sm m-1"
+                      (click)="updateUserpassword(user)"
+                    >
                       Update Password
                     </button>
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="logs">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-8">Account Logs</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-8">
-                    <button class="badge badge-solid-green btn btn btn-sm m-1" (click)="viewAccountLogs(user.id)">
-                      View Logs
-                    </button>
-                  </mat-cell>
-                </ng-container>
                 <ng-container matColumnDef="actions">
-                  <mat-header-cell class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
-                    *matHeaderCellDef>Actions</mat-header-cell>
-                  <mat-cell *matCellDef="let user; let i = index" class="column-nowrap psl-3 tbl-col-width-per-20 pr-0">
-                    <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(user)"
-                      class="tbl-action-btn">
-                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                  <mat-header-cell
+                    class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
+                    *matHeaderCellDef
+                    >Actions</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user; let i = index"
+                    class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
+                  >
+                    <button
+                      *ngIf="user.verifierStatus === 'PENDING'; else editBtn"
+                      mat-icon-button
+                      color="primary"
+                      (click)="verifyCall(user)"
+                      class="tbl-action-btn"
+                      aria-label="Verify"
+                      title="Verify User"
+                      matTooltip="Verify"
+                    >
+                      <mat-icon>verified_user</mat-icon>
                     </button>
-                    <button *ngIf="user.status == 'Active' || user.status == 'Locked'" mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="deleteCall(user)"
-                      class="tbl-action-btn">
-                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                    <ng-template #editBtn>
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      (click)="$event.stopPropagation()"
+                      (click)="editCall(user)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
                     </button>
-                    <button *ngIf="user.status == 'Deleted'" mat-icon-button color="primary" (click)="$event.stopPropagation()" (click)="restoreAccount(user)"
-                      class="tbl-action-btn">
+                    </ng-template>
+                    <!-- <button
+                      *ngIf="user.status == 'Active' || user.status == 'Locked'"
+                      mat-icon-button
+                      color="accent"
+                      (click)="$event.stopPropagation()"
+                      (click)="deleteCall(user)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      ></app-feather-icons>
+                    </button> -->
+                    <!-- <button
+                      *ngIf="user.status == 'Deleted'"
+                      mat-icon-button
+                      color="primary"
+                      (click)="$event.stopPropagation()"
+                      (click)="restoreAccount(user)"
+                      class="tbl-action-btn"
+                    >
                       <mat-icon>restore_from_trash</mat-icon>
+                    </button> -->
+                    <button
+                      *ngIf="user.status == 'Active'"
+                      mat-icon-button
+                      color="accent"
+                      (click)="$event.stopPropagation()"
+                      (click)="lockAccountCall(user)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'lock'"
+                        [class]="'tbl-fav-lock'"
+                      ></app-feather-icons>
                     </button>
-                   
-                    <button *ngIf="user.status == 'Active'" mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                      (click)="lockAccountCall(user)" class="tbl-action-btn">
-                      <app-feather-icons [icon]="'lock'" [class]="'tbl-fav-lock'"></app-feather-icons>
+                    <button
+                      *ngIf="user.status == 'Locked'"
+                      mat-icon-button
+                      color="primary"
+                      (click)="$event.stopPropagation()"
+                      (click)="unLockAccountCall(user)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'unlock'"
+                        [class]="'tbl-fav-unlock'"
+                      ></app-feather-icons>
                     </button>
-                    <button *ngIf="user.status == 'Locked'" mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                    (click)="unLockAccountCall(user)" class="tbl-action-btn">
-                    <app-feather-icons [icon]="'unlock'" [class]="'tbl-fav-unlock'"></app-feather-icons>
-                  </button>
-                    <button mat-icon-button color="primary" (click)="$event.stopPropagation()"
-                      (click)="detailsCall(user)" class="tbl-action-btn">
-                      <app-feather-icons [icon]="'eye'" [class]="'tbl-fav-eye'"></app-feather-icons>
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="$event.stopPropagation()"
+                      (click)="detailsCall(user)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'eye'"
+                        [class]="'tbl-fav-eye'"
+                      ></app-feather-icons>
                     </button>
                   </mat-cell>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                <mat-row *matRowDef="let row; columns: displayedColumns" [style.cursor]="'pointer'" matRipple>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
                 </mat-row>
                 <mat-cell *matNoDataRow colspan="4">
-                  No data matching the filter "{{ input.value }}"</mat-cell>
+                  No data matching the filter "{{ input.value }}"</mat-cell
+                >
               </mat-table>
 
               <!-- Loading spinner -->
               <div *ngIf="isLoading" class="tbl-spinner">
-                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                <mat-progress-spinner
+                  color="primary"
+                  [diameter]="40"
+                  mode="indeterminate"
+                >
                 </mat-progress-spinner>
               </div>
               <!-- context menu start -->
-              <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
-                [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu"></div>
+              <div
+                style="visibility: hidden; position: fixed"
+                [style.left]="contextMenuPosition.x"
+                [style.top]="contextMenuPosition.y"
+                [matMenuTriggerFor]="contextMenu"
+              ></div>
               <mat-menu #contextMenu="matMenu">
                 <ng-template matMenuContent let-item="item">
                   <button mat-menu-item (click)="addNew()">
@@ -236,7 +397,7 @@
                     <mat-icon>create</mat-icon>
                     <span>Edit Record</span>
                   </button>
-                  <button mat-menu-item (click)="deleteItem(item.id, item)">
+                  <button mat-menu-item (click)="deleteCall(item)">
                     <mat-icon>delete</mat-icon>
                     <span>Delete Record</span>
                   </button>
@@ -269,11 +430,12 @@
                 </button>
               </mat-menu>
               <!-- context menu end -->
-              <!-- <div *ngIf="!exampleDatabase.isTblLoading" class="no-results"
-                [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
-                No results
-              </div> -->
-              <mat-paginator #paginator [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+              <mat-paginator
+                #paginator
+                [pageIndex]="0"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
               </mat-paginator>
             </div>
           </div>

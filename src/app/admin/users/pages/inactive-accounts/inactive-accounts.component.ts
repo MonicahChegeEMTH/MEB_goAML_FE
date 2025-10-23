@@ -16,19 +16,19 @@ import { ActivateAccountComponent } from '../activate-account/activate-account.c
 @Component({
   selector: 'app-inactive-accounts',
   templateUrl: './inactive-accounts.component.html',
-  styleUrls: ['./inactive-accounts.component.sass']
+  styleUrls: ['./inactive-accounts.component.sass'],
 })
 export class InactiveAccountsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
-    "id",
-    "username",
-    "firstname",
-    "lastname",
-    "email",
-    "status",
-    "phonenumber",
-    "viewDetails",
-    "actions"
+    'id',
+    'username',
+    'firstname',
+    'lastname',
+    'email',
+    'status',
+    'phonenumber',
+    'viewDetails',
+    'actions',
   ];
   inActiveAccounts: Account[] = [];
   dataSource!: MatTableDataSource<Account>;
@@ -39,21 +39,21 @@ export class InactiveAccountsComponent extends BaseComponent implements OnInit {
 
   constructor(public accountService: AccountService, public dialog: MatDialog) {
     super();
-   }
+  }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild("filter", { static: true }) filter: ElementRef;
+  @ViewChild('filter', { static: true }) filter: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   ngOnInit(): void {
-    this.getInActiveAccounts()
+    this.getInActiveAccounts();
   }
 
-  refresh(){
-    this.getInActiveAccounts()
+  refresh() {
+    this.getInActiveAccounts();
   }
 
   getInActiveAccounts() {
@@ -63,12 +63,13 @@ export class InactiveAccountsComponent extends BaseComponent implements OnInit {
       .subscribe(
         (res) => {
           this.inActiveAccounts = res;
-          console.log(this.inActiveAccounts);
 
-          if(this.inActiveAccounts.length > 0){
+          if (this.inActiveAccounts.length > 0) {
             this.isLoading = false;
 
-            this.dataSource = new MatTableDataSource<Account>(this.inActiveAccounts);
+            this.dataSource = new MatTableDataSource<Account>(
+              this.inActiveAccounts
+            );
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
           }
@@ -79,31 +80,30 @@ export class InactiveAccountsComponent extends BaseComponent implements OnInit {
       );
   }
 
-  activateUserCall(user){
+  activateUserCall(user) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = "500px";
+    dialogConfig.width = '500px';
     dialogConfig.data = {
-      user
-    }
-    const dialogRef = this.dialog.open(ActivateAccountComponent, dialogConfig)
+      user,
+    };
+    const dialogRef = this.dialog.open(ActivateAccountComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((result) => {
       this.getInActiveAccounts();
     });
-  
   }
 
-  detailsCall(account){
+  detailsCall(account) {
     this.dialog.open(AccountDetailsComponent, {
       data: {
         account: account,
         action: 'details',
       },
-      //height: "70%",
-      width: "500px",
-    })
+
+      width: '500px',
+    });
   }
 
   applyFilter(event: Event) {
@@ -114,14 +114,12 @@ export class InactiveAccountsComponent extends BaseComponent implements OnInit {
     }
   }
 
-  // context menu
   onContextMenu(event: MouseEvent, item: Account) {
     event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + "px";
-    this.contextMenuPosition.y = event.clientY + "px";
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = { item: item };
-    this.contextMenu.menu.focusFirstItem("mouse");
+    this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
-
 }

@@ -19,8 +19,11 @@ export class SigninComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   authForm: FormGroup;
+  loginForm: FormGroup;
   submitted = false;
   loading = false;
+  loginType: 'system' | 'organization' = 'system';
+  hidePassword = true;
   error = "";
   hide = true;
   constructor(
@@ -33,6 +36,10 @@ export class SigninComponent
     private snackbar: SnackbarService
   ) {
     super();
+  }
+
+  setLoginType(type: 'system' | 'organization') {
+    this.loginType = type;
   }
 
   ngOnInit() {

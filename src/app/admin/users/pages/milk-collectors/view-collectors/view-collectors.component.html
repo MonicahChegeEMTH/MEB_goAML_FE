@@ -2,7 +2,7 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Milk Collectors'" [items]="['Users']" [active_item]="'Milk Collectors'">
+            <app-breadcrumb [title]="'Collectors'" [items]="['Users']" [active_item]="'Collectors'">
             </app-breadcrumb>
         </div>
 
@@ -56,7 +56,7 @@
                                                 <div class="export-button m-l-10" matTooltip="XLSX">
                                                     <img src="assets/images/icons/xlsx.png" alt="" (click)="
                                   exporter.exportTable('xlsx', {
-                                    fileName: 'milk-collectors',
+                                    fileName: 'collectors',
                                     sheet: 'sheet1'
                                   })
                                 " />

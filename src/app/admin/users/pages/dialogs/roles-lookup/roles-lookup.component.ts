@@ -10,22 +10,23 @@ import { takeUntil } from 'rxjs';
 import { RoleService } from 'src/app/data/services/role.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { AddAccountComponent } from '../../add-account/add-account.component';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
   selector: 'app-roles-lookup',
   templateUrl: './roles-lookup.component.html',
-  styleUrls: ['./roles-lookup.component.sass']
+  styleUrls: ['./roles-lookup.component.sass'],
 })
 export class RolesLookupComponent extends BaseComponent implements OnInit {
   roles: any;
   isLoading: boolean = true;
 
-  displayedColumns: string[] = ["id", "name", "creationDate"];
+  displayedColumns: string[] = ['id', 'name', 'status'];
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   contextMenu: MatMenuTrigger;
-  contextMenuPosition = { x: "0px", y: "0px" };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   selection = new SelectionModel<any>(true, []);
 
@@ -36,13 +37,12 @@ export class RolesLookupComponent extends BaseComponent implements OnInit {
     public dialogRef: MatDialogRef<AddAccountComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private fb: FormBuilder,
-    // private agendasCategoryService: AgendasCategoryService
-    private roleService: RoleService
+
+    private roleService: RoleService,
+    private snackbar: SnackbarService
   ) {
     super();
     this.meetingDetails = data.data;
-
-    console.log("Meeting Details", this.meetingDetails);
   }
 
   ngOnInit(): void {
@@ -50,11 +50,11 @@ export class RolesLookupComponent extends BaseComponent implements OnInit {
   }
 
   fetchAllMeetings() {
-    this.roleService.getAllActiveRoles()
+    this.roleService
+      .getAllRoles()
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-
           this.roles = res.roleData;
           if (this.roles.length > 0) {
             this.isLoading = false;
@@ -67,15 +67,17 @@ export class RolesLookupComponent extends BaseComponent implements OnInit {
           }
         },
         (err) => {
-          console.log(err);
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            'Failed to fetch roles'
+          );
         }
       );
   }
 
   onSelectRow(data: any) {
-    this.dialogRef.close({ event: "close", data: data });
+    this.dialogRef.close({ event: 'close', data: data });
   }
-
 
   onNoClick() {
     this.dialogRef.close();
@@ -88,5 +90,4 @@ export class RolesLookupComponent extends BaseComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
 }

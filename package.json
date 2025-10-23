@@ -51,6 +51,8 @@
     "core-js": "^3.20.0",
     "echarts": "^5.4.1",
     "file-saver": "^2.0.5",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "jwt-decode": "^4.0.0",
     "mat-table-exporter": "^10.2.4",
     "moment": "^2.29.1",

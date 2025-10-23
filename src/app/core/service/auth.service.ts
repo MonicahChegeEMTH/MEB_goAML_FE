@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   login(user): Observable<any> {
-    const authUrl = `${environment.apiUrl}/api/v1/authentication/login`
+    const authUrl = `${environment.apiUrl}/api/login`
     return this.http.post<any>(authUrl, user);
   }
 

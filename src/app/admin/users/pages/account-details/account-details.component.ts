@@ -10,10 +10,9 @@ import { ActiveAccountsComponent } from '../active-accounts/active-accounts.comp
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.sass']
+  styleUrls: ['./account-details.component.sass'],
 })
 export class AccountDetailsComponent extends BaseComponent implements OnInit {
-
   account: any;
   userId: number;
   accessRights: [] = [];
@@ -31,18 +30,20 @@ export class AccountDetailsComponent extends BaseComponent implements OnInit {
     this.account = this.data.account;
 
     this.accessRights = this.account.roles[0].accessRights;
-    console.log(this.account);
   }
 
   logoutUser() {
     this.accountService
-      .logoutUser({username: this.account.username})
+      .logoutUser({ username: this.account.username })
       .pipe(takeUntil(this.subject))
-      .subscribe((res) => {
-        this.snackbar.showNotification(res.message, "snackbar-success");
-        this.dialogRef.close();
-      }, err => {
-        console.log(err)
-      });
+      .subscribe(
+        (res) => {
+          this.snackbar.showNotification('snackbar-success', res.message);
+          this.dialogRef.close();
+        },
+        (err) => {
+          this.snackbar.showNotification('snackbar-danger', err);
+        }
+      );
   }
 }

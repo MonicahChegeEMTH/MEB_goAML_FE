@@ -1,14 +1,17 @@
 export interface Account {
     id: number,
-    firstname: string,
+    firstame: string,
+    firstName: string,
+    lastName: string,
     lastname: string,
     username: string,
-    phonenumber: string,
+    mobile: string,
     email: string,
     createdOn: Date,
     modifiedBy: string,
     modifiedOn: string,
     deleteFlag: string,
+    status: string,
     roles: [
         {
             id: number,

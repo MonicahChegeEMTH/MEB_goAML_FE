@@ -2,71 +2,125 @@
   <div class="contact-details">
     <div class="modalHeader">
       <div class="contact-details-name mb-1">Choose Role</div>
-      <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+      <button
+        mat-icon-button
+        (click)="dialogRef.close()"
+        aria-label="Close dialog"
+      >
         <mat-icon>close</mat-icon>
       </button>
     </div>
     <div mat-dialog-content>
       <mat-card-content>
-
         <div class="table-responsive m-t-5">
           <div class="body">
             <div class="table-responsive">
-              <div class="row" style="background-color: rgba(163, 159, 159, 0.297); margin: 5px;">
-
+              <div
+                class="row"
+                style="
+                  background-color: rgba(163, 159, 159, 0.297);
+                  margin: 5px;
+                "
+              >
                 <div class="col-6 d-flex align-items-center">
-                  <h6 style="margin: 5px;"><strong>Active Roles</strong></h6>
+                  <h6 style="margin: 5px"><strong>Active Roles</strong></h6>
                 </div>
                 <div class="col-6">
                   <div id="plist" class="people-list">
                     <div class="form-line m-b-10 m-t-10 m-l-2 m-r-2">
-                      <input placeholder="Filter..." type="text" (keyup)="applyFilter($event)" #filter
-                        class="form-control" placeholder="Search..." />
+                      <input
+                        placeholder="Filter..."
+                        type="text"
+                        (keyup)="applyFilter($event)"
+                        #filter
+                        class="form-control"
+                        placeholder="Search..."
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <mat-table #table matTableExporter [dataSource]="dataSource" matSort class="mat-cell"
-                #exporter="matTableExporter">
+              <mat-table
+                #table
+                matTableExporter
+                [dataSource]="dataSource"
+                matSort
+                class="mat-cell"
+                #exporter="matTableExporter"
+              >
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-25">Id
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-25">{{
-                    row.id }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    style="padding-right: 10px"
+                    >Id</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user; let i = index"
+                    style="padding-right: 10px"
+                  >
+                    {{
+                      paginator
+                        ? paginator.pageIndex * paginator.pageSize + i + 1
+                        : i + 1
+                    }}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-40">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    style="padding-left: 10px"
+                  >
                     Name
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
-
-                    {{ row.name == "MILK_COLLECTOR" ? "GRADER" : row.name}}
+                  <mat-cell *matCellDef="let row" style="padding-left: 10px">
+                    <span style="margin-left: 12px">{{ row.name }}</span>
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="creationDate">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="column-nowrap psl-3 tbl-col-width-per-40">
-                    Created on
+                <ng-container matColumnDef="status">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    style="padding-left: 10px"
+                  >
+                    Status
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-40">
-                    {{ row.creationDate | date : 'medium' }}
+                  <mat-cell *matCellDef="let row" style="padding-left: 10px">
+                    <span class="badge badge-pill badge-primary col-green">
+                      {{ row.status == 1 ? "Active" : "Inactive" }}
+                    </span>
                   </mat-cell>
                 </ng-container>
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectRow(row)"
-                  [style.cursor]="'pointer'" matRipple>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  (click)="onSelectRow(row)"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
                 </mat-row>
-                <mat-cell *matNoDataRow colspan="4"> No data matching the filter "{{ input.value
-                  }}"
+                <mat-cell *matNoDataRow colspan="4">
+                  No data matching the filter "{{ input.value }}"
                 </mat-cell>
               </mat-table>
               <!-- Loading spinner -->
               <div *ngIf="isLoading" class="tbl-spinner">
-                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                <mat-progress-spinner
+                  color="primary"
+                  [diameter]="40"
+                  mode="indeterminate"
+                >
                 </mat-progress-spinner>
               </div>
-              <mat-paginator [pageSize]="5" [pageSizeOptions]="[2, 5, 10, 20, 30, 40, 50, 100]"
-                aria-label="Select page of users"></mat-paginator>
+              <mat-paginator
+                [pageSize]="5"
+                [pageSizeOptions]="[2, 5, 10, 20, 30, 40, 50, 100]"
+                aria-label="Select page of users"
+              ></mat-paginator>
             </div>
           </div>
         </div>

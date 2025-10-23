@@ -11,52 +11,52 @@ import { ActiveAccountsComponent } from '../active-accounts/active-accounts.comp
 @Component({
   selector: 'app-delete-account',
   templateUrl: './delete-account.component.html',
-  styleUrls: ['./delete-account.component.sass']
+  styleUrls: ['./delete-account.component.sass'],
 })
 export class DeleteAccountComponent extends BaseComponent implements OnInit {
   account: any;
   userId: number;
   loading: boolean;
+  reason: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<ActiveAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackbar: SnackbarService,
-    // private accountService: AccountService
+
     private userService: UserService
   ) {
     super();
   }
 
   ngOnInit(): void {
-    console.log("User Data ", this.data)
     this.account = this.data.account;
 
     this.userId = this.data.account.id;
   }
 
   confirmDelete() {
-    this.loading = true
-    
+    this.loading = true;
+
     this.userService
-      .deleteUserAccount(this.userId)
+      .deleteUserAccount(this.userId, this.reason)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          console.log(res);
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification(res.message, "snackbar-success");
+          if (res.statusCode == 200 || res.statusCode == 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
 
-             this.dialogRef.close();
-          }else {
-            this.snackbar.showNotification(res.message, "snackbar-danger")
+             this.userService.triggerWidgetsRefresh();
+
+            this.dialogRef.close();
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
 
             this.loading = false;
           }
         },
         (err) => {
-          this.snackbar.showNotification(err.error.error, "snackbar-danger");
-          console.log(err);
+          this.snackbar.showNotification('snackbar-danger', err.error.error);
           this.loading = false;
         }
       );

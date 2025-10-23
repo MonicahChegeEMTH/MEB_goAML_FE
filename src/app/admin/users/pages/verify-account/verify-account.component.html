@@ -1,7 +1,7 @@
 <div class="addContainer">
   <div *ngIf="Data" class="contact-details">
     <div class="modalHeader">
-      <div class="contact-details-name mb-1">Verify Account</div>
+      <div class="contact-details-name mb-1">Verify User</div>
       <button
         mat-icon-button
         (click)="dialogRef.close()"
@@ -42,6 +42,14 @@
               </mat-form-field>
             </div>
           </div>
+          <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Remarks (optional)</mat-label>
+              <textarea matInput formControlName="remarks"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
           <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
               <div class="example-button-row" align="end">

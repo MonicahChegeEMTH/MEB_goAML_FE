@@ -341,10 +341,14 @@
   padding: 3px 3px;
   border-radius: 3px;
 }
+
+
+
 .navbar-brand {
   float: left;
   height: 45px;
   padding: 6px 25px;
+   gap: 6px;
   font-size: 18px;
   line-height: 20px;
   text-align: center;
@@ -352,6 +356,10 @@
   img {
     /*float: left;*/
     vertical-align: top;
+  }
+  button {
+    vertical-align: top;
+    width: 40px;
   }
   span {
     line-height: 32px;
@@ -561,3 +569,42 @@ nav a.button-collapse i {
     margin-left: 0;
   }
 }
+
+/* Force navbar background to dashboard background color */
+nav.navbar,
+nav.navbar .container-fluid {
+  background-color: #E8E5E5 !important;
+  background-image: none !important; /* kill gradients */
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Make navbar text/icons readable */
+nav.navbar .navbar-brand span,
+nav.navbar .navbar-nav > li > a,
+nav.navbar .header-icon,
+nav.navbar .feather {
+  color: #333 !important;
+}
+
+/* Keep menu icon size */
+nav.navbar .sidemenu-collapse .header-icon {
+  height: 22px;
+  width: 22px;
+  margin-right: 12px; /* space after menu icon */
+}
+
+/* Enlarge fullscreen icon to match */
+nav.navbar .fullscreen .header-icon {
+  height: 22px !important;
+  width: 22px !important;
+  margin-right: 12px; /* space after fullscreen icon */
+}
+
+/* Optional: align both vertically */
+nav.navbar .header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+

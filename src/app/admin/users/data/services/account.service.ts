@@ -1,16 +1,24 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { environment } from "src/environments/environment.prod";
 
 import { Account } from "../types/account";
 import { Log } from "../types/log";
 import { Role } from "../types/role";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class AccountService {
+  private getTenantHeaders(): HttpHeaders {
+    const tenantId = localStorage.getItem('tenantId') || '';
+    return new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('X-Tenant-Id', tenantId)
+      .set('Authorization', `Bearer ${localStorage.getItem('authToken') || ''}`);
+  }
+
   constructor(private http: HttpClient) { }
 
   //http://52.15.152.26:1905/urassauth/
@@ -18,25 +26,25 @@ export class AccountService {
   public listActiveAccounts(): Observable<Account[]> {
     const activeAccountsUrl = `${environment.apiUrl}/soa/users/view`;
 
-    return this.http.get<Account[]>(activeAccountsUrl);
+    return this.http.get<Account[]>(activeAccountsUrl, { headers: this.getTenantHeaders() });
   }
 
   public fetchPendingAccounts(): Observable<any[]> {
     const fetchPendingAccountsUrl = `${environment.apiUrl}/soa/users/view/pending`;
 
-    return this.http.get<any[]>(fetchPendingAccountsUrl);
+    return this.http.get<any[]>(fetchPendingAccountsUrl, { headers: this.getTenantHeaders() });
   }
 
   public fetchApprovedAccounts(): Observable<any[]> {
     const fetchApprovedAccountsUrl = `${environment.apiUrl}/soa/users/view/approved`;
 
-    return this.http.get<any[]>(fetchApprovedAccountsUrl);
+    return this.http.get<any[]>(fetchApprovedAccountsUrl, { headers: this.getTenantHeaders() });
   }
 
   public fetchRejectedAccounts(): Observable<any[]> {
     const fetchRejectedAccountsUrl = `${environment.apiUrl}/soa/users/view/rejected`;
 
-    return this.http.get<any[]>(fetchRejectedAccountsUrl);
+    return this.http.get<any[]>(fetchRejectedAccountsUrl, { headers: this.getTenantHeaders() });
   }
 
   public generateAccountReportsPerStatus(params): Observable<any> {
@@ -65,16 +73,21 @@ export class AccountService {
   }
 
   public verifyAccount(params): Observable<any> {
-    const verifyAccountUrl = `${environment.apiUrl}/soa/users/verify`;
+    const verifyAccountUrl = `${environment.apiUrl}/admin/api/v1/users/verify-user`;
 
     return this.http.get<any>(verifyAccountUrl, { params });
   }
 
   public addUser(account: any): Observable<{ message: string }> {
-    const registerUrl = `${environment.apiUrl}/soa/users/signup`;
+  const registerUrl = `${environment.apiUrl}/soa/users/signup`;
 
-    return this.http.post<{ message: string }>(registerUrl, account);
-  }
+  return this.http.post<{ message: string }>(
+    registerUrl,
+    account,
+    { headers: this.getTenantHeaders() }
+  );
+}
+
 
   public getRoles(): Observable<Role[]> {
     const rolesUrl = `${environment.apiUrl}/soa/roles/view`;
@@ -134,6 +147,7 @@ export class AccountService {
   }
 
   public getUserById(userId): Observable<Account> {
+  
     const usersUrl = `${environment.apiUrl}/soa/users/find/${userId}`;
 
     return this.http.get<Account>(usersUrl);

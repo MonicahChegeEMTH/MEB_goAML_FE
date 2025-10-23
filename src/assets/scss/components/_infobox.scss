@@ -590,16 +590,67 @@
   background: linear-gradient(to right, #005e33, #008f4d);
 }
 .info-box7 {
-  border-radius: 5px;
-  color: #fff;
-  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-  border: none;
-  margin: 8px 0px 25px 0px;
-  transition: all 0.3s ease-in-out;
-  .info-box7-block {
-    padding: 25px;
-  }
+  background: #ffffff;
+  border-radius: 15px;       /* from Figma */
+  padding: 1rem 1.2rem;
+  height: 117px; 
+  margin-bottom: 10px;            /* from Figma */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* subtle depth */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
+
+.info-box7:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.info-box7-block {
+  flex: 1;
+}
+
+.info-box7-block h5 {
+  font-family: 'Futura', sans-serif;
+  font-weight: 500;
+  font-size: 12px;      /* from Figma */
+  line-height: 20px;
+  margin: 0 0 0.4rem 0;
+  color: #000000;
+}
+
+.info-box-block h2 {
+  font-family: 'Futura', sans-serif;
+  font-weight: 500;
+  font-size: 12px;      /* from Figma */
+  line-height: 20px;
+  margin: 0 0 0.4rem 0;
+  padding: 12px;
+  color: #48B5E1;
+}
+
+.info-box7-block h4 {
+  font-family: 'Futura', sans-serif;
+  font-weight: 500;
+  font-size: 16px;      /* from Figma */
+  line-height: 20px;
+  margin: 0 0 0.4rem 0;
+  padding: 12px;
+  color: #000000;
+}
+
+.info-box7-block h2 {
+  font-family: 'Futura', sans-serif;
+  font-weight: 500;
+  font-size: 16px;      /* from Figma */
+  line-height: 20px;
+  margin: 0 0 0.4rem 0;
+  padding: 12px;
+  color: #000000;
+}
+
 .order-info-box7 i {
   font-size: 30px;
 }
@@ -683,7 +734,8 @@
 }
 
 .icon-count {
-  color: #2196F3
+  font-size: 24px;
+  color: #48B5E1; /* pick an accent color */
 }
 
 .icon-farmers {
@@ -695,18 +747,21 @@
 }
 
 .info-box-content {
-  // display: flex;
-  // align-items: center; /* Keep number and icon aligned */
-  justify-content: space-between; /* Ensure they stay in one row */
-  font-size: 1.5rem; /* Adjust font size to fit */
-  // white-space: nowrap; /* Prevent text wrapping */
-  // overflow: hidden;
+  margin: 0;
 }
 
 .info-value {
-  flex-grow: 1; /* Allow number to take available space */
-  text-align: left;
-  min-width: 0; /* Prevent number from expanding beyond available space */
+  font-family: 'Futura', sans-serif;
+  font-weight: 800;     /* bold from Figma */
+  font-size: 18px;      /* from Figma */
+  line-height: 20px;
+  color: #000000;
+}
+
+.info-box7-icon {
+  font-size: 32px;
+  color: #48B5E1; /* accent color */
+  flex-shrink: 0;
 }
 
 .info-box-content i {

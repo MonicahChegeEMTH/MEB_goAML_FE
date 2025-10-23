@@ -11,7 +11,7 @@ import { DeletedAccountsComponent } from '../deleted-accounts/deleted-accounts.c
 @Component({
   selector: 'app-restore-account',
   templateUrl: './restore-account.component.html',
-  styleUrls: ['./restore-account.component.sass']
+  styleUrls: ['./restore-account.component.sass'],
 })
 export class RestoreAccountComponent extends BaseComponent implements OnInit {
   account: Account;
@@ -28,35 +28,32 @@ export class RestoreAccountComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("User ID ", this.data)
-
     this.account = this.data.account;
 
     this.userId = this.data.account.id;
-
-    console.log("User ID ", this.data)
   }
 
   confirmRestoreAccount() {
-    this.loading = true
-    console.log({ username: this.account.username })
-    this.userService.restoreDeletedUserAccount(this.userId)
+    this.loading = true;
+    this.userService
+      .restoreDeletedUserAccount(this.userId)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification(res.message, "snackbar-success");
+          if (res.statusCode == 200 || res.statusCode == 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
 
-             this.dialogRef.close();
-          }else {
-            this.snackbar.showNotification(res.message, "snackbar-danger")
+             this.userService.triggerWidgetsRefresh();
+
+            this.dialogRef.close();
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
 
             this.loading = false;
           }
         },
         (err) => {
-          this.snackbar.showNotification(err.error.error, "snackbar-danger");
-          console.log(err);
+          this.snackbar.showNotification('snackbar-danger', err.error.error);
           this.loading = false;
         }
       );
@@ -65,5 +62,4 @@ export class RestoreAccountComponent extends BaseComponent implements OnInit {
   onNoClick() {
     this.dialogRef.close();
   }
-
 }

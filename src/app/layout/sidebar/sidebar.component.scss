@@ -1,5 +1,153 @@
+.sidebar {
+  position: fixed;
+  top: 10px;                   /* start at very top */
+  left: 10px;                  /* attach to the left edge */
+  height: 100vh;            /* full viewport height */
+   margin: 0;                 /* remove outer margin */
+  width: 250px;
+  margin-right: 20px;
+  background: #fff;
+  border-radius: 20px 20px 20px 20px; /* rounded only on right edge */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  z-index: 100; /* make sure it stays above content */
+}
 
-.l-bg-brown
-{
-    color: #046307;
+
+.sidebar-logo {
+  padding: 40px 0 20px;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-logo img {
+  width: 100%; /* Increased to match the photo's larger logo */
+  height: 150px;
+  object-fit: contain;
+}
+
+.menu {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 32px 0 20px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  color: #312b2a;
+}
+
+.list li a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 55px;
+  padding: 0 20px 0 40px;
+  font-family: "Futura", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 55px;
+  color: #312b2a !important;
+  background: transparent;
+  border-radius: 0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  border-bottom: 2px solid transparent; /* Soft underline */
+}
+
+.list li a:hover {
+  color: #f8e200; /* Yellow text on hover */
+  border-bottom: 2px solid #f8e200; /* Soft underline on hover */
+}
+
+.list li.active > a {
+  color: #f8e200; /* Yellow text for active state */
+  border-bottom: 2px solid #f8e200; /* Soft underline for active state */
+  font-weight: 600;
+}
+
+.logout-container {
+  flex: 0 0 auto;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  border-top: 1px solid #e0e0e0;
+}
+
+.logout-bg {
+  width: 262px;
+  height: 61px;
+  border-radius: 10px;
+  display: block;
+  background: #003087; /* Dark blue to match Victoria theme */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for button */
+}
+
+.logout-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 40px;
+  margin: 0 5px;
+  color: #fff;
+  font-family: "Futura", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.logout-text {
+  height: 20px;
+  width: auto;
+  left: 30px;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .list li a {
+    padding: 0 15px 0 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 180px;
+    position: absolute;
+    z-index: 2000;
+  }
+
+  .list li a {
+    padding: 0 10px 0 25px;
+  }
 }

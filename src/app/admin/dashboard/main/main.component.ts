@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { DashboardService } from "../dashboard.service";
 
 @Component({
   selector: "app-main",
@@ -8,51 +6,12 @@ import { DashboardService } from "../dashboard.service";
   styleUrls: ["./main.component.scss"],
 })
 export class MainComponent implements OnInit {
+  reports = [
+    { date: "12/03/2025", account: "1234567890", type: "Deposit", amount: "USD 10,000.00" },
+    { date: "09/02/2025", account: "1234567890", type: "Withdrawal", amount: "USD 2,500.00" },
+    { date: "28/01/2025", account: "1234567890", type: "Transfer", amount: "USD 5,000.00" },
+    { date: "15/01/2025", account: "1234567890", type: "Deposit", amount: "USD 8,000.00" },
+  ];
 
-  users: any = 0;
-  teams: any = 0;
-  departments: any = 0;
-  subsidiaries: any = 0;
-  meetingCategories: any = 0;
-  actionTypes: any = 0;
-
-  data: any;
-  subscription!: Subscription;
-  loaded: boolean = false;
-  isdata:boolean=false
-
-  constructor(private service: DashboardService) {
-
-  }
-
-  // getAnalysis() {
-  //   this.subscription = this.service.getDashboardWigetsAnalytics().subscribe(res => {
-  //     this.data = res;
-  //     if (this.data) {
-        
-  //       this.loaded = true;
-  //       this.users = this.data.entity.users;
-  //       this.teams = this.data.entity.teams;
-  //       this.meetingCategories = this.data.entity.meetingCategeories;
-  //       this.departments = this.data.entity.departments;
-  //       this.actionTypes = this.data.entity.actionTypes;
-  //       this.subsidiaries = this.data.entity.subsidiaries;
-  //     }else{
-  //       this.loaded = false;
-  //       this.users = 0;
-  //       this.teams = 0;
-  //       this.meetingCategories =0;
-  //       this.departments = 0;
-  //       this.actionTypes =0;
-  //       this.subsidiaries = 0;
-
-  //     }
-  //   });
-  // }
-
-
-  ngOnInit() {
-    // this.getAnalysis();
-  }
-
+  ngOnInit(): void {}
 }
