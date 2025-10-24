@@ -369,4 +369,10 @@
       cursor: pointer;
     }
   }
+
+  .bs-searchbox {
+      .form-control {
+        width: 90%;
+      }
+    }
 }
