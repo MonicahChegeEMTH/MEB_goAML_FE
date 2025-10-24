@@ -1,15 +1,12 @@
 <section class="content">
   <div class="content-block">
-    <!-- Main Content -->
 
     <div class="dashboard-content">
-      <!-- Header cards section -->
       <div class="header-cards">
-        <!-- Large card -->
         <div class="header-card large-card">
           <div class="welcome">
             <p class="greeting">Welcome Back</p>
-            <h3>Jairus Mokaya</h3>
+            <h3>{{ firstname }} {{ lastname }}</h3>
             <h2 class="system-title">goAML Reporting System</h2>
           </div>
           <div class="illustration">
@@ -20,7 +17,6 @@
           </div>
         </div>
 
-        <!-- Small Total Reports Card -->
         <div class="reports-summary-card">
           <div class="reports-summary-header">
             <h2>Total Reports</h2>
@@ -33,12 +29,58 @@
         </div>
       </div>
 
+      <div class="row">
+         <div class="reports-summary-card">
+          <div class="reports-summary-header">
+            <h5>Total Reports Generated</h5>
+          </div>
+
+          <div class="reports-summary-body">
+            <h3>100</h3>
+          </div>
+        </div>
+
+        <div class="reports-summary-card">
+          <div class="reports-summary-header">
+            <div class="reports-summary-header">
+              <h4 class="m-b-20">Pending Submissions</h4>
+              <h3 class="text-end">
+                <span class="float-start"> 100 </span
+                >
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="reports-summary-card">
+          <div class="reports-summary-header">
+            <div class="reports-summary-header">
+              <h4 class="m-b-20">Failed Submissions</h4>
+              <h3 class="text-end">
+                <span class="float-start"> 100 </span
+                >
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="reports-summary-card">
+          <div class="reports-summary-header">
+            <div class="reports-summary-header">
+              <h4 class="m-b-20">Last Submission Date</h4>
+              <h3 class="text-end">
+                <span class="float-start">2025-10-23</span
+                >
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Action Buttons -->
       <div class="actions">
-        <button>New STR/SAR <i class="fas fa-arrow-right"></i></button>
-        <button>New STAR <i class="fas fa-arrow-right"></i></button>
-        <button>New CTR <i class="fas fa-arrow-right"></i></button>
-        <button>New MID <i class="fas fa-arrow-right"></i></button>
+        <button (click)="openReportType('STR')">New STR/SAR <i class="fas fa-arrow-right"></i></button>
+        <button (click)="openReportType('STAR')">New STAR <i class="fas fa-arrow-right"></i></button>
+        <button (click)="openReportType('CTR')">New CTR <i class="fas fa-arrow-right"></i></button>
+        <button (click)="openReportType('MID')">New MID <i class="fas fa-arrow-right"></i></button>
       </div>
 
       <!-- Recent Reports Table -->

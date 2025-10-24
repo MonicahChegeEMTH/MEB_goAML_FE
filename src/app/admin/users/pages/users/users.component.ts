@@ -21,11 +21,12 @@ import { VerifyAccountComponent } from '../verify-account/verify-account.compone
 import { AuthService } from 'src/app/core/service/auth.service';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.sass'],
+  styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
@@ -49,13 +50,15 @@ export class UsersComponent extends BaseComponent implements OnInit {
   userImg: string;
   activeAccounts: number = 0;
   searchText: string = '';
+  firstname: string;
+  lastname: string;
 
   constructor(
     private userService: UserService,
     public dialog: MatDialog,
     private router: Router,
     private snackbar: SnackbarService,
-    private authService: AuthService
+    private tokenStorage: TokenStorageService
   ) {
     super();
   }
@@ -68,6 +71,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsers();
+    const user = this.tokenStorage.getUser();
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
 
     this.dataSource.filterPredicate = (data, filter) => {
       const f = filter.trim().toLowerCase();

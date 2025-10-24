@@ -21,6 +21,24 @@ const routes: Routes = [
         loadChildren: () =>
           import("./admin/admin.module").then((m) => m.AdminModule),
       },
+      {
+        path: "auditor",
+        canActivate: [AuthGuard],
+        data: {
+          role: Role.Auditor,
+        },
+        loadChildren: () =>
+          import("./auditor/auditor.module").then((m) => m.AuditorModule),
+      },
+      {
+        path: "riskofficer",
+        canActivate: [AuthGuard],
+        data: {
+          role: Role.Riskofficer,
+        },
+        loadChildren: () =>
+          import("./riskofficer/riskofficer.module").then((m) => m.RiskofficerModule),
+      },
       { path: "", redirectTo: "/authentication/signin", pathMatch: "full" },
      
     ],

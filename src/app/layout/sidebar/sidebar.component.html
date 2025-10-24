@@ -1,20 +1,16 @@
 <div>
-  <!-- Left Sidebar -->
   <aside
     id="leftsidebar"
     class="sidebar bg"
     (mouseenter)="mouseHover($event)"
     (mouseleave)="mouseOut($event)"
   >
-    <!-- Logo (Fixed at Top) -->
     <div class="sidebar-logo">
       <img src="assets/images/sidebar/vcb_logo2.png" alt="Logo" />
     </div>
 
-    <!-- Scrollable Menu -->
     <div class="menu" [perfectScrollbar]>
       <ul class="list">
-        <!-- Top Most level menu -->
         <li
           [class.active]="
             level1Menu === sidebarItem.moduleName &&
@@ -48,7 +44,6 @@
               >{{ sidebarItem.badge }}</span
             >
           </a>
-          <!-- First level menu -->
           <ul class="ml-menu" *ngIf="sidebarItem.submenu.length > 0">
             <li
               [ngClass]="
@@ -74,7 +69,6 @@
                 ></i-feather>
                 <span>{{ sidebarSubItem.title | translate }}</span>
               </a>
-              <!-- Second level menu -->
               <ul class="ml-menu-2" *ngIf="sidebarSubItem.submenu.length > 0">
                 <li
                   *ngFor="let sidebarSubsubItem of sidebarSubItem.submenu"
@@ -111,7 +105,6 @@
         </li>
       </ul>
     </div>
-
     <div class="logout-container" (click)="logout()">
       <button mat-raised-button class="logout-btn" type="submit">
         <span class="logout-text">LOG OUT</span>

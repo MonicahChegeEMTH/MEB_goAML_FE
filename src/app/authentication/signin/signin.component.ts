@@ -74,10 +74,10 @@ export class SigninComponent
           setTimeout(() => {
             if (role === Role.Admin) {
               this.router.navigate(['/admin/dashboard/main']);
-            } else if (role === Role.Staff) {
-              this.router.navigate(['/staff/dashboard']);
-            } else if (role === Role.Collector) {
-              this.router.navigate(['/sales/dashboard']);
+            } else if (role === Role.Riskofficer) {
+              this.router.navigate(['/riskofficer/dashboard/main']);
+            } else if (role === Role.Auditor) {
+              this.router.navigate(['/auditor/dashboard/main']);
             } else {
               this.error = 'Invalid Login';
             }

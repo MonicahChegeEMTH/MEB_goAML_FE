@@ -1,12 +1,25 @@
 <section class="content">
   <div class="content-block">
-    <div class="block-header">
+    <!-- <div class="block-header">
       <app-breadcrumb
         [title]="'All Users'"
         [items]="['Users']"
         [active_item]="'All Users'"
       >
       </app-breadcrumb>
+    </div> -->
+
+    <div class="header-cards">
+      <div class="header-card large-card">
+        <div class="welcome">
+          <p class="greeting">Welcome Back</p>
+          <h3>{{ firstname }} {{ lastname }}</h3>
+          <h2 class="system-title">goAML Reporting System</h2>
+        </div>
+        <div class="illustration">
+          <img src="assets/images/login/dashboard_img.png" alt="illustration" />
+        </div>
+      </div>
     </div>
     <app-user-widgets></app-user-widgets>
 

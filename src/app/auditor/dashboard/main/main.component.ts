@@ -1,17 +1,56 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 
 @Component({
-  selector: "app-main",
-  templateUrl: "./main.component.html",
-  styleUrls: ["./main.component.scss"],
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  firstname: string;
+  lastname: string;
   reports = [
-    { date: "12/03/2025", account: "1234567890", type: "Deposit", amount: "USD 10,000.00" },
-    { date: "09/02/2025", account: "1234567890", type: "Withdrawal", amount: "USD 2,500.00" },
-    { date: "28/01/2025", account: "1234567890", type: "Transfer", amount: "USD 5,000.00" },
-    { date: "15/01/2025", account: "1234567890", type: "Deposit", amount: "USD 8,000.00" },
+    {
+      date: '12/03/2025',
+      account: '1234567890',
+      type: 'Deposit',
+      amount: 'USD 10,000.00',
+    },
+    {
+      date: '09/02/2025',
+      account: '1234567890',
+      type: 'Withdrawal',
+      amount: 'USD 2,500.00',
+    },
+    {
+      date: '28/01/2025',
+      account: '1234567890',
+      type: 'Transfer',
+      amount: 'USD 5,000.00',
+    },
+    {
+      date: '15/01/2025',
+      account: '1234567890',
+      type: 'Deposit',
+      amount: 'USD 8,000.00',
+    },
   ];
 
-  ngOnInit(): void {}
+  constructor(
+    private router: Router,
+    private tokenStorage: TokenStorageService
+  ) {}
+
+  ngOnInit(): void {
+    const user = this.tokenStorage.getUser();
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
+  }
+
+  openReportType(type: string) {
+    this.router.navigate(['/auditor/reports/reports'], {
+      queryParams: { reportType: type },
+    });
+  }
 }

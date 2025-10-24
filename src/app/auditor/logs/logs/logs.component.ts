@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuditLog } from '../service/audit-log.model';
-import { AuditLogService } from '../service/audit-log.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { AuditLog } from '../service/audit-log.model';
+import { AuditLogService } from '../service/audit-log.service';
 
 @Component({
   selector: 'app-logs',
