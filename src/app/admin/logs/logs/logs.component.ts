@@ -1,22 +1,59 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuditLog } from '../service/audit-log.model';
+import { AuditLogService } from '../service/audit-log.service';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-logs',
   templateUrl: './logs.component.html',
-  styleUrls: ['./logs.component.scss']
+  styleUrls: ['./logs.component.scss'],
 })
 export class LogsComponent implements OnInit {
+  reports: AuditLog[] = [];
+  pagedReports: AuditLog[] = [];
+  isLoading = true;
+  errorMessage = '';
 
-  reports = [
-    { date: "12/03/2025", account: "1234567890", type: "Deposit", amount: "USD 10,000.00" },
-    { date: "09/02/2025", account: "1234567890", type: "Withdrawal", amount: "USD 2,500.00" },
-    { date: "28/01/2025", account: "1234567890", type: "Transfer", amount: "USD 5,000.00" },
-    { date: "15/01/2025", account: "1234567890", type: "Deposit", amount: "USD 8,000.00" },
+  displayedColumns: string[] = [
+    'user_id',
+    'username',
+    'action_type',
+    'report_type',
+    'records_retrieved',
+    'ip_address',
+    'file',
   ];
 
-  constructor() { }
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private auditLogService: AuditLogService) {}
 
   ngOnInit(): void {
+    this.fetchAuditLogs();
   }
 
+  fetchAuditLogs(): void {
+    this.auditLogService.getAuditLogs().subscribe({
+      next: (data) => {
+        this.reports = data;
+        this.isLoading = false;
+        this.setPagedData(0, 5);
+      },
+      error: (err) => {
+        console.error('Error fetching audit logs', err);
+        this.errorMessage = 'Failed to load audit logs. Please try again.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  onPageChange(event: PageEvent): void {
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.setPagedData(startIndex, endIndex);
+  }
+
+  private setPagedData(startIndex: number, endIndex: number): void {
+    this.pagedReports = this.reports.slice(startIndex, endIndex);
+  }
 }

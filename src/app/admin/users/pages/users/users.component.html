@@ -1,18 +1,14 @@
 <section class="content">
   <div class="content-block">
     <div class="block-header">
-      <!-- breadcrumb -->
-      <!-- <app-breadcrumb
-        [title]="'Active Users'"
+      <app-breadcrumb
+        [title]="'All Users'"
         [items]="['Users']"
-        [active_item]="'Active Users'"
+        [active_item]="'All Users'"
       >
-      </app-breadcrumb> -->
+      </app-breadcrumb>
     </div>
-
-    <!-- Widgets -->
     <app-user-widgets></app-user-widgets>
-    <!-- #END# Widgets -->
 
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -27,7 +23,6 @@
                         <label for="search-input">
                           <i class="material-icons search-icon">search</i>
                         </label>
-
                         <input
                           id="search-input"
                           placeholder="Search"
@@ -37,8 +32,6 @@
                           [(ngModel)]="searchText"
                           (keyup)="applyFilter($event)"
                         />
-
-                        <!-- Clear (X) icon -->
                         <i
                           class="material-icons clear-icon"
                           *ngIf="searchText"
@@ -88,14 +81,14 @@
                         </div>
                       </li>
                       <li>
-                            <div class="export-button m-l-10" matTooltip="PDF">
-                              <img
-                                src="assets/images/icons/pdf.png"
-                                alt="Export to PDF"
-                                (click)="exportAsPDF()"
-                              />
-                            </div>
-                          </li>
+                        <div class="export-button m-l-10" matTooltip="PDF">
+                          <img
+                            src="assets/images/icons/pdf.png"
+                            alt="Export to PDF"
+                            (click)="exportAsPDF()"
+                          />
+                        </div>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -213,74 +206,99 @@
                     {{ user.role }}</mat-cell
                   >
                 </ng-container>
+                <ng-container matColumnDef="status">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    Status
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    <span
+                      class="badge badge-pill"
+                      [ngClass]="{
+                        'col-green': user.status === 'ACTIVE',
+                        'col-purple': user.status === 'LOCKED'
+                      }"
+                    >
+                      {{ user.status }}
+                    </span>
+                  </mat-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="actions">
                   <mat-header-cell
                     class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
                     *matHeaderCellDef
-                    >Actions</mat-header-cell
                   >
+                    Actions
+                  </mat-header-cell>
+
                   <mat-cell
-                    *matCellDef="let user; let i = index"
+                    *matCellDef="let user"
                     class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
                   >
                     <button
-                      *ngIf="user.verifierStatus === 'PENDING'; else editBtn"
-                      mat-icon-button
-                      color="primary"
-                      (click)="verifyCall(user)"
-                      class="tbl-action-btn"
-                      aria-label="Verify"
-                      title="Verify User"
-                      matTooltip="Verify"
-                    >
-                      <mat-icon>verified_user</mat-icon>
-                    </button>
-                    <ng-template #editBtn>
-                    <button
                       mat-icon-button
                       color="accent"
-                      (click)="$event.stopPropagation()"
-                      (click)="editCall(user)"
+                      (click)="$event.stopPropagation(); editCall(user)"
                       class="tbl-action-btn"
+                      matTooltip="Edit"
+                      aria-label="Edit"
                     >
                       <app-feather-icons
                         [icon]="'edit'"
                         [class]="'tbl-fav-edit'"
                       ></app-feather-icons>
                     </button>
-                    </ng-template>
                     <button
-                      *ngIf="user.status == 'Active'"
+                      *ngIf="
+                        user.status?.toUpperCase() === 'ACTIVE';
+                        else unlockBtn
+                      "
                       mat-icon-button
                       color="accent"
-                      (click)="$event.stopPropagation()"
-                      (click)="lockAccountCall(user)"
+                      (click)="$event.stopPropagation(); lockAccountCall(user)"
                       class="tbl-action-btn"
+                      matTooltip="Lock Account"
+                      aria-label="Lock"
                     >
                       <app-feather-icons
                         [icon]="'lock'"
                         [class]="'tbl-fav-lock'"
                       ></app-feather-icons>
                     </button>
+
+                    <ng-template #unlockBtn>
+                      <button
+                        *ngIf="user.status?.toUpperCase() === 'LOCKED'"
+                        mat-icon-button
+                        color="primary"
+                        (click)="
+                          $event.stopPropagation(); unLockAccountCall(user)
+                        "
+                        class="tbl-action-btn"
+                        matTooltip="Unlock Account"
+                        aria-label="Unlock"
+                      >
+                        <app-feather-icons
+                          [icon]="'unlock'"
+                          [class]="'tbl-fav-unlock'"
+                        ></app-feather-icons>
+                      </button>
+                    </ng-template>
                     <button
-                      *ngIf="user.status == 'Locked'"
                       mat-icon-button
                       color="primary"
-                      (click)="$event.stopPropagation()"
-                      (click)="unLockAccountCall(user)"
+                      (click)="$event.stopPropagation(); detailsCall(user)"
                       class="tbl-action-btn"
-                    >
-                      <app-feather-icons
-                        [icon]="'unlock'"
-                        [class]="'tbl-fav-unlock'"
-                      ></app-feather-icons>
-                    </button>
-                    <button
-                      mat-icon-button
-                      color="primary"
-                      (click)="$event.stopPropagation()"
-                      (click)="detailsCall(user)"
-                      class="tbl-action-btn"
+                      matTooltip="View Details"
+                      aria-label="View Details"
                     >
                       <app-feather-icons
                         [icon]="'eye'"
@@ -303,8 +321,6 @@
                   No data matching the filter "{{ input.value }}"</mat-cell
                 >
               </mat-table>
-
-              <!-- Loading spinner -->
               <div *ngIf="isLoading" class="tbl-spinner">
                 <mat-progress-spinner
                   color="primary"
@@ -313,7 +329,6 @@
                 >
                 </mat-progress-spinner>
               </div>
-              <!-- context menu start -->
               <div
                 style="visibility: hidden; position: fixed"
                 [style.left]="contextMenuPosition.x"
@@ -362,7 +377,6 @@
                   <span>Item 3</span>
                 </button>
               </mat-menu>
-              <!-- context menu end -->
               <mat-paginator
                 #paginator
                 [pageIndex]="0"

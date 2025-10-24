@@ -15,8 +15,6 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
   totalAccounts: number = 0;
   lockedAccounts: number = 0;
 
-  activeAccountsArray: Account[] = [];
-  lockedAccountsArray: Account[] = [];
   allTenantUsers: Account[] = [];
 
   constructor(private userService: UserService, private router: Router) {
@@ -26,45 +24,31 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.getAllUserAccountsForWidgets();
 
+    // Refresh widget data when triggered from another component
     this.userService.refreshWidgets$
-    .pipe(takeUntil(this.subject))
-    .subscribe(() => {
-      this.getAllUserAccountsForWidgets();
-    });
+      .pipe(takeUntil(this.subject))
+      .subscribe(() => {
+        this.getAllUserAccountsForWidgets();
+      });
   }
 
   getAllUserAccountsForWidgets() {
-    const tenantId = localStorage.getItem('tenantId') || '000';
-
     this.userService
       .fetchAllUserAccounts()
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          const allUsers = res?.userData || [];
+          // ✅ Use the backend-provided totals directly
+          this.totalAccounts = res?.totalUsers || 0;
+          this.activeAccounts = res?.totalActive || 0;
+          this.lockedAccounts = res?.totalLocked || 0;
 
-          // 🔹 Filter by tenantId
-          this.allTenantUsers = allUsers.filter((u) => u.tenantId === tenantId);
-
-          // 🔹 Split into categories
-          this.activeAccountsArray = this.allTenantUsers.filter(
-            (u) => u.status === 'Active'
-          );
-          this.lockedAccountsArray = this.allTenantUsers.filter(
-            (u) => u.status === 'Locked'
-          );
-
-          // 🔹 Counts
-          this.activeAccounts = this.activeAccountsArray.length;
-          this.lockedAccounts = this.lockedAccountsArray.length;
-          this.totalAccounts = this.allTenantUsers.length;
+          // ✅ Keep full data if you still need it
+          this.allTenantUsers = res?.data || [];
         },
         (err) => {
           console.error('Failed to fetch users for widgets', err);
-          this.activeAccounts =
-            this.lockedAccounts =
-            this.totalAccounts =
-              0;
+          this.activeAccounts = this.lockedAccounts = this.totalAccounts = 0;
         }
       );
   }

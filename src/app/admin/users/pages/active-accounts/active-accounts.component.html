@@ -3,9 +3,9 @@
     <div class="block-header">
       <!-- breadcrumb -->
       <app-breadcrumb
-        [title]="'Locked Accounts'"
+        [title]="'Active Users'"
         [items]="['Users']"
-        [active_item]="'Locked Accounts'"
+        [active_item]="'Active Users'"
       >
       </app-breadcrumb>
     </div>
@@ -23,9 +23,6 @@
                 <div class="row">
                   <div class="col-8">
                     <ul class="header-buttons-left ms-0">
-                      <li class="dropdown">
-                        <h2>Active Accounts</h2>
-                      </li>
                       <li class="dropdown m-l-20">
                         <label for="search-input"
                           ><i class="material-icons search-icon"
@@ -70,6 +67,15 @@
                           />
                         </div>
                       </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="PDF">
+                          <img
+                            src="assets/images/icons/pdf.png"
+                            alt="Export to PDF"
+                            (click)="exportAsPDF()"
+                          />
+                        </div>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -111,76 +117,133 @@
                 </ng-container>
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-3">Id</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-3">{{ user.id
-                    }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >Id</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >{{ user.id }}</mat-cell
+                  >
                 </ng-container>
-                <ng-container matColumnDef="username">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Username</mat-header-cell>
-                  <mat-cell *matCellDef="let user" class="column-nowrap psl-3 tbl-col-width-per-12">{{ user.username
-                    }}</mat-cell>
+                <ng-container matColumnDef="employeeNumber">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Employee No</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >{{ user.employeeNumber }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="firstname">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Firstname</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-12">
-                    {{ user.firstName }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Firstname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.firstname }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="lastname">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-12">Lastname</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-12">
-                    {{ user.lastName }}
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Lastname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.lastname }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="phonenumber">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-15">Phonenumber</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-15">
-                    {{ user.mobile }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Phonenumber</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    {{ user.phone }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="email">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="column-nowrap psl-3 tbl-col-width-per-50">Email</mat-header-cell>
-                  <mat-cell *matCellDef="let user" (contextmenu)="onContextMenu($event, user)"
-                    class="column-nowrap psl-3 tbl-col-width-per-50">
-                    {{ user.email }}</mat-cell>
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-50"
+                    >Email</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-50"
+                  >
+                    {{ user.email }}</mat-cell
+                  >
                 </ng-container>
                 <ng-container matColumnDef="status">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="psl-3 tbl-col-width-per-8">Status
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="psl-3 tbl-col-width-per-8"
+                  >
+                    Status
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="column-nowrap psl-3 tbl-col-width-per-8">
-                    <div *ngIf="row.status == 'Locked'">
-                      <span class="badge badge-pill badge-primary col-purple">
-                        {{ "Locked" }}</span>
-                    </div>
-                    <div *ngIf="row.status == 'Active'">
-                      <span class="badge badge-pill badge-primary col-green">
-                        {{ "Active" }}</span>
-                    </div>
-                    <div *ngIf="row.status == 'Deleted'">
-                      <span class="badge badge-pill badge-primary col-red">
-                        {{ "Deleted" }}</span>
-                    </div>
+
+                  <mat-cell
+                    *matCellDef="let row"
+                    class="column-nowrap psl-3 tbl-col-width-per-8"
+                  >
+                    <span
+                      class="badge badge-pill"
+                      [ngClass]="{
+                        'col-green': row.status === 'ACTIVE',
+                        'col-purple': row.status === 'LOCKED'
+                      }"
+                    >
+                      {{ row.status }}
+                    </span>
                   </mat-cell>
                 </ng-container>
+
                 <ng-container matColumnDef="viewDetails">
-                  <mat-header-cell class="column-nowrap psl-3 tbl-col-width-per-20 pr-0" *matHeaderCellDef
+                  <mat-header-cell
+                    class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
+                    *matHeaderCellDef
                     >View Details</mat-header-cell
                   >
                   <mat-cell
                     *matCellDef="let user"
                     class="tcolumn-nowrap psl-3 tbl-col-width-per-20 pr-0"
-                    >
-                    <button class="badge badge-solid-green btn btn btn-sm m-1"
-                    (click)="detailsCall(user)">View Details</button>
-                    </mat-cell
                   >
+                    <button
+                      class="badge badge-solid-green btn btn btn-sm m-1"
+                      (click)="detailsCall(user)"
+                    >
+                      View Details
+                    </button>
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="actions">
                   <mat-header-cell
@@ -220,7 +283,6 @@
                 <h4>0 Records Found.</h4>
               </div>
 
-              
               <!-- Loading spinner -->
               <div *ngIf="isLoading" class="tbl-spinner">
                 <mat-progress-spinner

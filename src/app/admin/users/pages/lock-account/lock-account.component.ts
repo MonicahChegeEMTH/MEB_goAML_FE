@@ -37,21 +37,15 @@ export class LockAccountComponent extends BaseComponent implements OnInit {
   confirmLock() {
     this.loading = true;
     this.userService
-      .lockUserAccount(this.userId, this.reason)
+      .lockUserAccount(this.userId)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          if (res.statusCode == 200 || res.statusCode == 201) {
-            this.snackbar.showNotification('snackbar-success', res.message);
-
-             this.userService.triggerWidgetsRefresh();
-
-            this.dialogRef.close(true);
-          } else {
-            this.snackbar.showNotification('snackbar-danger', res.message);
-
-            this.loading = false;
-          }
+          this.snackbar.showNotification(
+            'snackbar-success',
+            'User locked successfully!'
+          );
+          this.dialogRef.close();
         },
         (err) => {
           this.snackbar.showNotification(err.error.error, 'snackbar-danger');

@@ -16,7 +16,7 @@ import { ActiveAccountsComponent } from '../active-accounts/active-accounts.comp
 })
 export class UpdateAccountComponent extends BaseComponent implements OnInit {
   user: any;
-  userId: any;
+  id: any;
   loading: boolean;
   accountForm: FormGroup;
 
@@ -31,7 +31,7 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
     super();
 
     this.user = data.user;
-    this.userId = this.user.id;
+    this.id = this.user.id;
   }
 
   ngOnInit(): void {
@@ -40,40 +40,47 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
 
   updateAccountForm() {
     this.accountForm = this.fb.group({
-      username: [this.user.username || '', [Validators.required]],
-      firstName: [this.user.firstName || '', [Validators.required]],
-      lastName: [this.user.lastName || '', [Validators.required]],
+      employeeNumber: [this.user.employeeNumber || '', [Validators.required]],
+      firstname: [this.user.firstname || '', [Validators.required]],
+      lastname: [this.user.lastname || '', [Validators.required]],
       email: [this.user.email || '', [Validators.email]],
       role: [
         this.user.roles && this.user.roles[0] ? this.user.roles[0].name : '',
         [],
       ],
-      mobile: [this.user.mobile || '', [Validators.required]],
+      phone: [this.user.phone || '', [Validators.required]],
     });
   }
 
-  roleLookup() {
-    // Implement role lookup logic here
-  }
+  roleLookup() {}
 
   updateAccount() {
     this.loading = true;
 
+    const payload = {
+      id: this.id,
+      firstname: this.accountForm.value.firstname,
+      lastname: this.accountForm.value.lastname,
+      phone: this.accountForm.value.phone,
+      email: this.accountForm.value.email,
+      employeeNumber: this.accountForm.value.employeeNumber,
+      role: this.accountForm.value.role || this.user.role || 'ROLE_ADMIN',
+      status: this.user.status || 'ACTIVE',
+    };
+
     this.userService
-      .updateUser(this.userId, this.accountForm.value)
+      .updateUser(this.id, payload)
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          if (res.statusCode == 200 || res.statusCode == 201) {
-            this.snackbar.showNotification(res.message, 'snackbar-success');
-            this.dialogRef.close();
-          } else {
-            this.snackbar.showNotification(res.message, 'snackbar-danger');
-            this.loading = false;
-          }
+          this.snackbar.showNotification(
+            'snackbar-success',
+            'User updated successfully!'
+          );
+          this.dialogRef.close();
         },
         (err: HttpErrorResponse) => {
-          this.snackbar.showNotification(err.error.error, 'snackbar-danger');
+          this.snackbar.showNotification('snackbar-danger', err.error.error);
           this.loading = false;
         }
       );

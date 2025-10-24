@@ -36,6 +36,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
     'email',
     'phonenumber',
     'role',
+    'status',
     'actions',
   ];
   users: any[] = [];
@@ -69,105 +70,105 @@ export class UsersComponent extends BaseComponent implements OnInit {
     this.getAllUsers();
 
     this.dataSource.filterPredicate = (data, filter) => {
-    const f = filter.trim().toLowerCase();
-    return (
-      data.firstname?.toLowerCase().includes(f) ||
-      data.lastname?.toLowerCase().includes(f) ||
-      data.phone?.toLowerCase().includes(f) ||
-      data.employeeNumber?.toLowerCase().includes(f) ||
-      data.role?.toLowerCase().includes(f)
-    );
-  };
+      const f = filter.trim().toLowerCase();
+      return (
+        data.firstname?.toLowerCase().includes(f) ||
+        data.lastname?.toLowerCase().includes(f) ||
+        data.phone?.toLowerCase().includes(f) ||
+        data.employeeNumber?.toLowerCase().includes(f) ||
+        data.role?.toLowerCase().includes(f)
+      );
+    };
   }
 
   clearSearch() {
-  this.searchText = '';
-  const event = { target: { value: '' } } as unknown as Event;
-  this.applyFilter(event);
-}
+    this.searchText = '';
+    const event = { target: { value: '' } } as unknown as Event;
+    this.applyFilter(event);
+  }
 
   exportAsPDF(): void {
-  const doc = new jsPDF();
-  autoTable(doc, {
-    head: [['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role']],
-    body: this.dataSource.data.map((u) => [
-      u.employeeNumber,
-      u.firstname,
-      u.lastname,
-      u.phone,
-      u.role
-    ]),
-  });
-  doc.save('users.pdf');
-}
-
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        ['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+      ],
+      body: this.dataSource.data.map((u) => [
+        u.employeeNumber,
+        u.firstname,
+        u.lastname,
+        u.phone,
+        u.role,
+      ]),
+    });
+    doc.save('users.pdf');
+  }
 
   refresh() {
     this.getAllUsers();
   }
 
   getAllUsers() {
-  this.isLoading = true;
-  const tenantId = localStorage.getItem('tenantId') || '000';
+    this.isLoading = true;
+    const tenantId = localStorage.getItem('tenantId') || '000';
 
-  this.userService
-    .fetchAllUserAccounts()
-    .pipe(takeUntil(this.subject))
-    .subscribe({
-      next: (res) => {
-         console.log('Raw response from backend:', res);
-        // if your backend returns { userData: [...] }
-        const rawUsers = res.data || [];
+    this.userService
+      .fetchAllUserAccounts()
+      .pipe(takeUntil(this.subject))
+      .subscribe({
+        next: (res) => {
+          console.log('Raw response from backend:', res);
+          // if your backend returns { userData: [...] }
+          const rawUsers = res.data || [];
 
-        // Normalize property names so Angular knows what to display
-        this.users = rawUsers.map((u, index) => ({
-          id: index + 1,
-          employeeNumber: u.employeeNumber,
-          firstname: u.firstname || u.firstName || '',
-          lastname: u.lastname || u.lastName || '',
-          phone: u.phone || u.mobile || '',
-          email: u.email || '',
-          role: u.role || '',
-          tenantId: u.tenantId || tenantId,
-          status: u.status || 'Active', // default fallback
-        }));
+          // Normalize property names so Angular knows what to display
+          this.users = rawUsers.map((u, index) => ({
+            id: index + 1,
+            employeeNumber: u.employeeNumber,
+            firstname: u.firstname || u.firstName || '',
+            lastname: u.lastname || u.lastName || '',
+            phone: u.phone || u.mobile || '',
+            email: u.email || '',
+            role: u.role || '',
+            tenantId: u.tenantId || tenantId,
+            status: u.status || 'Active', // default fallback
+          }));
 
-        // Filter for tenant if applicable
-        const filteredUsers = this.users.filter(
-          (user) => user.tenantId === tenantId
-        );
-
-        this.dataSource = new MatTableDataSource<any>(filteredUsers);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.activeAccounts = filteredUsers.filter(
-          (user) => user.status === 'Active'
-        ).length;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        if (err.status === 403) {
-          this.snackbar.showNotification(
-            'snackbar-danger',
-            'Access Denied: Insufficient permissions to fetch users.'
+          // Filter for tenant if applicable
+          const filteredUsers = this.users.filter(
+            (user) => user.tenantId === tenantId
           );
-        } else {
-          this.snackbar.showNotification(
-            'snackbar-danger',
-            err.error?.message || 'Failed to fetch users'
-          );
-        }
-      },
-    });
-}
 
+          this.dataSource = new MatTableDataSource<any>(filteredUsers);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.activeAccounts = filteredUsers.filter(
+            (user) => user.status === 'Active'
+          ).length;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          if (err.status === 403) {
+            this.snackbar.showNotification(
+              'snackbar-danger',
+              'Access Denied: Insufficient permissions to fetch users.'
+            );
+          } else {
+            this.snackbar.showNotification(
+              'snackbar-danger',
+              err.error?.message || 'Failed to fetch users'
+            );
+          }
+        },
+      });
+  }
 
   editCall(user) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = '500px';
+    dialogConfig.width = '800px';
     dialogConfig.data = { user };
 
     const dialogRef = this.dialog.open(UpdateAccountComponent, dialogConfig);
@@ -188,17 +189,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.getAllUsers();
-    });
-  }
-
-  verifyCall(account): void {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = { account: account };
-
-    const dialogRef = this.dialog.open(VerifyAccountComponent, config);
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.getAllUsers();
     });
   }
 
@@ -224,34 +214,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
       },
       width: '500px',
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
-    });
-  }
-
-  deleteCall(account) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '500px';
-    dialogConfig.data = { account };
-
-    const dialogRef = this.dialog.open(DeleteAccountComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
-    });
-  }
-
-  restoreAccount(account) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '500px';
-    dialogConfig.data = { account };
-
-    const dialogRef = this.dialog.open(RestoreAccountComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(() => {
       this.getAllUsers();

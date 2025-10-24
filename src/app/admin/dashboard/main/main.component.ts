@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-main",
@@ -13,5 +14,11 @@ export class MainComponent implements OnInit {
     { date: "15/01/2025", account: "1234567890", type: "Deposit", amount: "USD 8,000.00" },
   ];
 
+  constructor(private router: Router) {}
+
   ngOnInit(): void {}
+
+  openReportType(type: string) {
+    this.router.navigate(['/admin/reports/reports'], { queryParams: { reportType: type } });
+  }
 }

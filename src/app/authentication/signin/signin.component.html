@@ -17,20 +17,20 @@
         <button
           mat-button
           class="login-toggle"
-          [class.active]="loginType === 'system'"
-          (click)="setLoginType('system')"
-          type="button"
-        >
-          System Account
-        </button>
-        <button
-          mat-button
-          class="login-toggle"
           [class.active]="loginType === 'organization'"
           (click)="setLoginType('organization')"
           type="button"
         >
           Organization Account
+        </button>
+        <button
+          mat-button
+          class="login-toggle"
+          [class.active]="loginType === 'system'"
+          (click)="setLoginType('system')"
+          type="button"
+        >
+          System Account
         </button>
       </div>
 

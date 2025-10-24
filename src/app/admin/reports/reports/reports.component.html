@@ -21,7 +21,7 @@
         </div>
 
         <!-- Small Total Reports Card -->
-        <div class="reports-summary-card">
+        <!-- <div class="reports-summary-card">
           <div class="reports-summary-header">
             <h2>Total Reports</h2>
           </div>
@@ -30,22 +30,102 @@
             <h1>1000</h1>
             <a routerLink="/reports" class="view-all">VIEW ALL →</a>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Action Buttons -->
       <div class="actions">
-        <button>New STR/SAR <i class="fas fa-arrow-right"></i></button>
-        <button>New STAR <i class="fas fa-arrow-right"></i></button>
-        <button>New CTR <i class="fas fa-arrow-right"></i></button>
-        <button>New MID <i class="fas fa-arrow-right"></i></button>
+        <button (click)="showReportForm('STR')">
+          New STR/SAR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="showReportForm('STAR')">
+          New STAR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="showReportForm('CTR')">
+          New CTR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="showReportForm('MID')">
+          New MID <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Show report filter section when button clicked -->
+      <div class="filter-container" *ngIf="selectedReportType">
+        <div class="filter-header">
+          <h5>{{ selectedReportType }} Report</h5>
+        </div>
+
+        <div class="filter-row">
+          <!-- Date Range -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="startPicker"
+                [(ngModel)]="startDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="endPicker"
+                [(ngModel)]="endDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <!-- Account Number -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Account Number (CIF)</mat-label>
+              <input
+                matInput
+                placeholder="Enter account number"
+                [(ngModel)]="accountNumber"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Customer ID -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Customer ID Number</mat-label>
+              <input
+                matInput
+                placeholder="Enter ID number"
+                [(ngModel)]="customerId"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- Search Button -->
+        <div class="filter-actions">
+          <button mat-raised-button color="primary" class="search-btn">
+            <mat-icon>search</mat-icon>
+            Search Filter-Based Reports
+          </button>
+        </div>
       </div>
 
       <!-- Recent Reports Table -->
       <div class="recent-section">
         <div class="section-header">
           <h3>Recent Reports</h3>
-          <a href="#" class="view-all">VIEW ALL →</a>
         </div>
 
         <div class="table-container">

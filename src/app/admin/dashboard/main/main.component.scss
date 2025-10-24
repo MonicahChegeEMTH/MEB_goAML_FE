@@ -51,7 +51,6 @@
   }
 }
 
-/* Main content */
 .dashboard-content {
   flex: 1;
   background: #f8f9fb;
@@ -61,7 +60,6 @@
   box-shadow: inset 0 0 0 1px #e3e6eb;
 }
 
-/* Header card */
 .header-card {
   display: flex;
   justify-content: space-between;
@@ -121,7 +119,6 @@
   }
 }
 
-/* Header cards container */
 .header-cards {
   display: flex;
   gap: 1rem;
@@ -146,9 +143,6 @@
   }
 }
 
-/* ==========================
-   Total Reports Card Styling
-   ========================== */
 .reports-card {
   background: #ffffff;
   border-radius: 20px;
@@ -169,7 +163,7 @@
   top: 0;
   width: 6px;
   height: 100%;
-  background-color: #b08b2e; /* Gold vertical accent */
+  background-color: #b08b2e;
   border-radius: 0 20px 20px 0;
 }
 
@@ -182,12 +176,11 @@
 
 .reports-summary .reports-inline {
   display: flex;
-  align-items: baseline; /* aligns text baselines cleanly */
+  align-items: baseline;
   justify-content: flex-end;
-  gap: 1rem; /* space between 1000 and VIEW ALL */
+  gap: 1rem;
 }
 
-/* --- Total Reports Card --- */
 .reports-summary-card {
   background-color: #ffffff;
   border-radius: 16px;
@@ -197,13 +190,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 260px;
-  min-height: 130px;
+  width: 240px;
+  min-height: 110px;
   overflow: hidden;
   margin-right: 20px;
 }
 
-/* gold accent line on right side */
 .reports-summary-card::after {
   content: "";
   position: absolute;
@@ -216,14 +208,12 @@
   border-bottom-right-radius: 16px;
 }
 
-/* header */
 .reports-summary-header h2 {
   margin: 0;
   font-weight: 600;
   color: #001e3c;
 }
 
-/* number + link */
 .reports-summary-body {
   display: flex;
   align-items: baseline;
@@ -251,7 +241,6 @@
   color: #85691f;
 }
 
-
 .reports-summary h1 {
   margin: 0.5rem 0;
   color: #001e3c;
@@ -269,9 +258,8 @@
 }
 
 .reports-summary .view-all:hover {
-  color: #85691f; /* darker gold hover */
+  color: #85691f;
 }
-
 
 @media (max-width: 992px) {
   .header-cards {
@@ -285,8 +273,6 @@
   }
 }
 
-
-/* Action buttons */
 .actions {
   margin: 1.5rem 0;
   display: flex;
@@ -321,7 +307,6 @@
   }
 }
 
-/* Recent reports */
 .recent-section {
   background: #fff;
   border-radius: 20px;
@@ -372,17 +357,16 @@
   }
 
   .chart-section {
-  margin: 40px 0;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+    margin: 40px 0;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
 
-.chart-container {
-  position: relative;
-  height: 300px;
-  width: 100%;
-}
-
+  .chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+  }
 }

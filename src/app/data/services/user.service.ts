@@ -21,7 +21,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-   triggerWidgetsRefresh() {
+  triggerWidgetsRefresh() {
     this.refreshWidgetsSubject.next();
   }
 
@@ -81,12 +81,12 @@ export class UserService {
     });
   }
 
-  lockUserAccount(userId: number, reason: string): Observable<any> {
-    const lockUserAccountUrl = `${environment.apiUrl}/admin/api/v1/users/lock-user/${userId}`;
+  lockUserAccount(id: number): Observable<any> {
+    const lockUserAccountUrl = `${environment.apiUrl}/api/users/status/${id}`;
 
     return this.http.put<any>(
       lockUserAccountUrl,
-      { reason },
+      {},
       { headers: this.getTenantHeaders() }
     );
   }
@@ -109,16 +109,15 @@ export class UserService {
     );
   }
 
-  unlockUserAccount(userId: number, reason: string): Observable<any> {
-  const unlockUserAccountUrl = `${environment.apiUrl}/admin/api/v1/users/unlock-user/${userId}?userId=${userId}`;
+  unlockUserAccount(id: number, reason: string): Observable<any> {
+    const unlockUserAccountUrl = `${environment.apiUrl}/api/users/status/${id}`;
 
-  return this.http.put<any>(
-    unlockUserAccountUrl,
-    { reason },
-    { headers: this.getTenantHeaders() }
-  );
-}
-
+    return this.http.put<any>(
+      unlockUserAccountUrl,
+      {},
+      { headers: this.getTenantHeaders() }
+    );
+  }
 
   updateUserPassword(passwordDetails): Observable<any> {
     const updateUserPasswordUrl = `${environment.apiUrl}/admin/api/v1/users/update-user-password`;
@@ -136,8 +135,8 @@ export class UserService {
     });
   }
 
-  updateUser(userId, user): Observable<any> {
-    const updateUserUrl = `${environment.apiUrl}/admin/api/v1/users/update-user/${userId}`;
+  updateUser(id, user): Observable<any> {
+    const updateUserUrl = `${environment.apiUrl}/api/users/update/${id}`;
 
     return this.http.put<any>(updateUserUrl, user, {
       headers: this.getTenantHeaders(),

@@ -23,7 +23,7 @@ export class SigninComponent
   loginForm: FormGroup;
   submitted = false;
   loading = false;
-  loginType: 'system' | 'organization' = 'system';
+  loginType: 'system' | 'organization' = 'organization';
   hidePassword = true;
   error = '';
   hide = true;

@@ -11,6 +11,8 @@ import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { Account } from '../../data/types/account';
 import { AccountDetailsComponent } from '../account-details/account-details.component';
 import { UnlockAccountComponent } from '../unlock-account/unlock-account.component';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-locked-accounts',
@@ -20,7 +22,7 @@ import { UnlockAccountComponent } from '../unlock-account/unlock-account.compone
 export class LockedAccountsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'username',
+    'employeeNumber',
     'firstname',
     'lastname',
     'email',
@@ -48,39 +50,58 @@ export class LockedAccountsComponent extends BaseComponent implements OnInit {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   ngOnInit(): void {
-    this.getLockedAccounts();
+    this.getAccounts("LOCKED");
   }
 
   refresh() {
-    this.getLockedAccounts();
+    this.getAccounts("LOCKED");
   }
 
-  getLockedAccounts() {
-    this.isLoading = true;
-
-    this.userService
-      .fetchAllLockedUserAccounts()
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          this.lockedAccounts = res?.userData || [];
-
-          this.dataSource = new MatTableDataSource<Account>(
-            this.lockedAccounts
-          );
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-
-          this.isLoading = false;
-        },
-        (err) => {
-          console.error(err);
-          this.lockedAccounts = [];
-          this.dataSource = new MatTableDataSource<Account>([]);
-          this.isLoading = false;
-        }
-      );
+  exportAsPDF(): void {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        ['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+      ],
+      body: this.dataSource.data.map((u) => [
+        u.employeeNumber,
+        u.firstname,
+        u.lastname,
+        u.phone,
+        u.role,
+      ]),
+    });
+    doc.save('users.pdf');
   }
+
+  getAccounts(status: string) {
+  this.isLoading = true;
+
+  this.userService
+    .fetchAllUserAccounts() // Single unified endpoint
+    .pipe(takeUntil(this.subject))
+    .subscribe(
+      (res) => {
+        const allUsers = res?.data || [];
+
+        // ✅ Filter by status dynamically
+        this.lockedAccounts = allUsers.filter(
+          (user: Account) => user.status === status
+        );
+
+        this.dataSource = new MatTableDataSource<Account>(this.lockedAccounts);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.isLoading = false;
+      },
+      (err) => {
+        console.error(err);
+        this.lockedAccounts = [];
+        this.dataSource = new MatTableDataSource<Account>([]);
+        this.isLoading = false;
+      }
+    );
+}
 
   detailsCall(account) {
     this.dialog.open(AccountDetailsComponent, {
@@ -102,7 +123,7 @@ export class LockedAccountsComponent extends BaseComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((res) => {
-      this.getLockedAccounts();
+      this.getAccounts("LOCKED");
     });
   }
 

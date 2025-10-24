@@ -3,9 +3,9 @@
     <div class="block-header">
       <!-- breadcrumb -->
       <app-breadcrumb
-        [title]="'Locked Accounts'"
+        [title]="'Locked Users'"
         [items]="['Users']"
-        [active_item]="'Locked Accounts'"
+        [active_item]="'Locked Users'"
       >
       </app-breadcrumb>
     </div>
@@ -23,9 +23,6 @@
                 <div class="row">
                   <div class="col-8">
                     <ul class="header-buttons-left ms-0">
-                      <li class="dropdown">
-                        <h2>Locked Accounts</h2>
-                      </li>
                       <li class="dropdown m-l-20">
                         <label for="search-input"
                           ><i class="material-icons search-icon"
@@ -67,6 +64,15 @@
                                 sheet: 'sheet1'
                               })
                             "
+                          />
+                        </div>
+                      </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="PDF">
+                          <img
+                            src="assets/images/icons/pdf.png"
+                            alt="Export to PDF"
+                            (click)="exportAsPDF()"
                           />
                         </div>
                       </li>
@@ -123,17 +129,17 @@
                     >{{ user.id }}</mat-cell
                   >
                 </ng-container>
-                <ng-container matColumnDef="username">
+                <ng-container matColumnDef="employeeNumber">
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
                     class="column-nowrap psl-3 tbl-col-width-per-12"
-                    >Username</mat-header-cell
+                    >Employee No</mat-header-cell
                   >
                   <mat-cell
                     *matCellDef="let user"
                     class="column-nowrap psl-3 tbl-col-width-per-12"
-                    >{{ user.username }}</mat-cell
+                    >{{ user.employeeNumber }}</mat-cell
                   >
                 </ng-container>
                 <ng-container matColumnDef="firstname">
@@ -148,7 +154,7 @@
                     (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-12"
                   >
-                    {{ user.firstName }}</mat-cell
+                    {{ user.firstname }}</mat-cell
                   >
                 </ng-container>
                 <ng-container matColumnDef="lastname">
@@ -163,7 +169,7 @@
                     (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-12"
                   >
-                    {{ user.lastName }}
+                    {{ user.lastname }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="phonenumber">
@@ -178,7 +184,7 @@
                     (contextmenu)="onContextMenu($event, user)"
                     class="column-nowrap psl-3 tbl-col-width-per-15"
                   >
-                    {{ user.mobile }}</mat-cell
+                    {{ user.phone }}</mat-cell
                   >
                 </ng-container>
                 <ng-container matColumnDef="email">
@@ -201,27 +207,23 @@
                     *matHeaderCellDef
                     mat-sort-header
                     class="psl-3 tbl-col-width-per-8"
-                    >Status
+                  >
+                    Status
                   </mat-header-cell>
+
                   <mat-cell
                     *matCellDef="let row"
                     class="column-nowrap psl-3 tbl-col-width-per-8"
                   >
-                    <div *ngIf="row.status == 'Locked'">
-                      <span class="badge badge-pill badge-primary col-purple">
-                        {{ "Locked" }}</span
-                      >
-                    </div>
-                    <div *ngIf="row.status == 'Active'">
-                      <span class="badge badge-pill badge-primary col-green">
-                        {{ "Active" }}</span
-                      >
-                    </div>
-                    <div *ngIf="row.status == 'Deleted'">
-                      <span class="badge badge-pill badge-primary col-red">
-                        {{ "Deleted" }}</span
-                      >
-                    </div>
+                    <span
+                      class="badge badge-pill"
+                      [ngClass]="{
+                        'col-green': row.status === 'ACTIVE',
+                        'col-purple': row.status === 'LOCKED'
+                      }"
+                    >
+                      {{ row.status }}
+                    </span>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="viewDetails">

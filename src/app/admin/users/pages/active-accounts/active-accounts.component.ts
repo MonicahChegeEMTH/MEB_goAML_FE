@@ -1,23 +1,18 @@
 import { SelectionModel } from "@angular/cdk/collections";
-import { HttpParams } from "@angular/common/http";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { Router } from "@angular/router";
 import { takeUntil } from "rxjs";
 import { UserService } from "src/app/data/services/user.service";
 import { BaseComponent } from "src/app/shared/components/base/base.component";
-import { SnackbarService } from "src/app/shared/services/snackbar.service";
 import { Account } from "../../data/types/account";
 import { AccountDetailsComponent } from "../account-details/account-details.component";
-import { DeleteAccountComponent } from "../delete-account/delete-account.component";
-import { LockAccountComponent } from "../lock-account/lock-account.component";
-import { ModifyAccountComponent } from "../modify-account/modify-account.component";
 import { UnlockAccountComponent } from "../unlock-account/unlock-account.component";
-import { UpdateAccountComponent } from "../update-account/update-account.component";
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: "app-active-accounts",
@@ -27,7 +22,7 @@ import { UpdateAccountComponent } from "../update-account/update-account.compone
 export class ActiveAccountsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     "id",
-    "username",
+    "employeeNumber",
     "firstname",
     "lastname",
     "email",
@@ -59,39 +54,58 @@ export class ActiveAccountsComponent extends BaseComponent implements OnInit {
   contextMenuPosition = { x: "0px", y: "0px" };
 
   ngOnInit(): void {
-    this.getLockedAccounts();
+    this.getAccounts("ACTIVE");
   }
 
   refresh() {
-    this.getLockedAccounts();
+    this.getAccounts("ACTIVE");
   }
 
-  getLockedAccounts() {
-    this.isLoading = true;
+  exportAsPDF(): void {
+      const doc = new jsPDF();
+      autoTable(doc, {
+        head: [
+          ['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+        ],
+        body: this.dataSource.data.map((u) => [
+          u.employeeNumber,
+          u.firstname,
+          u.lastname,
+          u.phone,
+          u.role,
+        ]),
+      });
+      doc.save('users.pdf');
+    }
 
-    this.userService
-      .fetchAllActiveAccounts()
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
-          this.lockedAccounts = res?.userData || [];
+  getAccounts(status: string) {
+  this.isLoading = true;
 
-          this.dataSource = new MatTableDataSource<Account>(
-            this.lockedAccounts
-          );
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+  this.userService
+    .fetchAllUserAccounts() // Single unified endpoint
+    .pipe(takeUntil(this.subject))
+    .subscribe(
+      (res) => {
+        const allUsers = res?.data || [];
 
-          this.isLoading = false;
-        },
-        (err) => {
-          console.error(err);
-          this.lockedAccounts = [];
-          this.dataSource = new MatTableDataSource<Account>([]);
-          this.isLoading = false;
-        }
-      );
-  }
+        // ✅ Filter by status dynamically
+        this.lockedAccounts = allUsers.filter(
+          (user: Account) => user.status === status
+        );
+
+        this.dataSource = new MatTableDataSource<Account>(this.lockedAccounts);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.isLoading = false;
+      },
+      (err) => {
+        console.error(err);
+        this.lockedAccounts = [];
+        this.dataSource = new MatTableDataSource<Account>([]);
+        this.isLoading = false;
+      }
+    );
+}
 
   detailsCall(account) {
     this.dialog.open(AccountDetailsComponent, {
@@ -113,7 +127,7 @@ export class ActiveAccountsComponent extends BaseComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      this.getLockedAccounts();
+      this.getAccounts("ACTIVE");
     })
   }
 
