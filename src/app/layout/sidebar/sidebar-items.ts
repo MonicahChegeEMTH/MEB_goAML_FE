@@ -43,6 +43,20 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
+    path: '/admin/reports-handling/reports-handling',
+    title: 'Reports Handling',
+    moduleName: 'dashboard',
+    iconType: 'feather',
+    icon: 'bar-chart-2',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['ROLE_ADMIN'],
+    submenu: [],
+  },
+
+  {
     path: '/admin/logs/logs',
     title: 'Logs',
     moduleName: 'dashboard',
