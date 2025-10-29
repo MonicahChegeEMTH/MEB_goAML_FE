@@ -12,6 +12,7 @@ import { SharedModule } from './../../shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportsRoutingModule } from './reports-routing.module';
+import { MatSortModule } from "@angular/material/sort";
 
 @NgModule({
   declarations: [ReportsComponent],
@@ -28,6 +29,7 @@ import { ReportsRoutingModule } from './reports-routing.module';
     ComponentsModule,
     SharedModule,
     MatCardModule,
-  ],
+    MatSortModule
+],
 })
 export class ReportsModule {}

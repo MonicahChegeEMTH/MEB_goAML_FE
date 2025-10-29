@@ -47,7 +47,7 @@ export class UnlockAccountComponent extends BaseComponent implements OnInit {
             'snackbar-success',
             'User unlocked successfully!'
           );
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
         (err) => {
           this.snackbar.showNotification('snackbar-danger', err.error.error);

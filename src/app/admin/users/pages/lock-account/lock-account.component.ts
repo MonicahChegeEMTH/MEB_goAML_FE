@@ -45,7 +45,7 @@ export class LockAccountComponent extends BaseComponent implements OnInit {
             'snackbar-success',
             'User locked successfully!'
           );
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
         (err) => {
           this.snackbar.showNotification(err.error.error, 'snackbar-danger');

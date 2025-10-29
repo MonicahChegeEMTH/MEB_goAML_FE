@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -52,6 +52,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
   searchText: string = '';
   firstname: string;
   lastname: string;
+  pagedUsers: any[] = [];
 
   constructor(
     private userService: UserService,
@@ -179,8 +180,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
     const dialogRef = this.dialog.open(UpdateAccountComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getAllUsers();
+        this.userService.triggerWidgetsRefresh();
+      }
     });
   }
 
@@ -207,8 +211,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
       width: '500px',
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getAllUsers();
+        this.userService.triggerWidgetsRefresh();
+      }
     });
   }
 
@@ -221,8 +228,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
       width: '500px',
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.getAllUsers();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getAllUsers();
+        this.userService.triggerWidgetsRefresh();
+      }
     });
   }
 
@@ -263,5 +273,15 @@ export class UsersComponent extends BaseComponent implements OnInit {
     this.contextMenu.menuData = { item: item };
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
+  }
+
+  onPageChange(event: PageEvent): void {
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.setPagedData(startIndex, endIndex);
+  }
+
+  private setPagedData(startIndex: number, endIndex: number): void {
+    this.pagedUsers = this.users.slice(startIndex, endIndex);
   }
 }

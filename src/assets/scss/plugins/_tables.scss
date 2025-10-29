@@ -494,6 +494,20 @@ tr.group:hover {
         }
       }
     }
+
+    .clear-icon {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      font-size: 20px;
+      color: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.7);
+      }
+    }
   }
 
   h2 {
@@ -633,6 +647,19 @@ tr.group:hover {
       //     background: #f7f7f7;
       //   }
       // }
+    }
+    .clear-icon {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      font-size: 20px;
+      color: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.7);
+      }
     }
   }
 

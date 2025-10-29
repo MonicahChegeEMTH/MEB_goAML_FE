@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { LogsRoutingModule } from './logs-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { LogsComponent } from './logs/logs.component';
+import { MatSortModule } from "@angular/material/sort";
 
 @NgModule({
   declarations: [LogsComponent],
@@ -28,6 +29,7 @@ import { LogsComponent } from './logs/logs.component';
     ComponentsModule,
     SharedModule,
     MatCardModule,
-  ],
+    MatSortModule
+],
 })
 export class LogsModule {}

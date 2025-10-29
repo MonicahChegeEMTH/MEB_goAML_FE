@@ -16,13 +16,13 @@ export class UserService {
       );
   }
 
-  private refreshWidgetsSubject = new BehaviorSubject<void>(null);
-  refreshWidgets$ = this.refreshWidgetsSubject.asObservable();
+  private _refreshWidgets$ = new BehaviorSubject<void>(undefined);
+  public refreshWidgets$ = this._refreshWidgets$.asObservable();
 
   constructor(private http: HttpClient) {}
 
   triggerWidgetsRefresh() {
-    this.refreshWidgetsSubject.next();
+    this._refreshWidgets$.next();
   }
 
   getUserDetails(userId): Observable<any> {

@@ -14,7 +14,6 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
   activeAccounts: number = 0;
   totalAccounts: number = 0;
   lockedAccounts: number = 0;
-
   allTenantUsers: Account[] = [];
 
   constructor(private userService: UserService, private router: Router) {
@@ -24,7 +23,6 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.getAllUserAccountsForWidgets();
 
-    // Refresh widget data when triggered from another component
     this.userService.refreshWidgets$
       .pipe(takeUntil(this.subject))
       .subscribe(() => {
@@ -38,12 +36,10 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe(
         (res) => {
-          // ✅ Use the backend-provided totals directly
           this.totalAccounts = res?.totalUsers || 0;
           this.activeAccounts = res?.totalActive || 0;
           this.lockedAccounts = res?.totalLocked || 0;
 
-          // ✅ Keep full data if you still need it
           this.allTenantUsers = res?.data || [];
         },
         (err) => {
@@ -53,7 +49,6 @@ export class UserWidgetsComponent extends BaseComponent implements OnInit {
       );
   }
 
-  // 🔹 Navigation actions
   viewActivateUserAccounts() {
     this.router.navigate(['/admin/user-accounts/active-accounts']);
   }

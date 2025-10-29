@@ -19,18 +19,6 @@
             />
           </div>
         </div>
-
-        <!-- Small Total Reports Card -->
-        <!-- <div class="reports-summary-card">
-          <div class="reports-summary-header">
-            <h2>Total Reports</h2>
-          </div>
-
-          <div class="reports-summary-body">
-            <h1>1000</h1>
-            <a routerLink="/reports" class="view-all">VIEW ALL →</a>
-          </div>
-        </div> -->
       </div>
 
       <!-- Action Buttons -->
@@ -123,41 +111,172 @@
       </div>
 
       <!-- Recent Reports Table -->
-      <div class="recent-section">
-        <div class="section-header">
-          <h3>Recent Reports</h3>
-        </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="body">
+              <div class="table-responsive">
+                <div class="materialTableHeader">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul class="header-buttons-left ms-0">
+                        <li class="dropdown">
+                          <h2 style="color: #fff">Recent Reports</h2>
+                        </li>
+                        <li class="searchbox m-l-20">
+                          <label for="search-input">
+                            <i class="material-icons search-icon">search</i>
+                          </label>
+                          <input
+                            id="search-input"
+                            placeholder="Search"
+                            type="text"
+                            class="browser-default search-field"
+                            aria-label="Search box"
+                            [(ngModel)]="searchText"
+                            (keyup)="applyFilter($event)"
+                          />
+                          <!-- Clear (X) icon -->
+                          <i
+                            class="material-icons clear-icon"
+                            *ngIf="searchText"
+                            (click)="clearSearch()"
+                          >
+                            close
+                          </i>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                      <ul class="header-buttons">
+                        <li>
+                          <div class="export-button m-l-10" matTooltip="XLSX">
+                            <img
+                              src="assets/images/icons/xlsx.png"
+                              alt=""
+                              (click)="
+                                exporter.exportTable('xlsx', {
+                                  fileName: 'reports',
+                                  sheet: 'sheet1'
+                                })
+                              "
+                            />
+                          </div>
+                        </li>
+                        <li>
+                          <div class="export-button m-l-10" matTooltip="PDF">
+                            <img
+                              src="assets/images/icons/pdf.png"
+                              alt="Export as PDF"
+                              (click)="downloadPDF()"
+                            />
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <mat-table
+                  #table
+                  matTableExporter
+                  [dataSource]="dataSource"
+                  matSort
+                  class="mat-cell"
+                  #exporter="matTableExporter"
+                >
+                  <ng-container matColumnDef="date">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                      >Date</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="1 % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                      >{{ report.date }}</mat-cell
+                    >
+                  </ng-container>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Account Number</th>
-                <th>Transaction Type</th>
-                <th>Amount</th>
-                <th>File</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let report of reports">
-                <td>{{ report.date }}</td>
-                <td>{{ report.account }}</td>
-                <td>{{ report.type }}</td>
-                <td>{{ report.amount }}</td>
-                <td><i class="fas fa-folder-open"></i></td>
-              </tr>
-            </tbody>
-          </table>
+                  <ng-container matColumnDef="account">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                      >Account</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="1 % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                      >{{ report.account }}</mat-cell
+                    >
+                  </ng-container>
+
+                  <ng-container matColumnDef="type">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                      >Type</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="1 % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                      >{{ report.type }}</mat-cell
+                    >
+                  </ng-container>
+
+                  <ng-container matColumnDef="amount">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                      >Amount</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="1 % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                      >{{ report.amount }}</mat-cell
+                    >
+                  </ng-container>
+                  <mat-header-row
+                    *matHeaderRowDef="displayedColumns"
+                  ></mat-header-row>
+                  <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                  <mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                    (click)="requestDetailsCall(request)"
+                    [style.cursor]="'pointer'"
+                    matRipple
+                  >
+                  </mat-row>
+                  <mat-cell *matNoDataRow colspan="4">
+                    No data matching the filter "{{ input.value }}"</mat-cell
+                  >
+                </mat-table>
+                <div class="tbl-spinner" *ngIf="isLoading">
+                  <h4>0 Records Found</h4>
+                </div>
+
+                <mat-paginator
+                  [pageSize]="5"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <mat-paginator
-        [length]="reports.length"
-        [pageSize]="5"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        showFirstLastButtons
-        (page)="onPageChange($event)"
-      ></mat-paginator>
     </div>
   </div>
 </section>
