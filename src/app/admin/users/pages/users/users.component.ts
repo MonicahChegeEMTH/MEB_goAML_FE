@@ -32,6 +32,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'employeeNumber',
+    'username',
     'firstname',
     'lastname',
     'email',
@@ -80,6 +81,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
       const f = filter.trim().toLowerCase();
       return (
         data.firstname?.toLowerCase().includes(f) ||
+        data.username?.toLowerCase().includes(f) ||
         data.lastname?.toLowerCase().includes(f) ||
         data.phone?.toLowerCase().includes(f) ||
         data.employeeNumber?.toLowerCase().includes(f) ||
@@ -98,10 +100,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
     const doc = new jsPDF();
     autoTable(doc, {
       head: [
-        ['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+        ['Employee No', 'Username', 'First Name', 'Last Name', 'Phone Number', 'Role'],
       ],
       body: this.dataSource.data.map((u) => [
         u.employeeNumber,
+        u.username,
         u.firstname,
         u.lastname,
         u.phone,
@@ -133,6 +136,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             id: index + 1,
             employeeNumber: u.employeeNumber,
             firstname: u.firstname || u.firstName || '',
+            username: u.username || u.userName || '',
             lastname: u.lastname || u.lastName || '',
             phone: u.phone || u.mobile || '',
             email: u.email || '',

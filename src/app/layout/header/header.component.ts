@@ -1,4 +1,4 @@
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common';
 import {
   Component,
   Inject,
@@ -6,25 +6,25 @@ import {
   OnInit,
   Renderer2,
   AfterViewInit,
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { log } from "console";
-import { ConfigService } from "src/app/config/config.service";
-import { Role } from "src/app/core/models/role";
-import { AuthService } from "src/app/core/service/auth.service";
-import { LanguageService } from "src/app/core/service/language.service";
-import { TokenStorageService } from "src/app/core/service/token-storage.service";
-import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
-const document: any = window.document;
+  HostListener,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfigService } from 'src/app/config/config.service';
+import { Role } from 'src/app/core/models/role';
+import { AuthService } from 'src/app/core/service/auth.service';
+import { LanguageService } from 'src/app/core/service/language.service';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 
 @Component({
-  selector: "app-header",
-  templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.scss"],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   public config: any = {};
   userImg: string;
   homePage: string;
@@ -33,10 +33,14 @@ export class HeaderComponent
   countryName;
   langStoreValue: string;
   defaultFlag: string;
-  isOpenSidebar: boolean;
+  isOpenSidebar: boolean = false;
   userName: string;
   date = new Date();
-  userRole: any
+  userRole: any;
+  tenantId: any;
+  cooperativeId: any;
+  branchName: string;
+  Role = Role;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -50,85 +54,36 @@ export class HeaderComponent
   ) {
     super();
   }
+
   listLang = [
-    { text: "English", flag: "assets/images/flags/us.jpg", lang: "en" },
-    { text: "Spanish", flag: "assets/images/flags/spain.jpg", lang: "es" },
-    { text: "German", flag: "assets/images/flags/germany.jpg", lang: "de" },
+    { text: 'English', flag: 'assets/images/flags/us.jpg', lang: 'en' },
+    { text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' },
+    { text: 'German', flag: 'assets/images/flags/germany.jpg', lang: 'de' },
   ];
-  notifications: any[] = [
-    {
-      message: "Please check your mail",
-      time: "14 mins ago",
-      icon: "mail",
-      color: "nfc-green",
-      status: "msg-unread",
-    },
-    {
-      message: "New Employee Added..",
-      time: "22 mins ago",
-      icon: "person_add",
-      color: "nfc-blue",
-      status: "msg-read",
-    },
-    {
-      message: "Your leave is approved!! ",
-      time: "3 hours ago",
-      icon: "event_available",
-      color: "nfc-orange",
-      status: "msg-read",
-    },
-    {
-      message: "Lets break for lunch...",
-      time: "5 hours ago",
-      icon: "lunch_dining",
-      color: "nfc-blue",
-      status: "msg-read",
-    },
-    {
-      message: "Employee report generated",
-      time: "14 mins ago",
-      icon: "description",
-      color: "nfc-green",
-      status: "msg-read",
-    },
-    {
-      message: "Please check your mail",
-      time: "22 mins ago",
-      icon: "mail",
-      color: "nfc-red",
-      status: "msg-read",
-    },
-    {
-      message: "Salary credited...",
-      time: "3 hours ago",
-      icon: "paid",
-      color: "nfc-purple",
-      status: "msg-read",
-    },
-  ];
+
   ngOnInit() {
+    const mediaQuery = window.matchMedia('(min-width: 1030px)');
+    mediaQuery.addEventListener('change', () =>
+      this.onResize(new Event('matchMediaChange'))
+    );
     this.config = this.configService.configData;
-    this.userRole = this.tokenStorage.getUser().roles[0];
-    this.userName = this.tokenStorage.getUser().username;
-    this.userImg = "assets/images/user/profile_img.png";
+    const user = this.tokenStorage.getUser();
 
-    this.homePage = "admin/dashboard";
+    this.userRole =
+      typeof user.roles[0] === 'string' ? user.roles[0] : user.roles[0].name;
 
-    // if (userRole === "ROLE_ADMIN") {
-    //   this.homePage = "admin/dashboard";
-    // } else if (userRole === "ROLE_USER") {
-    //   this.homePage = "user/dashboard";
-    // } else {
-    //   // 404?
-    //   this.homePage = "page-not-found";
-    // }
+    this.userName = user.username;
+    this.tenantId = user.tenantId;
+    this.userImg = 'assets/images/user/profile_img.png';
 
-    this.langStoreValue = localStorage.getItem("lang");
+    this.homePage = 'admin/dashboard';
+
+    this.langStoreValue = localStorage.getItem('lang');
     const val = this.listLang.filter((x) => x.lang === this.langStoreValue);
     this.countryName = val.map((element) => element.text);
     if (val.length === 0) {
       if (this.flagvalue === undefined) {
-        this.defaultFlag = "assets/images/flags/us.jpg";
+        this.defaultFlag = 'assets/images/flags/us.jpg';
       }
     } else {
       this.flagvalue = val.map((element) => element.flag);
@@ -136,87 +91,130 @@ export class HeaderComponent
   }
 
   ngAfterViewInit() {
-    // set theme on startup
-    if (localStorage.getItem("theme")) {
+    this.initializeSidebarState();
+    this.onResize(new Event('init'));
+  }
+
+  initializeSidebarState() {
+    if (localStorage.getItem('theme')) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);
-      this.renderer.addClass(this.document.body, localStorage.getItem("theme"));
+      this.renderer.addClass(this.document.body, localStorage.getItem('theme'));
     } else {
       this.renderer.addClass(this.document.body, this.config.layout.variant);
     }
 
-    if (localStorage.getItem("menuOption")) {
+    if (localStorage.getItem('menuOption')) {
       this.renderer.addClass(
         this.document.body,
-        localStorage.getItem("menuOption")
+        localStorage.getItem('menuOption')
       );
     } else {
       this.renderer.addClass(
         this.document.body,
-        "menu_" + this.config.layout.sidebar.backgroundColor
+        'menu_' + this.config.layout.sidebar.backgroundColor
       );
     }
 
-    if (localStorage.getItem("choose_logoheader")) {
+    if (localStorage.getItem('choose_logoheader')) {
       this.renderer.addClass(
         this.document.body,
-        localStorage.getItem("choose_logoheader")
+        localStorage.getItem('choose_logoheader')
       );
     } else {
       this.renderer.addClass(
         this.document.body,
-        "logo-" + this.config.layout.logo_bg_color
+        'logo-' + this.config.layout.logo_bg_color
       );
     }
 
-    if (localStorage.getItem("sidebar_status")) {
-      if (localStorage.getItem("sidebar_status") === "close") {
-        this.renderer.addClass(this.document.body, "side-closed");
-        this.renderer.addClass(this.document.body, "submenu-closed");
+    const isDesktop = window.innerWidth >= 1030;
+    const sidebarStatus = localStorage.getItem('sidebar_status');
+
+    if (isDesktop) {
+      // Desktop: Sidebar open by default unless explicitly closed
+      if (sidebarStatus === 'close') {
+        this.renderer.addClass(this.document.body, 'side-closed');
+        this.renderer.addClass(this.document.body, 'submenu-closed');
+        this.isOpenSidebar = false;
       } else {
-        this.renderer.removeClass(this.document.body, "side-closed");
-        this.renderer.removeClass(this.document.body, "submenu-closed");
+        this.renderer.removeClass(this.document.body, 'side-closed');
+        this.renderer.removeClass(this.document.body, 'submenu-closed');
+        this.isOpenSidebar = true;
+        localStorage.setItem('sidebar_status', 'open'); // Ensure consistency
       }
     } else {
-      if (this.config.layout.sidebar.collapsed === true) {
-        this.renderer.addClass(this.document.body, "side-closed");
-        this.renderer.addClass(this.document.body, "submenu-closed");
+      // Mobile/Tablet: Sidebar closed by default
+      this.renderer.addClass(this.document.body, 'side-closed');
+      this.renderer.addClass(this.document.body, 'submenu-closed');
+      this.isOpenSidebar = false;
+      if (sidebarStatus === 'open') {
+        this.renderer.removeClass(this.document.body, 'side-closed');
+        this.renderer.removeClass(this.document.body, 'submenu-closed');
+        this.isOpenSidebar = true;
       }
     }
   }
+
+  callSidemenuCollapse() {
+    this.isOpenSidebar = !this.isOpenSidebar;
+
+    if (this.isOpenSidebar) {
+      this.renderer.removeClass(this.document.body, 'side-closed');
+      this.renderer.removeClass(this.document.body, 'submenu-closed');
+      this.renderer.removeClass(this.document.body, 'ls-closed');
+      localStorage.setItem('sidebar_status', 'open');
+    } else {
+      this.closeSidebar();
+    }
+
+    console.log(
+      'Sidebar toggled:',
+      this.isOpenSidebar,
+      this.document.body.classList
+    );
+  }
+
   callFullscreen() {
+    const docElm = document.documentElement;
+
+    // Check if the document is currently in fullscreen mode
     if (
       !document.fullscreenElement &&
-      !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement &&
-      !document.msFullscreenElement
+      !(document as any).webkitFullscreenElement &&
+      !(document as any).mozFullScreenElement &&
+      !(document as any).msFullscreenElement
     ) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
+      // Request fullscreen
+      if (docElm.requestFullscreen) {
+        docElm.requestFullscreen();
+      } else if ((docElm as any).webkitRequestFullscreen) {
+        (docElm as any).webkitRequestFullscreen();
+      } else if ((docElm as any).mozRequestFullScreen) {
+        (docElm as any).mozRequestFullScreen();
+      } else if ((docElm as any).msRequestFullscreen) {
+        (docElm as any).msRequestFullscreen();
       }
     } else {
+      // Exit fullscreen
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) {
+        (document as any).mozCancelFullScreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
       }
     }
   }
+
   setLanguage(text: string, lang: string, flag: string) {
     this.countryName = text;
     this.flagvalue = flag;
     this.langStoreValue = lang;
     this.languageService.setLanguage(lang);
   }
+
   mobileMenuSidebarOpen(event: any, className: string) {
     const hasClass = event.target.classList.contains(className);
     if (hasClass) {
@@ -225,37 +223,72 @@ export class HeaderComponent
       this.renderer.addClass(this.document.body, className);
     }
   }
-  callSidemenuCollapse() {
-    const hasClass = this.document.body.classList.contains("side-closed");
-    if (hasClass) {
-      this.renderer.removeClass(this.document.body, "side-closed");
-      this.renderer.removeClass(this.document.body, "submenu-closed");
-    } else {
-      this.renderer.addClass(this.document.body, "side-closed");
-      this.renderer.addClass(this.document.body, "submenu-closed");
-    }
-  }
 
   logout(): void {
     this.tokenStorage.signOut();
-    this.router.navigate(["/authentication/signin"]);
+    this.router.navigate(['/authentication/signin']);
   }
 
   toSettings() {
-    this.router.navigate(["/admin/users/settings"]);
+    this.router.navigate(['/admin/users/settings']);
   }
 
   toProfile() {
-    console.log("user role", this.userRole)
     if (this.userRole === Role.Admin) {
-      this.router.navigate(["/admin/user-profile/add-account"]);
+      this.router.navigate(['/admin/user-profile/add-account']);
     } else {
-      this.router.navigate(['/staff/user-profile/profile'])
+      this.router.navigate(['/staff/user-profile/profile']);
     }
   }
 
   toSMSManagement() {
-    this.router.navigate(["/staff/sms"]);
+    this.router.navigate(['/staff/sms']);
   }
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    const sidebarEl = this.document.querySelector('.sidebar');
+    const menuButton =
+      this.elementRef.nativeElement.querySelector('.sidemenu-collapse');
+
+    if (
+      this.isOpenSidebar &&
+      sidebarEl &&
+      !sidebarEl.contains(event.target as Node) &&
+      !menuButton.contains(event.target as Node) &&
+      window.innerWidth < 1030 // Close on click outside for mobile and tablet
+    ) {
+      this.closeSidebar();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    const width = window.innerWidth;
+
+    if (width >= 1030) {
+      this.renderer.removeClass(this.document.body, 'side-closed');
+      this.renderer.removeClass(this.document.body, 'submenu-closed');
+      this.renderer.removeClass(this.document.body, 'ls-closed');
+      this.isOpenSidebar = true;
+      localStorage.setItem('sidebar_status', 'open');
+    } else {
+      this.renderer.addClass(this.document.body, 'side-closed');
+      this.renderer.addClass(this.document.body, 'submenu-closed');
+      this.renderer.addClass(this.document.body, 'ls-closed');
+      this.isOpenSidebar = false;
+      localStorage.setItem('sidebar_status', 'close');
+    }
+  }
+
+  closeSidebar() {
+    if (window.innerWidth < 1030) {
+      // Include tablet devices (up to 1029px)
+      this.isOpenSidebar = false;
+      this.renderer.addClass(this.document.body, 'side-closed');
+      this.renderer.addClass(this.document.body, 'submenu-closed');
+      this.renderer.addClass(this.document.body, 'ls-closed');
+      localStorage.setItem('sidebar_status', 'close');
+    }
+  }
 }

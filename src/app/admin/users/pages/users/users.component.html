@@ -144,6 +144,21 @@
                     >{{ user.employeeNumber }}</mat-cell
                   >
                 </ng-container>
+                <ng-container matColumnDef="username">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Username</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.username }}</mat-cell
+                  >
+                </ng-container>
                 <ng-container matColumnDef="firstname">
                   <mat-header-cell
                     *matHeaderCellDef

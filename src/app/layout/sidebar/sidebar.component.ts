@@ -8,6 +8,8 @@ import {
   Renderer2,
   HostListener,
   OnDestroy,
+  Output,
+  EventEmitter
 } from "@angular/core";
 import { ROUTES } from "./sidebar-items";
 import { AuthService } from "src/app/core/service/auth.service";
@@ -35,6 +37,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   routerObj = null;
 
   currentUser: any;
+  @Output() menuClicked = new EventEmitter<void>();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,

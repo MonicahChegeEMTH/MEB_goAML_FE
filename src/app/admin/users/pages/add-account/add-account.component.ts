@@ -38,6 +38,14 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Za-z\s]+$/),
+        ],
+      ],
       firstname: [
         '',
         [

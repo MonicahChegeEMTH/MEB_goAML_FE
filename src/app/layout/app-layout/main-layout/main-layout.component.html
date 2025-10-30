@@ -1,11 +1,7 @@
-<!-- <app-header></app-header> -->
- <button class="hamburger-btn" (click)="callSidemenuCollapse()">
-  <i-feather name="menu"></i-feather>
-</button>
+<app-header></app-header>
 <app-sidebar></app-sidebar>
-<div class="sidebar-overlay" (click)="callSidemenuCollapse()"></div>
 <!-- <app-right-sidebar></app-right-sidebar> -->
 <div [dir]="direction">
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
 </div>
-<!-- <app-footer></app-footer> -->
+<app-footer></app-footer>
