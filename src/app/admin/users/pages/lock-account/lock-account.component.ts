@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { takeUntil } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs';
 import { UserService } from 'src/app/data/services/user.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { AccountService } from '../../data/services/account.service';
 import { Account } from '../../data/types/account';
 import { ActiveAccountsComponent } from '../active-accounts/active-accounts.component';
 
@@ -30,7 +29,6 @@ export class LockAccountComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.account = this.data.account;
-
     this.userId = this.data.account.id;
   }
 
@@ -38,20 +36,25 @@ export class LockAccountComponent extends BaseComponent implements OnInit {
     this.loading = true;
     this.userService
       .lockUserAccount(this.userId)
-      .pipe(takeUntil(this.subject))
-      .subscribe(
-        (res) => {
+      .pipe(
+        takeUntil(this.subject),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
           this.snackbar.showNotification(
             'snackbar-success',
             'User locked successfully!'
           );
           this.dialogRef.close(true);
         },
-        (err) => {
-          this.snackbar.showNotification(err.error.error, 'snackbar-danger');
-          this.loading = false;
+        error: (err) => {
+          const errorMsg = err?.error?.message || err?.error?.error || 'Failed to lock user. Please try again.';
+          this.snackbar.showNotification('snackbar-danger', errorMsg);
         }
-      );
+      });
   }
 
   onNoClick(): void {

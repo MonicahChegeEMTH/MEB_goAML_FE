@@ -15,11 +15,13 @@ import { MatSort } from '@angular/material/sort';
 })
 export class LogsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
+    'id',
     'user_id',
     'username',
     'action_type',
     'report_type',
     'records_retrieved',
+    'createdat',
     'ip_address',
     'file',
   ];
@@ -47,7 +49,6 @@ export class LogsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Set paginator and sort once the table is rendered
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -57,8 +58,6 @@ export class LogsComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.dataSource.data = data;
         this.isLoading = false;
-
-        // Re-attach paginator & sort AFTER async data load
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -94,6 +93,7 @@ export class LogsComponent implements OnInit, AfterViewInit {
           'Action Type',
           'Report Type',
           'Records Retrieved',
+          'Timestamp',
           'IP Address',
         ],
       ],
@@ -103,6 +103,7 @@ export class LogsComponent implements OnInit, AfterViewInit {
         row.action_type,
         row.report_type,
         row.records_retrieved,
+        row.createdat,
         row.ip_address,
       ]),
       startY: 25,

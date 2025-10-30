@@ -24,7 +24,6 @@ export class UnlockAccountComponent extends BaseComponent implements OnInit {
     public dialogRef: MatDialogRef<LockedAccountsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackbar: SnackbarService,
-    // private accountService: AccountService
     private userService: UserService
   ) {
     super();

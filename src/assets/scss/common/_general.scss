@@ -67,7 +67,7 @@ section.content {
   transition: 0.5s;
 
   .content-block {
-    padding: 0 0 0 25px;           
+    padding: 0 25px 0 25px;           
     margin-top: 0px;
     background: transparent; 
   }
@@ -288,13 +288,11 @@ input::-webkit-input-placeholder {
 }
 
 input:-moz-placeholder {
-  /* Firefox 18- */
   font-size: 12px;
   color: #adabab;
 }
 
 input::-moz-placeholder {
-  /* Firefox 19+ */
   font-size: 12px;
   color: #adabab;
 }
@@ -310,13 +308,11 @@ textarea::-webkit-input-placeholder {
 }
 
 textarea:-moz-placeholder {
-  /* Firefox 18- */
   font-size: 12px;
   color: #adabab;
 }
 
 textarea::-moz-placeholder {
-  /* Firefox 19+ */
   font-size: 12px;
   color: #adabab;
 }
@@ -380,3 +376,42 @@ textarea:-ms-input-placeholder {
     max-width: 100%;
   }
 }
+
+@media screen and (max-width: 1024px) {
+  section.content {
+    margin: 0 0 0 240px;          
+    width: calc(100% - 240px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  section.content {
+    margin: 0;                     
+    width: 100%;                   
+    min-height: auto;
+    padding: 0 15px;              
+    transition: 0.3s ease;
+  }
+
+  section.content .content-block {
+    padding: 0 10px;               
+  }
+
+  body.sidebar-open section.content {
+    opacity: 0.4;                  
+  }
+}
+
+@media screen and (max-width: 480px) {
+  section.content {
+    padding: 0 10px;              
+    margin: 0;
+    width: 100%;
+    background: #f9f9f9;
+  }
+
+  section.content .content-block {
+    padding: 0;                   
+  }
+}
+

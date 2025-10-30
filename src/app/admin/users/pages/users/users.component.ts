@@ -100,7 +100,14 @@ export class UsersComponent extends BaseComponent implements OnInit {
     const doc = new jsPDF();
     autoTable(doc, {
       head: [
-        ['Employee No', 'Username', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+        [
+          'Employee No',
+          'Username',
+          'First Name',
+          'Last Name',
+          'Phone Number',
+          'Role',
+        ],
       ],
       body: this.dataSource.data.map((u) => [
         u.employeeNumber,
@@ -128,10 +135,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Raw response from backend:', res);
-          // if your backend returns { userData: [...] }
+
           const rawUsers = res.data || [];
 
-          // Normalize property names so Angular knows what to display
           this.users = rawUsers.map((u, index) => ({
             id: index + 1,
             employeeNumber: u.employeeNumber,
@@ -142,10 +148,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
             email: u.email || '',
             role: u.role || '',
             tenantId: u.tenantId || tenantId,
-            status: u.status || 'Active', // default fallback
+            status: u.status || 'Active',
           }));
 
-          // Filter for tenant if applicable
           const filteredUsers = this.users.filter(
             (user) => user.tenantId === tenantId
           );

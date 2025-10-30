@@ -78,13 +78,12 @@ export class LockedAccountsComponent extends BaseComponent implements OnInit {
   this.isLoading = true;
 
   this.userService
-    .fetchAllUserAccounts() // Single unified endpoint
+    .fetchAllUserAccounts() 
     .pipe(takeUntil(this.subject))
     .subscribe(
       (res) => {
         const allUsers = res?.data || [];
 
-        // ✅ Filter by status dynamically
         this.lockedAccounts = allUsers.filter(
           (user: Account) => user.status === status
         );

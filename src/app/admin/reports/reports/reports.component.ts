@@ -15,6 +15,7 @@ import { ReportsService } from '../service/reports.service';
 })
 export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
+    'id',
     'date',
     'account',
     'type',
@@ -31,37 +32,11 @@ export class ReportsComponent implements OnInit {
   searchText: string = '';
   isLoading = true;
   errorMessage = '';
+  reports: any[] = [];
 
   showReportForm(type: string) {
     this.selectedReportType = type;
   }
-
-  reports = [
-    {
-      date: '12/03/2025',
-      account: '1234567890',
-      type: 'Deposit',
-      amount: 'KES 10,000.00',
-    },
-    {
-      date: '09/02/2025',
-      account: '1234567890',
-      type: 'Withdrawal',
-      amount: 'KES 2,500.00',
-    },
-    {
-      date: '28/01/2025',
-      account: '1234567890',
-      type: 'Transfer',
-      amount: 'KES 5,000.00',
-    },
-    {
-      date: '15/01/2025',
-      account: '1234567890',
-      type: 'Deposit',
-      amount: 'KES 8,000.00',
-    },
-  ];
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -91,8 +66,6 @@ export class ReportsComponent implements OnInit {
       next: (data) => {
         this.dataSource.data = data;
         this.isLoading = false;
-
-        // Re-attach paginator & sort AFTER async data load
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
