@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { BaseComponent } from "src/app/shared/components/base/base.component";
-import { NotificationService } from "src/app/data/services/notification.service";
-import { SnackbarService } from "src/app/shared/snackbar.service";
-import { AuthService } from "src/app/data/services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BaseComponent } from 'src/app/shared/components/base/base.component';
+import { NotificationService } from 'src/app/data/services/notification.service';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { AuthService } from 'src/app/data/services/auth.service';
 @Component({
-  selector: "app-forgot-password",
-  templateUrl: "./forgot-password.component.html",
-  styleUrls: ["./forgot-password.component.scss"],
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent extends BaseComponent implements OnInit {
   authForm: FormGroup;
@@ -19,12 +19,12 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
   emailSelected: boolean = true;
 
   loading = false;
-  error = "";
+  error = '';
   hide = true;
 
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = "";
+  errorMessage = '';
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -37,12 +37,12 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
   }
   ngOnInit() {
     this.authForm = this.formBuilder.group({
-    email: ["", [Validators.email]],
-      mobile: ["", [Validators.pattern('^[0-9]{10}$')]],
-      username: [""],
+      email: ['', [Validators.email]],
+      mobile: ['', [Validators.pattern('^[0-9]{10}$')]],
+      username: [''],
     });
-    
-    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
   get f() {
     return this.authForm.controls;
@@ -50,17 +50,17 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
 
   selectOption(event) {
     console.log(event.value);
-    if (event.value == "Email") {
+    if (event.value == 'Email') {
       this.emailSelected = true;
       this.mobileSelected = false;
       this.usernameSelected = false;
       this.authForm.reset();
-    } else if (event.value == "Username") {
+    } else if (event.value == 'Username') {
       this.emailSelected = false;
       this.mobileSelected = false;
       this.usernameSelected = true;
       this.authForm.reset();
-    } else if (event.value == "Mobile") {
+    } else if (event.value == 'Mobile') {
       this.emailSelected = false;
       this.mobileSelected = true;
       this.usernameSelected = false;
@@ -73,82 +73,136 @@ export class ForgotPasswordComponent extends BaseComponent implements OnInit {
   }
 
   onSubmit() {
-  
+    this.submitted = true;
+    this.error = '';
 
-    if(this.emailSelected){
-      if(this.authForm.value.email == '' || this.authForm.value.email == null || this.authForm.value.email == undefined){
-        this.snackbar.showNotification("snackbar-danger", "Please provide a valid email !")
-      }else {
-        this.submitted = true;
-        this.loading = true;
-        this.error = "";
+    // Reset spinner initially (prevents stuck spinner on previous state)
+    this.loading = false;
 
-        this.authService.forgotPasswordDetails(this.authForm.value).subscribe(res => {
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
+    // --- EMAIL OPTION ---
+    if (this.emailSelected) {
+      const emailControl = this.authForm.get('email');
 
-           this.router.navigate(['/authentication/signin'])
-          }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
-
-            this.loading = false;
-          }
-        }, err => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error);
-          console.log(err);
-          this.loading = false;
-        })
+      if (!emailControl.value) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please provide your email address!'
+        );
+        return;
       }
-    }else if(this.mobileSelected){
-      if(this.authForm.value.mobile == '' || this.authForm.value.mobile == null || this.authForm.value.mobile == undefined){
-        this.snackbar.showNotification("snackbar-danger", "Please provide a valid mobile number !")
-      }else {
-        this.submitted = true;
-        this.loading = true;
-        this.error = "";
 
-        this.authService.forgotPasswordDetails(this.authForm.value).subscribe(res => {
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
-
-           this.router.navigate(['/authentication/signin'])
-          }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
-
-            this.loading = false;
-          }
-        }, err => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error);
-          console.log(err);
-          this.loading = false;
-        })
+      if (emailControl.invalid) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please enter a valid email format!'
+        );
+        return;
       }
-    }else if(this.usernameSelected){
-      if(this.authForm.value.username == '' || this.authForm.value.username == null || this.authForm.value.username == undefined){
-        this.snackbar.showNotification("snackbar-danger", "Please provide a username !")
-      }else {
-        this.submitted = true;
-        this.loading = true;
-        this.error = "";
 
-        this.authService.forgotPasswordDetails(this.authForm.value).subscribe(res => {
-          if(res.statusCode == 200 || res.statusCode == 201){
-            this.snackbar.showNotification("snackbar-success", res.message);
+      this.loading = true;
 
-           this.router.navigate(['/authentication/signin'])
-          }else {
-            this.snackbar.showNotification("snackbar-danger", res.message)
-
-            this.loading = false;
-          }
-        }, err => {
-          this.snackbar.showNotification("snackbar-danger", err.error.error);
-          console.log(err);
+      this.authService.forgotPasswordDetails(this.authForm.value).subscribe(
+        (res) => {
           this.loading = false;
-        })
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
+            this.router.navigate(['/authentication/signin']);
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
+          }
+        },
+        (err) => {
+          this.loading = false;
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error.error || 'An error occurred'
+          );
+          console.error(err);
+        }
+      );
+
+      // --- MOBILE OPTION ---
+    } else if (this.mobileSelected) {
+      const mobileControl = this.authForm.get('mobile');
+
+      if (!mobileControl.value) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please provide your mobile number!'
+        );
+        return;
       }
-    }else {
-      this.snackbar.showNotification("snackbar-danger", "Invalid email, mobile or username !")
+
+      if (mobileControl.invalid) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please enter a valid 10-digit mobile number!'
+        );
+        return;
+      }
+
+      this.loading = true;
+
+      this.authService.forgotPasswordDetails(this.authForm.value).subscribe(
+        (res) => {
+          this.loading = false;
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
+            this.router.navigate(['/authentication/signin']);
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
+          }
+        },
+        (err) => {
+          this.loading = false;
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error.error || 'An error occurred'
+          );
+          console.error(err);
+        }
+      );
+
+      // --- USERNAME OPTION ---
+    } else if (this.usernameSelected) {
+      const usernameControl = this.authForm.get('username');
+
+      if (!usernameControl.value) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please provide your username!'
+        );
+        return;
+      }
+
+      this.loading = true;
+
+      this.authService.forgotPasswordDetails(this.authForm.value).subscribe(
+        (res) => {
+          this.loading = false;
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            this.snackbar.showNotification('snackbar-success', res.message);
+            this.router.navigate(['/authentication/signin']);
+          } else {
+            this.snackbar.showNotification('snackbar-danger', res.message);
+          }
+        },
+        (err) => {
+          this.loading = false;
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error.error || 'An error occurred'
+          );
+          console.error(err);
+        }
+      );
+
+      // --- NO OPTION SELECTED ---
+    } else {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please select Email, Mobile, or Username to reset your password!'
+      );
     }
   }
 }

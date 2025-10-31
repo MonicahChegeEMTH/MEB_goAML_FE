@@ -214,7 +214,7 @@
                       [class.even-row]="!(i % 2)"
                       class="column-nowrap"
                     >
-                      {{ report.createdat }}
+                      {{ report.created_at | date:'medium' }}
                     </mat-cell>
                   </ng-container>
 

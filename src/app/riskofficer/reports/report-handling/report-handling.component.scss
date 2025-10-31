@@ -1,0 +1,383 @@
+.content-block {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+
+  /* ===== Header ===== */
+  .header {
+    text-align: left;
+    margin-bottom: 2rem;
+
+    .welcome-text {
+      font-size: 1.3rem;
+      color: #444;
+
+      span {
+        color: #c2973f;
+        font-weight: 600;
+      }
+    }
+
+    .system-title {
+      font-size: 1.8rem;
+      color: #1d2d5c;
+      font-weight: 700;
+    }
+  }
+
+  /* ===== Summary Cards ===== */
+  .summary-cards {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      flex: 1;
+      min-width: 220px;
+
+      h3 {
+        font-size: 1rem;
+        color: #1d2d5c;
+      }
+
+      h1 {
+        color: #c2973f;
+        font-size: 2.2rem;
+        margin: 0.5rem 0;
+      }
+
+      .view-all {
+        color: #1d2d5c;
+        text-decoration: none;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* ===== Report Handling Section ===== */
+  .report-container {
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin: 1rem 0;
+
+    .title {
+      color: #1d2d5c;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+    }
+
+    /* ===== Tabs ===== */
+    .tab-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+
+      .btn {
+        padding: 0.6rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        font-size: 1rem;
+
+        &.preview-btn {
+          background-color: #c2973f;
+          color: white;
+
+          &.active,
+          &:hover {
+            background-color: #a88435;
+          }
+        }
+
+        &.download-btn {
+          background-color: #e5e5e5;
+          color: #1d2d5c;
+
+          &.active,
+          &:hover {
+            background-color: #cfd3d6;
+          }
+        }
+      }
+    }
+
+    /* ===== XML + Side Section (Main Flex Layout) ===== */
+    .xml-section {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+
+      /* Left side: XML preview box */
+      .xml-box {
+        flex: 2;
+        min-width: 400px;
+        max-width: 65%;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid #e1e1e1;
+        overflow-y: auto;
+        max-height: 350px;
+
+        pre {
+          margin: 0;
+          color: #333;
+          font-family: "Courier New", monospace;
+          font-size: 0.95rem;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+      }
+
+      /* Right side: Download buttons + Secure Repository */
+      .side-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        min-width: 250px;
+
+        .download-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+
+          .btn {
+            padding: 0.7rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+
+            &.gold-btn {
+              background-color: #c2973f;
+              color: white;
+              &:hover {
+                background-color: #a88435;
+              }
+            }
+
+            &.dark-btn {
+              background-color: #1d2d5c;
+              color: white;
+              &:hover {
+                background-color: #17224b;
+              }
+            }
+          }
+        }
+
+        /* Secure Repository box */
+        .secure-box {
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 1.2rem;
+          background-color: #f9f9f9;
+
+          h3 {
+            color: #1d2d5c;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+          }
+
+          .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .check {
+              color: #2ecc71;
+              font-weight: bold;
+              font-size: 1.2rem;
+            }
+
+            p {
+              color: #1d2d5c;
+              font-weight: 500;
+            }
+          }
+
+          .description {
+            color: #666;
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+
+  .header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  .welcome {
+    flex: 1;
+
+    .greeting {
+      color: #b08b2e;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    h3 {
+      margin: 0.2rem 0;
+      color: #b08b2e;
+      font-weight: 700;
+    }
+
+    .system-title {
+      color: #001e3c;
+      font-weight: 600;
+    }
+  }
+
+  .illustration img {
+    width: 140px;
+  }
+
+  .reports-summary {
+    text-align: right;
+
+    h2 {
+      color: #001e3c;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #b08b2e;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    .view-all {
+      color: #b08b2e;
+      font-weight: 500;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+  }
+}
+
+  .header-cards {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .large-card {
+    flex: 3;
+  }
+
+  .small-card {
+    flex: 1;
+  }
+
+  .header-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+  /* Tablets (≤ 1024px) */
+  @media (max-width: 1024px) {
+    .report-container {
+      padding: 1.5rem;
+
+      .xml-section {
+        flex-direction: column;
+        align-items: stretch;
+
+        .xml-box {
+          max-width: 100%;
+          min-width: unset;
+        }
+
+        .side-content {
+          flex-direction: row;
+          justify-content: space-between;
+          flex-wrap: wrap;
+
+          .download-buttons {
+            flex-direction: row;
+            flex: 1;
+            justify-content: center;
+
+            .btn {
+              width: auto;
+            }
+          }
+
+          .secure-box {
+            flex: 1;
+            min-width: 300px;
+          }
+        }
+      }
+    }
+  }
+
+  /* Mobile (≤ 768px) */
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .summary-cards {
+      flex-direction: column;
+    }
+
+    .report-container {
+      padding: 1rem;
+
+      .tab-buttons {
+        flex-direction: column;
+        align-items: stretch;
+
+        .btn {
+          width: 100%;
+        }
+      }
+
+      .xml-section {
+        flex-direction: column;
+
+        .side-content {
+          flex-direction: column;
+          align-items: stretch;
+
+          .download-buttons {
+            flex-direction: column;
+
+            .btn {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

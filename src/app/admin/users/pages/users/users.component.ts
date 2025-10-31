@@ -134,12 +134,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.subject))
       .subscribe({
         next: (res) => {
-          console.log('Raw response from backend:', res);
-
           const rawUsers = res.data || [];
 
           this.users = rawUsers.map((u, index) => ({
-            id: index + 1,
+            sn: index + 1,
+            id: u.id,
             employeeNumber: u.employeeNumber,
             firstname: u.firstname || u.firstName || '',
             username: u.username || u.userName || '',
@@ -212,6 +211,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
   }
 
   lockAccountCall(account) {
+     console.log('🧩 Lock clicked for:', account);
+  console.log('🧩 ID passed to dialog:', account.id);
     const dialogRef = this.dialog.open(LockAccountComponent, {
       data: {
         account: account,

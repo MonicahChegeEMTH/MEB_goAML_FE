@@ -1,36 +1,40 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { AuditLog } from '../service/audit-log.model';
 import { AuditLogService } from '../service/audit-log.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-logs',
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.scss'],
 })
-export class LogsComponent implements OnInit {
-  reports: AuditLog[] = [];
-  pagedReports: AuditLog[] = [];
-  isLoading = true;
-  errorMessage = '';
-  firstname: string;
-  lastname: string;
-  searchText: string = '';
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
-
+export class LogsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
+    'id',
     'user_id',
     'username',
     'action_type',
     'report_type',
     'records_retrieved',
+    'createdat',
     'ip_address',
     'file',
   ];
 
+  dataSource = new MatTableDataSource<AuditLog>([]);
+  isLoading = true;
+  errorMessage = '';
+  firstname: string;
+  lastname: string;
+  searchText = '';
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private auditLogService: AuditLogService,
@@ -42,24 +46,22 @@ export class LogsComponent implements OnInit {
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
+  }
 
-     this.dataSource.filterPredicate = (data, filter) => {
-      const f = filter.trim().toLowerCase();
-      return (
-        data.user_id?.toLowerCase().includes(f) ||
-        data.username?.toLowerCase().includes(f) ||
-        data.action_type?.toLowerCase().includes(f) ||
-        data.report_type?.toLowerCase().includes(f)
-      );
-    };
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   fetchAuditLogs(): void {
     this.auditLogService.getAuditLogs().subscribe({
       next: (data) => {
-        this.reports = data;
+        this.dataSource.data = data;
         this.isLoading = false;
-        this.setPagedData(0, 5);
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        });
       },
       error: (err) => {
         console.error('Error fetching audit logs', err);
@@ -69,27 +71,46 @@ export class LogsComponent implements OnInit {
     });
   }
 
-  onPageChange(event: PageEvent): void {
-    const startIndex = event.pageIndex * event.pageSize;
-    const endIndex = startIndex + event.pageSize;
-    this.setPagedData(startIndex, endIndex);
+  applyFilter(): void {
+    this.dataSource.filter = this.searchText.trim().toLowerCase();
   }
 
-  private setPagedData(startIndex: number, endIndex: number): void {
-    this.pagedReports = this.reports.slice(startIndex, endIndex);
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  clearSearch() {
+  clearSearch(): void {
     this.searchText = '';
-    const event = { target: { value: '' } } as unknown as Event;
-    this.applyFilter(event);
+    this.dataSource.filter = '';
+  }
+
+  downloadPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Audit Logs', 14, 15);
+
+    autoTable(doc, {
+      head: [
+        [
+          'User Id',
+          'Username',
+          'Action Type',
+          'Report Type',
+          'Records Retrieved',
+          'Timestamp',
+          'IP Address',
+        ],
+      ],
+      body: this.dataSource.data.map((row: any) => [
+        row.user_id,
+        row.username,
+        row.action_type,
+        row.report_type,
+        row.records_retrieved,
+        row.created_at ? new Date(row.created_at).toLocaleString() : '',
+        row.ip_address,
+      ]),
+      startY: 25,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] },
+    });
+
+    doc.save('logs-records.pdf');
   }
 }

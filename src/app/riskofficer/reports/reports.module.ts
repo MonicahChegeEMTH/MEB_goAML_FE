@@ -12,10 +12,12 @@ import { SharedModule } from "./../../shared/shared.module";
 import { MatCardModule } from "@angular/material/card";
 import { ReportsComponent } from "./reports/reports.component";
 import { ReportsRoutingModule } from "./reports-routing.module";
+import { ReportHandlingComponent } from './report-handling/report-handling.component';
 
 @NgModule({
   declarations: [
     ReportsComponent,
+    ReportHandlingComponent,
   ],
   imports: [
     CommonModule,

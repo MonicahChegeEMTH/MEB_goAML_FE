@@ -14,13 +14,7 @@ import { ReportsService } from '../service/reports.service';
   styleUrls: ['./reports.component.scss'],
 })
 export class ReportsComponent implements OnInit {
-  displayedColumns: string[] = [
-    'id',
-    'date',
-    'account',
-    'type',
-    'amount'
-  ]
+  displayedColumns: string[] = ['id', 'date', 'account', 'type', 'amount'];
   selectedReportType: string | null = null;
   pagedReports: any[] = [];
   startDate: string = '';
@@ -33,6 +27,15 @@ export class ReportsComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   reports: any[] = [];
+  selectedIdType: string = 'nationalId';
+  idPlaceholder: string = 'Enter ID number';
+
+  idTypes = [
+    { value: 'nationalId', viewValue: 'National ID' },
+    { value: 'passport', viewValue: 'Passport' },
+    { value: 'drivingLicense', viewValue: 'Driving License' },
+    { value: 'alienId', viewValue: 'Alien ID' },
+  ];
 
   showReportForm(type: string) {
     this.selectedReportType = type;
@@ -49,7 +52,7 @@ export class ReportsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchReports()
+    this.fetchReports();
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
@@ -61,8 +64,24 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  onIdTypeChange(type: string): void {
+    switch (type) {
+      case 'passport':
+        this.idPlaceholder = 'Enter passport number';
+        break;
+      case 'drivingLicense':
+        this.idPlaceholder = 'Enter driving license number';
+        break;
+      case 'alienId':
+        this.idPlaceholder = 'Enter alien ID number';
+        break;
+      default:
+        this.idPlaceholder = 'Enter ID number';
+    }
+  }
+
   fetchReports(): void {
-     this.service.getAuditLogs().subscribe({
+    this.service.getAuditLogs().subscribe({
       next: (data) => {
         this.dataSource.data = data;
         this.isLoading = false;
@@ -104,31 +123,24 @@ export class ReportsComponent implements OnInit {
     this.pagedReports = this.reports.slice(startIndex, endIndex);
   }
 
-   downloadPDF() {
-      const doc = new jsPDF();
-      doc.setFontSize(16);
-      doc.text('Reports', 14, 15);
-  
-      autoTable(doc, {
-        head: [
-          [
-            'Date',
-            'Account',
-            'Type',
-            'Amount',
-          ],
-        ],
-        body: this.dataSource.data.map((row: any) => [
-          row.date,
-          row.account,
-          row.type,
-          row.amount
-        ]),
-        startY: 25,
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [63, 81, 181] },
-      });
-  
-      doc.save('reports-records.pdf');
-    }
+  downloadPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reports', 14, 15);
+
+    autoTable(doc, {
+      head: [['Date', 'Account', 'Type', 'Amount']],
+      body: this.dataSource.data.map((row: any) => [
+        row.date,
+        row.account,
+        row.type,
+        row.amount,
+      ]),
+      startY: 25,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] },
+    });
+
+    doc.save('reports-records.pdf');
+  }
 }

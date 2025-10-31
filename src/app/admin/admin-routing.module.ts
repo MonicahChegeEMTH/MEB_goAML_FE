@@ -17,14 +17,6 @@ const routes: Routes = [
   },
 
   {
-    path: 'reports-handling',
-    loadChildren: () =>
-      import('./report-handling/report-handling.module').then(
-        (m) => m.ReportHandlingModule
-      ),
-  },
-
-  {
     path: 'logs',
     loadChildren: () => import('./logs/logs.module').then((m) => m.LogsModule),
   },

@@ -1,0 +1,89 @@
+<section class="content">
+  <div class="container-fluid content-block">
+    <!-- Header Section -->
+    <div class="header-cards">
+      <!-- Large card -->
+      <div class="header-card large-card">
+        <div class="welcome">
+          <p class="greeting">Welcome Back</p>
+          <h3>{{ firstname }} {{ lastname }}</h3>
+          <h2 class="system-title">goAML Reporting System</h2>
+        </div>
+        <div class="illustration">
+          <img src="assets/images/login/dashboard_img.png" alt="illustration" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Handling Section -->
+    <section class="report-container">
+      <!-- Title -->
+      <h2 class="title">Report Handling</h2>
+
+      <!-- Tabs -->
+      <div class="tab-buttons">
+        <button
+          class="btn preview-btn"
+          [class.active]="activeTab === 'preview'"
+          (click)="activeTab = 'preview'"
+        >
+          Preview
+        </button>
+        <button
+          class="btn download-btn"
+          [class.active]="activeTab === 'download'"
+          (click)="activeTab = 'download'"
+        >
+          Download
+        </button>
+      </div>
+
+      <!-- XML and Download/Repository Side by Side -->
+      <div class="xml-section">
+        <!-- XML Preview -->
+        <div class="xml-box">
+          <pre>
+&lt;Report&gt;
+  &lt;Info&gt;
+    &lt;ReportType&gt;STR&lt;/ReportType&gt;
+    &lt;ReportPeriodFrom&gt;2023-01-01&lt;/ReportPeriodFrom&gt;
+    &lt;ReportPeriodTo&gt;2023-01-31&lt;/ReportPeriodTo&gt;
+    &lt;TotalTransactions&gt;15&lt;/TotalTransactions&gt;
+    &lt;Sender&gt;
+      &lt;AccountNumberType&gt;CIF&lt;/AccountNumberType&gt;
+      &lt;AccountNumber&gt;1234567890&lt;/AccountNumber&gt;
+      &lt;AccountName&gt;ABC Bank&lt;/AccountName&gt;
+    &lt;/Sender&gt;
+  &lt;/Info&gt;
+&lt;/Report&gt;
+&lt;/goAML&gt;
+    </pre
+          >
+        </div>
+
+        <!-- Right Column -->
+        <div class="side-content">
+          <div class="download-buttons">
+            <button class="btn gold-btn" (click)="downloadXML()">
+              Download XML
+            </button>
+            <button class="btn dark-btn" (click)="downloadZIP()">
+              Download ZIP
+            </button>
+          </div>
+
+          <div class="secure-box">
+            <h3>Secure Repository</h3>
+            <div class="status">
+              <span class="check">✔</span>
+              <p>All reports securely stored</p>
+            </div>
+            <p class="description">
+              Reports are encrypted and stored in a secure repository.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

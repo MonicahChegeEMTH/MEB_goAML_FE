@@ -9,7 +9,7 @@
     <mat-card class="login-card">
       <div class="logo">
         <h2>Welcome to goAML</h2>
-        <h3 style="color: #b08b2e;">Reporting Solution</h3>
+        <h3 style="color: #b08b2e">Reporting Solution</h3>
         <p class="subtitle">Select mode of logging in to continue</p>
       </div>
 
@@ -37,7 +37,12 @@
       <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" placeholder="Enter Username" required />
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Enter Username"
+            required
+          />
           <mat-icon matSuffix>person</mat-icon>
         </mat-form-field>
 
@@ -50,18 +55,39 @@
             placeholder="Enter Password"
             required
           />
-          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
           </button>
         </mat-form-field>
 
         <div class="login-options">
           <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-          <a class="forgot-link" routerLink="/forgot-password">Forgot Password?</a>
+          <a class="forgot-link" routerLink="/authentication/forgot-password"
+            >Forgot Password?</a
+          >
         </div>
 
         <button mat-raised-button class="sign-in-btn full-width" type="submit">
           SIGN IN
+          <img
+            *ngIf="!loading"
+            src="assets/images/login/Vector.png"
+            alt="Arrow Vector"
+            class="arrow-vector-img"
+          />
+          <img
+            *ngIf="loading"
+            src="assets/images/login/loading.png"
+            alt="Loading..."
+            class="arrow-vector-img spin"
+          />
         </button>
       </form>
 

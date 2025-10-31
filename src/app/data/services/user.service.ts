@@ -82,6 +82,7 @@ export class UserService {
   }
 
   lockUserAccount(id: number): Observable<any> {
+    console.log('Locking user with ID:', id);
     const lockUserAccountUrl = `${environment.apiUrl}/api/users/status/${id}`;
 
     return this.http.put<any>(
