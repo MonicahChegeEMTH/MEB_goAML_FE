@@ -2,25 +2,20 @@
   <div class="container-fluid content-block">
     <!-- Header Section -->
     <div class="header-cards">
-        <!-- Large card -->
-        <div class="header-card large-card">
-          <div class="welcome">
-            <p class="greeting">Welcome Back</p>
-            <h3>{{ firstname }} {{ lastname }}</h3>
-            <h2 class="system-title">goAML Reporting System</h2>
-          </div>
-          <div class="illustration">
-            <img
-              src="assets/images/login/dashboard_img.png"
-              alt="illustration"
-            />
-          </div>
+      <div class="header-card large-card">
+        <div class="welcome">
+          <p class="greeting">Welcome Back</p>
+          <h3>{{ firstname }} {{ lastname }}</h3>
+          <h2 class="system-title">goAML Reporting System</h2>
+        </div>
+        <div class="illustration">
+          <img src="assets/images/login/dashboard_img.png" alt="illustration" />
         </div>
       </div>
+    </div>
 
     <!-- Report Handling Section -->
     <section class="report-container">
-      <!-- Title -->
       <h2 class="title">Report Handling</h2>
 
       <!-- Tabs -->
@@ -44,28 +39,12 @@
       <!-- XML and Download/Repository Side by Side -->
       <div class="xml-section">
         <!-- XML Preview -->
-        <div class="xml-box">
-          <pre>
-&lt;Report&gt;
-  &lt;Info&gt;
-    &lt;ReportType&gt;STR&lt;/ReportType&gt;
-    &lt;ReportPeriodFrom&gt;2023-01-01&lt;/ReportPeriodFrom&gt;
-    &lt;ReportPeriodTo&gt;2023-01-31&lt;/ReportPeriodTo&gt;
-    &lt;TotalTransactions&gt;15&lt;/TotalTransactions&gt;
-    &lt;Sender&gt;
-      &lt;AccountNumberType&gt;CIF&lt;/AccountNumberType&gt;
-      &lt;AccountNumber&gt;1234567890&lt;/AccountNumber&gt;
-      &lt;AccountName&gt;ABC Bank&lt;/AccountName&gt;
-    &lt;/Sender&gt;
-  &lt;/Info&gt;
-&lt;/Report&gt;
-&lt;/goAML&gt;
-    </pre
-          >
+        <div class="xml-box" *ngIf="activeTab === 'preview'">
+          <pre>{{ sarPreviewXML }}</pre>
         </div>
 
-        <!-- Right Column -->
-        <div class="side-content">
+        <!-- Download Section -->
+        <div class="side-content" *ngIf="activeTab === 'download'">
           <div class="download-buttons">
             <button class="btn gold-btn" (click)="downloadXML()">
               Download XML
