@@ -17,16 +17,14 @@ export class ReportsService {
   }
 
   getAllReports(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/api/reports/allreports`)
+    return this.http.get<any[]>(`${environment.apiUrl}/api/reports/allreports`);
   }
 
- downloadReport(id: string): Observable<Blob> {
-  return this.http.get(`${environment.apiUrl}/api/reports/download/${id}`, {
-    responseType: 'blob' as 'blob', // important for file downloads
-  });
-}
-
-
+  downloadReport(id: string): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/api/reports/download/${id}`, {
+      responseType: 'blob' as 'blob',
+    });
+  }
   downloadSARReport(
     accountNumber: string,
     reason: string,
@@ -40,5 +38,18 @@ export class ReportsService {
       .set('indicators', indicators.join(','));
 
     return this.http.post(`${this.baseUrl}/sar`, {}, { params });
+  }
+
+  downloadAccStmt(account: string, from: string, to: string): Observable<any> {
+    const params = new HttpParams()
+      .set('account', account)
+      .set('from', from)
+      .set('to', to);
+
+    return this.http.post(
+      `${environment.apiUrl}/api/reports/accountStatement`,
+      {},
+      { params }
+    );
   }
 }

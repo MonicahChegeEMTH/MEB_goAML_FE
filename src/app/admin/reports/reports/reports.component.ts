@@ -45,6 +45,9 @@ export class ReportsComponent implements OnInit {
   identificationNumber: string = '';
   sarReason: string = '';
   isDownloading: boolean = false;
+  accStmtAccount: string = '';
+  accStmtFrom: string = '';
+  accStmtTo: string = '';
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
   sarIndicators = [
@@ -97,18 +100,12 @@ export class ReportsComponent implements OnInit {
       endDate: [''],
       accountNumber: [
         '',
-        [
-          Validators.required,
-          Validators.pattern(/^[0-9]*$/), // ✅ Only numbers
-        ],
+        [Validators.required, Validators.pattern(/^[0-9]*$/)],
       ],
       identificationType: ['nationalId'],
       identificationNumber: [
         '',
-        [
-          Validators.required,
-          Validators.pattern(/^[0-9]*$/), // ✅ Only numbers
-        ],
+        [Validators.required, Validators.pattern(/^[0-9]*$/)],
       ],
       sarReason: [''],
       selectedAction: [''],
@@ -121,7 +118,9 @@ export class ReportsComponent implements OnInit {
   }
 
   showCommonFilters(): boolean {
-    return this.selectedReportType !== 'SAR';
+    return (
+      this.selectedReportType !== 'SAR' && this.selectedReportType !== 'AccStmt'
+    );
   }
 
   onIdTypeChange(type: string): void {
@@ -243,7 +242,10 @@ export class ReportsComponent implements OnInit {
       !this.selectedAction ||
       this.selectedIndicators.length === 0
     ) {
-      this.snackbar.showNotification('snackbar-danger', 'Please fill all SAR fields.');
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all SAR fields.'
+      );
       return;
     }
 
@@ -280,6 +282,53 @@ export class ReportsComponent implements OnInit {
           );
           console.error('Failed to download SAR report:', error);
           this.isDownloading = false;
+        },
+        complete: () => {
+          this.isDownloading = false;
+        },
+      });
+  }
+
+  downloadAccountStatement() {
+    if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all Account Statement fields.'
+      );
+      return;
+    }
+
+    this.isDownloading = true;
+    const formattedFrom = new Date(this.accStmtFrom)
+      .toISOString()
+      .split('T')[0];
+    const formattedTo = new Date(this.accStmtTo).toISOString().split('T')[0];
+
+    this.service
+      .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
+      .subscribe({
+        next: (response: Blob) => {
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `AccountStatement_${this.accStmtAccount}_${formattedFrom}_${formattedTo}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+
+          this.snackbar.showNotification(
+            'snackbar-success',
+            'Account statement downloaded successfully.'
+          );
+        },
+        error: (error) => {
+          console.error('Error downloading account statement:', error);
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            'Failed to download account statement.'
+          );
         },
         complete: () => {
           this.isDownloading = false;

@@ -5,51 +5,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 240px;
-  background: #fff;
-  border-radius: 20px;
-  margin: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  .logo-section img {
-    width: 160px;
-    margin-bottom: 2rem;
-  }
-
-  .menu-sidebar {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-
-    li {
-      display: flex;
-      align-items: center;
-      font-size: 0.95rem;
-      color: #001e3c;
-      padding: 0.8rem 0;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: all 0.3s ease;
-
-      i {
-        margin-right: 10px;
-        color: #b08b2e;
-      }
-
-      &:hover,
-      &.active {
-        border-left-color: #b08b2e;
-        font-weight: 600;
-      }
-    }
-  }
-}
 
 .dashboard-content {
   flex: 1;
@@ -371,107 +326,7 @@
   }
 }
 
-/* ===========================
-   DASHBOARD RESPONSIVE STYLES
-   =========================== */
 
-/* Large tablets and smaller (≤ 1200px) */
-@media (max-width: 1200px) {
-  .dashboard-wrapper {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .sidebar .menu-sidebar {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-  }
-
-  .dashboard-content {
-    margin: 0;
-    border-radius: 0;
-  }
-}
-
-/* Tablets and below (≤ 992px) */
-@media (max-width: 992px) {
-  .dashboard-wrapper {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -260px;
-    height: 100%;
-    width: 240px;
-    flex-direction: column;
-    align-items: flex-start;
-    background: #fff;
-    border-radius: 0;
-    margin: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s ease;
-    z-index: 2000;
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-  .dashboard-content {
-    margin: 0;
-    padding: 1.5rem;
-  }
-
-  /* Add toggle (hamburger) for mobile sidebar */
-  .menu-toggle {
-    display: block;
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    background: #001e3c;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 0.5rem 0.8rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    z-index: 2100;
-  }
-
-  .header-cards {
-    flex-direction: column;
-  }
-
-  .header-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .header-card .illustration img {
-    width: 100px;
-  }
-
-  .reports-summary {
-    text-align: center;
-  }
-}
-
-/* Phones (≤ 768px) */
 @media (max-width: 768px) {
   .dashboard-wrapper {
     flex-direction: column;
@@ -492,6 +347,7 @@
 
   .reports-summary-card {
     width: 100%;
+    max-width: 100%;
     margin: 1rem 0;
   }
 
@@ -525,7 +381,6 @@
   }
 }
 
-/* Small Phones (≤ 480px) */
 @media (max-width: 480px) {
   .header-card h3 {
     font-size: 1rem;
@@ -539,8 +394,90 @@
     flex-direction: column;
     gap: 0.75rem;
   }
+}
 
-  .sidebar {
-    width: 220px;
+@media (max-width: 992px) {
+  .actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .actions button {
+    flex: 1 1 45%;
+    font-size: 0.95rem;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+
+  .filter-container .filter-row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .filter-container .filter-field {
+    flex: 1 1 48%;
+    max-width: 48%;
+    min-width: 100%;
+  }
+
+  .filter-container .search-btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .actions button {
+    flex: 1 1 100%;
+    width: 100%;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  .filter-container .filter-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-container .filter-field {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .filter-container .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-container .search-btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions button {
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .filter-container {
+    padding: 1rem;
+  }
+
+  .filter-container .filter-field {
+    min-width: 100%;
+  }
+
+  .filter-container .search-btn {
+    font-size: 0.85rem;
+    padding: 0.8rem;
   }
 }
