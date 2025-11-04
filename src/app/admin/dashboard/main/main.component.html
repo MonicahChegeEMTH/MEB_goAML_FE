@@ -86,6 +86,24 @@
               </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="account_number">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                Account Number
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.account_number }}
+              </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="reporting_user">
               <mat-header-cell
                 *matHeaderCellDef

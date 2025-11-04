@@ -25,6 +25,7 @@ export class ReportsService {
       responseType: 'blob' as 'blob',
     });
   }
+
   downloadSARReport(
     accountNumber: string,
     reason: string,
@@ -38,6 +39,25 @@ export class ReportsService {
       .set('indicators', indicators.join(','));
 
     return this.http.post(`${this.baseUrl}/sar`, {}, { params });
+  }
+
+  downloadStrReport(
+    trandId: string,
+    tranDate: string,
+    accountNumber: string,
+    reason: string,
+    action: string,
+    indicators: string[]
+  ): Observable<any> {
+    const params = new HttpParams()
+      .set('tranId', trandId)
+      .set('tranDate', tranDate)
+      .set('accountNumber', accountNumber)
+      .set('reason', reason)
+      .set('action', action)
+      .set('indicators', indicators.join(','));
+
+    return this.http.post(`${environment.apiUrl}/api/reports/str`, {}, { params });
   }
 
   downloadAccStmt(account: string, from: string, to: string): Observable<any> {

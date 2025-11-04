@@ -16,6 +16,7 @@ export class MainComponent implements OnInit {
   lastname: string;
   displayedColumns: string[] = [
     'id',
+    'account_number',
     'reporting_user',
     'date',
     'type',
@@ -54,6 +55,7 @@ export class MainComponent implements OnInit {
       next: (data) => {
         const formattedReports = data.map((item) => ({
           id: item.id,
+          account_number: item.account_number,
           date: item.report_date,
           account: item.account_number,
           type: item.report_type,
