@@ -231,6 +231,51 @@ export class ReportsComponent implements OnInit {
     doc.save('reports-records.pdf');
   }
 
+  previewReport(reportId: string): void {
+    this.isDownloading = true;
+    this.service.downloadReport(reportId).subscribe({
+      next: (response: any) => {
+        if (response?.xmlContent || response?.xmlDocument) {
+          const xml = response.xmlContent || response.xmlDocument;
+
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: {
+              reportData: {
+                xmlContent: xml,
+                fileName: `report-${reportId}.xml`,
+              },
+            },
+          });
+        } else {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const xmlText = reader.result as string;
+            this.router.navigate(['/admin/reports/reports-handling'], {
+              state: {
+                reportData: {
+                  xmlContent: xmlText,
+                  fileName: `report-${reportId}.xml`,
+                },
+              },
+            });
+          };
+          reader.readAsText(response);
+        }
+      },
+      error: (error) => {
+        console.error('Preview failed:', error);
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to preview report.'
+        );
+        this.isDownloading = false;
+      },
+      complete: () => {
+        this.isDownloading = false;
+      },
+    });
+  }
+
   downloadReport(reportId: string): void {
     this.service.downloadReport(reportId).subscribe({
       next: (response: Blob) => {
@@ -342,6 +387,9 @@ export class ReportsComponent implements OnInit {
             'snackbar-success',
             'Account statement downloaded successfully.'
           );
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: { reportData: response },
+          });
         },
         error: (error) => {
           console.error('Error downloading account statement:', error);
@@ -389,7 +437,10 @@ export class ReportsComponent implements OnInit {
             'snackbar-success',
             'STR report generated successfully.'
           );
-          this.router.navigate(['/admin/reports/reports-handling']);
+          // this.router.navigate(['/admin/reports/reports-handling']);
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: { reportData: response },
+          });
         },
         error: (error) => {
           this.snackbar.showNotification(

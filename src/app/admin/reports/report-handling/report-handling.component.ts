@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { ReportsService } from '../service/reports.service';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
 
 @Component({
   selector: 'app-report-handling',
@@ -15,11 +17,15 @@ export class ReportHandlingComponent {
   xmlContent: string = '';
   formattedXml: SafeHtml = '';
   fileName: string = 'report.xml';
+  editMode: boolean = false;
+  reportId: string = '';
 
   constructor(
     private tokenStorage: TokenStorageService,
     private sanitizer: DomSanitizer,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private reportService: ReportsService,
+    private snackbar: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -32,13 +38,13 @@ export class ReportHandlingComponent {
     if (navData?.xmlContent) {
       this.xmlContent = navData.xmlContent;
       this.fileName = navData.fileName || 'report.xml';
+      this.reportId = navData.reportId || '';
       this.displayXml(this.xmlContent);
     } else {
       console.warn('No XML content found in navigation state:', navData);
     }
   }
 
-  /** Escapes <, >, &, and quotes to show XML tags as plain text */
   private escapeXml(unsafe: string): string {
     return unsafe
       .replace(/&/g, '&amp;')
@@ -48,7 +54,6 @@ export class ReportHandlingComponent {
       .replace(/'/g, '&#39;');
   }
 
-  /** Formats XML with indentation and safely escapes it for display */
   private displayXml(xml: string): void {
     const formatted = this.formatXml(xml);
     const escaped = this.escapeXml(formatted);
@@ -63,7 +68,6 @@ export class ReportHandlingComponent {
     this.displayXml(this.xmlContent);
   }
 
-  /** Pretty-prints XML (adds line breaks + indentation) */
   formatXml(xml: string): string {
     const PADDING = '  ';
     const reg = /(>)(<)(\/*)/g;
@@ -78,7 +82,7 @@ export class ReportHandlingComponent {
         } else if (node.match(/^<\/\w/)) {
           pad = Math.max(pad - 1, 0);
           indent = PADDING.repeat(pad);
-        } else if (node.match(/^<\w/)) {
+        } else if (node.match(/^<\w([^>]*[^\/])?>.*$/)) {
           indent = PADDING.repeat(pad);
           pad++;
         } else {
@@ -100,6 +104,68 @@ export class ReportHandlingComponent {
   }
 
   downloadZIP(): void {
-    alert('ZIP download triggered!');
+    this.snackbar.showNotification(
+      'snackbar-success',
+      'ZIP download triggered!'
+    );
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.xmlContent = this.formatXml(this.xmlContent);
+    } else {
+      this.displayXml(this.xmlContent);
+    }
+  }
+
+  saveEditedXml(): void {
+    try {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(this.xmlContent, 'text/xml');
+      const parserError = xmlDoc.getElementsByTagName('parsererror')[0];
+
+      if (parserError) {
+        this.snackbar.showNotification(
+          'snackbar-error',
+          'Invalid XML. Please fix before saving.'
+        );
+        return;
+      }
+
+      if (!this.reportId) {
+        this.snackbar.showNotification(
+          'snackbar-error',
+          'Report ID missing. Cannot update.'
+        );
+        return;
+      }
+
+      this.reportService
+        .updateReport(this.reportId, this.xmlContent)
+        .subscribe({
+          next: (res) => {
+            this.displayXml(this.xmlContent);
+            this.editMode = false;
+            this.snackbar.showNotification(
+              'snackbar-success',
+              'Report updated successfully!'
+            );
+          },
+          error: (err) => {
+            console.error('Error updating report:', err);
+            this.snackbar.showNotification(
+              'snackbar-error',
+              'Failed to update the report. Please try again.'
+            );
+          },
+        });
+    } catch (err) {
+      console.error('Error parsing XML:', err);
+      this.snackbar.showNotification(
+        'snackbar-error',
+        'Unexpected error while saving changes.'
+      );
+    }
   }
 }

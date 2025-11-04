@@ -26,6 +26,13 @@ export class ReportsService {
     });
   }
 
+  updateReport(id: string, xmlContent: string): Observable<any> {
+    return this.http.put<any>(
+      `${environment.apiUrl}/api/reports/report/${id}/updateXml`,
+      { xmlContent }
+    );
+  }
+
   downloadSARReport(
     accountNumber: string,
     reason: string,
@@ -57,7 +64,11 @@ export class ReportsService {
       .set('action', action)
       .set('indicators', indicators.join(','));
 
-    return this.http.post(`${environment.apiUrl}/api/reports/str`, {}, { params });
+    return this.http.post(
+      `${environment.apiUrl}/api/reports/str`,
+      {},
+      { params }
+    );
   }
 
   downloadAccStmt(account: string, from: string, to: string): Observable<any> {

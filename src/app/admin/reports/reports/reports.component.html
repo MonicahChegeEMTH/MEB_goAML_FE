@@ -630,10 +630,22 @@
                         $event.stopPropagation(); downloadReport(report.id)
                       "
                       class="tbl-action-btn"
-                      matTooltip="file"
-                      aria-label="file"
+                      matTooltip="Download XML"
+                      aria-label="Download XML"
                     >
                       <i class="fas fa-folder-open"></i>
+                    </button>
+
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      aria-label="Preview XML"
+                      (click)="
+                        $event.stopPropagation(); previewReport(report.id)
+                      "
+                      matTooltip="Preview XML"
+                    >
+                      <i class="fas fa-eye"></i>
                     </button>
                   </mat-cell>
                 </ng-container>
