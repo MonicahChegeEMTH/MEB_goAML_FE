@@ -124,7 +124,9 @@
       <div class="filter-row" *ngIf="selectedReportType === 'SAR'">
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Account Number</mat-label>
+            <mat-label
+              >Account Number <span class="required">*</span></mat-label
+            >
             <input
               matInput
               placeholder="Enter account number"
@@ -154,7 +156,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Reason</mat-label>
+            <mat-label>Reason <span class="required">*</span></mat-label>
             <input
               matInput
               placeholder="Enter reason"
@@ -165,7 +167,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Action</mat-label>
+            <mat-label>Action <span class="required">*</span></mat-label>
             <input
               matInput
               placeholder="Enter action"
@@ -176,7 +178,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Indicators</mat-label>
+            <mat-label>Indicators <span class="required">*</span></mat-label>
             <mat-select [(ngModel)]="selectedIndicators" multiple>
               <mat-option
                 *ngFor="let indicator of sarIndicators"
@@ -192,7 +194,9 @@
       <div class="filter-row" *ngIf="selectedReportType === 'AccStmt'">
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Account Number</mat-label>
+            <mat-label
+              >Account Number <span class="required">*</span></mat-label
+            >
             <input
               matInput
               placeholder="Enter account number"
@@ -211,7 +215,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>From Date</mat-label>
+            <mat-label>From Date <span class="required">*</span></mat-label>
             <input
               matInput
               [matDatepicker]="fromPicker"
@@ -228,7 +232,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>To Date</mat-label>
+            <mat-label>To Date <span class="required">*</span></mat-label>
             <input
               matInput
               [matDatepicker]="toPicker"
@@ -247,16 +251,13 @@
       <div class="filter-row" *ngIf="selectedReportType === 'STR'">
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Transaction ID</mat-label>
+            <mat-label
+              >Transaction ID <span class="required">*</span></mat-label
+            >
             <input
               matInput
               placeholder="Enter transaction ID"
               [(ngModel)]="strTranId"
-              (keypress)="
-                $event.charCode >= 48 && $event.charCode <= 57
-                  ? true
-                  : $event.preventDefault()
-              "
             />
             <mat-error *ngIf="!strTranId"
               >Transaction ID is required.</mat-error
@@ -266,7 +267,9 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Transaction Date</mat-label>
+            <mat-label
+              >Transaction Date <span class="required">*</span></mat-label
+            >
             <input
               matInput
               [matDatepicker]="toPicker"
@@ -285,7 +288,9 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Account Number</mat-label>
+            <mat-label
+              >Account Number <span class="required">*</span></mat-label
+            >
             <input
               matInput
               placeholder="Enter account number"
@@ -396,7 +401,7 @@
             color="accent"
             style="display: inline-block; vertical-align: middle"
           ></mat-spinner>
-          <span style="margin-left: 8px">Generating...</span>
+          <span style="margin-left: 8px">Generating Report...</span>
         </ng-template>
       </div>
     </div>

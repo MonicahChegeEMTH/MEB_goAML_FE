@@ -2,6 +2,7 @@
   <div class="container-fluid content-block">
     <!-- Header Section -->
     <div class="header-cards">
+      <!-- Large card -->
       <div class="header-card large-card">
         <div class="welcome">
           <p class="greeting">Welcome Back</p>
@@ -16,6 +17,7 @@
 
     <!-- Report Handling Section -->
     <section class="report-container">
+      <!-- Title -->
       <h2 class="title">Report Handling</h2>
 
       <!-- Tabs -->
@@ -39,12 +41,16 @@
       <!-- XML and Download/Repository Side by Side -->
       <div class="xml-section">
         <!-- XML Preview -->
-        <div class="xml-box" *ngIf="activeTab === 'preview'">
-          <pre>{{ sarPreviewXML }}</pre>
+        <div class="xml-box" *ngIf="xmlContent; else noReport">
+          <div [innerHTML]="formattedXml" class="xml-preview"></div>
         </div>
 
-        <!-- Download Section -->
-        <div class="side-content" *ngIf="activeTab === 'download'">
+        <ng-template #noReport>
+          <p>No report data available. Please generate a SAR report first.</p>
+        </ng-template>
+
+        <!-- Right Column -->
+        <div class="side-content">
           <div class="download-buttons">
             <button class="btn gold-btn" (click)="downloadXML()">
               Download XML

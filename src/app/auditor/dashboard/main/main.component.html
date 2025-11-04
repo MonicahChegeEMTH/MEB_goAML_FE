@@ -1,6 +1,5 @@
 <section class="content">
   <div class="content-block">
-
     <div class="dashboard-content">
       <div class="header-cards">
         <div class="header-card large-card">
@@ -19,96 +18,231 @@
 
         <div class="reports-summary-card">
           <div class="reports-summary-header">
-            <h3 style="color: #001e3c;">Generated Reports</h3>
+            <h3 style="color: #001e3c">Generated Reports</h3>
           </div>
 
           <div class="reports-summary-body">
             <h1>1000</h1>
-            <a routerLink="/auditor/reports/reports" class="view-all">VIEW ALL →</a>
+            <a routerLink="/auditor/reports/reports" class="view-all"
+              >VIEW ALL →</a
+            >
           </div>
         </div>
       </div>
-
-      <!-- <div class="row">
-         <div class="reports-summary-card">
-          <div class="reports-summary-header">
-            <h5>Total Reports Generated</h5>
-          </div>
-
-          <div class="reports-summary-body">
-            <h3>100</h3>
-          </div>
-        </div>
-
-        <div class="reports-summary-card">
-          <div class="reports-summary-header">
-            <div class="reports-summary-header">
-              <h4 class="m-b-20">Pending Submissions</h4>
-              <h3 class="text-end">
-                <span class="float-start"> 100 </span
-                >
-              </h3>
-            </div>
-          </div>
-        </div>
-        <div class="reports-summary-card">
-          <div class="reports-summary-header">
-            <div class="reports-summary-header">
-              <h4 class="m-b-20">Failed Submissions</h4>
-              <h3 class="text-end">
-                <span class="float-start"> 100 </span
-                >
-              </h3>
-            </div>
-          </div>
-        </div>
-        <div class="reports-summary-card">
-          <div class="reports-summary-header">
-            <div class="reports-summary-header">
-              <h4 class="m-b-20">Last Submission Date</h4>
-              <h3 class="text-end">
-                <span class="float-start">2025-10-23</span
-                >
-              </h3>
-            </div>
-          </div>
-        </div>
-      </div> -->
 
       <div class="actions">
-        <button (click)="openReportType('STR')">New STR/SAR <i class="fas fa-arrow-right"></i></button>
-        <button (click)="openReportType('STAR')">New STAR <i class="fas fa-arrow-right"></i></button>
-        <button (click)="openReportType('CTR')">New CTR <i class="fas fa-arrow-right"></i></button>
-        <button (click)="openReportType('MID')">New MID <i class="fas fa-arrow-right"></i></button>
+        <button (click)="openReportType('SAR')">
+          New SAR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="openReportType('STR')">
+          New STR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="openReportType('STAR')">
+          New STAR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="openReportType('CTR')">
+          New CTR <i class="fas fa-arrow-right"></i>
+        </button>
+        <button (click)="openReportType('AccStmt')">
+          Account Statements <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
-
       <div class="recent-section">
         <div class="section-header">
           <h3>Recent Reports</h3>
-          <a href="#" routerLink="/auditor/reports/reports" class="view-all">VIEW ALL →</a>
+          <a href="#" routerLink="/auditor/reports/reports" class="view-all"
+            >VIEW ALL →</a
+          >
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Account Number</th>
-                <th>Transaction Type</th>
-                <th>Amount</th>
-                <th>File</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let report of reports">
-                <td>{{ report.date }}</td>
-                <td>{{ report.account }}</td>
-                <td>{{ report.type }}</td>
-                <td>{{ report.amount }}</td>
-                <td><i class="fas fa-folder-open"></i></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-responsive">
+          <mat-table
+            #table
+            matTableExporter
+            [dataSource]="dataSource"
+            matSort
+            class="mat-cell"
+            #exporter="matTableExporter"
+          >
+            <ng-container matColumnDef="id">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+                 style="width: 60px; text-align: center; padding-right: 4px;"
+              >
+                Id
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="i % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+                 style="width: 60px; text-align: center; padding-right: 4px;"
+              >
+                {{
+                  paginator
+                    ? paginator.pageIndex * paginator.pageSize + i + 1
+                    : i + 1
+                }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="account_number">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+                 style="width: 180px; padding-left: 4px;"
+              >
+                Account Number
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+                 style="width: 180px; padding-left: 4px;"
+              >
+                {{ report.account_number }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reporting_user">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                Generated By
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.reporting_user }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                Date
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.date }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="account">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                Account Number
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.account }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                Report Type
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.type }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="file_name">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                File Name
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                {{ report.file_name }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-nowrap"
+              >
+                File
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let report; let i = index"
+                [class.odd-row]="1 % 2"
+                [class.even-row]="!(i % 2)"
+                class="column-nowrap"
+              >
+                <button
+                  mat-icon-button
+                  color="accent"
+                  (click)="$event.stopPropagation(); downloadReport(report.id)"
+                  class="tbl-action-btn"
+                  matTooltip="file"
+                  aria-label="file"
+                >
+                  <i class="fas fa-folder-open"></i>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row
+              *matHeaderRowDef="displayedColumns"
+            ></mat-header-row>
+            <mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="requestDetailsCall(request)"
+              [style.cursor]="'pointer'"
+              matRipple
+            ></mat-row>
+
+            <mat-cell *matNoDataRow colspan="4">
+              No data matching the filter "{{ input.value }}"
+            </mat-cell>
+          </mat-table>
+
+          <div class="tbl-spinner" *ngIf="isLoading">
+            <h4>0 Records Found</h4>
+          </div>
         </div>
       </div>
     </div>

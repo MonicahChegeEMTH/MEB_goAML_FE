@@ -13,9 +13,10 @@ import { MatCardModule } from '@angular/material/card';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportsRoutingModule } from './reports-routing.module';
 import { MatSortModule } from "@angular/material/sort";
+import { ReportHandlingComponent } from './report-handling/report-handling.component';
 
 @NgModule({
-  declarations: [ReportsComponent],
+  declarations: [ReportsComponent, ReportHandlingComponent],
   imports: [
     CommonModule,
     ReportsRoutingModule,

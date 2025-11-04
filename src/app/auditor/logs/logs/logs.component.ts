@@ -103,7 +103,7 @@ export class LogsComponent implements OnInit, AfterViewInit {
         row.action_type,
         row.report_type,
         row.records_retrieved,
-        row.created_at ? new Date(row.created_at).toLocaleString() : '',
+        row.created_at,
         row.ip_address,
       ]),
       startY: 25,

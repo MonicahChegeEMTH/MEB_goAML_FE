@@ -27,6 +27,7 @@ export class SigninComponent
   hidePassword = true;
   error = '';
   hide = true;
+  currentYear: number = new Date().getFullYear();
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -48,6 +49,8 @@ export class SigninComponent
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    this.currentYear = new Date().getFullYear();
   }
   get f() {
     return this.authForm.controls;

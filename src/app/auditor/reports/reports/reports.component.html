@@ -14,8 +14,11 @@
     </div>
 
     <div class="actions">
+      <button (click)="showReportForm('SAR')">
+        New SAR <i class="fas fa-arrow-right"></i>
+      </button>
       <button (click)="showReportForm('STR')">
-        New STR/SAR <i class="fas fa-arrow-right"></i>
+        New STR <i class="fas fa-arrow-right"></i>
       </button>
       <button (click)="showReportForm('STAR')">
         New STAR <i class="fas fa-arrow-right"></i>
@@ -23,8 +26,8 @@
       <button (click)="showReportForm('CTR')">
         New CTR <i class="fas fa-arrow-right"></i>
       </button>
-      <button (click)="showReportForm('MID')">
-        New MID <i class="fas fa-arrow-right"></i>
+      <button (click)="showReportForm('AccStmt')">
+        Account Statements <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
@@ -33,15 +36,11 @@
         <h5>{{ selectedReportType }} Report</h5>
       </div>
 
-      <div class="filter-row">
+      <div class="filter-row" *ngIf="showCommonFilters()">
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Start Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="startPicker"
-              [(ngModel)]="startDate"
-            />
+            <input matInput [matDatepicker]="startPicker" />
             <mat-datepicker-toggle
               matSuffix
               [for]="startPicker"
@@ -53,7 +52,7 @@
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" />
+            <input matInput [matDatepicker]="endPicker" />
             <mat-datepicker-toggle
               matSuffix
               [for]="endPicker"
@@ -65,21 +64,28 @@
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Account Number (CIF)</mat-label>
-            <input
-              matInput
-              placeholder="Enter account number"
-              [(ngModel)]="accountNumber"
-            />
+            <input matInput placeholder="Enter account number" />
+            <mat-error
+              *ngIf="
+                f.accountNumber.touched && f.accountNumber.hasError('pattern')
+              "
+            >
+              Only numbers are allowed.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                f.accountNumber.touched && f.accountNumber.hasError('required')
+              "
+            >
+              Account number is required.
+            </mat-error>
           </mat-form-field>
         </div>
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Identification Type</mat-label>
-            <mat-select
-              [(ngModel)]="selectedIdType"
-              (selectionChange)="onIdTypeChange($event.value)"
-            >
+            <mat-select [(ngModel)]="identificationType">
               <mat-option *ngFor="let type of idTypes" [value]="type.value">
                 {{ type.viewValue }}
               </mat-option>
@@ -89,21 +95,304 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>{{ idPlaceholder }}</mat-label>
+            <mat-label>Identification Number</mat-label>
             <input
               matInput
-              [placeholder]="idPlaceholder"
-              [(ngModel)]="customerId"
+              placeholder="Enter ID number"
+              [(ngModel)]="identificationNumber"
+            />
+            <mat-error
+              *ngIf="
+                f.identificationNumber.touched &&
+                f.identificationNumber.hasError('pattern')
+              "
+            >
+              Only numbers are allowed.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                f.identificationNumber.touched &&
+                f.identificationNumber.hasError('required')
+              "
+            >
+              Identification number is required.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="filter-row" *ngIf="selectedReportType === 'SAR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Account Number</mat-label>
+            <input
+              matInput
+              placeholder="Enter account number"
+              [(ngModel)]="accountNumber"
+              (keypress)="
+                $event.charCode >= 48 && $event.charCode <= 57
+                  ? true
+                  : $event.preventDefault()
+              "
+            />
+            <mat-error
+              *ngIf="
+                f.accountNumber.touched && f.accountNumber.hasError('required')
+              "
+            >
+              Account number is required.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                f.accountNumber.touched && f.accountNumber.hasError('pattern')
+              "
+            >
+              Only numbers are allowed.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <input
+              matInput
+              placeholder="Enter reason"
+              [(ngModel)]="sarReason"
             />
           </mat-form-field>
         </div>
 
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Action</mat-label>
+            <input
+              matInput
+              placeholder="Enter action"
+              [(ngModel)]="selectedAction"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Indicators</mat-label>
+            <mat-select [(ngModel)]="selectedIndicators" multiple>
+              <mat-option
+                *ngFor="let indicator of sarIndicators"
+                [value]="indicator"
+              >
+                {{ indicator }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
+
+      <div class="filter-row" *ngIf="selectedReportType === 'AccStmt'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Account Number</mat-label>
+            <input
+              matInput
+              placeholder="Enter account number"
+              [(ngModel)]="accStmtAccount"
+              (keypress)="
+                $event.charCode >= 48 && $event.charCode <= 57
+                  ? true
+                  : $event.preventDefault()
+              "
+            />
+            <mat-error *ngIf="!accStmtAccount"
+              >Account number is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="fromPicker"
+              [(ngModel)]="accStmtFrom"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="fromPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+            <mat-error *ngIf="!accStmtFrom">From date is required.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="accStmtTo"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!accStmtTo">To date is required.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="filter-row" *ngIf="selectedReportType === 'STR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Transaction ID</mat-label>
+            <input
+              matInput
+              placeholder="Enter transaction ID"
+              [(ngModel)]="strTranId"
+            />
+            <mat-error *ngIf="!strTranId"
+              >Transaction ID is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Transaction Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="strTranDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!strTranDate"
+              >Transaction Date is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Account Number</mat-label>
+            <input
+              matInput
+              placeholder="Enter account number"
+              [(ngModel)]="strAccountNo"
+              (keypress)="
+                $event.charCode >= 48 && $event.charCode <= 57
+                  ? true
+                  : $event.preventDefault()
+              "
+            />
+            <mat-error *ngIf="!strAccountNo"
+              >Account Number is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <input
+              matInput
+              placeholder="Enter reason"
+              [(ngModel)]="strReason"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Action</mat-label>
+            <input
+              matInput
+              placeholder="Enter action"
+              [(ngModel)]="strAction"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Comments</mat-label>
+            <input
+              matInput
+              placeholder="Enter comments"
+              [(ngModel)]="strComments"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Indicators</mat-label>
+            <mat-select [(ngModel)]="selectedStrIndicators" multiple>
+              <mat-option
+                *ngFor="let indicator of strIndicators"
+                [value]="indicator"
+              >
+                {{ indicator }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
       <div class="filter-actions">
-        <button mat-raised-button color="primary" class="search-btn">
-          <mat-icon>search</mat-icon>
-          Search Filter-Based Reports
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'SAR'"
+          (click)="downloadSARReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based SAR Reports
+          </ng-container>
         </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'AccStmt'"
+          (click)="downloadAccountStatement()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based Account Statements
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'STR'"
+          (click)="downloadStrReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based STR Reports
+          </ng-container>
+        </button>
+
+        <ng-template #loadingSpinner>
+          <mat-spinner
+            diameter="24"
+            color="accent"
+            style="display: inline-block; vertical-align: middle"
+          ></mat-spinner>
+          <span style="margin-left: 8px">Generating Report...</span>
+        </ng-template>
       </div>
     </div>
 
@@ -171,6 +460,7 @@
                   </div>
                 </div>
               </div>
+
               <mat-table
                 #table
                 matTableExporter
@@ -185,8 +475,8 @@
                     mat-sort-header
                     class="column-nowrap"
                   >
-                    Id</mat-header-cell
-                  >
+                    Id
+                  </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="i % 2"
@@ -201,20 +491,58 @@
                   </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="date">
+                <ng-container matColumnDef="account_number">
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
                     class="column-nowrap"
-                    >Date</mat-header-cell
                   >
+                    Account Number
+                  </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
                     class="column-nowrap"
-                    >{{ report.date }}</mat-cell
                   >
+                    {{ report.account_number }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="reporting_user">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap"
+                  >
+                    Generated By
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let report; let i = index"
+                    [class.odd-row]="1 % 2"
+                    [class.even-row]="!(i % 2)"
+                    class="column-nowrap"
+                  >
+                    {{ report.reporting_user }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap"
+                  >
+                    Generated At
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let report; let i = index"
+                    [class.odd-row]="1 % 2"
+                    [class.even-row]="!(i % 2)"
+                    class="column-nowrap"
+                  >
+                    {{ report.date }}
+                  </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="account">
@@ -222,15 +550,17 @@
                     *matHeaderCellDef
                     mat-sort-header
                     class="column-nowrap"
-                    >Account</mat-header-cell
                   >
+                    Account Number
+                  </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
                     class="column-nowrap"
-                    >{{ report.account }}</mat-cell
                   >
+                    {{ report.account }}
+                  </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="type">
@@ -238,32 +568,66 @@
                     *matHeaderCellDef
                     mat-sort-header
                     class="column-nowrap"
-                    >Type</mat-header-cell
                   >
+                    Report Type
+                  </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
                     class="column-nowrap"
-                    >{{ report.type }}</mat-cell
                   >
+                    {{ report.type }}
+                  </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="amount">
+                <ng-container matColumnDef="file_name">
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
                     class="column-nowrap"
-                    >Amount</mat-header-cell
                   >
+                    File Name
+                  </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
                     class="column-nowrap"
-                    >{{ report.amount }}</mat-cell
                   >
+                    {{ report.file_name }}
+                  </mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap"
+                  >
+                    File
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let report; let i = index"
+                    [class.odd-row]="1 % 2"
+                    [class.even-row]="!(i % 2)"
+                    class="column-nowrap"
+                  >
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      (click)="
+                        $event.stopPropagation(); downloadReport(report.id)
+                      "
+                      class="tbl-action-btn"
+                      matTooltip="file"
+                      aria-label="file"
+                    >
+                      <i class="fas fa-folder-open"></i>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
                 <mat-header-row
                   *matHeaderRowDef="displayedColumns"
                 ></mat-header-row>
@@ -272,22 +636,20 @@
                   (click)="requestDetailsCall(request)"
                   [style.cursor]="'pointer'"
                   matRipple
-                >
-                </mat-row>
+                ></mat-row>
+
                 <mat-cell *matNoDataRow colspan="4">
-                  No data matching the filter "{{ input.value }}"</mat-cell
-                >
+                  No data matching the filter "{{ input.value }}"
+                </mat-cell>
               </mat-table>
               <div class="tbl-spinner" *ngIf="isLoading">
                 <h4>0 Records Found</h4>
               </div>
-
               <mat-paginator
                 [pageSize]="5"
                 [pageSizeOptions]="[5, 10, 25, 100]"
                 showFirstLastButtons
-              >
-              </mat-paginator>
+              ></mat-paginator>
             </div>
           </div>
         </div>

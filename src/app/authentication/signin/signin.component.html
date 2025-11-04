@@ -1,10 +1,8 @@
 <div class="login-wrapper">
-  <!-- Left floating image -->
   <div class="left-image">
     <img src="assets/images/login/login_image.png" alt="Login Illustration" />
   </div>
 
-  <!-- Right Section (Login form) -->
   <div class="right-section">
     <mat-card class="login-card">
       <div class="logo">
@@ -67,13 +65,6 @@
           </button>
         </mat-form-field>
 
-        <div class="login-options">
-          <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-          <a class="forgot-link" routerLink="/authentication/forgot-password"
-            >Forgot Password?</a
-          >
-        </div>
-
         <button mat-raised-button class="sign-in-btn full-width" type="submit">
           SIGN IN
           <img
@@ -89,10 +80,17 @@
             class="arrow-vector-img spin"
           />
         </button>
+
+        <div class="login-options">
+          <mat-checkbox formControlName="rememberMe"></mat-checkbox>
+          <a class="forgot-link" routerLink="/authentication/forgot-password"
+            >Forgot Password?</a
+          >
+        </div>
       </form>
 
       <div class="footer">
-        <small>© 2025 goAML | E&M Technology House</small>
+        <small>© {{ currentYear }} goAML | E&M Technology House</small>
       </div>
     </mat-card>
   </div>

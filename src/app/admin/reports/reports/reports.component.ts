@@ -9,6 +9,7 @@ import { TokenStorageService } from 'src/app/core/service/token-storage.service'
 import { ReportsService } from '../service/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-reports',
@@ -290,7 +291,9 @@ export class ReportsComponent implements OnInit {
             'snackbar-success',
             'SAR report generated successfully.'
           );
-          this.router.navigate(['/admin/reports/reports-handling']);
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: { reportData: response },
+          });
         },
         error: (error) => {
           this.snackbar.showNotification(
@@ -354,6 +357,8 @@ export class ReportsComponent implements OnInit {
   }
 
   downloadStrReport() {
+    this.markFormGroupTouched(this.filterForm);
+
     if (!this.strAccountNo || !this.strTranId || !this.strTranDate) {
       this.snackbar.showNotification(
         'snackbar-danger',
@@ -363,9 +368,9 @@ export class ReportsComponent implements OnInit {
     }
 
     this.isDownloading = true;
-    const formattedTo = new Date(this.strTranDate)
-      .toISOString()
-      .split('T')[0];
+    const formattedTo = this.strTranDate
+      ? formatDate(this.strTranDate, 'dd-MMM-yy', 'en').toLowerCase()
+      : null;
 
     this.service
       .downloadStrReport(
@@ -398,5 +403,14 @@ export class ReportsComponent implements OnInit {
           this.isDownloading = false;
         },
       });
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+      if ((control as any).controls) {
+        this.markFormGroupTouched(control as FormGroup);
+      }
+    });
   }
 }
