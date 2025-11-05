@@ -1,0 +1,97 @@
+<div class="login-wrapper">
+  <div class="left-image">
+    <img src="assets/images/login/login_image.png" alt="Login Illustration" />
+  </div>
+
+  <div class="right-section">
+    <mat-card class="login-card">
+      <div class="logo">
+        <h2>Welcome to goAML</h2>
+        <h3 style="color: #b08b2e">Reporting Solution</h3>
+        <p class="subtitle">Select mode of logging in to continue</p>
+      </div>
+
+      <div class="login-type">
+        <button
+          mat-button
+          class="login-toggle"
+          [class.active]="loginType === 'organization'"
+          (click)="setLoginType('organization')"
+          type="button"
+        >
+          Organization Account
+        </button>
+        <button
+          mat-button
+          class="login-toggle"
+          [class.active]="loginType === 'system'"
+          (click)="setLoginType('system')"
+          type="button"
+        >
+          System Account
+        </button>
+      </div>
+
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Enter Username"
+            required
+          />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter Password"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button mat-raised-button class="sign-in-btn full-width" type="submit">
+          SIGN IN
+          <img
+            *ngIf="!loading"
+            src="assets/images/login/Vector.png"
+            alt="Arrow Vector"
+            class="arrow-vector-img"
+          />
+          <img
+            *ngIf="loading"
+            src="assets/images/login/loading.png"
+            alt="Loading..."
+            class="arrow-vector-img spin"
+          />
+        </button>
+
+        <div class="login-options">
+          <mat-checkbox formControlName="rememberMe"></mat-checkbox>
+          <a class="forgot-link" routerLink="/authentication/forgot-password"
+            >Forgot Password?</a
+          >
+        </div>
+      </form>
+
+      <div class="footer">
+        <small>© {{ currentYear }} goAML | E&M Technology House</small>
+      </div>
+    </mat-card>
+  </div>
+</div>

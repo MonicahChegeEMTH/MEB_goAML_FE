@@ -1,0 +1,98 @@
+<section class="content">
+  <div class="container-fluid content-block">
+    <div class="header-cards">
+      <div class="header-card large-card">
+        <div class="welcome">
+          <p class="greeting">Welcome Back</p>
+          <h3>{{ firstname }} {{ lastname }}</h3>
+          <h2 class="system-title">goAML Reporting System</h2>
+        </div>
+        <div class="illustration">
+          <img src="assets/images/login/dashboard_img.png" alt="illustration" />
+        </div>
+      </div>
+    </div>
+
+    <section class="report-container">
+      <h2 class="title">Report Handling</h2>
+
+      <div class="tab-buttons">
+        <button
+          class="btn preview-btn"
+          [class.active]="activeTab === 'preview'"
+          (click)="activeTab = 'preview'"
+          (click)="toggleEditMode()"
+        >
+          Preview
+        </button>
+        <button
+          class="btn download-btn"
+          [class.active]="activeTab === 'download'"
+          (click)="activeTab = 'download'"
+          (click)="downloadXML()"
+        >
+          Download
+        </button>
+      </div>
+
+      <div class="xml-section">
+        <div class="xml-box" *ngIf="xmlContent; else noReport">
+          <div class="edit-actions">
+            <button class="btn small-btn" (click)="toggleEditMode()">
+              {{ editMode ? "Preview XML" : "Edit XML" }}
+            </button>
+            <button
+              class="btn save-btn"
+              *ngIf="editMode"
+              (click)="saveEditedXml()"
+            >
+              Save Changes
+            </button>
+          </div>
+
+          <div *ngIf="editMode">
+            <textarea
+              [(ngModel)]="xmlContent"
+              class="xml-editor"
+              rows="25"
+              wrap="off"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div
+            *ngIf="!editMode"
+            [innerHTML]="formattedXml"
+            class="xml-preview"
+          ></div>
+        </div>
+
+        <ng-template #noReport>
+          <p>No report data available. Please generate a report first.</p>
+        </ng-template>
+
+        <div class="side-content">
+          <div class="download-buttons">
+            <button class="btn gold-btn" (click)="downloadXML()">
+              Download XML
+            </button>
+            <button class="btn dark-btn" (click)="downloadZIP()">
+              Download ZIP
+            </button>
+          </div>
+
+          <div class="secure-box">
+            <h3>Secure Repository</h3>
+            <div class="status">
+              <span class="check">✔</span>
+              <p>All reports securely stored</p>
+            </div>
+            <p class="description">
+              Reports are encrypted and stored in a secure repository.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

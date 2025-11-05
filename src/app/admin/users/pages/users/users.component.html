@@ -1,0 +1,414 @@
+<section class="content">
+  <div class="content-block">
+
+    <div class="header-cards">
+      <div class="header-card large-card">
+        <div class="welcome">
+          <p class="greeting">Welcome Back</p>
+          <h3>{{ firstname }} {{ lastname }}</h3>
+          <h2 class="system-title">goAML Reporting System</h2>
+        </div>
+        <div class="illustration">
+          <img src="assets/images/login/dashboard_img.png" alt="illustration" />
+        </div>
+      </div>
+    </div>
+    <app-user-widgets></app-user-widgets>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="searchbox m-l-20">
+                        <label for="search-input">
+                          <i class="material-icons search-icon">search</i>
+                        </label>
+                        <input
+                          id="search-input"
+                          placeholder="Search"
+                          type="text"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                          [(ngModel)]="searchText"
+                          (keyup)="applyFilter($event)"
+                        />
+                        <i
+                          class="material-icons clear-icon"
+                          *ngIf="searchText"
+                          (click)="clearSearch()"
+                        >
+                          close
+                        </i>
+                      </li>
+                      <li>
+                        <div class="m-l-10" matTooltip="ADD">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="addNew()"
+                          >
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="m-l-10" matTooltip="REFRESH">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="refresh()"
+                          >
+                            <mat-icon class="col-white">refresh</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="XLSX">
+                          <img
+                            src="assets/images/icons/xlsx.png"
+                            alt=""
+                            (click)="
+                              exporter.exportTable('xlsx', {
+                                fileName: 'users',
+                                sheet: 'sheet1'
+                              })
+                            "
+                          />
+                        </div>
+                      </li>
+                      <li>
+                        <div class="export-button m-l-10" matTooltip="PDF">
+                          <img
+                            src="assets/images/icons/pdf.png"
+                            alt="Export to PDF"
+                            (click)="exportAsPDF()"
+                          />
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table
+                #table
+                matTableExporter
+                [dataSource]="dataSource"
+                matSort
+                class="mat-cell"
+                #exporter="matTableExporter"
+              >
+                <ng-container matColumnDef="id">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >Id</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user; let i = index"
+                    class="column-nowrap psl-3 tbl-col-width-per-3"
+                    >{{
+                      paginator
+                        ? paginator.pageIndex * paginator.pageSize + i + 1
+                        : i + 1
+                    }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="employeeNumber">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Employee No</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >{{ user.employeeNumber }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="username">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Username</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.username }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="firstname">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Firstname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.firstname }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="lastname">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Lastname</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.lastname }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                    >Email</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-12"
+                  >
+                    {{ user.email }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="phonenumber">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Phonenumber</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    {{ user.phone }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="role">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                    >Role</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    {{ user.role }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    Status
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let user"
+                    (contextmenu)="onContextMenu($event, user)"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    <span
+                      class="badge badge-pill"
+                      [ngClass]="{
+                        'col-green': user.status === 'ACTIVE',
+                        'col-purple': user.status === 'LOCKED'
+                      }"
+                    >
+                      {{ user.status }}
+                    </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell
+                    class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
+                    *matHeaderCellDef
+                  >
+                    Actions
+                  </mat-header-cell>
+
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-20 pr-0"
+                  >
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      (click)="$event.stopPropagation(); editCall(user)"
+                      class="tbl-action-btn"
+                      matTooltip="Edit"
+                      aria-label="Edit"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      *ngIf="
+                        user.status?.toUpperCase() === 'ACTIVE';
+                        else unlockBtn
+                      "
+                      mat-icon-button
+                      color="accent"
+                      (click)="$event.stopPropagation(); lockAccountCall(user)"
+                      class="tbl-action-btn"
+                      matTooltip="Lock Account"
+                      aria-label="Lock"
+                    >
+                      <app-feather-icons
+                        [icon]="'lock'"
+                        [class]="'tbl-fav-lock'"
+                      ></app-feather-icons>
+                    </button>
+
+                    <ng-template #unlockBtn>
+                      <button
+                        *ngIf="user.status?.toUpperCase() === 'LOCKED'"
+                        mat-icon-button
+                        color="primary"
+                        (click)="
+                          $event.stopPropagation(); unLockAccountCall(user)
+                        "
+                        class="tbl-action-btn"
+                        matTooltip="Unlock Account"
+                        aria-label="Unlock"
+                      >
+                        <app-feather-icons
+                          [icon]="'unlock'"
+                          [class]="'tbl-fav-unlock'"
+                        ></app-feather-icons>
+                      </button>
+                    </ng-template>
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="$event.stopPropagation(); detailsCall(user)"
+                      class="tbl-action-btn"
+                      matTooltip="View Details"
+                      aria-label="View Details"
+                    >
+                      <app-feather-icons
+                        [icon]="'eye'"
+                        [class]="'tbl-fav-eye'"
+                      ></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+                <mat-cell *matNoDataRow colspan="4">
+                  No data matching the filter "{{ input.value }}"</mat-cell
+                >
+              </mat-table>
+              <div *ngIf="isLoading" class="tbl-spinner">
+                <mat-progress-spinner
+                  color="primary"
+                  [diameter]="40"
+                  mode="indeterminate"
+                >
+                </mat-progress-spinner>
+              </div>
+              <div
+                style="visibility: hidden; position: fixed"
+                [style.left]="contextMenuPosition.x"
+                [style.top]="contextMenuPosition.y"
+                [matMenuTriggerFor]="contextMenu"
+              ></div>
+              <mat-menu #contextMenu="matMenu">
+                <ng-template matMenuContent let-item="item">
+                  <button mat-menu-item (click)="addNew()">
+                    <mat-icon>add_box</mat-icon>
+                    <span>Add Record</span>
+                  </button>
+                  <button mat-menu-item (click)="editCall(item)">
+                    <mat-icon>create</mat-icon>
+                    <span>Edit Record</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteCall(item)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Record</span>
+                  </button>
+                  <button mat-menu-item (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh Record</span>
+                  </button>
+                  <button mat-menu-item disabled>
+                    <mat-icon>no_encryption</mat-icon>
+                    <span>Disable</span>
+                  </button>
+                  <button mat-menu-item [matMenuTriggerFor]="nestedmenu">
+                    <mat-icon>list_alt</mat-icon>
+                    <span> Nested Menu</span>
+                  </button>
+                </ng-template>
+              </mat-menu>
+              <mat-menu #nestedmenu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>mail_outline</mat-icon>
+                  <span>Item 1</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>call</mat-icon>
+                  <span>Item 2</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>chat</mat-icon>
+                  <span>Item 3</span>
+                </button>
+              </mat-menu>
+              <mat-paginator
+            [length]="users.length"
+            [pageSize]="5"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            showFirstLastButtons
+            (page)="onPageChange($event)"
+          >
+          </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

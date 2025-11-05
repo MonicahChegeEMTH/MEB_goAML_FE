@@ -1,0 +1,45 @@
+<div class="addContainer">
+  <div *ngIf="account" class="contact-details">
+    <div class="modalHeader">
+      <div class="contact-details-name mb-1">User Details</div>
+      <button
+        mat-icon-button
+        (click)="dialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+      <mat-card-content>
+        <div class="row mt-1" style="width: 98%">
+          <div class="col-5 m-b-10">Employee No:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.employeeNumber }}</div>
+          <div class="col-5 m-b-10">Firstname:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.firstname }}</div>
+          <div class="col-5 m-b-10">Lastname:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.lastname }}</div>
+          <div class="col-5 m-b-10">Phoneneumber:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.phone }}</div>
+          <div class="col-5 m-b-10">Email:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.email }}</div>
+          <div class="col-5 m-b-10">Role:</div>
+          <div class="col-7 pro-left m-b-10">{{ account.role }}</div>
+
+          <div class="col-5 m-b-10">User Status:</div>
+          <div class="col-7 pro-lef mb-2">
+            <span
+              class="badge badge-pill"
+              [ngClass]="{
+                'col-green': account.status === 'ACTIVE',
+                'col-purple': account.status === 'LOCKED'
+              }"
+            >
+              {{ account.status }}
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </div>
+</div>

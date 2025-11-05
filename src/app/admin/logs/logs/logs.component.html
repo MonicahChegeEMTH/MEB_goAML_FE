@@ -1,0 +1,296 @@
+<section class="content">
+  <div class="content-block">
+    <div class="dashboard-content">
+      <div class="header-cards">
+        <div class="header-card large-card">
+          <div class="welcome">
+            <p class="greeting">Welcome Back</p>
+            <h3>{{ firstname }} {{ lastname }}</h3>
+            <h2 class="system-title">goAML Reporting System</h2>
+          </div>
+          <div class="illustration">
+            <img
+              src="assets/images/login/dashboard_img.png"
+              alt="illustration"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="body">
+              <div class="table-responsive">
+                <div class="materialTableHeader">
+                  <div class="row align-items-center">
+                    <div class="col-8">
+                      <ul class="header-buttons-left ms-0">
+                        <li class="dropdown">
+                          <h2 style="color: #fff !important">Audit Logs</h2>
+                        </li>
+                        <li class="searchbox m-l-20">
+                          <label for="search-input">
+                            <i class="material-icons search-icon">search</i>
+                          </label>
+
+                          <input
+                            id="search-input"
+                            placeholder="Search"
+                            type="text"
+                            class="browser-default search-field"
+                            aria-label="Search box"
+                            [(ngModel)]="searchText"
+                            (keyup)="applyFilter()"
+                          />
+                          <i
+                            class="material-icons clear-icon"
+                            *ngIf="searchText"
+                            (click)="clearSearch()"
+                          >
+                            close
+                          </i>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                      <ul class="header-buttons">
+                        <li>
+                          <div class="export-button m-l-10" matTooltip="XLSX">
+                            <img
+                              src="assets/images/icons/xlsx.png"
+                              alt=""
+                              (click)="
+                                exporter.exportTable('xlsx', {
+                                  fileName: 'logs',
+                                  sheet: 'sheet1'
+                                })
+                              "
+                            />
+                          </div>
+                        </li>
+                        <li>
+                          <div class="export-button m-l-10" matTooltip="PDF">
+                            <img
+                              src="assets/images/icons/pdf.png"
+                              alt="Export as PDF"
+                              (click)="downloadPDF()"
+                            />
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <mat-table
+                  #table
+                  matTableExporter
+                  [dataSource]="dataSource"
+                  matSort
+                  class="mat-cell"
+                  #exporter="matTableExporter"
+                >
+                  <ng-container matColumnDef="id">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Id</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ paginator
+                        ? paginator.pageIndex * paginator.pageSize + i + 1
+                        : i + 1 }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="user_id">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      User Id</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.user_id }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="username">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Username</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.username }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action_type">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Action Type</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.action_type }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="report_type">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                      style="padding-right: 30px;"
+                    >
+                      Report Type</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                      style="padding-right: 30px;"
+                    >
+                      {{ report.report_type }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="records_retrieved">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Records Retrieved</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.records_retrieved }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="createdat">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Timestamp</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.created_at | date:'medium' }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ip_address">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      Ip Addressed</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      {{ report.ip_address }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="file">
+                    <mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header
+                      class="column-nowrap"
+                    >
+                      file</mat-header-cell
+                    >
+                    <mat-cell
+                      *matCellDef="let report; let i = index"
+                      [class.odd-row]="i % 2"
+                      [class.even-row]="!(i % 2)"
+                      class="column-nowrap"
+                    >
+                      <i class="fas fa-folder-open"></i>
+                      {{ report.file }}
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row
+                    *matHeaderRowDef="displayedColumns"
+                  ></mat-header-row>
+                  <mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                    (click)="requestDetailsCall(request)"
+                    [style.cursor]="'pointer'"
+                    matRipple
+                  >
+                  </mat-row>
+                  <mat-cell *matNoDataRow colspan="4">
+                    No data matching the filter "{{ input.value }}"</mat-cell
+                  >
+                </mat-table>
+                <div *ngIf="isLoading" class="tbl-spinner">
+                  <mat-progress-spinner
+                    color="primary"
+                    [diameter]="40"
+                    mode="indeterminate"
+                  >
+                  </mat-progress-spinner>
+                </div>
+                <mat-paginator
+                  #paginator
+                  [pageIndex]="0"
+                  [pageSize]="5"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
