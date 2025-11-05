@@ -111,6 +111,6 @@ export class LogsComponent implements OnInit, AfterViewInit {
       headStyles: { fillColor: [63, 81, 181] },
     });
 
-    doc.save('logs-records.pdf');
+    doc.save('auditLogs.pdf');
   }
 }

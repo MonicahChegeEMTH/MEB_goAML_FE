@@ -111,9 +111,12 @@ export class MainComponent implements OnInit {
       },
       error: (error) => {
         console.error('Download failed:', error);
-        this.snackbar.showNotification('snackbar-danger', 'Failed to download report.');
-      }
-    })
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to download report.'
+        );
+      },
+    });
   }
 
   previewReport(reportId: string): void {
@@ -151,13 +154,16 @@ export class MainComponent implements OnInit {
       },
       error: (error) => {
         console.error('Preview failed:', error);
-        this.snackbar.showNotification('snackbar-danger', 'Failed to preview report.');
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to preview report.'
+        );
         this.isDownloading = false;
       },
       complete: () => {
         this.isDownloading = false;
-      }
-    })
+      },
+    });
   }
 
   applyFilter(event: Event) {
