@@ -28,6 +28,15 @@
           </div>
           <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-4">
             <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" required />
+              <mat-error *ngIf="accountForm.get('username').hasError('required')">
+                Username is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-4">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstname" required />
               <mat-error *ngIf="accountForm.get('firstname').hasError('required')">
@@ -44,8 +53,6 @@
               </mat-error>
             </mat-form-field>
           </div>
-        </div>
-        <div class="row">
           <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-4">
             <mat-form-field class="example-full-width mb-3" appearance="outline">
               <mat-label>Email</mat-label>
@@ -58,15 +65,6 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-4">
-            <mat-form-field class="example-full-width mb-3" appearance="outline">
-              <mat-label>Role</mat-label>
-              <input matInput formControlName="role" />
-              <button (click)="roleLookup()" mat-icon-button matSuffix [attr.aria-label]="'Search role'">
-                <mat-icon>search</mat-icon>
-              </button>
-            </mat-form-field>
-          </div> -->
           <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-4">
             <mat-form-field class="example-full-width mb-3" appearance="outline">
               <mat-label>Mobile</mat-label>

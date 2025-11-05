@@ -22,7 +22,8 @@
           </div>
 
           <div class="reports-summary-body">
-            <h1>1000</h1>
+            <h1 *ngIf="!isLoading; else loading">{{ totalReports }}</h1>
+            <ng-template #loading><h1>...</h1></ng-template>
             <a routerLink="/admin/reports/reports" class="view-all"
               >VIEW ALL →</a
             >
@@ -69,7 +70,7 @@
                 *matHeaderCellDef
                 mat-sort-header
                 class="column-nowrap"
-                 style="width: 60px; text-align: center; padding-right: 4px;"
+                style="width: 60px; text-align: center; padding-right: 4px"
               >
                 Id
               </mat-header-cell>
@@ -78,7 +79,7 @@
                 [class.odd-row]="i % 2"
                 [class.even-row]="!(i % 2)"
                 class="column-nowrap"
-                 style="width: 60px; text-align: center; padding-right: 4px;"
+                style="width: 60px; text-align: center; padding-right: 4px"
               >
                 {{
                   paginator
@@ -93,7 +94,7 @@
                 *matHeaderCellDef
                 mat-sort-header
                 class="column-nowrap"
-                 style="width: 180px; padding-left: 4px;"
+                style="width: 180px; padding-left: 4px"
               >
                 Account Number
               </mat-header-cell>
@@ -102,7 +103,7 @@
                 [class.odd-row]="1 % 2"
                 [class.even-row]="!(i % 2)"
                 class="column-nowrap"
-                 style="width: 180px; padding-left: 4px;"
+                style="width: 180px; padding-left: 4px"
               >
                 {{ report.account_number }}
               </mat-cell>
@@ -217,10 +218,20 @@
                   color="accent"
                   (click)="$event.stopPropagation(); downloadReport(report.id)"
                   class="tbl-action-btn"
-                  matTooltip="file"
-                  aria-label="file"
+                  matTooltip="Download XML"
+                  aria-label="Download XML"
                 >
                   <i class="fas fa-folder-open"></i>
+                </button>
+
+                <button
+                  mat-icon-button
+                  color="primary"
+                  aria-label="Preview XML"
+                  (click)="$event.stopPropagation(); previewReport(report.id)"
+                  matTooltip="Preview XML"
+                >
+                  <i class="fas fa-eye"></i>
                 </button>
               </mat-cell>
             </ng-container>

@@ -41,9 +41,10 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
   updateAccountForm() {
     this.accountForm = this.fb.group({
       employeeNumber: [this.user.employeeNumber || '', [Validators.required]],
+      username: [this.user.username || '', [Validators.required]],
       firstname: [this.user.firstname || '', [Validators.required]],
       lastname: [this.user.lastname || '', [Validators.required]],
-      email: [this.user.email || '', [Validators.email]],
+      email: [this.user.email || '', [Validators.email, Validators.required]],
       role: [
         this.user.roles && this.user.roles[0] ? this.user.roles[0].name : '',
         [],
@@ -64,6 +65,7 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
       phone: this.accountForm.value.phone,
       email: this.accountForm.value.email,
       employeeNumber: this.accountForm.value.employeeNumber,
+      username: this.accountForm.value.username,
       role: this.accountForm.value.role || this.user.role || 'ROLE_ADMIN',
       status: this.user.status || 'ACTIVE',
     };

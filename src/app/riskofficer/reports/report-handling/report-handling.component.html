@@ -1,8 +1,6 @@
 <section class="content">
   <div class="container-fluid content-block">
-    <!-- Header Section -->
     <div class="header-cards">
-      <!-- Large card -->
       <div class="header-card large-card">
         <div class="welcome">
           <p class="greeting">Welcome Back</p>
@@ -15,17 +13,15 @@
       </div>
     </div>
 
-    <!-- Report Handling Section -->
     <section class="report-container">
-      <!-- Title -->
       <h2 class="title">Report Handling</h2>
 
-      <!-- Tabs -->
       <div class="tab-buttons">
         <button
           class="btn preview-btn"
           [class.active]="activeTab === 'preview'"
           (click)="activeTab = 'preview'"
+          (click)="toggleEditMode()"
         >
           Preview
         </button>
@@ -33,35 +29,48 @@
           class="btn download-btn"
           [class.active]="activeTab === 'download'"
           (click)="activeTab = 'download'"
+          (click)="downloadXML()"
         >
           Download
         </button>
       </div>
 
-      <!-- XML and Download/Repository Side by Side -->
       <div class="xml-section">
-        <!-- XML Preview -->
-        <div class="xml-box">
-          <pre>
-&lt;Report&gt;
-  &lt;Info&gt;
-    &lt;ReportType&gt;STR&lt;/ReportType&gt;
-    &lt;ReportPeriodFrom&gt;2023-01-01&lt;/ReportPeriodFrom&gt;
-    &lt;ReportPeriodTo&gt;2023-01-31&lt;/ReportPeriodTo&gt;
-    &lt;TotalTransactions&gt;15&lt;/TotalTransactions&gt;
-    &lt;Sender&gt;
-      &lt;AccountNumberType&gt;CIF&lt;/AccountNumberType&gt;
-      &lt;AccountNumber&gt;1234567890&lt;/AccountNumber&gt;
-      &lt;AccountName&gt;ABC Bank&lt;/AccountName&gt;
-    &lt;/Sender&gt;
-  &lt;/Info&gt;
-&lt;/Report&gt;
-&lt;/goAML&gt;
-    </pre
-          >
+        <div class="xml-box" *ngIf="xmlContent; else noReport">
+          <div class="edit-actions">
+            <button class="btn small-btn" (click)="toggleEditMode()">
+              {{ editMode ? "Preview XML" : "Edit XML" }}
+            </button>
+            <button
+              class="btn save-btn"
+              *ngIf="editMode"
+              (click)="saveEditedXml()"
+            >
+              Save Changes
+            </button>
+          </div>
+
+          <div *ngIf="editMode">
+            <textarea
+              [(ngModel)]="xmlContent"
+              class="xml-editor"
+              rows="25"
+              wrap="off"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div
+            *ngIf="!editMode"
+            [innerHTML]="formattedXml"
+            class="xml-preview"
+          ></div>
         </div>
 
-        <!-- Right Column -->
+        <ng-template #noReport>
+          <p>No report data available. Please generate a report first.</p>
+        </ng-template>
+
         <div class="side-content">
           <div class="download-buttons">
             <button class="btn gold-btn" (click)="downloadXML()">

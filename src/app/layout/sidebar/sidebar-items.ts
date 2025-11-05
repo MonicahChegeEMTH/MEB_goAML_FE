@@ -42,19 +42,19 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
 
-  {
-    path: '/admin/reports/reports-handling',
-    title: 'Reports Handling',
-    moduleName: 'dashboard',
-    iconType: 'feather',
-    icon: 'bar-chart-2',
-    class: '',
-    groupTitle: false,
-    badge: '',
-    badgeClass: '',
-    role: ['ROLE_ADMIN'],
-    submenu: [],
-  },
+  // {
+  //   path: '/admin/reports/reports-handling',
+  //   title: 'Reports Handling',
+  //   moduleName: 'dashboard',
+  //   iconType: 'feather',
+  //   icon: 'bar-chart-2',
+  //   class: '',
+  //   groupTitle: false,
+  //   badge: '',
+  //   badgeClass: '',
+  //   role: ['ROLE_ADMIN'],
+  //   submenu: [],
+  // },
 
   {
     path: '/admin/logs/logs',

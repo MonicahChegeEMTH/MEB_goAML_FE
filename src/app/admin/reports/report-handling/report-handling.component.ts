@@ -141,6 +141,8 @@ export class ReportHandlingComponent {
         return;
       }
 
+      console.log('Updating report with ID:', this.reportId);
+
       this.reportService
         .updateReport(this.reportId, this.xmlContent)
         .subscribe({

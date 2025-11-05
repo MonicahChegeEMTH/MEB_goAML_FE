@@ -8,8 +8,10 @@ export const environment = {
   // API: "http://18.219.121.50:9400",
   // apiUrl: "http://localhost:9600",
   // API: "http://localhost:9600",
-  apiUrl: 'http://172.16.1.227:9600',
-  API: 'http://172.16.1.227:9600',
+  // apiUrl: 'http://172.16.1.227:9600',
+  // API: 'http://172.16.1.227:9600',
+  apiUrl: 'http://172.16.2.128:9600',
+  API: 'http://172.16.2.128:9600',
   //  apiUrl: "http://172.16.10.215:9600",
   //  API: "http://172.16.10.215:9600",
 };

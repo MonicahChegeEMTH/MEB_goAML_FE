@@ -243,6 +243,7 @@ export class ReportsComponent implements OnInit {
               reportData: {
                 xmlContent: xml,
                 fileName: `report-${reportId}.xml`,
+                reportId: reportId,
               },
             },
           });
@@ -255,6 +256,7 @@ export class ReportsComponent implements OnInit {
                 reportData: {
                   xmlContent: xmlText,
                   fileName: `report-${reportId}.xml`,
+                  reportId: reportId,
                 },
               },
             });
@@ -427,6 +429,7 @@ export class ReportsComponent implements OnInit {
         this.strAccountNo,
         this.strReason,
         this.strAction,
+        this.strComments,
         this.selectedStrIndicators
       )
       .subscribe({

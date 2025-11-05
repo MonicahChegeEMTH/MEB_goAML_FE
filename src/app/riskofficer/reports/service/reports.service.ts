@@ -26,6 +26,19 @@ export class ReportsService {
     });
   }
 
+  updateReport(id: string, xmlContent: string): Observable<any> {
+    return this.http.put<any>(
+      `${environment.apiUrl}/api/reports/report/${id}/updateXml`,
+      { xmlContent }
+    );
+  }
+
+  reportCount() {
+    return this.http.get<{ totalReports: number; message: string }>(
+      `${environment.apiUrl}/api/reports/reports/count`
+    );
+  }
+
   downloadSARReport(
     accountNumber: string,
     reason: string,
@@ -47,6 +60,7 @@ export class ReportsService {
     accountNumber: string,
     reason: string,
     action: string,
+    comments: string,
     indicators: string[]
   ): Observable<any> {
     const params = new HttpParams()
@@ -55,9 +69,14 @@ export class ReportsService {
       .set('accountNumber', accountNumber)
       .set('reason', reason)
       .set('action', action)
+      .set('comments', comments)
       .set('indicators', indicators.join(','));
 
-    return this.http.post(`${environment.apiUrl}/api/reports/str`, {}, { params });
+    return this.http.post(
+      `${environment.apiUrl}/api/reports/str`,
+      {},
+      { params }
+    );
   }
 
   downloadAccStmt(account: string, from: string, to: string): Observable<any> {

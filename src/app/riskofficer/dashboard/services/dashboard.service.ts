@@ -27,10 +27,6 @@ export class DashboardService {
     return this.http.get(this.usersUrl + 'user/department');
   }
 
-  // public getDashboardWigetsAnalytics(): Observable<any> {
-  //   return this.http.get(this.usersUrl + 'counts');
-  // }
-
   public getUsersPerRole(): Observable<any> {
     return this.http.get(this.usersUrl + 'users/role');
   }
