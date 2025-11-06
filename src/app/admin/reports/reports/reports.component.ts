@@ -26,6 +26,8 @@ export class ReportsComponent implements OnInit {
     'file_name',
     'actions',
   ];
+  isLoadingPreview: { [key: string]: boolean } = {};
+  isLoadingDownload: { [key: string]: boolean } = {};
   selectedReportType: string | null = null;
   filterForm!: FormGroup;
   pagedReports: any[] = [];
@@ -230,7 +232,9 @@ export class ReportsComponent implements OnInit {
   }
 
   previewReport(reportId: string): void {
-    this.isDownloading = true;
+    if (this.isLoadingPreview[reportId]) return;
+    this.isLoadingPreview[reportId] = true;
+
     this.service.downloadReport(reportId).subscribe({
       next: (response: any) => {
         if (response?.xmlContent || response?.xmlDocument) {
@@ -268,15 +272,18 @@ export class ReportsComponent implements OnInit {
           'snackbar-danger',
           'Failed to preview report.'
         );
-        this.isDownloading = false;
+        this.isLoadingPreview[reportId] = false;
       },
       complete: () => {
-        this.isDownloading = false;
+        this.isLoadingPreview[reportId] = false;
       },
     });
   }
 
   downloadReport(reportId: string): void {
+    if (this.isLoadingDownload[reportId]) return;
+    this.isLoadingDownload[reportId] = true;
+
     this.service.downloadReport(reportId).subscribe({
       next: (response: Blob) => {
         const url = window.URL.createObjectURL(response);
@@ -294,6 +301,9 @@ export class ReportsComponent implements OnInit {
           'snackbar-danger',
           'Failed to download report.'
         );
+      },
+      complete: () => {
+        this.isLoadingDownload[reportId] = false;
       },
     });
   }

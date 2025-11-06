@@ -132,7 +132,7 @@
                 *matHeaderCellDef
                 mat-sort-header
                 class="column-nowrap"
-                style="min-width: 150px; padding-right: 50px;"
+                style="min-width: 150px; padding-right: 50px"
               >
                 Generated On
               </mat-header-cell>
@@ -141,9 +141,9 @@
                 [class.odd-row]="1 % 2"
                 [class.even-row]="!(i % 2)"
                 class="column-nowrap"
-                style="min-width: 150px; padding-right: 50px;"
+                style="min-width: 150px; padding-right: 50px"
               >
-                {{ report.date | date:'medium' }}
+                {{ report.date | date : "medium" }}
               </mat-cell>
             </ng-container>
 
@@ -222,8 +222,15 @@
                   class="tbl-action-btn"
                   matTooltip="Download XML"
                   aria-label="Download XML"
+                  [disabled]="isLoadingDownload[report.id]"
                 >
-                  <i class="fas fa-folder-open"></i>
+                  <ng-container
+                    *ngIf="!isLoadingDownload[report.id]; else downloadSpinner"
+                    ><i class="fas fa-folder-open"></i
+                  ></ng-container>
+                  <ng-template #downloadSpinner
+                    ><i class="fas fa-spinner fa-spin"></i
+                  ></ng-template>
                 </button>
 
                 <button
@@ -232,8 +239,15 @@
                   aria-label="Preview XML"
                   (click)="$event.stopPropagation(); previewReport(report.id)"
                   matTooltip="Preview XML"
+                  [disabled]="isLoadingPreview[report.id]"
                 >
-                  <i class="fas fa-eye"></i>
+                  <ng-container
+                    *ngIf="!isLoadingPreview[report.id]; else previewSpinner"
+                    ><i class="fas fa-eye"></i
+                  ></ng-container>
+                  <ng-template #previewSpinner
+                    ><i class="fas fa-spinner fa-spin"></i
+                  ></ng-template>
                 </button>
               </mat-cell>
             </ng-container>

@@ -132,6 +132,7 @@
                 *matHeaderCellDef
                 mat-sort-header
                 class="column-nowrap"
+                style="min-width: 150px; padding-right: 50px"
               >
                 Generated On
               </mat-header-cell>
@@ -140,8 +141,9 @@
                 [class.odd-row]="1 % 2"
                 [class.even-row]="!(i % 2)"
                 class="column-nowrap"
+                style="min-width: 150px; padding-right: 50px"
               >
-                {{ report.date }}
+                {{ report.date | date : "medium" }}
               </mat-cell>
             </ng-container>
 
