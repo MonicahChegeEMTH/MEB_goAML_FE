@@ -28,6 +28,8 @@ export class MainComponent implements OnInit {
   errorMessage = '';
   totalReports: number = 0;
   isDownloading: boolean = false;
+  isLoadingPreview: { [key: string]: boolean } = {};
+  isLoadingDownload: { [key: string]: boolean } = {};
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -98,6 +100,9 @@ export class MainComponent implements OnInit {
   }
 
   downloadReport(reportId: string): void {
+    if (this.isLoadingDownload[reportId]) return;
+    this.isLoadingDownload[reportId] = true;
+
     this.service.downloadReport(reportId).subscribe({
       next: (response: Blob) => {
         const url = window.URL.createObjectURL(response);
@@ -111,13 +116,21 @@ export class MainComponent implements OnInit {
       },
       error: (error) => {
         console.error('Download failed:', error);
-        this.snackbar.showNotification('snackbar-danger', 'Failed to download report.');
-      }
-    })
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to download report.'
+        );
+      },
+      complete: () => {
+        this.isLoadingDownload[reportId] = false;
+      },
+    });
   }
 
   previewReport(reportId: string): void {
-    this.isDownloading = true;
+    if (this.isLoadingPreview[reportId]) return;
+    this.isLoadingPreview[reportId] = true;
+
     this.service.downloadReport(reportId).subscribe({
       next: (response: any) => {
         if (response?.xmlContent || response?.xmlDocument) {
@@ -151,13 +164,16 @@ export class MainComponent implements OnInit {
       },
       error: (error) => {
         console.error('Preview failed:', error);
-        this.snackbar.showNotification('snackbar-danger', 'Failed to preview report.');
-        this.isDownloading = false;
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to preview report.'
+        );
+        this.isLoadingPreview[reportId] = false;
       },
       complete: () => {
-        this.isDownloading = false;
-      }
-    })
+        this.isLoadingPreview[reportId] = false;
+      },
+    });
   }
 
   applyFilter(event: Event) {
