@@ -19,6 +19,7 @@ export class ReportHandlingComponent {
   fileName: string = 'report.xml';
   editMode: boolean = false;
   reportId: string = '';
+  isSaving: boolean = false;
 
   constructor(
       private tokenStorage: TokenStorageService,
@@ -142,6 +143,7 @@ export class ReportHandlingComponent {
       }
 
       console.log('Updating report with ID:', this.reportId);
+      this.isSaving = true;
 
       this.reportsService
         .updateReport(this.reportId, this.xmlContent)
@@ -153,6 +155,7 @@ export class ReportHandlingComponent {
               'snackbar-success',
               'Report updated successfully!'
             );
+            this.isSaving = false;
           },
           error: (err) => {
             console.error('Error updating report:', err);
@@ -160,6 +163,7 @@ export class ReportHandlingComponent {
               'snackbar-error',
               'Failed to update the report. Please try again.'
             );
+            this.isSaving = false;
           },
         });
     } catch (err) {
@@ -168,6 +172,7 @@ export class ReportHandlingComponent {
         'snackbar-error',
         'Unexpected error while saving changes.'
       );
+      this.isSaving = false;
     }
   }
 }

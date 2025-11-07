@@ -78,7 +78,7 @@
 
       .btn {
         padding: 0.6rem 2rem;
-        border-radius: 25px;
+        border-radius: 8px;
         font-weight: 600;
         border: none;
         cursor: pointer;
@@ -428,6 +428,27 @@
 
 .btn.save-btn {
   background-color: #001e3c;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #555;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 
