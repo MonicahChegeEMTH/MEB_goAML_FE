@@ -8,11 +8,16 @@ const routes: Routes = [
     redirectTo: "main",
     pathMatch: "full",
   },
+  
   {
     path: "main",
     component: MainComponent,
   },
-  { path: "**", component: Page404Component },
+
+  { 
+    path: "**", 
+    component: Page404Component 
+  },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

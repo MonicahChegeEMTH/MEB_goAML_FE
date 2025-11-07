@@ -8,11 +8,16 @@ const routes: Routes = [
     redirectTo: "logs",
     pathMatch: "full",
   },
+  
   {
     path: "logs",
     component: LogsComponent,
   },
-  { path: "**", component: Page404Component },
+
+  { 
+    path: "**", 
+    component: Page404Component 
+  },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

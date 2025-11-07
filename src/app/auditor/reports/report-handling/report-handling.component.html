@@ -43,8 +43,14 @@
               class="btn save-btn"
               *ngIf="editMode"
               (click)="saveEditedXml()"
+              [disabled]="isSaving"
             >
-              Save Changes
+              <ng-container *ngIf="!isSaving; else loading"
+                >Save Changes</ng-container
+              >
+              <ng-template #loading
+                ><span class="spinner"></span>Saving...</ng-template
+              >
             </button>
           </div>
 
