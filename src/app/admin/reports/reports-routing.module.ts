@@ -9,15 +9,21 @@ const routes: Routes = [
     redirectTo: "reports",
     pathMatch: "full",
   },
+  
   {
     path: "reports",
     component: ReportsComponent,
   },
+
   {
     path: 'reports-handling',
     component: ReportHandlingComponent
   },
-  { path: "**", component: Page404Component },
+
+  { 
+    path: "**", 
+    component: Page404Component 
+  },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

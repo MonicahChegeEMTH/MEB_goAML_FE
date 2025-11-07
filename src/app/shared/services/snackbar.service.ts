@@ -14,15 +14,6 @@ export class SnackbarService {
 
   constructor(private _snackBar: MatSnackBar) {}
 
-  // showNotification(text, colorName) {
-  //   this._snackBar.open(text, "X", {
-  //     horizontalPosition: this.horizontalPosition,
-  //     verticalPosition: this.verticalPosition,
-  //     duration: 3000,
-  //     panelClass: [colorName, "login-snackbar"],
-  //   });
-  // }
-
   showNotification(colorName: string, text: string) {
     this._snackBar.open(text, "X", {
       horizontalPosition: this.horizontalPosition,
