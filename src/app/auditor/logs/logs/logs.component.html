@@ -171,7 +171,7 @@
                       class="column-nowrap"
                       style="padding-right: 30px;"
                     >
-                      Report Type</mat-header-cell
+                      Activity</mat-header-cell
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
@@ -207,6 +207,7 @@
                       *matHeaderCellDef
                       mat-sort-header
                       class="column-nowrap"
+                       style="padding-right: 30px;"
                     >
                       Timestamp</mat-header-cell
                     >
@@ -215,6 +216,7 @@
                       [class.odd-row]="i % 2"
                       [class.even-row]="!(i % 2)"
                       class="column-nowrap"
+                       style="padding-right: 30px;"
                     >
                       {{ report.created_at | date:'medium' }}
                     </mat-cell>

@@ -36,7 +36,7 @@
       <div class="xml-section">
         <div class="xml-box" *ngIf="xmlContent; else noReport">
           <div class="edit-actions">
-            <button class="btn small-btn" (click)="toggleEditMode()">
+            <button class="btn small-btn" (click)="toggleEditMode()" [disabled]="isSaving">
               {{ editMode ? "Preview XML" : "Edit XML" }}
             </button>
             <button
@@ -48,8 +48,8 @@
               <ng-container *ngIf="!isSaving; else loading"
                 >Save Changes</ng-container
               >
-              <ng-template #loading
-                ><span class="spinner"></span>Saving...</ng-template
+              <ng-template #loading>
+                <span class="spinner"></span>Saving...</ng-template
               >
             </button>
           </div>
