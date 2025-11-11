@@ -20,10 +20,10 @@ export class LogsComponent implements OnInit, AfterViewInit {
     'username',
     'action_type',
     'report_type',
-    'records_retrieved',
+    // 'records_retrieved',
     'createdat',
     'ip_address',
-    'file',
+    // 'file',
   ];
 
   dataSource = new MatTableDataSource<AuditLog>([]);

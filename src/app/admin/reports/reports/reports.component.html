@@ -355,6 +355,147 @@
         </div>
       </div>
 
+      <div class="filter-row" *ngIf="selectedReportType === 'STAR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction ID <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction ID"
+              [(ngModel)]="starTranId"
+            />
+            <mat-error *ngIf="!starTranId"
+              >Transaction ID is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Date <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="starTranDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!starTranDate"
+              >Transaction Date is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <input
+              matInput
+              placeholder="Enter reason"
+              [(ngModel)]="starReason"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Action</mat-label>
+            <input
+              matInput
+              placeholder="Enter action"
+              [(ngModel)]="starAction"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Comments</mat-label>
+            <input
+              matInput
+              placeholder="Enter comments"
+              [(ngModel)]="starComments"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Indicators</mat-label>
+            <mat-select [(ngModel)]="selectedStarIndicators" multiple>
+              <mat-option
+                *ngFor="let indicator of starIndicators"
+                [value]="indicator"
+              >
+                {{ indicator }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="filter-row" *ngIf="selectedReportType === 'CTR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Type <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction type"
+              [(ngModel)]="ctrTranType"
+            />
+            <mat-error *ngIf="!ctrTranType"
+              >Transaction Type is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction ID <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction ID"
+              [(ngModel)]="ctrTranId"
+            />
+            <mat-error *ngIf="!ctrTranId"
+              >Transaction ID is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Date <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="ctrTranDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!ctrTranDate"
+              >Transaction Date is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
       <div class="filter-actions">
         <button
           mat-raised-button
@@ -392,6 +533,32 @@
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
             Search Filter Based STR Reports
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'STAR'"
+          (click)="downloadStarReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based STAR Reports
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'CTR'"
+          (click)="downloadCtrReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based CTR Reports
           </ng-container>
         </button>
 

@@ -53,12 +53,21 @@ export class ReportsComponent implements OnInit {
   accStmtFrom: string = '';
   accStmtTo: string = '';
   strTranId: string = '';
+  starTranId: string = '';
   strTranDate: string = '';
+  starTranDate: string = '';
   strAccountNo: string = '';
   strReason: string = '';
+  starReason: string = '';
   strAction: string = '';
+  starAction: string = '';
   strComments: string = '';
+  starComments: string = '';
   selectedStrIndicators: string[] = [];
+  selectedStarIndicators: string[] = [];
+  ctrTranType: string = '';
+  ctrTranId: string = '';
+  ctrTranDate: string = '';
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
   sarIndicators = [
@@ -68,6 +77,12 @@ export class ReportsComponent implements OnInit {
   ];
 
   strIndicators = [
+    'Unusual Transactions',
+    'Suspicious Transfers',
+    'Large Cash Deposits',
+  ];
+
+  starIndicators = [
     'Unusual Transactions',
     'Suspicious Transfers',
     'Large Cash Deposits',
@@ -138,7 +153,9 @@ export class ReportsComponent implements OnInit {
     return (
       this.selectedReportType !== 'SAR' &&
       this.selectedReportType !== 'AccStmt' &&
-      this.selectedReportType !== 'STR'
+      this.selectedReportType !== 'STR' &&
+      this.selectedReportType !== 'STAR' &&
+      this.selectedReportType !== 'CTR'
     );
   }
 
@@ -370,13 +387,63 @@ export class ReportsComponent implements OnInit {
       });
   }
 
+  // downloadAccountStatement() {
+  //   if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
+  //     this.snackbar.showNotification(
+  //       'snackbar-danger',
+  //       'Please fill all Account Statement fields.'
+  //     );
+  //     return;
+  //   }
+
+  //   this.isDownloading = true;
+  //   const formattedFrom = new Date(this.accStmtFrom)
+  //     .toISOString()
+  //     .split('T')[0];
+  //   const formattedTo = new Date(this.accStmtTo).toISOString().split('T')[0];
+
+  //   this.service
+  //     .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
+  //     .subscribe({
+  //       next: (response: Blob) => {
+  //         const blob = new Blob([response], { type: 'application/pdf' });
+  //         const url = window.URL.createObjectURL(blob);
+  //         const a = document.createElement('a');
+  //         a.href = url;
+  //         a.download = `AccountStatement_${this.accStmtAccount}_${formattedFrom}_${formattedTo}.pdf`;
+  //         document.body.appendChild(a);
+  //         a.click();
+  //         document.body.removeChild(a);
+  //         window.URL.revokeObjectURL(url);
+
+  //         this.snackbar.showNotification(
+  //           'snackbar-success',
+  //           'Account statement downloaded successfully.'
+  //         );
+  //         this.router.navigate(['/admin/reports/reports-handling'], {
+  //           state: { reportData: response },
+  //         });
+  //       },
+  //       error: (error) => {
+  //         console.error('Error downloading account statement:', error);
+  //         this.snackbar.showNotification(
+  //           'snackbar-danger',
+  //           'Failed to download account statement.'
+  //         );
+  //       },
+  //       complete: () => {
+  //         this.isDownloading = false;
+  //       },
+  //     });
+  // }
+
   downloadAccountStatement() {
+    this.markFormGroupTouched(this.filterForm);
     if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
       this.snackbar.showNotification(
         'snackbar-danger',
-        'Please fill all Account Statement fields.'
+        'Please fill all required account fields'
       );
-      return;
     }
 
     this.isDownloading = true;
@@ -384,35 +451,35 @@ export class ReportsComponent implements OnInit {
       .toISOString()
       .split('T')[0];
     const formattedTo = new Date(this.accStmtTo).toISOString().split('T')[0];
-
     this.service
       .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
       .subscribe({
-        next: (response: Blob) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `AccountStatement_${this.accStmtAccount}_${formattedFrom}_${formattedTo}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-
+        next: (response) => {
+          sessionStorage.setItem(
+            'accStmtPreviewXML',
+            response.xmlDocument
+          );
           this.snackbar.showNotification(
             'snackbar-success',
-            'Account statement downloaded successfully.'
+            'Account Statement report generated successfully.'
           );
           this.router.navigate(['/admin/reports/reports-handling'], {
-            state: { reportData: response },
+            state: {
+              reportData: {
+                xmlContent: response.xmlContent,
+                fileName: response.fileName,
+                reportId: response.id,
+              },
+            },
           });
         },
         error: (error) => {
-          console.error('Error downloading account statement:', error);
-          this.snackbar.showNotification(
-            'snackbar-danger',
-            'Failed to download account statement.'
-          );
+          const backendMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Failed to generete account statement report';
+          this.snackbar.showNotification('snackbar-danger', backendMessage);
+          this.isDownloading = false;
         },
         complete: () => {
           this.isDownloading = false;
@@ -466,11 +533,122 @@ export class ReportsComponent implements OnInit {
           });
         },
         error: (error) => {
+          const backendMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Failed to generate STR report. Please try again.';
+          this.snackbar.showNotification('snackbar-danger', backendMessage);
+          this.isDownloading = false;
+        },
+        complete: () => {
+          this.isDownloading = false;
+        },
+      });
+  }
+
+  downloadStarReport() {
+    this.markFormGroupTouched(this.filterForm);
+
+    if (!this.starTranId || !this.starTranDate) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all required STAR fields.'
+      );
+      return;
+    }
+
+    this.isDownloading = true;
+    const formattedTo = this.starTranDate
+      ? formatDate(this.starTranDate, 'dd-MMM-yy', 'en').toLowerCase()
+      : null;
+
+    this.service
+      .downloadStarReport(
+        this.starTranId,
+        formattedTo,
+        this.starReason,
+        this.starAction,
+        this.starComments,
+        this.selectedStarIndicators
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('STAR report response:', response);
+          sessionStorage.setItem('strPreviewXML', response.xmlDocument);
           this.snackbar.showNotification(
-            'snackbar-danger',
-            'Failed to generate STR report. Please try again.'
+            'snackbar-success',
+            'STAR report generated successfully.'
           );
-          console.error('Failed to download STR report:', error);
+
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: {
+              reportData: {
+                xmlContent: response.xmlContent,
+                fileName: response.fileName,
+                reportId: response.id,
+              },
+            },
+          });
+        },
+        error: (error) => {
+          const backendMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Failed to generate STAR report. Please try again.';
+
+          this.snackbar.showNotification('snackbar-danger', backendMessage);
+          this.isDownloading = false;
+        },
+
+        complete: () => {
+          this.isDownloading = false;
+        },
+      });
+  }
+
+  downloadCtrReport() {
+    this.markFormGroupTouched(this.filterForm);
+
+    if (!this.ctrTranType || !this.ctrTranId || !this.ctrTranDate) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all required CTR fields.'
+      );
+      return;
+    }
+
+    this.isDownloading = true;
+    const formattedTo = this.ctrTranDate
+      ? formatDate(this.ctrTranDate, 'dd-MMM-yy', 'en').toLowerCase()
+      : null;
+
+    this.service
+      .downloadCtrReport(this.ctrTranType, this.ctrTranId, formattedTo)
+      .subscribe({
+        next: (response) => {
+          console.log('CTR report response:', response);
+          sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+          this.snackbar.showNotification(
+            'snackbar-success',
+            'CTR report generated successfully.'
+          );
+
+          this.router.navigate(['/admin/reports/reports-handling'], {
+            state: {
+              reportData: {
+                xmlContent: response.xmlContent,
+                fileName: response.fileName,
+                reportId: response.id,
+              },
+            },
+          });
+        },
+        error: (error) => {
+          const backendMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Failed to generate CTR report. Please try again';
+          this.snackbar.showNotification('snackbar-danger', backendMessage);
           this.isDownloading = false;
         },
         complete: () => {

@@ -23,11 +23,13 @@ export class ActiveAccountsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     "id",
     "employeeNumber",
+    "username",
     "firstname",
     "lastname",
     "email",
-    "status",
+    "role",
     "phonenumber",
+    "status",
     "viewDetails",
     // "actions",
   ];
@@ -65,10 +67,11 @@ export class ActiveAccountsComponent extends BaseComponent implements OnInit {
       const doc = new jsPDF();
       autoTable(doc, {
         head: [
-          ['Employee No', 'First Name', 'Last Name', 'Phone Number', 'Role'],
+          ['Employee No', 'Username', 'First Name', 'Last Name', 'Phone Number', 'Role'],
         ],
         body: this.dataSource.data.map((u) => [
           u.employeeNumber,
+          u.username,
           u.firstname,
           u.lastname,
           u.phone,
