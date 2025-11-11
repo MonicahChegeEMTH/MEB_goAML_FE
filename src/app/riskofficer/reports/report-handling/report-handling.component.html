@@ -15,13 +15,11 @@
 
     <section class="report-container">
       <h2 class="title">Report Handling</h2>
-
       <div class="tab-buttons">
         <button
           class="btn preview-btn"
           [class.active]="activeTab === 'preview'"
           (click)="activeTab = 'preview'"
-          (click)="toggleEditMode()"
         >
           Preview
         </button>
@@ -38,7 +36,7 @@
       <div class="xml-section">
         <div class="xml-box" *ngIf="xmlContent; else noReport">
           <div class="edit-actions">
-            <button class="btn small-btn" (click)="toggleEditMode()">
+            <button class="btn small-btn" (click)="toggleEditMode()" [disabled]="isSaving">
               {{ editMode ? "Preview XML" : "Edit XML" }}
             </button>
             <button
@@ -50,8 +48,8 @@
               <ng-container *ngIf="!isSaving; else loading"
                 >Save Changes</ng-container
               >
-              <ng-template #loading
-                ><span class="spinner"></span>Saving...</ng-template
+              <ng-template #loading>
+                <span class="spinner"></span>Saving...</ng-template
               >
             </button>
           </div>
@@ -82,7 +80,7 @@
             <button class="btn gold-btn" (click)="downloadXML()">
               Download XML
             </button>
-            <button class="btn dark-btn" (click)="downloadZIP()">
+            <button class="btn dark-btn" (click)="downloadZIP(reportId)">
               Download ZIP
             </button>
           </div>

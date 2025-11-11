@@ -104,11 +104,32 @@ export class ReportHandlingComponent {
     URL.revokeObjectURL(url);
   }
 
-  downloadZIP(): void {
-    this.snackbar.showNotification(
-      'snackbar-success',
-      'ZIP download triggered!'
-    );
+  downloadZIP(reportId: string): void {
+    // if (this.isLoadingDownload[reportId]) return;
+    // this.isLoadingDownload[reportId] = true;
+
+    this.reportService.downloadZipReport(reportId).subscribe({
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `report-${reportId}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Download failed:', error);
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to download report.'
+        );
+      },
+      complete: () => {
+        // this.isLoadingDownload[reportId] = false;
+      },
+    });
   }
 
   toggleEditMode(): void {

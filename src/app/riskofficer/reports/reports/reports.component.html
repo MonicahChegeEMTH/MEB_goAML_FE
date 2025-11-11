@@ -215,7 +215,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>From Date<span class="required">*</span></mat-label>
+            <mat-label>From Date <span class="required">*</span></mat-label>
             <input
               matInput
               [matDatepicker]="fromPicker"
@@ -232,7 +232,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>To Date<span class="required">*</span></mat-label>
+            <mat-label>To Date <span class="required">*</span></mat-label>
             <input
               matInput
               [matDatepicker]="toPicker"
@@ -355,6 +355,147 @@
         </div>
       </div>
 
+      <div class="filter-row" *ngIf="selectedReportType === 'STAR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction ID <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction ID"
+              [(ngModel)]="starTranId"
+            />
+            <mat-error *ngIf="!starTranId"
+              >Transaction ID is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Date <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="starTranDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!starTranDate"
+              >Transaction Date is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <input
+              matInput
+              placeholder="Enter reason"
+              [(ngModel)]="starReason"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Action</mat-label>
+            <input
+              matInput
+              placeholder="Enter action"
+              [(ngModel)]="starAction"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Comments</mat-label>
+            <input
+              matInput
+              placeholder="Enter comments"
+              [(ngModel)]="starComments"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Indicators</mat-label>
+            <mat-select [(ngModel)]="selectedStarIndicators" multiple>
+              <mat-option
+                *ngFor="let indicator of starIndicators"
+                [value]="indicator"
+              >
+                {{ indicator }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="filter-row" *ngIf="selectedReportType === 'CTR'">
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Type <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction type"
+              [(ngModel)]="ctrTranType"
+            />
+            <mat-error *ngIf="!ctrTranType"
+              >Transaction Type is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction ID <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              placeholder="Enter transaction ID"
+              [(ngModel)]="ctrTranId"
+            />
+            <mat-error *ngIf="!ctrTranId"
+              >Transaction ID is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="filter-field">
+          <mat-form-field appearance="outline">
+            <mat-label
+              >Transaction Date <span class="required">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              [(ngModel)]="ctrTranDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="!ctrTranDate"
+              >Transaction Date is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
       <div class="filter-actions">
         <button
           mat-raised-button
@@ -392,6 +533,32 @@
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
             Search Filter Based STR Reports
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'STAR'"
+          (click)="downloadStarReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based STAR Reports
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'CTR'"
+          (click)="downloadCtrReport()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Search Filter Based CTR Reports
           </ng-container>
         </button>
 
@@ -483,7 +650,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-6"
                   >
                     Id
                   </mat-header-cell>
@@ -491,7 +658,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="i % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-6"
                   >
                     {{
                       paginator
@@ -505,7 +672,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     Account Number
                   </mat-header-cell>
@@ -513,7 +680,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.account_number }}
                   </mat-cell>
@@ -523,7 +690,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     Generated By
                   </mat-header-cell>
@@ -531,7 +698,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.reporting_user }}
                   </mat-cell>
@@ -541,7 +708,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                     style="min-width: 150px; padding-right: 50px"
                   >
                     Generated On
@@ -550,7 +717,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                     style="min-width: 150px; padding-right: 50px"
                   >
                     {{ report.date | date : "medium" }}
@@ -561,7 +728,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     Account Number
                   </mat-header-cell>
@@ -569,7 +736,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.account }}
                   </mat-cell>
@@ -579,7 +746,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     Report Type
                   </mat-header-cell>
@@ -587,7 +754,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.type }}
                   </mat-cell>
@@ -597,7 +764,8 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
+                    style="min-width: 150px; padding-right: 50px"
                   >
                     File Name
                   </mat-header-cell>
@@ -605,7 +773,8 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
+                    style="min-width: 150px; padding-right: 50px"
                   >
                     {{ report.file_name }}
                   </mat-cell>
@@ -615,7 +784,7 @@
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     File
                   </mat-header-cell>
@@ -623,7 +792,7 @@
                     *matCellDef="let report; let i = index"
                     [class.odd-row]="1 % 2"
                     [class.even-row]="!(i % 2)"
-                    class="column-nowrap"
+                    class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     <button
                       mat-icon-button

@@ -26,6 +26,12 @@ export class ReportsService {
     });
   }
 
+  downloadZipReport(id: string): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/api/reports/downloadZip/${id}`, {
+      responseType: 'blob' as 'blob',
+    });
+  }
+
   updateReport(id: string, xmlContent: string): Observable<any> {
     return this.http.put<any>(
       `${environment.apiUrl}/api/reports/report/${id}/updateXml`,
