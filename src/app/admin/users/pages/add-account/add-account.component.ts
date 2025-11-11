@@ -43,7 +43,6 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
         [
           Validators.required,
           Validators.maxLength(50),
-          Validators.pattern(/^[A-Za-z\s]+$/),
         ],
       ],
       firstname: [
