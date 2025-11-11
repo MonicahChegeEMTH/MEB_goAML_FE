@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'auth-user';
 const REFRESH_TOKEN_KEY = 'refresh-token';
+const USER_KEY = 'auth-user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenStorageService {
   constructor() {}
 
+  // ---- TOKEN IN COOKIES ----
   private setCookie(name: string, value: string, days = 1): void {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
-    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Strict;Secure`;
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
   }
 
   private getCookie(name: string): string | null {
@@ -25,10 +26,18 @@ export class TokenStorageService {
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
   }
 
-  signOut(): void {
-    this.deleteCookie(TOKEN_KEY);
-    this.deleteCookie(REFRESH_TOKEN_KEY);
-    this.deleteCookie(USER_KEY);
+  // ---- USER IN SESSION STORAGE ----
+  public saveUser(user: any): void {
+    sessionStorage.removeItem(USER_KEY);
+    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+
+  public getUser(): any {
+    const user = sessionStorage.getItem(USER_KEY);
+    if (user) {
+      return JSON.parse(user);
+    }
+    return null;
   }
 
   public saveToken(token: string, refreshToken: string): void {
@@ -44,19 +53,9 @@ export class TokenStorageService {
     return this.getCookie(REFRESH_TOKEN_KEY);
   }
 
-  public saveUser(user: any): void {
-    this.setCookie(USER_KEY, JSON.stringify(user));
-  }
-
-  public getUser(): any {
-    const user = this.getCookie(USER_KEY);
-    if (user) {
-      try {
-        return JSON.parse(user);
-      } catch {
-        return {};
-      }
-    }
-    return {};
+  signOut(): void {
+    sessionStorage.clear();
+    this.deleteCookie(TOKEN_KEY);
+    this.deleteCookie(REFRESH_TOKEN_KEY);
   }
 }

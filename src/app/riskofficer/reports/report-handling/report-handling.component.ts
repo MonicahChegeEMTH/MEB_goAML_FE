@@ -12,6 +12,7 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 })
 export class ReportHandlingComponent {
   activeTab: 'preview' | 'download' = 'preview';
+  isLoadingDownload: { [key: string]: boolean } = {};
   firstname: string = '';
   lastname: string = '';
   xmlContent: string = '';
@@ -112,8 +113,8 @@ export class ReportHandlingComponent {
   // }
 
   downloadZIP(reportId: string): void {
-    // if (this.isLoadingDownload[reportId]) return;
-    // this.isLoadingDownload[reportId] = true;
+    if (this.isLoadingDownload[reportId]) return;
+    this.isLoadingDownload[reportId] = true;
 
     this.reportService.downloadZipReport(reportId).subscribe({
       next: (response: Blob) => {
@@ -134,7 +135,7 @@ export class ReportHandlingComponent {
         );
       },
       complete: () => {
-        // this.isLoadingDownload[reportId] = false;
+        this.isLoadingDownload[reportId] = false;
       },
     });
   }
