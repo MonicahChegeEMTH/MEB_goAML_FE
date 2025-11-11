@@ -12,8 +12,8 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 })
 export class ReportHandlingComponent {
   activeTab: 'preview' | 'download' = 'preview';
-  firstname: string;
-  lastname: string;
+  firstname: string = '';
+  lastname: string = '';
   xmlContent: string = '';
   formattedXml: SafeHtml = '';
   fileName: string = 'report.xml';
@@ -22,31 +22,31 @@ export class ReportHandlingComponent {
   isSaving: boolean = false;
 
   constructor(
-      private tokenStorage: TokenStorageService,
-      private sanitizer: DomSanitizer,
-      private route: ActivatedRoute,
-      private reportsService: ReportsService,
-      private snackbar: SnackbarService
-    ) {}
-  
-    ngOnInit(): void {
-      const user = this.tokenStorage.getUser();
-      this.firstname = user.firstname;
-      this.lastname = user.lastname;
+    private tokenStorage: TokenStorageService,
+    private sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private reportService: ReportsService,
+    private snackbar: SnackbarService
+  ) {}
 
-      const navData = history.state?.reportData;
+  ngOnInit(): void {
+    const user = this.tokenStorage.getUser();
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
 
-      if (navData?.xmlContent) {
-        this.xmlContent = navData.xmlContent;
-        this.fileName = navData.fileName || 'report.xml';
-        this.reportId = navData.reportId || '';
-        this.displayXml(this.xmlContent);
-      } else {
-        console.warn('No XML content found in navigation state:', navData);
-      }
+    const navData = history.state?.reportData;
+
+    if (navData?.xmlContent) {
+      this.xmlContent = navData.xmlContent;
+      this.fileName = navData.fileName || 'report.xml';
+      this.reportId = navData.reportId || '';
+      this.displayXml(this.xmlContent);
+    } else {
+      console.warn('No XML content found in navigation state:', navData);
     }
+  }
 
-    private escapeXml(unsafe: string): string {
+  private escapeXml(unsafe: string): string {
     return unsafe
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -104,11 +104,39 @@ export class ReportHandlingComponent {
     URL.revokeObjectURL(url);
   }
 
-  downloadZIP(): void {
-    this.snackbar.showNotification(
-      'snackbar-success',
-      'ZIP download triggered!'
-    );
+  // downloadZIP(): void {
+  //   this.snackbar.showNotification(
+  //     'snackbar-success',
+  //     'ZIP download triggered!'
+  //   );
+  // }
+
+  downloadZIP(reportId: string): void {
+    // if (this.isLoadingDownload[reportId]) return;
+    // this.isLoadingDownload[reportId] = true;
+
+    this.reportService.downloadZipReport(reportId).subscribe({
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `report-${reportId}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Download failed:', error);
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to download report.'
+        );
+      },
+      complete: () => {
+        // this.isLoadingDownload[reportId] = false;
+      },
+    });
   }
 
   toggleEditMode(): void {
@@ -120,7 +148,7 @@ export class ReportHandlingComponent {
     }
   }
 
-   saveEditedXml(): void {
+  saveEditedXml(): void {
     try {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(this.xmlContent, 'text/xml');
@@ -143,9 +171,10 @@ export class ReportHandlingComponent {
       }
 
       console.log('Updating report with ID:', this.reportId);
+
       this.isSaving = true;
 
-      this.reportsService
+      this.reportService
         .updateReport(this.reportId, this.xmlContent)
         .subscribe({
           next: (res) => {
