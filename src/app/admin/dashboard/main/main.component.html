@@ -22,7 +22,7 @@
           </div>
 
           <div class="reports-summary-body">
-            <h1 *ngIf="!isLoading; else loading">{{ totalReports }}</h1>
+            <h3 *ngIf="!isLoading; else loading" style="color: #b08b2e">{{ totalReports }}</h3>
             <ng-template #loading><h1>...</h1></ng-template>
             <a routerLink="/admin/reports/reports" class="view-all"
               >VIEW ALL →</a
