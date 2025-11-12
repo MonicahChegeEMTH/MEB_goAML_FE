@@ -36,7 +36,11 @@
       <div class="xml-section">
         <div class="xml-box" *ngIf="xmlContent; else noReport">
           <div class="edit-actions">
-            <button class="btn small-btn" (click)="toggleEditMode()" [disabled]="isSaving">
+            <button
+              class="btn small-btn"
+              (click)="toggleEditMode()"
+              [disabled]="isSaving"
+            >
               {{ editMode ? "Preview XML" : "Edit XML" }}
             </button>
             <button
@@ -77,11 +81,25 @@
 
         <div class="side-content">
           <div class="download-buttons">
-            <button class="btn gold-btn" (click)="downloadXML()">
-              Download XML
+            <button
+              class="btn gold-btn"
+              (click)="downloadXML()"
+              [disabled]="isDownloadingXML"
+            >
+              <ng-container *ngIf="!isDownloadingXML; else xmlLoading"
+                >Download XML</ng-container
+              >
+              <ng-template #xmlLoading>Download XML</ng-template>
             </button>
-            <button class="btn dark-btn" (click)="downloadZIP(reportId)">
-              Download ZIP
+            <button
+              class="btn dark-btn"
+              (click)="downloadZIP(reportId)"
+              [disabled]="isDownloadingZIP[reportId]"
+            >
+              <ng-container *ngIf="!isDownloadingZIP[reportId]; else zipLoading"
+                >Download ZIP</ng-container
+              >
+              <ng-template #zipLoading>Download ZIP</ng-template>
             </button>
           </div>
 

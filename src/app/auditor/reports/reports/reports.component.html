@@ -220,6 +220,7 @@
               matInput
               [matDatepicker]="fromPicker"
               [(ngModel)]="accStmtFrom"
+              [max]="today"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -237,6 +238,7 @@
               matInput
               [matDatepicker]="toPicker"
               [(ngModel)]="accStmtTo"
+              [max]="today"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -274,6 +276,7 @@
               matInput
               [matDatepicker]="toPicker"
               [(ngModel)]="strTranDate"
+              [max]="today"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -286,7 +289,7 @@
           </mat-form-field>
         </div>
 
-        <div class="filter-field">
+        <!-- <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label
               >Account Number <span class="required">*</span></mat-label
@@ -305,7 +308,7 @@
               >Account Number is required.</mat-error
             >
           </mat-form-field>
-        </div>
+        </div> -->
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
@@ -381,6 +384,7 @@
               matInput
               [matDatepicker]="toPicker"
               [(ngModel)]="starTranDate"
+              [max]="today"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -483,6 +487,7 @@
               matInput
               [matDatepicker]="toPicker"
               [(ngModel)]="ctrTranDate"
+              [max]="today"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -506,7 +511,7 @@
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Search Filter Based SAR Reports
+            Generate Filter Based SAR Report
           </ng-container>
         </button>
 
@@ -519,7 +524,7 @@
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Search Filter Based Account Statements
+            Generate Filter Based Account Statement
           </ng-container>
         </button>
 
@@ -532,7 +537,7 @@
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Search Filter Based STR Reports
+            Generate Filter Based STR Report
           </ng-container>
         </button>
 
@@ -545,7 +550,7 @@
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Search Filter Based STAR Reports
+            Generate Filter Based STAR Report
           </ng-container>
         </button>
 
@@ -558,7 +563,7 @@
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Search Filter Based CTR Reports
+            Generate Filter Based CTR Report
           </ng-container>
         </button>
 
@@ -583,7 +588,7 @@
                   <div class="col-8">
                     <ul class="header-buttons-left ms-0">
                       <li class="dropdown">
-                        <h2 style="color: #fff">Recent Reports</h2>
+                        <h2 style="color: #fff">Reports</h2>
                       </li>
                       <li class="searchbox m-l-20">
                         <label for="search-input">
@@ -615,12 +620,7 @@
                           <img
                             src="assets/images/icons/xlsx.png"
                             alt=""
-                            (click)="
-                              exporter.exportTable('xlsx', {
-                                fileName: 'reports',
-                                sheet: 'sheet1'
-                              })
-                            "
+                            (click)="exportXlsx()"
                           />
                         </div>
                       </li>

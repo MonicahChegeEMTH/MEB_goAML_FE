@@ -14,6 +14,8 @@ export const environment = {
   // API: 'http://172.16.2.128:9600',
    apiUrl: "http://172.16.1.126:9600",
    API: "http://172.16.1.126:9600",
+  //  apiUrl: "/backend-api",
+  //  API: "/backend-api",
 };
 
 /*

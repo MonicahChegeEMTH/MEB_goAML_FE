@@ -56,61 +56,58 @@ export class SigninComponent
     return this.authForm.controls;
   }
 
- onSubmit() {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  onSubmit() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
 
-  this.submitted = true;
-  this.loading = true;
-  this.error = '';
+    this.submitted = true;
+    this.loading = true;
+    this.error = '';
+    if (this.authForm.invalid) {
+      this.error = 'Username and Password not valid !';
+      return;
+    } else {
+      this.authService.login(this.authForm.value).subscribe(
+        (response) => {
+          // const res = response.entity;
+          // this.tokenStorage.saveToken(res.token, res.refreshToken);
+          const res = response.entity;
+          this.tokenStorage.saveToken(res.token, res.refreshToken);
+          this.tokenStorage.saveUser(res);
+          console.log('user data', res);
+          // this.tokenStorage.saveUser(res);
+          const role = res.roles[0].name;
+          setTimeout(() => {
+            if (role === Role.Admin) {
+              this.router.navigate(['/admin/dashboard/main']);
+            } else if (role === Role.Riskofficer) {
+              this.router.navigate(['/riskofficer/dashboard/main']);
+            } else if (role === Role.Auditor) {
+              this.router.navigate(['/auditor/dashboard/main']);
+            } else {
+              this.error = 'Invalid Login';
+            }
+          }, 100);
 
-  if (this.authForm.invalid) {
-    this.error = 'Username and Password not valid!';
-    this.snackbar.showNotification('snackbar-danger', this.error);
-    this.loading = false;
-    return;
-  }
+          this.submitted = false;
+          this.loading = false;
+          this.snackbar.showNotification(
+            'snackbar-success',
+            'Login successful. Welcome ' + res.username + '!'
+          );
+        },
+        (err) => {
+          const backendMessage =
+        err?.error?.message || err?.message || 'Login failed. Please try again.';
+      this.error = backendMessage;
 
-  this.authService.login(this.authForm.value).subscribe(
-    (response) => {
-      const res = response.entity;
-      this.tokenStorage.saveToken(res.token, res.refreshToken);
-      this.tokenStorage.saveUser(res);
+      this.submitted = false;
+      this.loading = false;
 
-      const role = res.roles[0].name;
-
-      setTimeout(() => {
-        if (role === Role.Admin) {
-          this.router.navigate(['/admin/dashboard/main']);
-        } else if (role === Role.Riskofficer) {
-          this.router.navigate(['/riskofficer/dashboard/main']);
-        } else if (role === Role.Auditor) {
-          this.router.navigate(['/auditor/dashboard/main']);
-        } else {
-          this.snackbar.showNotification('snackbar-danger', 'Invalid login role');
+      // Show notification using your service
+      this.notificationService.alertWarning(backendMessage);
         }
-      }, 100);
-
-      this.submitted = false;
-      this.loading = false;
-      this.snackbar.showNotification(
-        'snackbar-success',
-        'Login successful. Welcome ' + res.username + '!'
       );
-    },
-    (err) => {
-      console.error('Login error:', err);
-      this.submitted = false;
-      this.loading = false;
-
-      const backendMessage =
-        err?.error?.message ||
-        err?.message ||
-        'An unknown error occurred. Please try again.';
-
-      this.snackbar.showNotification('snackbar-danger', backendMessage);
     }
-  );
-}
-
+  }
 }
