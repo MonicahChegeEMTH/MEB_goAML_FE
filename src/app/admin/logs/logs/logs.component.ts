@@ -23,7 +23,7 @@ import { formatDate } from '@angular/common';
 export class LogsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'id',
-    'user_id',
+
     'username',
     'action_type',
     'report_type',
@@ -90,9 +90,9 @@ export class LogsComponent implements OnInit, AfterViewInit {
 
   customFilter() {
     return (data: AuditLog, filter: string): boolean => {
-      const lowerCaseFilter = filter.trim().toLowerCase();
+      const terms = filter.trim().toLowerCase().split(/\s+/);
 
-      let combinedData = `
+      const combinedData = `
       ${data.id}
       ${data.user_id}
       ${data.username}
@@ -102,11 +102,7 @@ export class LogsComponent implements OnInit, AfterViewInit {
       ${data.ip_address}
     `.toLowerCase();
 
-      combinedData = combinedData
-        .replace(/\b(am|a\.m\.|morning)\b/g, 'am')
-        .replace(/\b(pm|p\.m\.|afternoon|evening)\b/g, 'pm');
-
-      return combinedData.includes(lowerCaseFilter);
+      return terms.every((term) => combinedData.includes(term));
     };
   }
 

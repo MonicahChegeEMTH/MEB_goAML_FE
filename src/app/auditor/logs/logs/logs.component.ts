@@ -89,10 +89,10 @@ export class LogsComponent implements OnInit, AfterViewInit {
   }
 
   customFilter() {
-    return (data: AuditLog, filter: string): boolean => {
-      const lowerCaseFilter = filter.trim().toLowerCase();
-
-      let combinedData = `
+      return (data: AuditLog, filter: string): boolean => {
+        const terms = filter.trim().toLowerCase().split(/\s+/);
+  
+        const combinedData = `
         ${data.id}
         ${data.user_id}
         ${data.username}
@@ -101,14 +101,10 @@ export class LogsComponent implements OnInit, AfterViewInit {
         ${data.created_at}
         ${data.ip_address}
       `.toLowerCase();
-
-      combinedData = combinedData
-        .replace(/\b(am|a\.m\.|morning)\b/g, 'am')
-        .replace(/\b(pm|p\.m\.|afternoon|evening)\b/g, 'pm');
-
-      return combinedData.includes(lowerCaseFilter);
-    };
-  }
+  
+        return terms.every((term) => combinedData.includes(term));
+      };
+    }
 
   applyFilter(): void {
     this.dataSource.filter = this.searchText.trim().toLowerCase();

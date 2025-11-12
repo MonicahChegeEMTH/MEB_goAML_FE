@@ -8,10 +8,10 @@
       <div class="logo">
         <h2>Welcome to goAML</h2>
         <h3 style="color: #b08b2e">Reporting Solution</h3>
-        <p class="subtitle">Select mode of logging in to continue</p>
+        <p class="subtitle">Login in to continue</p>
       </div>
 
-      <div class="login-type">
+      <!-- <div class="login-type">
         <button
           mat-button
           class="login-toggle"
@@ -30,7 +30,7 @@
         >
           System Account
         </button>
-      </div>
+      </div> -->
 
       <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
@@ -84,7 +84,7 @@
         <div class="login-options">
           <mat-checkbox formControlName="rememberMe"></mat-checkbox>
           <a class="forgot-link" routerLink="/authentication/forgot-password"
-            >Forgot Password?</a
+            ></a
           >
         </div>
       </form>
