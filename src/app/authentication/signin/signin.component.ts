@@ -97,11 +97,15 @@ export class SigninComponent
           );
         },
         (err) => {
-          this.error = err;
-          this.submitted = false;
-          this.loading = false;
+          const backendMessage =
+        err?.error?.message || err?.message || 'Login failed. Please try again.';
+      this.error = backendMessage;
 
-          this.notificationService.alertWarning(this.error);
+      this.submitted = false;
+      this.loading = false;
+
+      // Show notification using your service
+      this.notificationService.alertWarning(backendMessage);
         }
       );
     }

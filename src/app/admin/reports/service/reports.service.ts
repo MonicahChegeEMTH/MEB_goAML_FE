@@ -63,7 +63,7 @@ export class ReportsService {
   downloadStrReport(
     trandId: string,
     tranDate: string,
-    accountNumber: string,
+    // accountNumber: string,
     reason: string,
     action: string,
     comments: string,
@@ -72,7 +72,7 @@ export class ReportsService {
     const params = new HttpParams()
       .set('tranId', trandId)
       .set('tranDate', tranDate)
-      .set('accountNumber', accountNumber)
+      // .set('accountNumber', accountNumber)
       .set('reason', reason)
       .set('action', action)
       .set('comments', comments)

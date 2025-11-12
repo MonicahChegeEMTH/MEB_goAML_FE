@@ -20,6 +20,8 @@ export class ReportHandlingComponent {
   editMode: boolean = false;
   reportId: string = '';
   isSaving: boolean = false;
+  isDownloadingXML = false;
+  isDownloadingZIP: { [key: string]: boolean } = {};
 
   constructor(
     private tokenStorage: TokenStorageService,
@@ -95,18 +97,31 @@ export class ReportHandlingComponent {
   }
 
   downloadXML(): void {
-    const blob = new Blob([this.xmlContent], { type: 'application/xml' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = this.fileName;
-    link.click();
-    URL.revokeObjectURL(url);
+    if (this.isDownloadingXML) return;
+    this.isDownloadingXML = true;
+
+    try {
+      const blob = new Blob([this.xmlContent], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = this.fileName;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      const backendMessage =
+        error?.error?.message ||
+        error?.message ||
+        'Failed to download XML file.';
+      this.snackbar.showNotification('snackbar-danger', backendMessage);
+    } finally {
+      setTimeout(() => (this.isDownloadingXML = false), 1000);
+    }
   }
 
   downloadZIP(reportId: string): void {
-    // if (this.isLoadingDownload[reportId]) return;
-    // this.isLoadingDownload[reportId] = true;
+    if (this.isDownloadingZIP[reportId]) return;
+    this.isDownloadingZIP[reportId] = true;
 
     this.reportService.downloadZipReport(reportId).subscribe({
       next: (response: Blob) => {
@@ -120,14 +135,13 @@ export class ReportHandlingComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
-        console.error('Download failed:', error);
         this.snackbar.showNotification(
           'snackbar-danger',
           'Failed to download report.'
         );
       },
       complete: () => {
-        // this.isLoadingDownload[reportId] = false;
+        this.isDownloadingZIP[reportId] = false;
       },
     });
   }

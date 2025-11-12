@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { AuditLog } from '../service/audit-log.model';
 import { AuditLogService } from '../service/audit-log.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,6 +13,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-logs',
@@ -20,10 +27,9 @@ export class LogsComponent implements OnInit, AfterViewInit {
     'username',
     'action_type',
     'report_type',
-    // 'records_retrieved',
+
     'createdat',
     'ip_address',
-    // 'file',
   ];
 
   dataSource = new MatTableDataSource<AuditLog>([]);
@@ -32,9 +38,11 @@ export class LogsComponent implements OnInit, AfterViewInit {
   firstname: string;
   lastname: string;
   searchText = '';
+  today = new Date();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('exporter', { static: false }) exporter: any;
 
   constructor(
     private auditLogService: AuditLogService,
@@ -48,15 +56,17 @@ export class LogsComponent implements OnInit, AfterViewInit {
     this.lastname = user.lastname;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
   fetchAuditLogs(): void {
     this.auditLogService.getAuditLogs().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
+        this.dataSource.data = data.map((log: any) => ({
+          ...log,
+          created_at: formatDate(
+            log.created_at,
+            'MMM d, y, h:mm:ss a',
+            'en-US'
+          ),
+        }));
         this.isLoading = false;
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
@@ -71,6 +81,35 @@ export class LogsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.dataSource.filterPredicate = this.customFilter();
+  }
+
+  customFilter() {
+    return (data: AuditLog, filter: string): boolean => {
+      const lowerCaseFilter = filter.trim().toLowerCase();
+
+      let combinedData = `
+      ${data.id}
+      ${data.user_id}
+      ${data.username}
+      ${data.action_type}
+      ${data.report_type}
+      ${data.created_at}
+      ${data.ip_address}
+    `.toLowerCase();
+
+      combinedData = combinedData
+        .replace(/\b(am|a\.m\.|morning)\b/g, 'am')
+        .replace(/\b(pm|p\.m\.|afternoon|evening)\b/g, 'pm');
+
+      return combinedData.includes(lowerCaseFilter);
+    };
+  }
+
   applyFilter(): void {
     this.dataSource.filter = this.searchText.trim().toLowerCase();
   }
@@ -80,10 +119,19 @@ export class LogsComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = '';
   }
 
-  downloadPDF() {
+  getCurrentDateString(): string {
+    return formatDate(new Date(), 'yyyyMMdd', 'en-US');
+  }
+
+  downloadPDF(): void {
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text('Audit Logs', 14, 15);
+
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
 
     autoTable(doc, {
       head: [
@@ -91,18 +139,16 @@ export class LogsComponent implements OnInit, AfterViewInit {
           'User Id',
           'Username',
           'Action Type',
-          'Report Type',
-          'Records Retrieved',
+          'Activity',
           'Timestamp',
           'IP Address',
         ],
       ],
-      body: this.dataSource.data.map((row: any) => [
+      body: exportData.map((row) => [
         row.user_id,
         row.username,
         row.action_type,
         row.report_type,
-        row.records_retrieved,
         row.created_at,
         row.ip_address,
       ]),
@@ -111,6 +157,24 @@ export class LogsComponent implements OnInit, AfterViewInit {
       headStyles: { fillColor: [63, 81, 181] },
     });
 
-    doc.save('auditLogs.pdf');
+    const fileName = `Auditlogs_${this.getCurrentDateString()}.pdf`;
+    doc.save(fileName);
+  }
+
+  exportXlsx(): void {
+    if (!this.exporter) {
+      console.error('Exporter not found!');
+      return;
+    }
+    const fileName = `Auditlogs_${this.getCurrentDateString()}`;
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
+    this.exporter.exportTable('xlsx', {
+      fileName,
+      sheet: 'sheet1',
+      dataSource: exportData,
+    });
   }
 }

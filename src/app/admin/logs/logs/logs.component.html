@@ -60,12 +60,7 @@
                             <img
                               src="assets/images/icons/xlsx.png"
                               alt=""
-                              (click)="
-                                exporter.exportTable('xlsx', {
-                                  fileName: 'logs',
-                                  sheet: 'sheet1'
-                                })
-                              "
+                              (click)="exportXlsx()"
                             />
                           </div>
                         </li>
@@ -104,9 +99,11 @@
                       [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-6"
                     >
-                      {{ paginator
-                        ? paginator.pageIndex * paginator.pageSize + i + 1
-                        : i + 1 }}
+                      {{
+                        paginator
+                          ? paginator.pageIndex * paginator.pageSize + i + 1
+                          : i + 1
+                      }}
                     </mat-cell>
                   </ng-container>
 
@@ -114,7 +111,7 @@
                     <mat-header-cell
                       *matHeaderCellDef
                       mat-sort-header
-                     class="column-nowrap psl-3 tbl-col-width-per-18"
+                      class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       User Id</mat-header-cell
                     >
@@ -132,7 +129,7 @@
                     <mat-header-cell
                       *matHeaderCellDef
                       mat-sort-header
-                     class="column-nowrap psl-3 tbl-col-width-per-18"
+                      class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       Username</mat-header-cell
                     >
@@ -169,7 +166,7 @@
                       *matHeaderCellDef
                       mat-sort-header
                       class="column-nowrap psl-3 tbl-col-width-per-18"
-                      style="padding-right: 30px;"
+                      style="padding-right: 30px"
                     >
                       Activity</mat-header-cell
                     >
@@ -178,7 +175,7 @@
                       [class.odd-row]="i % 2"
                       [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
-                      style="padding-right: 30px;"
+                      style="padding-right: 30px"
                     >
                       {{ report.report_type }}
                     </mat-cell>
@@ -218,7 +215,7 @@
                       class="column-nowrap psl-3 tbl-col-width-per-18 spacing-generated-report"
                       style="min-width: 150px; padding-right: 50px"
                     >
-                      {{ report.created_at | date:'medium' }}
+                      {{ report.created_at | date : "medium" }}
                     </mat-cell>
                   </ng-container>
 
@@ -226,7 +223,7 @@
                     <mat-header-cell
                       *matHeaderCellDef
                       mat-sort-header
-                     class="column-nowrap psl-3 tbl-col-width-per-18"
+                      class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       Ip Addressed</mat-header-cell
                     >
