@@ -13,7 +13,10 @@ export class ReportsService {
   constructor(private http: HttpClient) {}
 
   getAuditLogs(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/api/users/audit/logs`, {});
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/api/users/audit/logs`,
+      {}
+    );
   }
 
   getAllReports(): Observable<any[]> {
@@ -27,15 +30,18 @@ export class ReportsService {
   }
 
   downloadZipReport(id: string): Observable<Blob> {
-    return this.http.get(`${environment.apiUrl}/api/reports/downloadZip/${id}`, {
-      responseType: 'blob' as 'blob',
-    });
+    return this.http.get(
+      `${environment.apiUrl}/api/reports/downloadZip/${id}`,
+      {
+        responseType: 'blob' as 'blob',
+      }
+    );
   }
 
   updateReport(id: string, xmlContent: string): Observable<any> {
     return this.http.put<any>(
       `${environment.apiUrl}/api/reports/report/${id}/updateXml`,
-      xmlContent,
+      xmlContent
     );
   }
 
@@ -46,11 +52,13 @@ export class ReportsService {
   }
 
   getAccounts(docCode: string, referenceNumber: string) {
-  return this.http.get<any[]>(`${environment.apiUrl}/api/reports/allAccounts`, {
-    params: { doccode: docCode, referencenumber: referenceNumber }
-  });
-}
-
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/api/reports/allAccounts`,
+      {
+        params: { doccode: docCode, referencenumber: referenceNumber },
+      }
+    );
+  }
 
   downloadSARReport(
     accountNumber: string,
@@ -64,7 +72,11 @@ export class ReportsService {
       .set('action', action)
       .set('indicators', indicators.join(','));
 
-    return this.http.post(`${environment.apiUrl}/api/reports/sar`, {}, { params });
+    return this.http.post(
+      `${environment.apiUrl}/api/reports/sar`,
+      {},
+      { params }
+    );
   }
 
   downloadStrReport(
@@ -139,8 +151,40 @@ export class ReportsService {
 
     return this.http.get(
       `${environment.apiUrl}/api/reports/accountStatement`,
-      
+
       { params }
     );
   }
+
+  createManualSar(sarData: {
+  reason: string;
+  action: string;
+  firstName: string;
+  lastName: string;
+  birthdate?: string;
+  occupation?: string;
+  idNumber: string;
+  nationality1?: string;
+  indicators: string[];
+}): Observable<{ fileName: string; id: string; xmlContent: string }> {
+
+  // Backend expects a single object containing all indicators
+  const payload = {
+    reason: sarData.reason,
+    action: sarData.action,
+    firstName: sarData.firstName,
+    lastName: sarData.lastName,
+    birthdate: sarData.birthdate || '',
+    occupation: sarData.occupation || '',
+    idNumber: sarData.idNumber,
+    nationality1: sarData.nationality1 || '',
+    indicator: sarData.indicators.join(','), // combine indicators into one string
+  };
+
+  return this.http.post<{ fileName: string; id: string; xmlContent: string }>(
+    `${environment.apiUrl}/api/sar/manualSAR`,
+    [payload] // wrap in array if backend expects an array
+  );
+}
+
 }

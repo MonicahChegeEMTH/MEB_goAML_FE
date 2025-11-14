@@ -76,6 +76,18 @@ export class ReportsComponent implements OnInit {
   filteredAccounts: any[] = [];
   fullAccountList: any[] = [];
   private lastIdNumber: string = '';
+  sarInputMode: 'existing' | 'new' | null = null;
+  firstName = '';
+  lastName = '';
+  idNumber = '';
+  nationality1 = '';
+  occupation = '';
+  birthdate = '';
+
+  openSar(mode: 'existing' | 'new') {
+    this.sarInputMode = mode;
+    this.showReportForm('SAR'); // open the SAR section
+  }
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
   sarIndicators = [
@@ -165,27 +177,21 @@ export class ReportsComponent implements OnInit {
 
   onIdentifierInputChange(value: string) {
     if (!value || !value.trim()) {
-      this.filteredAccounts = [...this.fullAccountList];
+      this.filteredAccounts = [];
+      this.accountList = [];
       return;
     }
 
-    if (this.selectedIdType === 'account') {
-      if (this.fullAccountList.length > 0) {
-        this.filteredAccounts = [...this.fullAccountList];
-      } else {
-        this.identifierInput$.next('');
-      }
+    if (this.hasIdNumberChanged(value)) {
+      this.fullAccountList = [];
+      this.identifierInput$.next(value.trim());
       return;
     }
 
     const hasComma = value.includes(',');
 
     if (!hasComma) {
-      if (this.fullAccountList.length > 0) {
-        this.filteredAccounts = [...this.fullAccountList];
-      } else {
-        this.identifierInput$.next(value.trim());
-      }
+      this.identifierInput$.next(value.trim());
       return;
     }
 
@@ -193,24 +199,20 @@ export class ReportsComponent implements OnInit {
     const searchTerm = parts[parts.length - 1].trim().toLowerCase();
 
     if (!searchTerm) {
-      this.filteredAccounts = [...this.fullAccountList];
+      this.filteredAccounts = [];
       return;
     }
 
-    if (this.fullAccountList.length > 0) {
-      this.filteredAccounts = this.fullAccountList.filter((acc) => {
-        const combinedData = (
-          acc.account_no +
-          ' ' +
-          acc.account_name +
-          ' ' +
-          acc.scheme_type
-        ).toLowerCase();
-        return combinedData.includes(searchTerm);
-      });
-    } else {
-      this.identifierInput$.next(searchTerm);
-    }
+    this.filteredAccounts = this.fullAccountList.filter((acc) => {
+      const combinedData = (
+        acc.account_no +
+        ' ' +
+        acc.account_name +
+        ' ' +
+        acc.scheme_type
+      ).toLowerCase();
+      return combinedData.includes(searchTerm);
+    });
   }
 
   private hasIdNumberChanged(currentId: string): boolean {
@@ -548,13 +550,6 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
-    console.log('Downloading SAR report with:', {
-      accountNumber: this.accountNumber,
-      sarReason: this.sarReason,
-      selectedAction: this.selectedAction,
-      selectedIndicators: this.selectedIndicators,
-    });
-
     this.isDownloading = true;
 
     this.service
@@ -566,7 +561,6 @@ export class ReportsComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('SAR report response:', response);
           sessionStorage.setItem('sarPreviewXML', response.xmlDocument);
           this.snackbar.showNotification(
             'snackbar-success',
@@ -595,6 +589,65 @@ export class ReportsComponent implements OnInit {
         },
       });
   }
+
+  downloadManualSar() {
+  if (!this.firstName || !this.lastName || !this.idNumber || this.selectedIndicators.length === 0) {
+    this.snackbar.showNotification(
+      'snackbar-danger',
+      'Please fill all required fields.'
+    );
+    return;
+  }
+
+  this.isDownloading = true;
+
+  const sarData = {
+    reason: this.sarReason,
+    action: this.selectedAction,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    birthdate: this.birthdate,
+    occupation: this.occupation,
+    idNumber: this.idNumber,
+    nationality1: this.nationality1,
+    indicators: this.selectedIndicators
+  };
+
+  this.service.createManualSar(sarData).subscribe({
+    next: (response) => {
+      // store preview XML in session storage
+      sessionStorage.setItem('sarPreviewXML', response.xmlContent);
+
+      this.snackbar.showNotification(
+        'snackbar-success',
+        'Manual SAR report generated successfully.'
+      );
+
+      // navigate to preview or handling page
+      this.router.navigate(['/admin/reports/reports-handling'], {
+        state: {
+          reportData: {
+            xmlContent: response.xmlContent,
+            fileName: response.fileName,
+            reportId: response.id,
+          },
+        },
+      });
+    },
+    error: (error) => {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Failed to generate manual SAR report. Please try again.'
+      );
+      console.error('Failed to generate manual SAR report:', error);
+      this.isDownloading = false;
+    },
+    complete: () => {
+      this.isDownloading = false;
+    },
+  });
+}
+
 
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
