@@ -14,6 +14,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { ReportsRoutingModule } from './reports-routing.module';
 import { MatSortModule } from "@angular/material/sort";
 import { ReportHandlingComponent } from './report-handling/report-handling.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [ReportsComponent, ReportHandlingComponent],
@@ -30,7 +31,8 @@ import { ReportHandlingComponent } from './report-handling/report-handling.compo
     ComponentsModule,
     SharedModule,
     MatCardModule,
-    MatSortModule
+    MatSortModule,
+    MatAutocompleteModule
 ],
 })
 export class ReportsModule {}

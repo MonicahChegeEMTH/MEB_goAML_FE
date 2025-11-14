@@ -10,6 +10,7 @@ import { ReportsService } from '../service/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { debounceTime, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-reports',
@@ -69,6 +70,11 @@ export class ReportsComponent implements OnInit {
   ctrTranId: string = '';
   ctrTranDate: string = '';
   today = new Date();
+  accountList: any[] = [];
+  isFetchingAccounts: boolean = false;
+  identifierInput$: Subject<string> = new Subject<string>();
+  filteredAccounts: any[] = [];
+  fullAccountList: any[] = [];
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
   sarIndicators = [
@@ -117,15 +123,114 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.fetchReports();
+
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
+
     this.route.queryParams.subscribe((params) => {
       const type = params['reportType'];
       if (type) {
         this.selectedReportType = type;
       }
     });
+
+    this.identifierInput$
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isFetchingAccounts = true)),
+        switchMap((value) => this.fetchAccountsObservable(value)),
+        tap(() => (this.isFetchingAccounts = false))
+      )
+      .subscribe({
+        next: (data: any[]) => {
+          this.accountList = data;
+          this.fullAccountList = [...data];
+          this.filteredAccounts = [...data];
+
+          if (data.length === 1) {
+            this.accountNumber = data[0].account_no;
+            this.identificationNumber = data[0].account_no;
+          }
+        },
+        error: (err) => {
+          console.error('Failed to fetch accounts:', err);
+          this.accountList = [];
+          this.fullAccountList = [];
+          this.filteredAccounts = [];
+          this.isFetchingAccounts = false;
+        },
+      });
+  }
+
+  onIdentifierInputChange(value: string) {
+    if (!value || !value.trim()) {
+      this.filteredAccounts = [...this.fullAccountList];
+      return;
+    }
+
+    if (this.selectedIdType === 'account') {
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next('');
+      }
+      return;
+    }
+
+    const hasComma = value.includes(',');
+
+    if (!hasComma) {
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next(value.trim());
+      }
+      return;
+    }
+
+    const parts = value.split(',');
+    const searchTerm = parts[parts.length - 1].trim().toLowerCase();
+
+    if (!searchTerm) {
+      this.filteredAccounts = [...this.fullAccountList];
+      return;
+    }
+
+    if (this.fullAccountList.length > 0) {
+      this.filteredAccounts = this.fullAccountList.filter((acc) => {
+        const combinedData = (
+          acc.account_no +
+          ' ' +
+          acc.account_name +
+          ' ' +
+          acc.scheme_type
+        ).toLowerCase();
+        return combinedData.includes(searchTerm);
+      });
+    } else {
+      this.identifierInput$.next(searchTerm);
+    }
+  }
+
+  fetchAccountsObservable(identifier: string) {
+    const docCodeMap: any = {
+      nationalId: 'NIDA',
+      passport: 'PP',
+      registration: 'CR',
+    };
+    const docCode = docCodeMap[this.selectedIdType] || '';
+    return this.service.getAccounts(docCode, identifier);
+  }
+
+  displayAccount(accountNo: string) {
+    return accountNo;
+  }
+
+  onAccountSelected(account: any) {
+    this.accountNumber = account.account_no;
+    this.identificationNumber = account.account_no;
+    this.accountList = [];
   }
 
   initForm() {
@@ -166,11 +271,11 @@ export class ReportsComponent implements OnInit {
       case 'passport':
         this.idPlaceholder = 'Enter passport number';
         break;
-      case 'drivingLicense':
-        this.idPlaceholder = 'Enter driving license number';
+      case 'registration':
+        this.idPlaceholder = 'Enter certificate of registration number';
         break;
-      case 'alienId':
-        this.idPlaceholder = 'Enter alien ID number';
+      case 'account':
+        this.idPlaceholder = 'Enter account number';
         break;
       default:
         this.idPlaceholder = 'Enter ID number';
@@ -214,6 +319,45 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  fetchAccounts() {
+    if (
+      !this.identificationNumber ||
+      !this.selectedIdType ||
+      this.selectedIdType === 'account'
+    ) {
+      this.accountList = [];
+      if (this.selectedIdType === 'account') {
+        this.accountNumber = this.identificationNumber;
+      }
+      return;
+    }
+
+    const docCodeMap: any = {
+      nationalId: 'NIDA',
+      passport: 'PP',
+      registration: 'CR',
+    };
+
+    const docCode = docCodeMap[this.selectedIdType] || '';
+
+    this.service.getAccounts(docCode, this.identificationNumber).subscribe({
+      next: (data: any[]) => {
+        this.accountList = data;
+        if (data.length === 1) {
+          this.accountNumber = data[0].account_no;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch accounts:', err);
+        this.accountList = [];
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to fetch accounts'
+        );
+      },
+    });
+  }
+
   customFilter() {
     return (data: any, filter: string): boolean => {
       const terms = filter.trim().toLowerCase().split(/\s+/);
@@ -227,8 +371,7 @@ export class ReportsComponent implements OnInit {
       ${data.file_name}
     `.toLowerCase();
 
-    return terms.every(term => combinedData.includes(term));
-
+      return terms.every((term) => combinedData.includes(term));
     };
   }
 
@@ -258,48 +401,54 @@ export class ReportsComponent implements OnInit {
   }
 
   getCurrentDateString(): string {
-      return formatDate(new Date(), 'yyyyMMdd', 'en-US');
+    return formatDate(new Date(), 'yyyyMMdd', 'en-US');
+  }
+
+  downloadPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reports', 14, 15);
+
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
+
+    autoTable(doc, {
+      head: [['Account No', 'Report Type', 'Generated By', 'Generated At']],
+      body: exportData.map((row: any) => [
+        row.account,
+        row.type,
+        row.reporting_user,
+        row.date,
+      ]),
+      startY: 25,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] },
+    });
+
+    const fileName = `Report_${this.getCurrentDateString()}.pdf`;
+    doc.save(fileName);
+  }
+
+  exportXlsx(): void {
+    if (!this.exporter) {
+      console.error('Exporter not found!');
+      return;
     }
-  
-    downloadPDF() {
-      const doc = new jsPDF();
-      doc.setFontSize(16);
-      doc.text('Reports', 14, 15);
-  
-      const exportData = this.dataSource.filteredData.length > 0 ? this.dataSource.filteredData : this.dataSource.data;
-  
-      autoTable(doc, {
-        head: [['Account No', 'Report Type', 'Generated By', 'Generated At']],
-        body: exportData.map((row: any) => [
-          row.account,
-          row.type,
-          row.reporting_user,
-          row.date,
-        ]),
-        startY: 25,
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [63, 81, 181] },
-      });
-  
-      const fileName = `Report_${this.getCurrentDateString()}.pdf`;
-      doc.save(fileName);
-    }
-  
-    exportXlsx(): void {
-      if (!this.exporter) {
-        console.error('Exporter not found!');
-        return;
-      }
-  
-      const fileName = `Report_${this.getCurrentDateString()}`;
-      const exportData = this.dataSource.filteredData.length > 0 ? this.dataSource.filteredData : this.dataSource.data;
-  
-      this.exporter.exportTable('xlsx', {
-        fileName,
-        sheet: 'sheet1',
-        dataSource: exportData
-      });
-    }
+
+    const fileName = `Report_${this.getCurrentDateString()}`;
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
+
+    this.exporter.exportTable('xlsx', {
+      fileName,
+      sheet: 'sheet1',
+      dataSource: exportData,
+    });
+  }
 
   previewReport(reportId: string): void {
     if (this.isLoadingPreview[reportId]) return;
@@ -379,12 +528,7 @@ export class ReportsComponent implements OnInit {
   }
 
   downloadSARReport() {
-    if (
-      !this.accountNumber ||
-      !this.sarReason ||
-      !this.selectedAction ||
-      this.selectedIndicators.length === 0
-    ) {
+    if (!this.accountNumber || this.selectedIndicators.length === 0) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all SAR fields.'

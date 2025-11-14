@@ -49,6 +49,14 @@ export class ReportHandlingComponent {
     }
   }
 
+  private highlightEmptyFields(xml: string): string {
+    // Matches <tag> ... </tag> where ... is only whitespace (including line breaks)
+    return xml.replace(
+      /(&lt;\w+&gt;)(\s*?)(&lt;\/\w+&gt;)/gs,
+      `<span class="missing-field">$1$2$3</span>`
+    );
+  }
+
   private escapeXml(unsafe: string): string {
     return unsafe
       .replace(/&/g, '&amp;')
@@ -59,10 +67,22 @@ export class ReportHandlingComponent {
   }
 
   private displayXml(xml: string): void {
-    const formatted = this.formatXml(xml);
-    const escaped = this.escapeXml(formatted);
+    let formatted = this.formatXml(xml); // indent nicely
+    let escaped = this.escapeXml(formatted); // escape <, >, &
+    let highlighted = this.highlightEmptyFields(escaped);
+
     this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
-      `<pre>${escaped}</pre>`
+      `<pre class="xml-preview-container">
+      <style>
+        .missing-field {
+          background-color: #ffdddd;
+          color: red;
+          border-radius: 4px;
+          padding: 2px 4px;
+        }
+      </style>
+      ${highlighted}
+    </pre>`
     );
   }
 
@@ -77,6 +97,7 @@ export class ReportHandlingComponent {
     const reg = /(>)(<)(\/*)/g;
     xml = xml.replace(reg, '$1\r\n$2$3');
     let pad = 0;
+
     return xml
       .split('\r\n')
       .map((node) => {
@@ -109,11 +130,6 @@ export class ReportHandlingComponent {
       link.download = this.fileName;
       link.click();
       URL.revokeObjectURL(url);
-
-      // this.snackbar.showNotification(
-      //   'snackbar-success',
-      //   'XML download started!'
-      // );
     } catch (error) {
       const backendMessage =
         error?.error?.message ||
@@ -155,11 +171,33 @@ export class ReportHandlingComponent {
 
   toggleEditMode(): void {
     this.editMode = !this.editMode;
+
     if (this.editMode) {
-      this.xmlContent = this.formatXml(this.xmlContent);
+      // Format and highlight for edit mode
+      let formatted = this.formatXml(this.xmlContent);
+      let escaped = this.escapeXml(formatted);
+      let highlighted = this.highlightEmptyFields(escaped);
+
+      this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
+        `<style>
+        .missing-field {
+          background-color: #ffdddd;
+          color: black;
+          border-radius: 4px;
+          padding: 2px 4px;
+        }
+      </style>
+      ${highlighted}`
+      );
     } else {
       this.displayXml(this.xmlContent);
     }
+  }
+
+  onXmlEdit(event: Event): void {
+    const target = event.target as HTMLElement;
+    // Extract plain text content, removing HTML tags
+    this.xmlContent = target.innerText || target.textContent || '';
   }
 
   saveEditedXml(): void {
@@ -189,7 +227,7 @@ export class ReportHandlingComponent {
       this.reportService
         .updateReport(this.reportId, this.xmlContent)
         .subscribe({
-          next: (res) => {
+          next: () => {
             this.displayXml(this.xmlContent);
             this.editMode = false;
             this.snackbar.showNotification(

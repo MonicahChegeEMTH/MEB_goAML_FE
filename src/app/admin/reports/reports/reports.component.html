@@ -122,78 +122,91 @@
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'SAR'">
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Account Number <span class="required"></span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Enter account number"
-              [(ngModel)]="accountNumber"
-              #accStmtAccountModel="ngModel"
-              required
-              pattern="^[0-9]*$"
-              maxlength="15"
-              (keypress)="
-                $event.charCode >= 48 && $event.charCode <= 57
-                  ? true
-                  : $event.preventDefault()
-              "
-            />
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('required')
-              "
-            >
-              Account number is required.
-            </mat-error>
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('pattern')
-              "
-            >
-              Only numbers are allowed.
-            </mat-error>
-          </mat-form-field>
-        </div>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Reason <span class="required">*</span></mat-label>
-            <input
-              matInput
-              placeholder="Enter reason"
-              [(ngModel)]="sarReason"
-            />
-          </mat-form-field>
-        </div>
+  <!-- Identifier Type -->
+  <div class="filter-field">
+    <mat-form-field appearance="outline">
+      <mat-label>Identifier Type <span class="required">*</span></mat-label>
+      <mat-select [(ngModel)]="selectedIdType" (selectionChange)="onIdTypeChange($event.value)">
+        <mat-option value="nationalId">National ID</mat-option>
+        <mat-option value="passport">Passport Number</mat-option>
+        <mat-option value="registration">Certificate of Registration</mat-option>
+        <mat-option value="account">Account Number</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Action <span class="required">*</span></mat-label>
-            <input
-              matInput
-              placeholder="Enter action"
-              [(ngModel)]="selectedAction"
-            />
-          </mat-form-field>
-        </div>
+  <!-- Identifier Number -->
+  <div class="filter-field">
+  <mat-form-field appearance="outline" class="full-width" style="min-width: 400px !important; margin-right: 120px">
+    <mat-label>{{ idPlaceholder }} <span class="required">*</span></mat-label>
+    
+    <input
+      type="text"
+      matInput
+      [(ngModel)]="identificationNumber"
+      [matAutocomplete]="auto"
+      (ngModelChange)="onIdentifierInputChange($event)"
+    />
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators <span class="required">*</span></mat-label>
-            <mat-select [(ngModel)]="selectedIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of sarIndicators"
-                [value]="indicator"
-              >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
+    <!-- Spinner -->
+    <mat-progress-spinner
+      *ngIf="isFetchingAccounts"
+      matSuffix
+      mode="indeterminate"
+      diameter="24"
+    >
+    </mat-progress-spinner>
+
+    <!-- Autocomplete dropdown -->
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccount">
+      <mat-option
+        *ngFor="let acc of filteredAccounts"
+        [value]="acc.account_no"
+        (onSelectionChange)="onAccountSelected(acc)"
+      >
+        <span style="width: 300px; display: inline-block;">
+          {{ acc.account_no }} - {{ acc.account_name }} ({{ acc.scheme_type }})
+        </span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+
+  <!-- Reason -->
+  <div class="filter-field" style="margin-left: 180px;">
+    <mat-form-field appearance="outline" >
+      <mat-label>Reason <span class="required">*</span></mat-label>
+      <input matInput placeholder="Enter reason" [(ngModel)]="sarReason" />
+    </mat-form-field>
+  </div>
+
+  <!-- Action -->
+  <div class="filter-field">
+    <mat-form-field appearance="outline">
+      <mat-label>Action <span class="required">*</span></mat-label>
+      <mat-select [(ngModel)]="selectedAction">
+        <mat-option *ngFor="let action of sarActions" [value]="action">
+          {{ action }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Indicators -->
+  <div class="filter-field">
+    <mat-form-field appearance="outline">
+      <mat-label>Indicators <span class="required">*</span></mat-label>
+      <mat-select [(ngModel)]="selectedIndicators" multiple>
+        <mat-option *ngFor="let indicator of sarIndicators" [value]="indicator">
+          {{ indicator }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+</div>
+
 
       <div class="filter-row" *ngIf="selectedReportType === 'AccStmt'">
         <div class="filter-field">

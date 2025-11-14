@@ -388,7 +388,7 @@
   font-size: 0.95rem;
   background-color: #1e1e1e;
   color: #dcdcdc;
-  border: none; 
+  border: none;
   border-radius: 6px;
   padding: 1rem;
   line-height: 1.4;
@@ -397,8 +397,8 @@
   overflow-x: auto;
   resize: vertical;
   outline: none;
-  caret-color: #c2973f; 
-  font-variant-ligatures: none; 
+  caret-color: #c2973f;
+  font-variant-ligatures: none;
 }
 
 .xml-editor[wrap="off"] {
@@ -451,5 +451,9 @@
   }
 }
 
-
-
+.missing-field {
+  background-color: #ffe6e6;
+  color: #c00;
+  padding: 2px 4px;
+  border-radius: 4px;
+}

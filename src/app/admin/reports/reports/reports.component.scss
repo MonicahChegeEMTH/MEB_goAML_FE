@@ -612,4 +612,10 @@
   }
 }
 
+.mat-autocomplete-panel.wide-autocomplete {
+  min-width: 800px !important; /* Adjust as needed */
+  max-width: 1500px !important;
+}
+
+
 
