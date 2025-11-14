@@ -75,6 +75,7 @@ export class ReportsComponent implements OnInit {
   identifierInput$: Subject<string> = new Subject<string>();
   filteredAccounts: any[] = [];
   fullAccountList: any[] = [];
+  private lastIdNumber: string = '';
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
   sarIndicators = [
@@ -150,7 +151,6 @@ export class ReportsComponent implements OnInit {
 
           if (data.length === 1) {
             this.accountNumber = data[0].account_no;
-            this.identificationNumber = data[0].account_no;
           }
         },
         error: (err) => {
@@ -213,6 +213,12 @@ export class ReportsComponent implements OnInit {
     }
   }
 
+  private hasIdNumberChanged(currentId: string): boolean {
+    const hasChanged = this.lastIdNumber !== currentId;
+    this.lastIdNumber = currentId;
+    return hasChanged;
+  }
+
   fetchAccountsObservable(identifier: string) {
     const docCodeMap: any = {
       nationalId: 'NIDA',
@@ -267,6 +273,12 @@ export class ReportsComponent implements OnInit {
   }
 
   onIdTypeChange(type: string): void {
+    this.identificationNumber = '';
+    this.filteredAccounts = [];
+    this.fullAccountList = [];
+    this.accountList = [];
+    this.lastIdNumber = '';
+
     switch (type) {
       case 'passport':
         this.idPlaceholder = 'Enter passport number';
