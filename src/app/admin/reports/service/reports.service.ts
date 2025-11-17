@@ -184,7 +184,7 @@ export class ReportsService {
     );
   }
 
-  createManualSar(sarData: {
+  createManualSar(sarDataArray: {
     reason: string;
     action: string;
     firstName: string;
@@ -193,23 +193,14 @@ export class ReportsService {
     occupation?: string;
     idNumber: string;
     nationality1?: string;
-    indicators: string[];
-  }): Observable<{ fileName: string; id: string; xmlContent: string }> {
-    const payload = {
-      reason: sarData.reason,
-      action: sarData.action,
-      firstName: sarData.firstName,
-      lastName: sarData.lastName,
-      birthdate: sarData.birthdate || '',
-      occupation: sarData.occupation || '',
-      idNumber: sarData.idNumber,
-      nationality1: sarData.nationality1 || '',
-      indicator: sarData.indicators.join(','),
-    };
+    indicator: string;  // note: string, not string[]
+}[]): Observable<{ fileName: string; id: string; xmlContent: string }[]> {
 
-    return this.http.post<{ fileName: string; id: string; xmlContent: string }>(
-      `${environment.apiUrl}/api/sar/manualSAR`,
-      [payload]
-    );
-  }
+  // Send the array of customers directly
+  return this.http.post<{ fileName: string; id: string; xmlContent: string }[]>(
+    `${environment.apiUrl}/api/sar/manualSAR`,
+    sarDataArray
+  );
+}
+
 }

@@ -65,11 +65,7 @@
 
           <!-- Identifier Number -->
           <div class="filter-field">
-            <mat-form-field
-              appearance="outline"
-              class="full-width"
-              style="min-width: 400px !important; margin-right: 120px"
-            >
+            <mat-form-field appearance="outline" class="full-width">
               <mat-label
                 >{{ idPlaceholder }} <span class="required">*</span></mat-label
               >
@@ -112,7 +108,7 @@
           </div>
 
           <!-- Reason -->
-          <div class="filter-field" style="margin-left: 180px">
+          <div class="filter-field">
             <mat-form-field appearance="outline">
               <mat-label>Reason</mat-label>
               <input
@@ -127,11 +123,11 @@
           <div class="filter-field">
             <mat-form-field appearance="outline">
               <mat-label>Action</mat-label>
-              <mat-select [(ngModel)]="selectedAction">
-                <mat-option *ngFor="let action of sarActions" [value]="action">
-                  {{ action }}
-                </mat-option>
-              </mat-select>
+              <input
+                matInput
+                placeholder="Enter action"
+                [(ngModel)]="sarAction"
+              />
             </mat-form-field>
           </div>
 
@@ -151,110 +147,153 @@
           </div>
         </div>
         <div class="filter-row" *ngIf="sarInputMode === 'new'">
-          <!-- Identifier Type -->
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Firstname <span class="required">*</span></mat-label>
-              <input
-                matInput
-                placeholder="Enter firstname"
-                [(ngModel)]="firstName"
-              />
-            </mat-form-field>
-          </div>
+          <!-- Add Customer Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            style="margin-bottom: 20px"
+            (click)="addCustomer()"
+          >
+            + Add Customer
+          </button>
 
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Lastname <span class="required">*</span></mat-label>
-              <input
-                matInput
-                placeholder="Enter lastname"
-                [(ngModel)]="lastName"
-              />
-            </mat-form-field>
-          </div>
+          <!-- Customer Blocks -->
+          <div
+            class="filter-row"
+            *ngFor="let cust of manualSarCustomers; let i = index"
+            style="
+              border: 1px solid #ccc;
+              padding: 15px;
+              border-radius: 6px;
+              margin-bottom: 20px;
+            "
+          >
+            <!-- Firstname -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Firstname <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter firstname"
+                  [(ngModel)]="cust.firstName"
+                />
+              </mat-form-field>
+            </div>
 
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>ID Number <span class="required">*</span></mat-label>
-              <input
-                matInput
-                placeholder="Enter idNumber"
-                [(ngModel)]="idNumber"
-              />
-            </mat-form-field>
-          </div>
+            <!-- Lastname -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Lastname <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter lastname"
+                  [(ngModel)]="cust.lastName"
+                />
+              </mat-form-field>
+            </div>
 
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Nationality</mat-label>
-              <input
-                matInput
-                placeholder="Enter nationality"
-                [(ngModel)]="nationality1"
-              />
-            </mat-form-field>
-          </div>
+            <!-- ID Number -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>ID Number <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter idNumber"
+                  [(ngModel)]="cust.idNumber"
+                />
+              </mat-form-field>
+            </div>
 
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Occupation</mat-label>
-              <input
-                matInput
-                placeholder="Enter occupation"
-                [(ngModel)]="occupation"
-              />
-            </mat-form-field>
-          </div>
+            <!-- Nationality -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Nationality</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter nationality"
+                  [(ngModel)]="cust.nationality"
+                />
+              </mat-form-field>
+            </div>
 
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Birth Date</mat-label>
-              <input
-                matInput
-                placeholder="Enter birthdate"
-                [(ngModel)]="birthdate"
-              />
-            </mat-form-field>
-          </div>
+            <!-- Occupation -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Occupation</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter occupation"
+                  [(ngModel)]="cust.occupation"
+                />
+              </mat-form-field>
+            </div>
 
-          <!-- Reason -->
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Reason</mat-label>
-              <input
-                matInput
-                placeholder="Enter reason"
-                [(ngModel)]="sarReason"
-              />
-            </mat-form-field>
-          </div>
+            <!-- Birth Date -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Birth Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Select birthdate"
+                  [(ngModel)]="cust.birthdate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
 
-          <!-- Action -->
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Action</mat-label>
-              <mat-select [(ngModel)]="selectedAction">
-                <mat-option *ngFor="let action of sarActions" [value]="action">
-                  {{ action }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+            <!-- Reason -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Reason</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter reason"
+                  [(ngModel)]="cust.reason"
+                />
+              </mat-form-field>
+            </div>
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Action</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter action"
+                  [(ngModel)]="cust.action"
+                />
+              </mat-form-field>
+            </div>
 
-          <!-- Indicators -->
-          <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Indicators <span class="required">*</span></mat-label>
-              <mat-select [(ngModel)]="selectedIndicators" multiple>
-                <mat-option
-                  *ngFor="let indicator of sarIndicators"
-                  [value]="indicator"
+            <!-- Indicators -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label
+                  >Indicators <span class="required">*</span></mat-label
                 >
-                  {{ indicator }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+                <mat-select [(ngModel)]="cust.indicators" multiple>
+                  <mat-option
+                    *ngFor="let indicator of sarIndicators"
+                    [value]="indicator"
+                  >
+                    {{ indicator }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Remove Customer -->
+            <button
+              mat-button
+              color="warn"
+              *ngIf="manualSarCustomers.length > 1"
+              (click)="removeCustomer(i)"
+            >
+              Remove Customer
+            </button>
           </div>
         </div>
       </div>

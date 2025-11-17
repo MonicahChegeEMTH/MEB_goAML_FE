@@ -15,6 +15,8 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { MatSortModule } from "@angular/material/sort";
 import { ReportHandlingComponent } from './report-handling/report-handling.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [ReportsComponent, ReportHandlingComponent],
@@ -32,7 +34,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     SharedModule,
     MatCardModule,
     MatSortModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
 ],
 })
 export class ReportsModule {}
