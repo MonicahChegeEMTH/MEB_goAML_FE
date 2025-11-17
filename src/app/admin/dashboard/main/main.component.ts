@@ -56,6 +56,15 @@ export class MainComponent implements OnInit {
     });
   }
 
+  openSar(mode: 'existing' | 'new') {
+  this.router.navigate(['/admin/reports/reports'], {
+    queryParams: {
+      reportType: 'SAR',
+      sarOption: mode, // 'existing' or 'new'
+    },
+  });
+}
+
   fetchReports(): void {
     this.isLoading = true;
     this.service.getAllReports().subscribe({

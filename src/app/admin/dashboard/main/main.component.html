@@ -22,7 +22,9 @@
           </div>
 
           <div class="reports-summary-body">
-            <h3 *ngIf="!isLoading; else loading" style="color: #b08b2e">{{ totalReports }}</h3>
+            <h3 *ngIf="!isLoading; else loading" style="color: #b08b2e">
+              {{ totalReports }}
+            </h3>
             <ng-template #loading><h1>...</h1></ng-template>
             <a routerLink="/admin/reports/reports" class="view-all"
               >VIEW ALL →</a
@@ -32,9 +34,15 @@
       </div>
 
       <div class="actions">
-        <button (click)="openReportType('SAR')">
-          New SAR <i class="fas fa-arrow-right"></i>
+        <button class="menu-button" [matMenuTriggerFor]="sarMenu">
+        New SAR <i class="fas fa-arrow-down"></i>
+      </button>
+      <mat-menu #sarMenu="matMenu" class="sar-menu">
+        <button mat-menu-item (click)="openSar('existing')">
+          Existing Customer
         </button>
+        <button mat-menu-item (click)="openSar('new')">New Customer</button>
+      </mat-menu>
         <button (click)="openReportType('STR')">
           New STR <i class="fas fa-arrow-right"></i>
         </button>
@@ -129,8 +137,8 @@
               <mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header
-               class="column-nowrap psl-3 tbl-col-width-per-18"
-               style="min-width: 150px; padding-right: 50px"
+                class="column-nowrap psl-3 tbl-col-width-per-18"
+                style="min-width: 150px; padding-right: 50px"
               >
                 Generated On
               </mat-header-cell>

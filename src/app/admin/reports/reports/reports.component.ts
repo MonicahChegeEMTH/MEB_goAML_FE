@@ -78,29 +78,28 @@ export class ReportsComponent implements OnInit {
   private lastIdNumber: string = '';
   sarInputMode: 'existing' | 'new' | null = null;
   manualSarCustomers: {
-  firstName: string;
-  lastName: string;
-  idNumber: string;
-  nationality?: string;
-  occupation?: string;
-  birthdate?: string;
-  reason?: string;
-  action?: string;
-  indicators?: string[];
-}[] = [
-  {
-    firstName: '',
-    lastName: '',
-    idNumber: '',
-    nationality: '',
-    occupation: '',
-    birthdate: '',
-    reason: '',
-    action: '',
-    indicators: []
-  }
-];
-
+    firstName: string;
+    lastName: string;
+    idNumber: string;
+    nationality?: string;
+    occupation?: string;
+    birthdate?: string;
+    reason?: string;
+    action?: string;
+    indicators?: string[];
+  }[] = [
+    {
+      firstName: '',
+      lastName: '',
+      idNumber: '',
+      nationality: '',
+      occupation: '',
+      birthdate: '',
+      reason: '',
+      action: '',
+      indicators: [],
+    },
+  ];
 
   openSar(mode: 'existing' | 'new') {
     this.sarInputMode = mode;
@@ -161,8 +160,12 @@ export class ReportsComponent implements OnInit {
 
     this.route.queryParams.subscribe((params) => {
       const type = params['reportType'];
+      const sarOption = params['sarOption'];
       if (type) {
         this.selectedReportType = type;
+        if (type === 'SAR' && sarOption) {
+          this.sarInputMode = sarOption;
+        }
       }
     });
 
@@ -195,21 +198,27 @@ export class ReportsComponent implements OnInit {
 
   onIdentifierInputChange(value: string) {
     if (!value || !value.trim()) {
-      this.filteredAccounts = [];
-      this.accountList = [];
+      this.filteredAccounts = [...this.fullAccountList];
       return;
     }
 
-    if (this.hasIdNumberChanged(value)) {
-      this.fullAccountList = [];
-      this.identifierInput$.next(value.trim());
+    if (this.selectedIdType === 'account') {
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next('');
+      }
       return;
     }
 
     const hasComma = value.includes(',');
 
     if (!hasComma) {
-      this.identifierInput$.next(value.trim());
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next(value.trim());
+      }
       return;
     }
 
@@ -217,20 +226,24 @@ export class ReportsComponent implements OnInit {
     const searchTerm = parts[parts.length - 1].trim().toLowerCase();
 
     if (!searchTerm) {
-      this.filteredAccounts = [];
+      this.filteredAccounts = [...this.fullAccountList];
       return;
     }
 
-    this.filteredAccounts = this.fullAccountList.filter((acc) => {
-      const combinedData = (
-        acc.account_no +
-        ' ' +
-        acc.account_name +
-        ' ' +
-        acc.scheme_type
-      ).toLowerCase();
-      return combinedData.includes(searchTerm);
-    });
+    if (this.fullAccountList.length > 0) {
+      this.filteredAccounts = this.fullAccountList.filter((acc) => {
+        const combinedData = (
+          acc.account_no +
+          ' ' +
+          acc.account_name +
+          ' ' +
+          acc.scheme_type
+        ).toLowerCase();
+        return combinedData.includes(searchTerm);
+      });
+    } else {
+      this.identifierInput$.next(searchTerm);
+    }
   }
 
   private hasIdNumberChanged(currentId: string): boolean {
@@ -626,70 +639,70 @@ export class ReportsComponent implements OnInit {
   }
 
   downloadManualSar() {
-  // Validate customers
-  for (let c of this.manualSarCustomers) {
-    if (!c.firstName || !c.lastName || !c.idNumber) {
+    for (let c of this.manualSarCustomers) {
+      if (!c.firstName || !c.lastName || !c.idNumber) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Firstname, Lastname and ID Number are required for each customer.'
+        );
+        return;
+      }
+    }
+
+    if (!this.selectedIndicators || this.selectedIndicators.length === 0) {
       this.snackbar.showNotification(
         'snackbar-danger',
-        'Firstname, Lastname and ID Number are required for each customer.'
+        'Please select at least one indicator.'
       );
       return;
     }
-  }
 
-  if (!this.selectedIndicators || this.selectedIndicators.length === 0) {
-    this.snackbar.showNotification(
-      'snackbar-danger',
-      'Please select at least one indicator.'
-    );
-    return;
-  }
+    this.isDownloading = true;
 
-  this.isDownloading = true;
+    const payloadArray = this.manualSarCustomers.map((c) => ({
+      reason: this.sarReason,
+      action: this.selectedAction,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      birthdate: c.birthdate
+        ? new Date(c.birthdate).toISOString().split('T')[0]
+        : '',
+      occupation: c.occupation || '',
+      idNumber: c.idNumber,
+      nationality1: c.nationality || '',
+      indicator: (c.indicators || []).join(','),
+    }));
 
-  // Transform customers to match backend format
-  const payloadArray = this.manualSarCustomers.map((c) => ({
-    reason: this.sarReason,
-    action: this.selectedAction,
-    firstName: c.firstName,
-    lastName: c.lastName,
-    birthdate: c.birthdate
-      ? new Date(c.birthdate).toISOString().split('T')[0]
-      : '',
-    occupation: c.occupation || '',
-    idNumber: c.idNumber,
-    nationality1: c.nationality || '',
-    indicator: (c.indicators || []).join(','), 
-  }));
+    this.service.createManualSar(payloadArray).subscribe({
+      next: (responses) => {
+        const mergedXml = responses.map((r) => r.xmlContent).join('\n');
+        sessionStorage.setItem('sarPreviewXML', mergedXml);
 
-  this.service.createManualSar(payloadArray).subscribe({
-    next: (responses) => {
-      const mergedXml = responses.map(r => r.xmlContent).join('\n');
-      sessionStorage.setItem('sarPreviewXML', mergedXml);
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'Manual SAR report(s) generated successfully.'
+        );
 
-      this.snackbar.showNotification(
-        'snackbar-success',
-        'Manual SAR report(s) generated successfully.'
-      );
-
-      this.router.navigate(['/admin/reports/reports-handling'], {
-        state: {
-          reportData: {
-            xmlContent: mergedXml,
-            fileName: responses[0].fileName,
-            reportId: responses[0].id,
+        this.router.navigate(['/admin/reports/reports-handling'], {
+          state: {
+            reportData: {
+              xmlContent: mergedXml,
+              fileName: responses[0].fileName,
+              reportId: responses[0].id,
+            },
           },
-        },
-      });
-    },
-    error: () => {
-      this.snackbar.showNotification('snackbar-danger', 'Failed to generate SAR.');
-      this.isDownloading = false;
-    },
-    complete: () => (this.isDownloading = false),
-  });
-}
-
+        });
+      },
+      error: () => {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to generate SAR.'
+        );
+        this.isDownloading = false;
+      },
+      complete: () => (this.isDownloading = false),
+    });
+  }
 
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);

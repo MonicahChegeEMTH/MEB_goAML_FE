@@ -91,6 +91,7 @@
               <mat-autocomplete
                 #auto="matAutocomplete"
                 [displayWith]="displayAccount"
+                [panelWidth]="'400px'"
               >
                 <mat-option
                   *ngFor="let acc of filteredAccounts"
