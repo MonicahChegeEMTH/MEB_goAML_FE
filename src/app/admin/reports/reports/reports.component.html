@@ -328,7 +328,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="strTranId"
             />
             <mat-error *ngIf="!strTranId"
@@ -344,44 +344,27 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="strTranDate"
-              [max]="today"
             />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="toPicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!strTranDate"
-              >Transaction Date is required.</mat-error
-            >
-            <mat-error *ngIf="strDate && strDate > today"
-              >Transaction Date cannot be in the future</mat-error
-            >
-          </mat-form-field>
-        </div>
-
-        <!-- <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Account Number <span class="required">*</span></mat-label
-            >
             <input
               matInput
-              placeholder="Enter account number"
-              [(ngModel)]="strAccountNo"
-              (keypress)="
-                $event.charCode >= 48 && $event.charCode <= 57
-                  ? true
-                  : $event.preventDefault()
-              "
+              [matDatepicker]="picker"
+              (dateChange)="addTranDate($event)"
+              style="display: none"
             />
-            <mat-error *ngIf="!strAccountNo"
-              >Account Number is required.</mat-error
-            >
+
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!strTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
-        </div> -->
+        </div>
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
@@ -439,7 +422,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="starTranId"
             />
             <mat-error *ngIf="!starTranId"
@@ -455,18 +438,25 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="starTranDate"
-              [max]="today"
             />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="addStarTranDate($event)"
+              style="display: none"
+            />
+
             <mat-datepicker-toggle
               matSuffix
-              [for]="toPicker"
+              [for]="picker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!starTranDate"
-              >Transaction Date is required.</mat-error
-            >
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!starTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -542,7 +532,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="ctrTranId"
             />
             <mat-error *ngIf="!ctrTranId"
@@ -558,18 +548,25 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="ctrTranDate"
-              [max]="today"
             />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="addCtrTranDate($event)"
+              style="display: none"
+            />
+
             <mat-datepicker-toggle
               matSuffix
-              [for]="toPicker"
+              [for]="picker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!ctrTranDate"
-              >Transaction Date is required.</mat-error
-            >
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!ctrTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

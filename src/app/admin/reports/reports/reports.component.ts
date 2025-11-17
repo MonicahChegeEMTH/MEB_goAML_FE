@@ -83,10 +83,11 @@ export class ReportsComponent implements OnInit {
   nationality1 = '';
   occupation = '';
   birthdate = '';
+  caretPos = 0;
 
   openSar(mode: 'existing' | 'new') {
     this.sarInputMode = mode;
-    this.showReportForm('SAR'); // open the SAR section
+    this.showReportForm('SAR');
   }
 
   sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
@@ -418,6 +419,10 @@ export class ReportsComponent implements OnInit {
     return formatDate(new Date(), 'yyyyMMdd', 'en-US');
   }
 
+  saveCaretPosition(event: any) {
+    this.caretPos = event.target.selectionStart;
+  }
+
   downloadPDF() {
     const doc = new jsPDF();
     doc.setFontSize(16);
@@ -591,63 +596,65 @@ export class ReportsComponent implements OnInit {
   }
 
   downloadManualSar() {
-  if (!this.firstName || !this.lastName || !this.idNumber || this.selectedIndicators.length === 0) {
-    this.snackbar.showNotification(
-      'snackbar-danger',
-      'Please fill all required fields.'
-    );
-    return;
-  }
-
-  this.isDownloading = true;
-
-  const sarData = {
-    reason: this.sarReason,
-    action: this.selectedAction,
-    firstName: this.firstName,
-    lastName: this.lastName,
-    birthdate: this.birthdate,
-    occupation: this.occupation,
-    idNumber: this.idNumber,
-    nationality1: this.nationality1,
-    indicators: this.selectedIndicators
-  };
-
-  this.service.createManualSar(sarData).subscribe({
-    next: (response) => {
-      // store preview XML in session storage
-      sessionStorage.setItem('sarPreviewXML', response.xmlContent);
-
-      this.snackbar.showNotification(
-        'snackbar-success',
-        'Manual SAR report generated successfully.'
-      );
-
-      // navigate to preview or handling page
-      this.router.navigate(['/admin/reports/reports-handling'], {
-        state: {
-          reportData: {
-            xmlContent: response.xmlContent,
-            fileName: response.fileName,
-            reportId: response.id,
-          },
-        },
-      });
-    },
-    error: (error) => {
+    if (
+      !this.firstName ||
+      !this.lastName ||
+      !this.idNumber ||
+      this.selectedIndicators.length === 0
+    ) {
       this.snackbar.showNotification(
         'snackbar-danger',
-        'Failed to generate manual SAR report. Please try again.'
+        'Please fill all required fields.'
       );
-      console.error('Failed to generate manual SAR report:', error);
-      this.isDownloading = false;
-    },
-    complete: () => {
-      this.isDownloading = false;
-    },
-  });
-}
+      return;
+    }
 
+    this.isDownloading = true;
+
+    const sarData = {
+      reason: this.sarReason,
+      action: this.selectedAction,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      birthdate: this.birthdate,
+      occupation: this.occupation,
+      idNumber: this.idNumber,
+      nationality1: this.nationality1,
+      indicators: this.selectedIndicators,
+    };
+
+    this.service.createManualSar(sarData).subscribe({
+      next: (response) => {
+        sessionStorage.setItem('sarPreviewXML', response.xmlContent);
+
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'Manual SAR report generated successfully.'
+        );
+
+        this.router.navigate(['/admin/reports/reports-handling'], {
+          state: {
+            reportData: {
+              xmlContent: response.xmlContent,
+              fileName: response.fileName,
+              reportId: response.id,
+            },
+          },
+        });
+      },
+      error: (error) => {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to generate manual SAR report. Please try again.'
+        );
+        console.error('Failed to generate manual SAR report:', error);
+        this.isDownloading = false;
+      },
+      complete: () => {
+        this.isDownloading = false;
+      },
+    });
+  }
 
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
@@ -707,16 +714,25 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.strTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.strTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.strTranDate
-      ? formatDate(this.strTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
       .downloadStrReport(
-        this.strTranId,
-        formattedTo,
-
+        tranIds,
+        tranDates,
         this.strReason,
         this.strAction,
         this.strComments,
@@ -726,6 +742,7 @@ export class ReportsComponent implements OnInit {
         next: (response) => {
           console.log('STR report response:', response);
           sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+
           this.snackbar.showNotification(
             'snackbar-success',
             'STR report generated successfully.'
@@ -746,6 +763,7 @@ export class ReportsComponent implements OnInit {
             error?.error?.message ||
             error?.message ||
             'Failed to generate STR report. Please try again.';
+
           this.snackbar.showNotification('snackbar-danger', backendMessage);
           this.isDownloading = false;
         },
@@ -753,6 +771,57 @@ export class ReportsComponent implements OnInit {
           this.isDownloading = false;
         },
       });
+  }
+
+  addTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.strTranDate) {
+      this.strTranDate = formatted;
+    } else {
+      const existing = this.strTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.strTranDate += `, ${formatted}`;
+      }
+    }
+  }
+
+  addStarTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.starTranDate) {
+      this.starTranDate = formatted;
+    } else {
+      const existing = this.starTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.starTranDate += `, ${formatted}`;
+      }
+    }
+  }
+
+  addCtrTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.ctrTranDate) {
+      this.ctrTranDate = formatted;
+    } else {
+      const existing = this.ctrTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.ctrTranDate += `, ${formatted}`;
+      }
+    }
   }
 
   downloadStarReport() {
@@ -766,15 +835,25 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.starTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.starTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.starTranDate
-      ? formatDate(this.starTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
       .downloadStarReport(
-        this.starTranId,
-        formattedTo,
+        tranIds,
+        tranDates,
         this.starReason,
         this.starAction,
         this.starComments,
@@ -783,7 +862,7 @@ export class ReportsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('STAR report response:', response);
-          sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+          sessionStorage.setItem('starPreviewXML', response.xmlDocument);
           this.snackbar.showNotification(
             'snackbar-success',
             'STAR report generated successfully.'
@@ -826,13 +905,23 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.ctrTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.ctrTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.ctrTranDate
-      ? formatDate(this.ctrTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
-      .downloadCtrReport(this.ctrTranType, this.ctrTranId, formattedTo)
+      .downloadCtrReport(this.ctrTranType, tranIds, tranDates)
       .subscribe({
         next: (response) => {
           console.log('CTR report response:', response);
@@ -874,4 +963,5 @@ export class ReportsComponent implements OnInit {
       }
     });
   }
+  
 }

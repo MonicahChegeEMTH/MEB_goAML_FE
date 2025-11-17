@@ -80,22 +80,32 @@ export class ReportsService {
   }
 
   downloadStrReport(
-    trandId: string,
-    tranDate: string,
-    // accountNumber: string,
+    tranIds: string[],
+    tranDates: string[],
     reason: string,
     action: string,
     comments: string,
     indicators: string[]
   ): Observable<any> {
-    const params = new HttpParams()
-      .set('tranId', trandId)
-      .set('tranDate', tranDate)
-      // .set('accountNumber', accountNumber)
-      .set('reason', reason)
-      .set('action', action)
-      .set('comments', comments)
-      .set('indicators', indicators.join(','));
+    let params = new HttpParams();
+
+    tranIds.forEach((id) => {
+      params = params.append('tranId', id);
+    });
+
+    tranDates.forEach((date) => {
+      params = params.append('tranDate', date);
+    });
+
+    if (indicators) {
+      indicators.forEach((ind) => {
+        params = params.append('indicators', ind);
+      });
+    }
+
+    if (reason) params = params.append('reason', reason);
+    if (action) params = params.append('action', action);
+    if (comments) params = params.append('comments', comments);
 
     return this.http.post(
       `${environment.apiUrl}/api/reports/str`,
@@ -105,20 +115,32 @@ export class ReportsService {
   }
 
   downloadStarReport(
-    trandId: string,
-    tranDate: string,
+    tranIds: string[],
+    tranDates: string[],
     reason: string,
     action: string,
     comments: string,
     indicators: string[]
   ): Observable<any> {
-    const params = new HttpParams()
-      .set('tranId', trandId)
-      .set('tranDate', tranDate)
-      .set('reason', reason)
-      .set('action', action)
-      .set('comments', comments)
-      .set('indicators', indicators.join(','));
+    let params = new HttpParams();
+
+    tranIds.forEach((id) => {
+      params = params.append('tranId', id);
+    });
+
+    tranDates.forEach((date) => {
+      params = params.append('tranDate', date);
+    });
+
+    if (indicators) {
+      indicators.forEach((ind) => {
+        params = params.append('indicators', ind);
+      });
+    }
+
+    if (reason) params = params.append('reason', reason);
+    if (action) params = params.append('action', action);
+    if (comments) params = params.append('comments', comments);
 
     return this.http.post(
       `${environment.apiUrl}/api/reports/star`,
@@ -129,13 +151,19 @@ export class ReportsService {
 
   downloadCtrReport(
     tranType: string,
-    trandId: string,
-    tranDate: string
+    tranIds: string[],
+    tranDates: string[]
   ): Observable<any> {
-    const params = new HttpParams()
-      .set('tranType', tranType)
-      .set('tranId', trandId)
-      .set('tranDate', tranDate);
+    let params = new HttpParams();
+
+    tranIds.forEach((id) => {
+      params = params.append('tranId', id);
+    });
+
+    tranDates.forEach((date) => {
+      params = params.append('tranDate', date);
+    });
+
     return this.http.post(
       `${environment.apiUrl}/api/reports/ctr`,
       {},
@@ -157,34 +185,31 @@ export class ReportsService {
   }
 
   createManualSar(sarData: {
-  reason: string;
-  action: string;
-  firstName: string;
-  lastName: string;
-  birthdate?: string;
-  occupation?: string;
-  idNumber: string;
-  nationality1?: string;
-  indicators: string[];
-}): Observable<{ fileName: string; id: string; xmlContent: string }> {
+    reason: string;
+    action: string;
+    firstName: string;
+    lastName: string;
+    birthdate?: string;
+    occupation?: string;
+    idNumber: string;
+    nationality1?: string;
+    indicators: string[];
+  }): Observable<{ fileName: string; id: string; xmlContent: string }> {
+    const payload = {
+      reason: sarData.reason,
+      action: sarData.action,
+      firstName: sarData.firstName,
+      lastName: sarData.lastName,
+      birthdate: sarData.birthdate || '',
+      occupation: sarData.occupation || '',
+      idNumber: sarData.idNumber,
+      nationality1: sarData.nationality1 || '',
+      indicator: sarData.indicators.join(','),
+    };
 
-  // Backend expects a single object containing all indicators
-  const payload = {
-    reason: sarData.reason,
-    action: sarData.action,
-    firstName: sarData.firstName,
-    lastName: sarData.lastName,
-    birthdate: sarData.birthdate || '',
-    occupation: sarData.occupation || '',
-    idNumber: sarData.idNumber,
-    nationality1: sarData.nationality1 || '',
-    indicator: sarData.indicators.join(','), // combine indicators into one string
-  };
-
-  return this.http.post<{ fileName: string; id: string; xmlContent: string }>(
-    `${environment.apiUrl}/api/sar/manualSAR`,
-    [payload] // wrap in array if backend expects an array
-  );
-}
-
+    return this.http.post<{ fileName: string; id: string; xmlContent: string }>(
+      `${environment.apiUrl}/api/sar/manualSAR`,
+      [payload]
+    );
+  }
 }
