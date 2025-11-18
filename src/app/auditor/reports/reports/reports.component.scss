@@ -117,7 +117,7 @@
   top: 0;
   width: 6px;
   height: 100%;
-  background-color: #b08b2e; 
+  background-color: #b08b2e;
   border-radius: 0 20px 20px 0;
 }
 
@@ -130,9 +130,9 @@
 
 .reports-summary .reports-inline {
   display: flex;
-  align-items: baseline; 
+  align-items: baseline;
   justify-content: flex-end;
-  gap: 1rem; 
+  gap: 1rem;
 }
 
 .reports-summary-card {
@@ -211,7 +211,7 @@
 }
 
 .reports-summary .view-all:hover {
-  color: #85691f; 
+  color: #85691f;
 }
 
 @media (max-width: 992px) {
@@ -258,6 +258,21 @@
       background: #003366;
     }
   }
+}
+
+::ng-deep .sar-menu .mat-menu-content {
+  background: #001a33 !important;
+  padding: 0 !important;
+}
+
+::ng-deep .sar-menu .mat-menu-item {
+  color: #fff !important;
+  font-weight: 500;
+  padding-right: 90px !important;
+}
+
+::ng-deep .sar-menu .mat-menu-item:hover {
+  background: #003366 !important;
 }
 
 @media (max-width: 768px) {
@@ -385,7 +400,7 @@
 
 .filter-container .filter-actions {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
 }
 
 .filter-container .filter-field {
@@ -405,7 +420,7 @@
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: #3b82f6; 
+  color: #3b82f6;
 }
 
 .filter-container .search-btn {
@@ -430,7 +445,7 @@
   width: 100%;
   background-color: #f9fafb;
   border-radius: 6px;
-  --mat-form-field-padding: 0.25rem 0.5rem; 
+  --mat-form-field-padding: 0.25rem 0.5rem;
 }
 
 .filter-container .search-btn:hover {
@@ -479,7 +494,7 @@
   }
 
   .filter-container .filter-field {
-    flex: 1 1 45%; 
+    flex: 1 1 45%;
     width: 100%;
   }
 
@@ -612,4 +627,12 @@
   }
 }
 
+.mat-autocomplete-panel.wide-autocomplete {
+  min-width: 800px !important; /* Adjust as needed */
+  max-width: 1500px !important;
+}
+
+.gold-spinner ::ng-deep circle {
+  stroke: #b08b2e !important;
+}
 

@@ -59,13 +59,14 @@
           </div>
 
           <div *ngIf="editMode">
-            <textarea
-              [(ngModel)]="xmlContent"
+            <div
+              #xmlEditor
+              contenteditable="true"
+              [innerHTML]="formattedXml"
+              (input)="onXmlEdit($event)"
               class="xml-editor"
-              rows="25"
-              wrap="off"
               spellcheck="false"
-            ></textarea>
+            ></div>
           </div>
 
           <div
@@ -89,9 +90,7 @@
               <ng-container *ngIf="!isDownloadingXML; else xmlLoading"
                 >Download XML</ng-container
               >
-              <ng-template #xmlLoading
-                >Download XML</ng-template
-              >
+              <ng-template #xmlLoading>Download XML</ng-template>
             </button>
             <button
               class="btn dark-btn"
@@ -101,9 +100,7 @@
               <ng-container *ngIf="!isDownloadingZIP[reportId]; else zipLoading"
                 >Download ZIP</ng-container
               >
-              <ng-template #zipLoading
-                >Download ZIP</ng-template
-              >
+              <ng-template #zipLoading>Download ZIP</ng-template>
             </button>
           </div>
 

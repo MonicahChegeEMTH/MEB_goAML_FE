@@ -59,13 +59,14 @@
           </div>
 
           <div *ngIf="editMode">
-            <textarea
-              [(ngModel)]="xmlContent"
+            <div
+              #xmlEditor
+              contenteditable="true"
+              [innerHTML]="formattedXml"
+              (input)="onXmlEdit($event)"
               class="xml-editor"
-              rows="25"
-              wrap="off"
               spellcheck="false"
-            ></textarea>
+            ></div>
           </div>
 
           <div

@@ -10,6 +10,9 @@ import { ReportsService } from '../service/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { debounceTime, forkJoin, Subject, switchMap, tap } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { IndicatorsLookupComponent } from '../indicators-lookup/indicators-lookup.component';
 
 @Component({
   selector: 'app-reports',
@@ -20,7 +23,7 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-    'reporting_user',
+    // 'reporting_user',
     'date',
     'type',
     'file_name',
@@ -69,32 +72,43 @@ export class ReportsComponent implements OnInit {
   ctrTranId: string = '';
   ctrTranDate: string = '';
   today = new Date();
-
-  sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
-  sarIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
+  accountList: any[] = [];
+  isFetchingAccounts: boolean = false;
+  identifierInput$: Subject<string> = new Subject<string>();
+  filteredAccounts: any[] = [];
+  fullAccountList: any[] = [];
+  private lastIdNumber: string = '';
+  sarInputMode: 'existing' | 'new' | null = null;
+  selectedIndicatorText = '';
+  selectedIndicator: any = null;
+  manualSarCustomers: {
+    firstName: string;
+    lastName: string;
+    idNumber: string;
+    nationality?: string;
+    occupation?: string;
+    birthdate?: string;
+    reason?: string;
+    action?: string;
+    indicators?: string[];
+  }[] = [
+    {
+      firstName: '',
+      lastName: '',
+      idNumber: '',
+      nationality: '',
+      occupation: '',
+      birthdate: '',
+      reason: '',
+      action: '',
+      indicators: [],
+    },
   ];
 
-  strIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
-  ];
-
-  starIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
-  ];
-
-  idTypes = [
-    { value: 'nationalId', viewValue: 'National ID' },
-    { value: 'passport', viewValue: 'Passport' },
-    { value: 'drivingLicense', viewValue: 'Driving License' },
-    { value: 'alienId', viewValue: 'Alien ID' },
-  ];
+  openSar(mode: 'existing' | 'new') {
+    this.sarInputMode = mode;
+    this.showReportForm('SAR');
+  }
 
   showReportForm(type: string) {
     this.selectedReportType = type;
@@ -111,21 +125,166 @@ export class ReportsComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private service: ReportsService,
     private router: Router,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.fetchReports();
+
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
+
     this.route.queryParams.subscribe((params) => {
       const type = params['reportType'];
+      const sarOption = params['sarOption'];
       if (type) {
         this.selectedReportType = type;
+        if (type === 'SAR' && sarOption) {
+          this.sarInputMode = sarOption;
+        }
       }
     });
+
+    this.identifierInput$
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isFetchingAccounts = true)),
+        switchMap((value) => this.fetchAccountsObservable(value)),
+        tap(() => (this.isFetchingAccounts = false))
+      )
+      .subscribe({
+        next: (data: any[]) => {
+          this.accountList = data;
+          this.fullAccountList = [...data];
+          this.filteredAccounts = [...data];
+
+          if (data.length === 1) {
+            this.accountNumber = data[0].account_no;
+          }
+        },
+        error: (err) => {
+          console.error('Failed to fetch accounts:', err);
+          this.accountList = [];
+          this.fullAccountList = [];
+          this.filteredAccounts = [];
+          this.isFetchingAccounts = false;
+        },
+      });
+  }
+
+  pickIndicatorDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+
+    const dialogRef = this.dialog.open(IndicatorsLookupComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result || !result.data) return;
+
+      const indicators = result.data;
+
+      this.selectedIndicatorText = indicators.map((i) => i.code).join(', ');
+
+      this.selectedIndicators = indicators.map((i) => i.code);
+
+      this.selectedStrIndicators = indicators.map((i) => i.code);
+
+      this.selectedStarIndicators = indicators.map((i) => i.code);
+
+      this.manualSarCustomers.forEach((c) => {
+        c.indicators = indicators.map((i) => i.code);
+      });
+    });
+  }
+
+  onIdentifierInputChange(value: string) {
+    this.isFetchingAccounts = true;
+    if (!value || !value.trim()) {
+      this.filteredAccounts = [...this.fullAccountList];
+      this.accountNumber = '';
+      return;
+    }
+
+    if (this.selectedIdType === 'account') {
+      this.accountNumber = value.trim();
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next('');
+      }
+      return;
+    }
+
+    const hasComma = value.includes(',');
+
+    if (!hasComma) {
+      if (this.fullAccountList.length > 0) {
+        this.filteredAccounts = [...this.fullAccountList];
+      } else {
+        this.identifierInput$.next(value.trim());
+      }
+      return;
+    }
+
+    const parts = value.split(',');
+    const searchTerm = parts[parts.length - 1].trim().toLowerCase();
+
+    if (!searchTerm) {
+      this.filteredAccounts = [...this.fullAccountList];
+      return;
+    }
+
+    if (this.fullAccountList.length > 0) {
+      this.filteredAccounts = this.fullAccountList.filter((acc) => {
+        const combinedData = (
+          acc.account_no +
+          ' ' +
+          acc.account_name +
+          ' ' +
+          acc.scheme_type
+        ).toLowerCase();
+        return combinedData.includes(searchTerm);
+      });
+    } else {
+      this.identifierInput$.next(searchTerm);
+    }
+  }
+
+  private hasIdNumberChanged(currentId: string): boolean {
+    const hasChanged = this.lastIdNumber !== currentId;
+    this.lastIdNumber = currentId;
+    return hasChanged;
+  }
+
+  fetchAccountsObservable(identifier: string) {
+    const docCodeMap: any = {
+      nationalId: 'NIDA',
+      passport: 'PASSPORT NUMBER',
+      registration: 'RGST',
+    };
+    const docCode = docCodeMap[this.selectedIdType] || '';
+    return this.service.getAccounts(docCode, identifier);
+  }
+
+  displayAccount(accountNo: string) {
+    return accountNo;
+  }
+
+  onAccountSelected(account: any) {
+    this.accountNumber = account.account_no;
+    this.identificationNumber = account.account_no;
+    this.accountList = [];
+
+    this.isFetchingAccounts = false;
+  }
+
+  onAutocompleteClosed() {
+    this.isFetchingAccounts = false;
   }
 
   initForm() {
@@ -162,15 +321,21 @@ export class ReportsComponent implements OnInit {
   }
 
   onIdTypeChange(type: string): void {
+    this.identificationNumber = '';
+    this.filteredAccounts = [];
+    this.fullAccountList = [];
+    this.accountList = [];
+    this.lastIdNumber = '';
+
     switch (type) {
       case 'passport':
         this.idPlaceholder = 'Enter passport number';
         break;
-      case 'drivingLicense':
-        this.idPlaceholder = 'Enter driving license number';
+      case 'registration':
+        this.idPlaceholder = 'Enter certificate of registration number';
         break;
-      case 'alienId':
-        this.idPlaceholder = 'Enter alien ID number';
+      case 'account':
+        this.idPlaceholder = 'Enter account number';
         break;
       default:
         this.idPlaceholder = 'Enter ID number';
@@ -214,6 +379,46 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  fetchAccounts() {
+    if (
+      !this.identificationNumber ||
+      !this.selectedIdType ||
+      this.selectedIdType === 'account'
+    ) {
+      this.accountList = [];
+      if (this.selectedIdType === 'account') {
+        this.accountNumber = this.identificationNumber;
+      }
+      return;
+    }
+
+    const docCodeMap: any = {
+      nationalId: 'NIDA',
+      passport: 'PASSPORT NUMBER',
+      registration: 'RGST',
+    };
+
+    const docCode = docCodeMap[this.selectedIdType] || '';
+    this.isFetchingAccounts = true;
+
+    this.service.getAccounts(docCode, this.identificationNumber).subscribe({
+      next: (data: any[]) => {
+        this.accountList = data;
+        if (data.length === 1) {
+          this.accountNumber = data[0].account_no;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch accounts:', err);
+        this.accountList = [];
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to fetch accounts'
+        );
+      },
+    });
+  }
+
   customFilter() {
     return (data: any, filter: string): boolean => {
       const terms = filter.trim().toLowerCase().split(/\s+/);
@@ -227,8 +432,7 @@ export class ReportsComponent implements OnInit {
       ${data.file_name}
     `.toLowerCase();
 
-    return terms.every(term => combinedData.includes(term));
-
+      return terms.every((term) => combinedData.includes(term));
     };
   }
 
@@ -258,48 +462,54 @@ export class ReportsComponent implements OnInit {
   }
 
   getCurrentDateString(): string {
-      return formatDate(new Date(), 'yyyyMMdd', 'en-US');
+    return formatDate(new Date(), 'yyyyMMdd', 'en-US');
+  }
+
+  downloadPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reports', 14, 15);
+
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
+
+    autoTable(doc, {
+      head: [['Account No', 'Report Type', 'Generated By', 'Generated At']],
+      body: exportData.map((row: any) => [
+        row.account,
+        row.type,
+        row.reporting_user,
+        row.date,
+      ]),
+      startY: 25,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] },
+    });
+
+    const fileName = `Report_${this.getCurrentDateString()}.pdf`;
+    doc.save(fileName);
+  }
+
+  exportXlsx(): void {
+    if (!this.exporter) {
+      console.error('Exporter not found!');
+      return;
     }
-  
-    downloadPDF() {
-      const doc = new jsPDF();
-      doc.setFontSize(16);
-      doc.text('Reports', 14, 15);
-  
-      const exportData = this.dataSource.filteredData.length > 0 ? this.dataSource.filteredData : this.dataSource.data;
-  
-      autoTable(doc, {
-        head: [['Account No', 'Report Type', 'Generated By', 'Generated At']],
-        body: exportData.map((row: any) => [
-          row.account,
-          row.type,
-          row.reporting_user,
-          row.date,
-        ]),
-        startY: 25,
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [63, 81, 181] },
-      });
-  
-      const fileName = `Report_${this.getCurrentDateString()}.pdf`;
-      doc.save(fileName);
-    }
-  
-    exportXlsx(): void {
-      if (!this.exporter) {
-        console.error('Exporter not found!');
-        return;
-      }
-  
-      const fileName = `Report_${this.getCurrentDateString()}`;
-      const exportData = this.dataSource.filteredData.length > 0 ? this.dataSource.filteredData : this.dataSource.data;
-  
-      this.exporter.exportTable('xlsx', {
-        fileName,
-        sheet: 'sheet1',
-        dataSource: exportData
-      });
-    }
+
+    const fileName = `Report_${this.getCurrentDateString()}`;
+    const exportData =
+      this.dataSource.filteredData.length > 0
+        ? this.dataSource.filteredData
+        : this.dataSource.data;
+
+    this.exporter.exportTable('xlsx', {
+      fileName,
+      sheet: 'sheet1',
+      dataSource: exportData,
+    });
+  }
 
   previewReport(reportId: string): void {
     if (this.isLoadingPreview[reportId]) return;
@@ -379,25 +589,13 @@ export class ReportsComponent implements OnInit {
   }
 
   downloadSARReport() {
-    if (
-      !this.accountNumber ||
-      !this.sarReason ||
-      !this.selectedAction ||
-      this.selectedIndicators.length === 0
-    ) {
+    if (!this.accountNumber || this.selectedIndicators.length === 0) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all SAR fields.'
       );
       return;
     }
-
-    console.log('Downloading SAR report with:', {
-      accountNumber: this.accountNumber,
-      sarReason: this.sarReason,
-      selectedAction: this.selectedAction,
-      selectedIndicators: this.selectedIndicators,
-    });
 
     this.isDownloading = true;
 
@@ -410,7 +608,6 @@ export class ReportsComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('SAR report response:', response);
           sessionStorage.setItem('sarPreviewXML', response.xmlDocument);
           this.snackbar.showNotification(
             'snackbar-success',
@@ -438,6 +635,88 @@ export class ReportsComponent implements OnInit {
           this.isDownloading = false;
         },
       });
+  }
+
+  addCustomer() {
+    this.manualSarCustomers.push({
+      firstName: '',
+      lastName: '',
+      idNumber: '',
+      nationality: '',
+      occupation: '',
+      birthdate: '',
+    });
+  }
+
+  removeCustomer(i: number) {
+    if (this.manualSarCustomers.length > 1) {
+      this.manualSarCustomers.splice(i, 1);
+    }
+  }
+
+  downloadManualSar() {
+    for (let c of this.manualSarCustomers) {
+      if (!c.firstName || !c.lastName || !c.idNumber) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Firstname, Lastname and ID Number are required for each customer.'
+        );
+        return;
+      }
+    }
+
+    if (!this.selectedIndicators || this.selectedIndicators.length === 0) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please select at least one indicator.'
+      );
+      return;
+    }
+
+    this.isDownloading = true;
+
+    const payloadArray = this.manualSarCustomers.map((c) => ({
+      reason: this.sarReason,
+      action: this.selectedAction,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      birthdate: c.birthdate
+        ? new Date(c.birthdate).toISOString().split('T')[0]
+        : '',
+      occupation: c.occupation || '',
+      idNumber: c.idNumber,
+      nationality1: c.nationality || '',
+      indicator: (c.indicators || []).join(','),
+    }));
+
+    this.service.createManualSar(payloadArray).subscribe({
+      next: (response) => {
+        sessionStorage.setItem('sarPreviewXML', response.xmlDocument);
+
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'Manual SAR report(s) generated successfully.'
+        );
+
+        this.router.navigate(['/admin/reports/reports-handling'], {
+          state: {
+            reportData: {
+              xmlContent: response.xmlContent,
+              fileName: response.fileName,
+              reportId: response.id,
+            },
+          },
+        });
+      },
+      error: () => {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to generate SAR.'
+        );
+        this.isDownloading = false;
+      },
+      complete: () => (this.isDownloading = false),
+    });
   }
 
   downloadAccountStatement() {
@@ -498,16 +777,25 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.strTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.strTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.strTranDate
-      ? formatDate(this.strTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
       .downloadStrReport(
-        this.strTranId,
-        formattedTo,
-
+        tranIds,
+        tranDates,
         this.strReason,
         this.strAction,
         this.strComments,
@@ -517,6 +805,7 @@ export class ReportsComponent implements OnInit {
         next: (response) => {
           console.log('STR report response:', response);
           sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+
           this.snackbar.showNotification(
             'snackbar-success',
             'STR report generated successfully.'
@@ -537,6 +826,7 @@ export class ReportsComponent implements OnInit {
             error?.error?.message ||
             error?.message ||
             'Failed to generate STR report. Please try again.';
+
           this.snackbar.showNotification('snackbar-danger', backendMessage);
           this.isDownloading = false;
         },
@@ -544,6 +834,57 @@ export class ReportsComponent implements OnInit {
           this.isDownloading = false;
         },
       });
+  }
+
+  addTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.strTranDate) {
+      this.strTranDate = formatted;
+    } else {
+      const existing = this.strTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.strTranDate += `, ${formatted}`;
+      }
+    }
+  }
+
+  addStarTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.starTranDate) {
+      this.starTranDate = formatted;
+    } else {
+      const existing = this.starTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.starTranDate += `, ${formatted}`;
+      }
+    }
+  }
+
+  addCtrTranDate(event: any) {
+    const picked = event.value;
+
+    if (!picked) return;
+
+    const formatted = formatDate(picked, 'dd-MMM-yy', 'en').toUpperCase();
+
+    if (!this.ctrTranDate) {
+      this.ctrTranDate = formatted;
+    } else {
+      const existing = this.ctrTranDate.split(',').map((x) => x.trim());
+      if (!existing.includes(formatted)) {
+        this.ctrTranDate += `, ${formatted}`;
+      }
+    }
   }
 
   downloadStarReport() {
@@ -557,15 +898,25 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.starTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.starTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.starTranDate
-      ? formatDate(this.starTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
       .downloadStarReport(
-        this.starTranId,
-        formattedTo,
+        tranIds,
+        tranDates,
         this.starReason,
         this.starAction,
         this.starComments,
@@ -574,7 +925,7 @@ export class ReportsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('STAR report response:', response);
-          sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+          sessionStorage.setItem('starPreviewXML', response.xmlDocument);
           this.snackbar.showNotification(
             'snackbar-success',
             'STAR report generated successfully.'
@@ -617,13 +968,23 @@ export class ReportsComponent implements OnInit {
       return;
     }
 
+    const tranIds = this.ctrTranId
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id !== '');
+
+    const tranDates = this.ctrTranDate
+      .split(',')
+      .map((date) => date.trim())
+      .filter((date) => date !== '')
+      .map((date) =>
+        formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
+      );
+
     this.isDownloading = true;
-    const formattedTo = this.ctrTranDate
-      ? formatDate(this.ctrTranDate, 'dd-MMM-yy', 'en').toLowerCase()
-      : null;
 
     this.service
-      .downloadCtrReport(this.ctrTranType, this.ctrTranId, formattedTo)
+      .downloadCtrReport(this.ctrTranType, tranIds, tranDates)
       .subscribe({
         next: (response) => {
           console.log('CTR report response:', response);

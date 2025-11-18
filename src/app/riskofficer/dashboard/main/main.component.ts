@@ -18,7 +18,7 @@ export class MainComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-    'reporting_user',
+    // 'reporting_user',
     'date',
     'type',
     'file_name',
@@ -55,6 +55,15 @@ export class MainComponent implements OnInit {
       queryParams: { reportType: type },
     });
   }
+
+  openSar(mode: 'existing' | 'new') {
+  this.router.navigate(['/riskofficer/reports/reports'], {
+    queryParams: {
+      reportType: 'SAR',
+      sarOption: mode, // 'existing' or 'new'
+    },
+  });
+}
 
   fetchReports(): void {
     this.isLoading = true;
@@ -123,7 +132,7 @@ export class MainComponent implements OnInit {
       },
       complete: () => {
         this.isLoadingDownload[reportId] = false;
-      },
+      }
     });
   }
 

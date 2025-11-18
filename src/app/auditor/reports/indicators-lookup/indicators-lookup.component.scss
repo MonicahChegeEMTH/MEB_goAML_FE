@@ -1,0 +1,24 @@
+.indicator-container {
+  position: relative;
+}
+
+.lookup-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  z-index: 10;
+}
+
+.gold-spinner ::ng-deep circle {
+  stroke: #b08b2e !important;
+}
+
