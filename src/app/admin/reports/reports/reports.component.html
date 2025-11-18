@@ -78,12 +78,17 @@
                 (ngModelChange)="onIdentifierInputChange($event)"
               />
 
-              <!-- Spinner -->
+              <!-- Spinner shown when fetching accounts -->
               <mat-progress-spinner
                 *ngIf="isFetchingAccounts"
                 matSuffix
                 mode="indeterminate"
                 diameter="24"
+                style="
+                  display: inline-block;
+                  vertical-align: middle;
+                  color: #b08b2e;
+                "
               >
               </mat-progress-spinner>
 
@@ -134,16 +139,24 @@
 
           <!-- Indicators -->
           <div class="filter-field">
-            <mat-form-field appearance="outline">
-              <mat-label>Indicators <span class="required">*</span></mat-label>
-              <mat-select [(ngModel)]="selectedIndicators" multiple>
-                <mat-option
-                  *ngFor="let indicator of sarIndicators"
-                  [value]="indicator"
-                >
-                  {{ indicator }}
-                </mat-option>
-              </mat-select>
+            <mat-form-field
+              appearance="outline"
+            >
+              <mat-label>Indicators</mat-label>
+              <input
+                readonly
+                [(ngModel)]="selectedIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
             </mat-form-field>
           </div>
         </div>
@@ -238,6 +251,7 @@
                   [matDatepicker]="picker"
                   placeholder="Select birthdate"
                   [(ngModel)]="cust.birthdate"
+                  [max]="today"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -271,20 +285,26 @@
 
             <!-- Indicators -->
             <div class="filter-field">
-              <mat-form-field appearance="outline">
-                <mat-label
-                  >Indicators <span class="required">*</span></mat-label
-                >
-                <mat-select [(ngModel)]="cust.indicators" multiple>
-                  <mat-option
-                    *ngFor="let indicator of sarIndicators"
-                    [value]="indicator"
-                  >
-                    {{ indicator }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+            <mat-form-field
+              appearance="outline"
+            >
+              <mat-label>Indicators</mat-label>
+              <input
+                readonly
+                [(ngModel)]="selectedIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
 
             <!-- Remove Customer -->
             <button
@@ -440,18 +460,26 @@
         </div>
 
         <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators</mat-label>
-            <mat-select [(ngModel)]="selectedStrIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of strIndicators"
-                [value]="indicator"
+            <mat-form-field
+              appearance="outline"
+            >
+              <mat-label>Indicators</mat-label>
+              <input
+                readonly
+                [(ngModel)]="selectedStrIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
               >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'STAR'">
@@ -534,18 +562,26 @@
         </div>
 
         <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators</mat-label>
-            <mat-select [(ngModel)]="selectedStarIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of starIndicators"
-                [value]="indicator"
+            <mat-form-field
+              appearance="outline"
+            >
+              <mat-label>Indicators</mat-label>
+              <input
+                readonly
+                [(ngModel)]="selectedStarIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
               >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'CTR'">

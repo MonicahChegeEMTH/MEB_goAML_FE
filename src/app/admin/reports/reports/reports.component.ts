@@ -11,6 +11,8 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { debounceTime, forkJoin, Subject, switchMap, tap } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { IndicatorsLookupComponent } from '../indicators-lookup/indicators-lookup.component';
 
 @Component({
   selector: 'app-reports',
@@ -77,6 +79,8 @@ export class ReportsComponent implements OnInit {
   fullAccountList: any[] = [];
   private lastIdNumber: string = '';
   sarInputMode: 'existing' | 'new' | null = null;
+  selectedIndicatorText = '';
+  selectedIndicator: any = null;
   manualSarCustomers: {
     firstName: string;
     lastName: string;
@@ -106,32 +110,6 @@ export class ReportsComponent implements OnInit {
     this.showReportForm('SAR');
   }
 
-  sarActions = ['Freeze Account', 'Close Account', 'Monitor Transactions'];
-  sarIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
-  ];
-
-  strIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
-  ];
-
-  starIndicators = [
-    'Unusual Transactions',
-    'Suspicious Transfers',
-    'Large Cash Deposits',
-  ];
-
-  idTypes = [
-    { value: 'nationalId', viewValue: 'National ID' },
-    { value: 'passport', viewValue: 'Passport' },
-    { value: 'drivingLicense', viewValue: 'Driving License' },
-    { value: 'alienId', viewValue: 'Alien ID' },
-  ];
-
   showReportForm(type: string) {
     this.selectedReportType = type;
   }
@@ -147,7 +125,8 @@ export class ReportsComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private service: ReportsService,
     private router: Router,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -196,13 +175,43 @@ export class ReportsComponent implements OnInit {
       });
   }
 
+  pickIndicatorDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+
+    const dialogRef = this.dialog.open(IndicatorsLookupComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result || !result.data) return;
+
+      const indicators = result.data;
+
+      this.selectedIndicatorText = indicators.map((i) => i.code).join(', ');
+
+      this.selectedIndicators = indicators.map((i) => i.code);
+
+      this.selectedStrIndicators = indicators.map((i) => i.code);
+
+      this.selectedStarIndicators = indicators.map((i) => i.code);
+
+      this.manualSarCustomers.forEach((c) => {
+        c.indicators = indicators.map((i) => i.code);
+      });
+    });
+  }
+
   onIdentifierInputChange(value: string) {
+    this.isFetchingAccounts = true;
     if (!value || !value.trim()) {
       this.filteredAccounts = [...this.fullAccountList];
+      this.accountNumber = '';
       return;
     }
 
     if (this.selectedIdType === 'account') {
+      this.accountNumber = value.trim();
       if (this.fullAccountList.length > 0) {
         this.filteredAccounts = [...this.fullAccountList];
       } else {
@@ -255,8 +264,8 @@ export class ReportsComponent implements OnInit {
   fetchAccountsObservable(identifier: string) {
     const docCodeMap: any = {
       nationalId: 'NIDA',
-      passport: 'PP',
-      registration: 'CR',
+      passport: 'PASSPORT NUMBER',
+      registration: 'RGST',
     };
     const docCode = docCodeMap[this.selectedIdType] || '';
     return this.service.getAccounts(docCode, identifier);
@@ -379,11 +388,12 @@ export class ReportsComponent implements OnInit {
 
     const docCodeMap: any = {
       nationalId: 'NIDA',
-      passport: 'PP',
-      registration: 'CR',
+      passport: 'PASSPORT NUMBER',
+      registration: 'RGST',
     };
 
     const docCode = docCodeMap[this.selectedIdType] || '';
+    this.isFetchingAccounts = true;
 
     this.service.getAccounts(docCode, this.identificationNumber).subscribe({
       next: (data: any[]) => {
@@ -674,9 +684,8 @@ export class ReportsComponent implements OnInit {
     }));
 
     this.service.createManualSar(payloadArray).subscribe({
-      next: (responses) => {
-        const mergedXml = responses.map((r) => r.xmlContent).join('\n');
-        sessionStorage.setItem('sarPreviewXML', mergedXml);
+      next: (response) => {
+        sessionStorage.setItem('sarPreviewXML', response.xmlDocument);
 
         this.snackbar.showNotification(
           'snackbar-success',
@@ -686,9 +695,9 @@ export class ReportsComponent implements OnInit {
         this.router.navigate(['/admin/reports/reports-handling'], {
           state: {
             reportData: {
-              xmlContent: mergedXml,
-              fileName: responses[0].fileName,
-              reportId: responses[0].id,
+               xmlContent: response.xmlContent,
+                fileName: response.fileName,
+                reportId: response.id,
             },
           },
         });

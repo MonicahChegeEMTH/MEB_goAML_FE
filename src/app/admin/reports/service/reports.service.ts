@@ -60,6 +60,10 @@ export class ReportsService {
     );
   }
 
+  getIndicators(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/api/sar/indicators`);
+  }
+
   downloadSARReport(
     accountNumber: string,
     reason: string,
@@ -184,23 +188,21 @@ export class ReportsService {
     );
   }
 
-  createManualSar(sarDataArray: {
-    reason: string;
-    action: string;
-    firstName: string;
-    lastName: string;
-    birthdate?: string;
-    occupation?: string;
-    idNumber: string;
-    nationality1?: string;
-    indicator: string;  // note: string, not string[]
-}[]): Observable<{ fileName: string; id: string; xmlContent: string }[]> {
-
-  // Send the array of customers directly
-  return this.http.post<{ fileName: string; id: string; xmlContent: string }[]>(
-    `${environment.apiUrl}/api/sar/manualSAR`,
-    sarDataArray
-  );
-}
-
+  createManualSar(
+    sarDataArray: {
+      reason: string;
+      action: string;
+      firstName: string;
+      lastName: string;
+      birthdate?: string;
+      occupation?: string;
+      idNumber: string;
+      nationality1?: string;
+      indicator: string;
+    }[]
+  ): Observable<any> {
+    return this.http.post<
+      { fileName: string; id: string; xmlContent: string }[]
+    >(`${environment.apiUrl}/api/sar/manualSAR`, sarDataArray);
+  }
 }

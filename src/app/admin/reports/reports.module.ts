@@ -17,9 +17,13 @@ import { ReportHandlingComponent } from './report-handling/report-handling.compo
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { IndicatorsLookupComponent } from './indicators-lookup/indicators-lookup.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CdkColumnDef } from '@angular/cdk/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [ReportsComponent, ReportHandlingComponent],
+  declarations: [ReportsComponent, ReportHandlingComponent, IndicatorsLookupComponent],
   imports: [
     CommonModule,
     ReportsRoutingModule,
@@ -37,6 +41,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule
 ],
 })
 export class ReportsModule {}
