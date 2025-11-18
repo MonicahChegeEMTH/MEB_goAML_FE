@@ -631,3 +631,8 @@
   min-width: 800px !important; /* Adjust as needed */
   max-width: 1500px !important;
 }
+
+.gold-spinner ::ng-deep circle {
+  stroke: #b08b2e !important;
+}
+

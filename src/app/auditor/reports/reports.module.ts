@@ -12,10 +12,18 @@ import { SharedModule } from './../../shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportsRoutingModule } from './reports-routing.module';
+import { MatSortModule } from "@angular/material/sort";
 import { ReportHandlingComponent } from './report-handling/report-handling.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { IndicatorsLookupComponent } from './indicators-lookup/indicators-lookup.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CdkColumnDef } from '@angular/cdk/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [ReportsComponent, ReportHandlingComponent],
+  declarations: [ReportsComponent, ReportHandlingComponent, IndicatorsLookupComponent],
   imports: [
     CommonModule,
     ReportsRoutingModule,
@@ -29,6 +37,12 @@ import { ReportHandlingComponent } from './report-handling/report-handling.compo
     ComponentsModule,
     SharedModule,
     MatCardModule,
-  ],
+    MatSortModule,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule
+],
 })
 export class ReportsModule {}

@@ -18,7 +18,7 @@ export class MainComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-    'reporting_user',
+    // 'reporting_user',
     'date',
     'type',
     'file_name',

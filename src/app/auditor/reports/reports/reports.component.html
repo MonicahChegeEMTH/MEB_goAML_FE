@@ -14,9 +14,15 @@
     </div>
 
     <div class="actions">
-      <button (click)="showReportForm('SAR')">
-        New SAR <i class="fas fa-arrow-right"></i>
+      <button class="menu-button" [matMenuTriggerFor]="sarMenu">
+        New SAR <i class="fas fa-arrow-down"></i>
       </button>
+      <mat-menu #sarMenu="matMenu" class="sar-menu">
+        <button mat-menu-item (click)="openSar('existing')">
+          Existing Customer
+        </button>
+        <button mat-menu-item (click)="openSar('new')">New Customer</button>
+      </mat-menu>
       <button (click)="showReportForm('STR')">
         New STR <i class="fas fa-arrow-right"></i>
       </button>
@@ -35,172 +41,289 @@
       <div class="filter-header">
         <h5>{{ selectedReportType }} Report</h5>
       </div>
-
-      <div class="filter-row" *ngIf="showCommonFilters()">
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="startPicker" />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="startPicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endPicker" />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="endPicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Account Number (CIF)</mat-label>
-            <input matInput placeholder="Enter account number" />
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('pattern')
-              "
-            >
-              Only numbers are allowed.
-            </mat-error>
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('required')
-              "
-            >
-              Account number is required.
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Identification Type</mat-label>
-            <mat-select [(ngModel)]="identificationType">
-              <mat-option *ngFor="let type of idTypes" [value]="type.value">
-                {{ type.viewValue }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Identification Number</mat-label>
-            <input
-              matInput
-              placeholder="Enter ID number"
-              [(ngModel)]="identificationNumber"
-            />
-            <mat-error
-              *ngIf="
-                f.identificationNumber.touched &&
-                f.identificationNumber.hasError('pattern')
-              "
-            >
-              Only numbers are allowed.
-            </mat-error>
-            <mat-error
-              *ngIf="
-                f.identificationNumber.touched &&
-                f.identificationNumber.hasError('required')
-              "
-            >
-              Identification number is required.
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
       <div class="filter-row" *ngIf="selectedReportType === 'SAR'">
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Account Number <span class="required">*</span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Enter account number"
-              [(ngModel)]="accountNumber"
-              (keypress)="
-                $event.charCode >= 48 && $event.charCode <= 57
-                  ? true
-                  : $event.preventDefault()
-              "
-            />
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('required')
-              "
-            >
-              Account number is required.
-            </mat-error>
-            <mat-error
-              *ngIf="
-                f.accountNumber.touched && f.accountNumber.hasError('pattern')
-              "
-            >
-              Only numbers are allowed.
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Reason <span class="required">*</span></mat-label>
-            <input
-              matInput
-              placeholder="Enter reason"
-              [(ngModel)]="sarReason"
-            />
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Action <span class="required">*</span></mat-label>
-            <input
-              matInput
-              placeholder="Enter action"
-              [(ngModel)]="selectedAction"
-            />
-          </mat-form-field>
-        </div>
-
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators <span class="required">*</span></mat-label>
-            <mat-select [(ngModel)]="selectedIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of sarIndicators"
-                [value]="indicator"
+        <div class="filter-row" *ngIf="sarInputMode === 'existing'">
+          <!-- Identifier Type -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label
+                >Identifier Type <span class="required">*</span></mat-label
               >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+              <mat-select
+                [(ngModel)]="selectedIdType"
+                (selectionChange)="onIdTypeChange($event.value)"
+              >
+                <mat-option value="nationalId">National ID</mat-option>
+                <mat-option value="passport">Passport Number</mat-option>
+                <mat-option value="registration"
+                  >Certificate of Registration</mat-option
+                >
+                <mat-option value="account">Account Number</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Identifier Number -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label
+                >{{ idPlaceholder }} <span class="required">*</span></mat-label
+              >
+
+              <input
+                type="text"
+                matInput
+                [(ngModel)]="identificationNumber"
+                [matAutocomplete]="auto"
+                (ngModelChange)="onIdentifierInputChange($event)"
+              />
+
+              <!-- Spinner shown when fetching accounts -->
+              <mat-progress-spinner
+                *ngIf="isFetchingAccounts"
+                matSuffix
+                class="gold-spinner"
+                mode="indeterminate"
+                diameter="24"
+              >
+              </mat-progress-spinner>
+
+              <!-- Autocomplete dropdown -->
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (closed)="onAutocompleteClosed()"
+                [displayWith]="displayAccount"
+                [panelWidth]="'400px'"
+              >
+                <mat-option
+                  *ngFor="let acc of filteredAccounts"
+                  [value]="acc.account_no"
+                  (onSelectionChange)="onAccountSelected(acc)"
+                >
+                  <span style="width: 300px; display: inline-block">
+                    {{ acc.account_no }} - {{ acc.account_name }} ({{
+                      acc.scheme_type
+                    }})
+                  </span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <!-- Reason -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input
+                matInput
+                placeholder="Enter reason"
+                [(ngModel)]="sarReason"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Action -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Action</mat-label>
+              <input
+                matInput
+                placeholder="Enter action"
+                [(ngModel)]="sarAction"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Indicators -->
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Indicators</mat-label>
+              <input
+                readonly
+                [(ngModel)]="selectedIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="filter-row" *ngIf="sarInputMode === 'new'">
+          <!-- Add Customer Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            style="margin-bottom: 20px"
+            (click)="addCustomer()"
+          >
+            + Add Customer
+          </button>
+
+          <!-- Customer Blocks -->
+          <div
+            class="filter-row"
+            *ngFor="let cust of manualSarCustomers; let i = index"
+            style="
+              border: 1px solid #ccc;
+              padding: 15px;
+              border-radius: 6px;
+              margin-bottom: 20px;
+            "
+          >
+            <!-- Firstname -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Firstname <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter firstname"
+                  [(ngModel)]="cust.firstName"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Lastname -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Lastname <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter lastname"
+                  [(ngModel)]="cust.lastName"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- ID Number -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>ID Number <span class="required">*</span></mat-label>
+                <input
+                  matInput
+                  placeholder="Enter idNumber"
+                  [(ngModel)]="cust.idNumber"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Nationality -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Nationality</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter nationality"
+                  [(ngModel)]="cust.nationality"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Occupation -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Occupation</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter occupation"
+                  [(ngModel)]="cust.occupation"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Birth Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Select birthdate"
+                  [(ngModel)]="cust.birthdate"
+                  [max]="today"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <!-- Reason -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Reason</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter reason"
+                  [(ngModel)]="cust.reason"
+                />
+              </mat-form-field>
+            </div>
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Action</mat-label>
+                <input
+                  matInput
+                  placeholder="Enter action"
+                  [(ngModel)]="cust.action"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Indicators -->
+            <div class="filter-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Indicators</mat-label>
+                <input
+                  readonly
+                  [(ngModel)]="selectedIndicators"
+                  placeholder="Select an indicator"
+                  matInput
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="pickIndicatorDialog()"
+                  aria-label="Pick indicator"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <!-- Remove Customer -->
+            <button
+              mat-button
+              color="warn"
+              *ngIf="manualSarCustomers.length > 1"
+              (click)="removeCustomer(i)"
+            >
+              Remove Customer
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'AccStmt'">
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label
-              >Account Number <span class="required">*</span></mat-label
-            >
+            <mat-label>Account Number <span class="required"></span></mat-label>
             <input
               matInput
               placeholder="Enter account number"
               [(ngModel)]="accStmtAccount"
+              #accStmtAccountModel="ngModel"
+              required
+              pattern="^[0-9]*$"
+              maxlength="15"
               (keypress)="
                 $event.charCode >= 48 && $event.charCode <= 57
                   ? true
@@ -258,7 +381,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="strTranId"
             />
             <mat-error *ngIf="!strTranId"
@@ -274,41 +397,27 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="strTranDate"
-              [max]="today"
             />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="toPicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!strTranDate"
-              >Transaction Date is required.</mat-error
-            >
-          </mat-form-field>
-        </div>
-
-        <!-- <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Account Number <span class="required">*</span></mat-label
-            >
             <input
               matInput
-              placeholder="Enter account number"
-              [(ngModel)]="strAccountNo"
-              (keypress)="
-                $event.charCode >= 48 && $event.charCode <= 57
-                  ? true
-                  : $event.preventDefault()
-              "
+              [matDatepicker]="picker"
+              (dateChange)="addTranDate($event)"
+              style="display: none"
             />
-            <mat-error *ngIf="!strAccountNo"
-              >Account Number is required.</mat-error
-            >
+
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!strTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
-        </div> -->
+        </div>
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
@@ -346,14 +455,20 @@
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Indicators</mat-label>
-            <mat-select [(ngModel)]="selectedStrIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of strIndicators"
-                [value]="indicator"
-              >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
+            <input
+              readonly
+              [(ngModel)]="selectedStrIndicators"
+              placeholder="Select an indicator"
+              matInput
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="pickIndicatorDialog()"
+              aria-label="Pick indicator"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
           </mat-form-field>
         </div>
       </div>
@@ -366,7 +481,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="starTranId"
             />
             <mat-error *ngIf="!starTranId"
@@ -382,18 +497,25 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="starTranDate"
-              [max]="today"
             />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="addStarTranDate($event)"
+              style="display: none"
+            />
+
             <mat-datepicker-toggle
               matSuffix
-              [for]="toPicker"
+              [for]="picker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!starTranDate"
-              >Transaction Date is required.</mat-error
-            >
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!starTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -433,14 +555,20 @@
         <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Indicators</mat-label>
-            <mat-select [(ngModel)]="selectedStarIndicators" multiple>
-              <mat-option
-                *ngFor="let indicator of starIndicators"
-                [value]="indicator"
-              >
-                {{ indicator }}
-              </mat-option>
-            </mat-select>
+            <input
+              readonly
+              [(ngModel)]="selectedStarIndicators"
+              placeholder="Select an indicator"
+              matInput
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="pickIndicatorDialog()"
+              aria-label="Pick indicator"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
           </mat-form-field>
         </div>
       </div>
@@ -469,7 +597,7 @@
             >
             <input
               matInput
-              placeholder="Enter transaction ID"
+              placeholder="Enter transaction ID, separate with commas for multiple"
               [(ngModel)]="ctrTranId"
             />
             <mat-error *ngIf="!ctrTranId"
@@ -485,18 +613,25 @@
             >
             <input
               matInput
-              [matDatepicker]="toPicker"
+              placeholder="Select date(s), multiple allowed"
               [(ngModel)]="ctrTranDate"
-              [max]="today"
             />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="addCtrTranDate($event)"
+              style="display: none"
+            />
+
             <mat-datepicker-toggle
               matSuffix
-              [for]="toPicker"
+              [for]="picker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #toPicker></mat-datepicker>
-            <mat-error *ngIf="!ctrTranDate"
-              >Transaction Date is required.</mat-error
-            >
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="!ctrTranDate">
+              Transaction Date is required.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -506,12 +641,25 @@
           mat-raised-button
           color="primary"
           class="search-btn"
-          *ngIf="selectedReportType === 'SAR'"
+          *ngIf="selectedReportType === 'SAR' && sarInputMode === 'existing'"
           (click)="downloadSARReport()"
           [disabled]="isDownloading"
         >
           <ng-container *ngIf="!isDownloading; else loadingSpinner">
-            Generate Filter Based SAR Report
+            Generate Existing Customer SAR Report
+          </ng-container>
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-btn"
+          *ngIf="selectedReportType === 'SAR' && sarInputMode === 'new'"
+          (click)="downloadManualSar()"
+          [disabled]="isDownloading"
+        >
+          <ng-container *ngIf="!isDownloading; else loadingSpinner">
+            Generate New Customer SAR Report
           </ng-container>
         </button>
 
@@ -588,7 +736,7 @@
                   <div class="col-8">
                     <ul class="header-buttons-left ms-0">
                       <li class="dropdown">
-                        <h2 style="color: #fff">Reports</h2>
+                        <h2 style="color: #fff">Recent Reports</h2>
                       </li>
                       <li class="searchbox m-l-20">
                         <label for="search-input">
@@ -656,8 +804,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="i % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-6"
                   >
                     {{
@@ -678,8 +824,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.account_number }}
@@ -696,8 +840,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.reporting_user }}
@@ -715,8 +857,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                     style="min-width: 150px; padding-right: 50px"
                   >
@@ -734,8 +874,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.account }}
@@ -752,8 +890,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     {{ report.type }}
@@ -771,8 +907,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                     style="min-width: 150px; padding-right: 50px"
                   >
@@ -790,8 +924,6 @@
                   </mat-header-cell>
                   <mat-cell
                     *matCellDef="let report; let i = index"
-                    [class.odd-row]="1 % 2"
-                    [class.even-row]="!(i % 2)"
                     class="column-nowrap psl-3 tbl-col-width-per-18"
                   >
                     <button
@@ -845,7 +977,9 @@
                   *matHeaderRowDef="displayedColumns"
                 ></mat-header-row>
                 <mat-row
-                  *matRowDef="let row; columns: displayedColumns"
+                  *matRowDef="let row; columns: displayedColumns; let i = index"
+                  [class.odd-row]="i % 2"
+                  [class.even-row]="!(i % 2)"
                   (click)="requestDetailsCall(request)"
                   [style.cursor]="'pointer'"
                   matRipple

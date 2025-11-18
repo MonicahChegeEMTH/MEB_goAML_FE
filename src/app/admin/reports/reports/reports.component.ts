@@ -23,7 +23,7 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-    'reporting_user',
+    // 'reporting_user',
     'date',
     'type',
     'file_name',
@@ -279,6 +279,12 @@ export class ReportsComponent implements OnInit {
     this.accountNumber = account.account_no;
     this.identificationNumber = account.account_no;
     this.accountList = [];
+
+    this.isFetchingAccounts = false;
+  }
+
+  onAutocompleteClosed() {
+    this.isFetchingAccounts = false;
   }
 
   initForm() {
@@ -695,9 +701,9 @@ export class ReportsComponent implements OnInit {
         this.router.navigate(['/admin/reports/reports-handling'], {
           state: {
             reportData: {
-               xmlContent: response.xmlContent,
-                fileName: response.fileName,
-                reportId: response.id,
+              xmlContent: response.xmlContent,
+              fileName: response.fileName,
+              reportId: response.id,
             },
           },
         });

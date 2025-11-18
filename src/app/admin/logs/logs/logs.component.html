@@ -95,8 +95,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-6"
                     >
                       {{
@@ -117,8 +115,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       {{ report.user_id }}
@@ -135,8 +131,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       {{ report.username }}
@@ -153,8 +147,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       {{ report.action_type }}
@@ -172,8 +164,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                       style="padding-right: 30px"
                     >
@@ -191,8 +181,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       {{ report.records_retrieved }}
@@ -210,8 +198,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18 spacing-generated-report"
                       style="min-width: 150px; padding-right: 50px"
                     >
@@ -229,8 +215,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap psl-3 tbl-col-width-per-18"
                     >
                       {{ report.ip_address }}
@@ -247,8 +231,6 @@
                     >
                     <mat-cell
                       *matCellDef="let report; let i = index"
-                      [class.odd-row]="i % 2"
-                      [class.even-row]="!(i % 2)"
                       class="column-nowrap"
                     >
                       <i class="fas fa-folder-open"></i>
@@ -259,7 +241,13 @@
                     *matHeaderRowDef="displayedColumns"
                   ></mat-header-row>
                   <mat-row
-                    *matRowDef="let row; columns: displayedColumns"
+                    *matRowDef="
+                      let row;
+                      columns: displayedColumns;
+                      let i = index
+                    "
+                    [class.odd-row]="i % 2"
+                    [class.even-row]="!(i % 2)"
                     (click)="requestDetailsCall(request)"
                     [style.cursor]="'pointer'"
                     matRipple

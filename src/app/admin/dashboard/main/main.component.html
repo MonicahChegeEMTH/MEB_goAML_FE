@@ -35,14 +35,14 @@
 
       <div class="actions">
         <button class="menu-button" [matMenuTriggerFor]="sarMenu">
-        New SAR <i class="fas fa-arrow-down"></i>
-      </button>
-      <mat-menu #sarMenu="matMenu" class="sar-menu">
-        <button mat-menu-item (click)="openSar('existing')">
-          Existing Customer
+          New SAR <i class="fas fa-arrow-down"></i>
         </button>
-        <button mat-menu-item (click)="openSar('new')">New Customer</button>
-      </mat-menu>
+        <mat-menu #sarMenu="matMenu" class="sar-menu">
+          <button mat-menu-item (click)="openSar('existing')">
+            Existing Customer
+          </button>
+          <button mat-menu-item (click)="openSar('new')">New Customer</button>
+        </mat-menu>
         <button (click)="openReportType('STR')">
           New STR <i class="fas fa-arrow-right"></i>
         </button>
@@ -83,8 +83,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="i % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-6"
               >
                 {{
@@ -106,8 +104,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
                 style="min-width: 150px; padding-right: 50px"
               >
@@ -125,8 +121,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
               >
                 {{ report.reporting_user }}
@@ -144,8 +138,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
                 style="min-width: 150px; padding-right: 50px"
               >
@@ -163,8 +155,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
               >
                 {{ report.account }}
@@ -181,8 +171,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
               >
                 {{ report.type }}
@@ -200,8 +188,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
                 style="min-width: 150px; padding-right: 50px"
               >
@@ -219,8 +205,6 @@
               </mat-header-cell>
               <mat-cell
                 *matCellDef="let report; let i = index"
-                [class.odd-row]="1 % 2"
-                [class.even-row]="!(i % 2)"
                 class="column-nowrap psl-3 tbl-col-width-per-18"
               >
                 <button
@@ -266,7 +250,9 @@
               *matHeaderRowDef="displayedColumns"
             ></mat-header-row>
             <mat-row
-              *matRowDef="let row; columns: displayedColumns"
+              *matRowDef="let row; columns: displayedColumns; let i = index"
+              [class.odd-row]="i % 2"
+              [class.even-row]="!(i % 2)"
               (click)="requestDetailsCall(request)"
               [style.cursor]="'pointer'"
               matRipple
