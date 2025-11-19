@@ -79,7 +79,7 @@ export class UpdateAccountComponent extends BaseComponent implements OnInit {
             'snackbar-success',
             'User updated successfully!'
           );
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
         (err: HttpErrorResponse) => {
           this.snackbar.showNotification('snackbar-danger', err.error.error);

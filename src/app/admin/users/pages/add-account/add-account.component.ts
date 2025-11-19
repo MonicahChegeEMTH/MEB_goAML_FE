@@ -65,10 +65,10 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^\+?(?:[()\s.-]*\d){10,20}$/),
+          Validators.pattern(/^(\+?254|0)?7\d{8}$/),
         ],
       ],
-      employeeNumber: ['', [Validators.required]],
+      employeeNumber: [''],
       role: [null, Validators.required],
     });
   }
