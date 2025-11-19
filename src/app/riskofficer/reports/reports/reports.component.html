@@ -43,7 +43,6 @@
       </div>
       <div class="filter-row" *ngIf="selectedReportType === 'SAR'">
         <div class="filter-row" *ngIf="sarInputMode === 'existing'">
-          <!-- Identifier Type -->
           <div class="filter-field">
             <mat-form-field appearance="outline">
               <mat-label
@@ -63,7 +62,6 @@
             </mat-form-field>
           </div>
 
-          <!-- Identifier Number -->
           <div class="filter-field">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label
@@ -78,7 +76,6 @@
                 (ngModelChange)="onIdentifierInputChange($event)"
               />
 
-              <!-- Spinner shown when fetching accounts -->
               <mat-progress-spinner
                 *ngIf="isFetchingAccounts"
                 matSuffix
@@ -88,7 +85,6 @@
               >
               </mat-progress-spinner>
 
-              <!-- Autocomplete dropdown -->
               <mat-autocomplete
                 #auto="matAutocomplete"
                 (closed)="onAutocompleteClosed()"
@@ -110,7 +106,6 @@
             </mat-form-field>
           </div>
 
-          <!-- Reason -->
           <div class="filter-field">
             <mat-form-field appearance="outline">
               <mat-label>Reason</mat-label>
@@ -122,7 +117,6 @@
             </mat-form-field>
           </div>
 
-          <!-- Action -->
           <div class="filter-field">
             <mat-form-field appearance="outline">
               <mat-label>Action</mat-label>
@@ -134,10 +128,9 @@
             </mat-form-field>
           </div>
 
-          <!-- Indicators -->
           <div class="filter-field">
             <mat-form-field appearance="outline">
-              <mat-label>Indicators</mat-label>
+              <mat-label>Indicators <span class="required">*</span> </mat-label>
               <input
                 [(ngModel)]="selectedIndicators"
                 placeholder="Select an indicator"
@@ -155,7 +148,6 @@
           </div>
         </div>
         <div class="filter-row" *ngIf="sarInputMode === 'new'">
-          <!-- Add Customer Button -->
           <button
             mat-raised-button
             color="primary"
@@ -165,7 +157,6 @@
             + Add Customer
           </button>
 
-          <!-- Customer Blocks -->
           <div
             class="filter-row"
             *ngFor="let cust of manualSarCustomers; let i = index"
@@ -176,7 +167,6 @@
               margin-bottom: 20px;
             "
           >
-            <!-- Firstname -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Firstname <span class="required">*</span></mat-label>
@@ -188,7 +178,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Lastname -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Lastname <span class="required">*</span></mat-label>
@@ -200,7 +189,6 @@
               </mat-form-field>
             </div>
 
-            <!-- ID Number -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>ID Number <span class="required">*</span></mat-label>
@@ -212,7 +200,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Nationality -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Nationality</mat-label>
@@ -224,7 +211,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Occupation -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Occupation</mat-label>
@@ -236,7 +222,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Birth Date -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Birth Date</mat-label>
@@ -255,7 +240,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Reason -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
                 <mat-label>Reason</mat-label>
@@ -277,10 +261,9 @@
               </mat-form-field>
             </div>
 
-            <!-- Indicators -->
             <div class="filter-field">
               <mat-form-field appearance="outline">
-                <mat-label>Indicators</mat-label>
+                <mat-label>Indicators <span class="required">*</span> </mat-label>
                 <input
                   [(ngModel)]="selectedIndicators"
                   placeholder="Select an indicator"
@@ -297,7 +280,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Remove Customer -->
             <button
               mat-button
               color="warn"
@@ -403,6 +385,7 @@
               [matDatepicker]="picker"
               (dateChange)="addTranDate($event)"
               style="display: none"
+              [max]="today"
             />
 
             <mat-datepicker-toggle
@@ -452,7 +435,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Indicators</mat-label>
+            <mat-label>Indicators <span class="required">*</span> </mat-label>
             <input
               [(ngModel)]="selectedStrIndicators"
               placeholder="Select an indicator"
@@ -502,6 +485,7 @@
               [matDatepicker]="picker"
               (dateChange)="addStarTranDate($event)"
               style="display: none"
+              [max]="today"
             />
 
             <mat-datepicker-toggle
@@ -551,7 +535,7 @@
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
-            <mat-label>Indicators</mat-label>
+            <mat-label>Indicators <span class="required">*</span> </mat-label>
             <input
               [(ngModel)]="selectedStarIndicators"
               placeholder="Select an indicator"
@@ -617,6 +601,7 @@
               [matDatepicker]="picker"
               (dateChange)="addCtrTranDate($event)"
               style="display: none"
+              [max]="today"
             />
 
             <mat-datepicker-toggle
