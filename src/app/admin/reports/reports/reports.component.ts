@@ -111,8 +111,12 @@ export class ReportsComponent implements OnInit {
   }
 
   showReportForm(type: string) {
-    this.selectedReportType = type;
-  }
+  this.selectedReportType = type;
+
+  this.selectedIndicators = [];   
+  this.selectedStrIndicators = [];  
+  this.selectedStarIndicators = [];  
+}
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
