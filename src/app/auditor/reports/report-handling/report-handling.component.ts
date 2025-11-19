@@ -50,10 +50,16 @@ export class ReportHandlingComponent {
   }
 
   private highlightEmptyFields(xml: string): string {
-    // Matches <tag> ... </tag> where ... is only whitespace (including line breaks)
     return xml.replace(
-      /(&lt;\w+&gt;)(\s*?)(&lt;\/\w+&gt;)/gs,
+      /(&lt;\w+&gt;)(\s*?)(&lt;\/\w+&gt;)/g,
       `<span class="missing-field">$1$2$3</span>`
+    );
+  }
+
+  private highlightNullFields(xml: string): string {
+    return xml.replace(
+      /(&lt;\w+&gt;)\(null\)(&lt;\/\w+&gt;)/g,
+      `<span class="missing-field">$1(null)$2</span>`
     );
   }
 
@@ -67,9 +73,10 @@ export class ReportHandlingComponent {
   }
 
   private displayXml(xml: string): void {
-    let formatted = this.formatXml(xml); // indent nicely
-    let escaped = this.escapeXml(formatted); // escape <, >, &
+    let formatted = this.formatXml(xml);
+    let escaped = this.escapeXml(formatted);
     let highlighted = this.highlightEmptyFields(escaped);
+    let highlightedNull = this.highlightNullFields(highlighted);
 
     this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
       `<pre class="xml-preview-container">
@@ -81,7 +88,7 @@ export class ReportHandlingComponent {
           padding: 2px 4px;
         }
       </style>
-      ${highlighted}
+      ${highlightedNull}
     </pre>`
     );
   }
@@ -94,28 +101,65 @@ export class ReportHandlingComponent {
 
   formatXml(xml: string): string {
     const PADDING = '  ';
-    const reg = /(>)(<)(\/*)/g;
-    xml = xml.replace(reg, '$1\r\n$2$3');
     let pad = 0;
+    let result = '';
 
-    return xml
-      .split('\r\n')
-      .map((node) => {
-        let indent = '';
-        if (node.match(/.+<\/\w[^>]*>$/)) {
-          indent = PADDING.repeat(pad);
-        } else if (node.match(/^<\/\w/)) {
-          pad = Math.max(pad - 1, 0);
-          indent = PADDING.repeat(pad);
-        } else if (node.match(/^<\w([^>]*[^\/])?>.*$/)) {
-          indent = PADDING.repeat(pad);
-          pad++;
-        } else {
-          indent = PADDING.repeat(pad);
+    xml = xml.replace(/>([^<]+)</g, (_, text) => `>${text.trim()}<`);
+    xml = xml.replace(/>\s+</g, '><').trim();
+
+    const tokens = xml.split(/(<[^>]+>)/).filter((t) => t.length > 0);
+
+    for (let index = 0; index < tokens.length; index++) {
+      const token = tokens[index];
+      const isOpeningTag = /^<[^/!][^>]*>$/.test(token);
+      const isClosingTag = /^<\/[^>]+>$/.test(token);
+      const isSelfClosing = /^<[^>]+\/>$/.test(token);
+
+      const next = tokens[index + 1];
+      const nextNext = tokens[index + 2];
+
+      if (isClosingTag) {
+        pad = Math.max(pad - 1, 0);
+        result += PADDING.repeat(pad) + token + '\n';
+        continue;
+      }
+
+      if (isOpeningTag) {
+        const nextIsClosing = next && /^<\/[^>]+>$/.test(next);
+
+        if (nextIsClosing) {
+          result += PADDING.repeat(pad) + token + next + '\n';
+          index += 1;
+          continue;
         }
-        return indent + node;
-      })
-      .join('\r\n');
+
+        const hasTextContent = next && !/^</.test(next);
+        const nextNextIsClosing = nextNext && /^<\/[^>]+>$/.test(nextNext);
+
+        if (hasTextContent && nextNextIsClosing) {
+          const trimmedContent = next.trim();
+          result +=
+            PADDING.repeat(pad) + token + trimmedContent + nextNext + '\n';
+          index += 2;
+          continue;
+        }
+
+        result += PADDING.repeat(pad) + token;
+        if (!hasTextContent) result += '\n';
+
+        pad++;
+        continue;
+      }
+
+      if (isSelfClosing) {
+        result += PADDING.repeat(pad) + token + '\n';
+        continue;
+      }
+
+      result += token;
+    }
+
+    return result.trim();
   }
 
   downloadXML(): void {
@@ -173,7 +217,6 @@ export class ReportHandlingComponent {
     this.editMode = !this.editMode;
 
     if (this.editMode) {
-      // Format and highlight for edit mode
       let formatted = this.formatXml(this.xmlContent);
       let escaped = this.escapeXml(formatted);
       let highlighted = this.highlightEmptyFields(escaped);
@@ -196,7 +239,7 @@ export class ReportHandlingComponent {
 
   onXmlEdit(event: Event): void {
     const target = event.target as HTMLElement;
-    // Extract plain text content, removing HTML tags
+
     this.xmlContent = target.innerText || target.textContent || '';
   }
 
