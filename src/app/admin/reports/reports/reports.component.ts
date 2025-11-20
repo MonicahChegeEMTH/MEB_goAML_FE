@@ -267,9 +267,9 @@ export class ReportsComponent implements OnInit {
 
   fetchAccountsObservable(identifier: string) {
     const docCodeMap: any = {
-      nationalId: 'NIDA',
-      passport: 'PASSPORT NUMBER',
-      registration: 'RGST',
+      nationalId: 'NATID',
+      passport: 'PASSP',
+      registration: 'REG1',
     };
     const docCode = docCodeMap[this.selectedIdType] || '';
     return this.service.getAccounts(docCode, identifier);
@@ -397,9 +397,9 @@ export class ReportsComponent implements OnInit {
     }
 
     const docCodeMap: any = {
-      nationalId: 'NIDA',
-      passport: 'PASSPORT NUMBER',
-      registration: 'RGST',
+      nationalId: 'NATID',
+      passport: 'PASSP',
+      registration: 'REG1',
     };
 
     const docCode = docCodeMap[this.selectedIdType] || '';
