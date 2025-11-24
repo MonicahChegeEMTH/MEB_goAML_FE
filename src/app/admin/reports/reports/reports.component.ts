@@ -190,6 +190,29 @@ export class ReportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (!result || !result.data) return;
 
+        const pickedCodes = result.data.map((i: any) => i.code);
+
+         this.selectedIndicators = Array.from(
+    new Set([
+      ...this.selectedIndicators,
+      ...pickedCodes
+    ])
+  );
+
+  this.selectedStrIndicators = Array.from(
+    new Set([
+      ...this.selectedStrIndicators,
+      ...pickedCodes
+    ])
+  );
+
+  this.selectedStarIndicators = Array.from(
+    new Set([
+      ...this.selectedStrIndicators,
+      ...pickedCodes
+    ])
+  );
+
       const indicators = result.data;
 
       this.selectedIndicatorText = indicators.map((i) => i.code).join(', ');
@@ -205,6 +228,33 @@ export class ReportsComponent implements OnInit {
       });
     });
   }
+
+  onIndicatorInputChange(value: string) {
+  if (!value) {
+    this.selectedIndicators = [];
+    return;
+  }
+
+  this.selectedIndicators = value
+    .split(',')
+    .map(v => v.trim())
+    .filter(v => v.length > 0);
+
+    this.selectedStrIndicators = value
+    .split(',')
+    .map(v => v.trim())
+    .filter(v => v.length > 0);
+
+    this.selectedStarIndicators = value
+    .split(',')
+    .map(v => v.trim())
+    .filter(v => v.length > 0);
+
+  // Update manual SAR customers if needed
+  this.manualSarCustomers.forEach(c => {
+    c.indicators = [...this.selectedIndicators];
+  });
+}
 
   onIdentifierInputChange(value: string) {
     this.isFetchingAccounts = true;
@@ -660,7 +710,7 @@ export class ReportsComponent implements OnInit {
 
   downloadManualSar() {
     for (let c of this.manualSarCustomers) {
-      if (!c.firstName || !c.lastName || !c.idNumber) {
+      if (!c.firstName || !c.idNumber) {
         this.snackbar.showNotification(
           'snackbar-danger',
           'Firstname, Lastname and ID Number are required for each customer.'
@@ -964,7 +1014,7 @@ export class ReportsComponent implements OnInit {
   downloadCtrReport() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.ctrTranType || !this.ctrTranId || !this.ctrTranDate) {
+    if (!this.ctrTranId || !this.ctrTranDate) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all required CTR fields.'
@@ -988,7 +1038,7 @@ export class ReportsComponent implements OnInit {
     this.isDownloading = true;
 
     this.service
-      .downloadCtrReport(this.ctrTranType, tranIds, tranDates)
+      .downloadCtrReport(tranIds, tranDates)
       .subscribe({
         next: (response) => {
           console.log('CTR report response:', response);
@@ -1030,4 +1080,27 @@ export class ReportsComponent implements OnInit {
       }
     });
   }
+
+  activeNewTab: string = 'customer';
+
+manualSarCooperations: any[] = [];
+
+addCooperation() {
+  this.manualSarCooperations.push({
+    firstName: '',
+    lastName: '',
+    idNumber: '',
+    nationality: '',
+    occupation: '',
+    birthdate: '',
+    reason: '',
+    action: '',
+    selectedIndicators: ''
+  });
+}
+
+removeCooperation(i: number) {
+  this.manualSarCooperations.splice(i, 1);
+}
+
 }

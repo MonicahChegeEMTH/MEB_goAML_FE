@@ -154,7 +154,6 @@ export class ReportsService {
   }
 
   downloadCtrReport(
-    tranType: string,
     tranIds: string[],
     tranDates: string[]
   ): Observable<any> {

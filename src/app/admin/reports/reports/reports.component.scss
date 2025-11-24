@@ -636,3 +636,35 @@
   stroke: #b08b2e !important;
 }
 
+/* Completely resets layout inside SAR tabs */
+.sar-section mat-tab-group,
+.sar-section .mat-tab-group,
+.sar-section .mat-tab-body,
+.sar-section .mat-tab-body-content {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Restore normal layout inside tabs */
+.sar-section .sar-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.sar-section .sar-field {
+  flex: 1 1 250px;
+}
+/* Clean, safe layout for SAR tabs ONLY */
+.sar-section .sar-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.sar-section .sar-field {
+  flex: 1 1 250px;
+  min-width: 250px;
+}
+
+

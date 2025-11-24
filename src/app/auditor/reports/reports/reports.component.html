@@ -148,6 +148,312 @@
           </div>
         </div>
         <div class="filter-row" *ngIf="sarInputMode === 'new'">
+          <mat-tab-group 
+  animationDuration="0ms" 
+  style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 20px;"
+  [selectedIndex]="selectedTabIndex"
+  (selectedIndexChange)="onTabChange($event)">
+  
+  <!-- New Customer Tab -->
+  <mat-tab label="New Customer">
+    <div style="margin-top: 20px;">
+      <div class="filter-row" *ngIf="sarInputMode === 'new'">
+        <button
+          mat-raised-button
+          color="primary"
+          style="margin-bottom: 20px"
+          (click)="addCustomer()"
+        >
+          + Add Customer
+        </button>
+
+        <div
+          class="filter-row"
+          *ngFor="let cust of manualSarCustomers; let i = index"
+          style="
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+          "
+        >
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Firstname <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter firstname"
+                [(ngModel)]="cust.firstName"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Lastname <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter lastname"
+                [(ngModel)]="cust.lastName"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>ID Number <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter idNumber"
+                [(ngModel)]="cust.idNumber"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Nationality</mat-label>
+              <input
+                matInput
+                placeholder="Enter nationality"
+                [(ngModel)]="cust.nationality"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Occupation</mat-label>
+              <input
+                matInput
+                placeholder="Enter occupation"
+                [(ngModel)]="cust.occupation"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Birth Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                placeholder="Select birthdate"
+                [(ngModel)]="cust.birthdate"
+                [max]="today"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input
+                matInput
+                placeholder="Enter reason"
+                [(ngModel)]="cust.reason"
+              />
+            </mat-form-field>
+          </div>
+          
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Action</mat-label>
+              <input
+                matInput
+                placeholder="Enter action"
+                [(ngModel)]="cust.action"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Indicators <span class="required">*</span> </mat-label>
+              <input
+                [(ngModel)]="selectedIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-button
+            color="warn"
+            *ngIf="manualSarCustomers.length > 1"
+            (click)="removeCustomer(i)"
+          >
+            Remove Customer
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- New Cooperative Tab -->
+  <mat-tab label="New Cooperative">
+    <div style="margin-top: 20px;">
+      <div class="filter-row" *ngIf="sarInputMode === 'new'">
+        <button
+          mat-raised-button
+          color="primary"
+          style="margin-bottom: 20px"
+          (click)="addCooperative()"
+        >
+          + Add Cooperative
+        </button>
+
+        <div
+          class="filter-row"
+          *ngFor="let coop of manualSarCooperatives; let i = index"
+          style="
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+          "
+        >
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Firstname <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter firstname"
+                [(ngModel)]="coop.firstName"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Lastname <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter lastname"
+                [(ngModel)]="coop.lastName"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>ID Number <span class="required">*</span></mat-label>
+              <input
+                matInput
+                placeholder="Enter idNumber"
+                [(ngModel)]="coop.idNumber"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Nationality</mat-label>
+              <input
+                matInput
+                placeholder="Enter nationality"
+                [(ngModel)]="coop.nationality"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Occupation</mat-label>
+              <input
+                matInput
+                placeholder="Enter occupation"
+                [(ngModel)]="coop.occupation"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Birth Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker2"
+                placeholder="Select birthdate"
+                [(ngModel)]="coop.birthdate"
+                [max]="today"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input
+                matInput
+                placeholder="Enter reason"
+                [(ngModel)]="coop.reason"
+              />
+            </mat-form-field>
+          </div>
+          
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Action</mat-label>
+              <input
+                matInput
+                placeholder="Enter action"
+                [(ngModel)]="coop.action"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Indicators <span class="required">*</span> </mat-label>
+              <input
+                [(ngModel)]="selectedIndicators"
+                placeholder="Select an indicator"
+                matInput
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorDialog()"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-button
+            color="warn"
+            *ngIf="manualSarCooperatives.length > 1"
+            (click)="removeCooperative(i)"
+          >
+            Remove Cooperative
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
           <button
             mat-raised-button
             color="primary"
@@ -554,7 +860,7 @@
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'CTR'">
-        <div class="filter-field">
+        <!-- <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label
               >Transaction Type <span class="required">*</span></mat-label
@@ -568,7 +874,7 @@
               >Transaction Type is required.</mat-error
             >
           </mat-form-field>
-        </div>
+        </div> -->
 
         <div class="filter-field">
           <mat-form-field appearance="outline">

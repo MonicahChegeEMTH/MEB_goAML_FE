@@ -964,7 +964,7 @@ export class ReportsComponent implements OnInit {
   downloadCtrReport() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.ctrTranType || !this.ctrTranId || !this.ctrTranDate) {
+    if (!this.ctrTranId || !this.ctrTranDate) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all required CTR fields.'
@@ -988,7 +988,7 @@ export class ReportsComponent implements OnInit {
     this.isDownloading = true;
 
     this.service
-      .downloadCtrReport(this.ctrTranType, tranIds, tranDates)
+      .downloadCtrReport(tranIds, tranDates)
       .subscribe({
         next: (response) => {
           console.log('CTR report response:', response);
