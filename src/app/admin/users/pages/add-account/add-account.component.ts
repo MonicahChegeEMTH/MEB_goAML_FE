@@ -23,7 +23,7 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
   roles: RoleOption[] = [
     { id: 1, name: 'ROLE_ADMIN' },
     { id: 2, name: 'ROLE_RISKOFFICER' },
-    { id: 3, name: 'ROLE_AUDITOR' },
+    // { id: 3, name: 'ROLE_AUDITOR' },
   ];
 
   constructor(

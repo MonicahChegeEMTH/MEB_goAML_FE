@@ -23,7 +23,7 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-    // 'reporting_user',
+
     'date',
     'type',
     'file_name',
@@ -105,13 +105,37 @@ export class ReportsComponent implements OnInit {
     },
   ];
 
-  cooperationList = [
+  manualSarCooperatives: {
+    firstName: string;
+    lastName: string;
+    idNumber: string;
+    nationality?: string;
+    occupation?: string;
+    birthdate?: string;
+    reason?: string;
+    action?: string;
+    indicators?: string[];
+    name: string;
+    address?: string;
+    town?: string;
+    city?: string;
+    countryCode?: string;
+  }[] = [
     {
-      firstName: '', // cooperation name
-      idNumber: '', // registration number
+      firstName: '',
+      lastName: '',
+      idNumber: '',
+      nationality: '',
+      occupation: '',
+      birthdate: '',
       reason: '',
       action: '',
       indicators: [],
+      name: '',
+      address: '',
+      town: '',
+      city: '',
+      countryCode: '',
     },
   ];
 
@@ -189,30 +213,50 @@ export class ReportsComponent implements OnInit {
       });
   }
 
-  pickIndicatorDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-
-    const dialogRef = this.dialog.open(IndicatorsLookupComponent, dialogConfig);
+  pickIndicatorForReport(reportType: 'SAR' | 'STR' | 'STAR'): void {
+    const dialogRef = this.dialog.open(IndicatorsLookupComponent, {
+      width: '65%',
+      disableClose: false,
+      autoFocus: true,
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result || !result.data) return;
 
-      const indicators = result.data;
+      const picked = result.data.map((i: any) => i.code);
 
-      this.selectedIndicatorText = indicators.map((i) => i.code).join(', ');
+      if (reportType === 'SAR') {
+        this.selectedIndicators = picked;
+      } else if (reportType === 'STR') {
+        this.selectedStrIndicators = picked;
+      } else if (reportType === 'STAR') {
+        this.selectedStarIndicators = picked;
+      }
+    });
+  }
 
-      this.selectedIndicators = indicators.map((i) => i.code);
+  pickIndicatorForManual(
+    type: 'customer' | 'cooperative',
+    index: number
+  ): void {
+    const dialogRef = this.dialog.open(IndicatorsLookupComponent, {
+      width: '65%',
+      disableClose: false,
+      autoFocus: true,
+    });
 
-      this.selectedStrIndicators = indicators.map((i) => i.code);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result || !result.data) return;
 
-      this.selectedStarIndicators = indicators.map((i) => i.code);
+      const picked = result.data.map((i: any) => i.code);
 
-      this.manualSarCustomers.forEach((c) => {
-        c.indicators = indicators.map((i) => i.code);
-      });
+      if (type === 'customer') {
+        this.manualSarCustomers[index].indicators = picked;
+      }
+
+      if (type === 'cooperative') {
+        this.manualSarCooperatives[index].indicators = picked;
+      }
     });
   }
 
@@ -662,29 +706,37 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  addCooperative() {
+    this.manualSarCooperatives.push({
+      firstName: '',
+      lastName: '',
+      idNumber: '',
+      nationality: '',
+      occupation: '',
+      birthdate: '',
+      name: '',
+      address: '',
+      city: '',
+      town: '',
+      countryCode: '',
+    });
+  }
+
   removeCustomer(i: number) {
     if (this.manualSarCustomers.length > 1) {
       this.manualSarCustomers.splice(i, 1);
     }
   }
 
-  addCooperation() {
-    this.cooperationList.push({
-      firstName: '',
-      idNumber: '',
-      reason: '',
-      action: '',
-      indicators: [],
-    });
-  }
-
-  removeCooperation(index: number) {
-    this.cooperationList.splice(index, 1);
+  removeCooperative(i: number) {
+    if (this.manualSarCooperatives.length > 1) {
+      this.manualSarCooperatives.splice(i, 1);
+    }
   }
 
   downloadManualSar() {
     for (let c of this.manualSarCustomers) {
-      if (!c.firstName || !c.lastName || !c.idNumber) {
+      if (!c.firstName || !c.idNumber) {
         this.snackbar.showNotification(
           'snackbar-danger',
           'Firstname, Lastname and ID Number are required for each customer.'
@@ -693,19 +745,21 @@ export class ReportsComponent implements OnInit {
       }
     }
 
-    if (!this.selectedIndicators || this.selectedIndicators.length === 0) {
-      this.snackbar.showNotification(
-        'snackbar-danger',
-        'Please select at least one indicator.'
-      );
-      return;
+    for (let c of this.manualSarCustomers) {
+      if (!c.indicators || c.indicators.length === 0) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please select at least one indicator for each customer.'
+        );
+        return;
+      }
     }
 
     this.isDownloading = true;
 
     const payloadArray = this.manualSarCustomers.map((c) => ({
-      reason: this.sarReason,
-      action: this.selectedAction,
+      reason: c.reason,
+      action: c.action,
       firstName: c.firstName,
       lastName: c.lastName,
       birthdate: c.birthdate
@@ -747,20 +801,119 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  downloadEntityManualSar() {
+    for (let c of this.manualSarCooperatives) {
+      if (!c.name) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Cooperative name is required for each cooperative.'
+        );
+        return;
+      }
+    }
+
+    for (let c of this.manualSarCooperatives) {
+      if (!c.indicators || c.indicators.length === 0) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Please select at least one indicator for each cooperative.'
+        );
+        return;
+      }
+    }
+
+    this.isDownloading = true;
+
+    const payloadArray = this.manualSarCooperatives.map((c) => ({
+      reason: c.reason,
+      action: c.action,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      birthdate: c.birthdate
+        ? new Date(c.birthdate).toISOString().split('T')[0]
+        : '',
+      occupation: c.occupation || '',
+      idNumber: c.idNumber,
+      nationality1: c.nationality || '',
+      indicator: (c.indicators || []).join(','),
+      name: c.name,
+      address: c.address,
+      town: c.town,
+      city: c.city,
+      countryCode: c.countryCode,
+    }));
+
+    this.service.createEntityManualSar(payloadArray).subscribe({
+      next: (response) => {
+        sessionStorage.setItem('sarPreviewXML', response.xmlDocument);
+
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'Manual SAR report(s) generated successfully.'
+        );
+
+        this.router.navigate(['/admin/reports/reports-handling'], {
+          state: {
+            reportData: {
+              xmlContent: response.xmlContent,
+              fileName: response.fileName,
+              reportId: response.id,
+            },
+          },
+        });
+      },
+      error: () => {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Failed to generate SAR.'
+        );
+        this.isDownloading = false;
+      },
+      complete: () => (this.isDownloading = false),
+    });
+  }
+
+  formatDate(date: any): string {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const monthNames = [
+      'jan',
+      'feb',
+      'mar',
+      'apr',
+      'may',
+      'jun',
+      'jul',
+      'aug',
+      'sep',
+      'oct',
+      'nov',
+      'dec',
+    ];
+    const month = monthNames[d.getMonth()];
+
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
+
     if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all required account fields'
       );
+      return;
     }
 
     this.isDownloading = true;
-    const formattedFrom = new Date(this.accStmtFrom)
-      .toISOString()
-      .split('T')[0];
-    const formattedTo = new Date(this.accStmtTo).toISOString().split('T')[0];
+
+    const formattedFrom = this.formatDate(this.accStmtFrom);
+    const formattedTo = this.formatDate(this.accStmtTo);
+
     this.service
       .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
       .subscribe({
@@ -784,7 +937,7 @@ export class ReportsComponent implements OnInit {
           const backendMessage =
             error?.error?.message ||
             error?.message ||
-            'Failed to generete account statement report';
+            'Failed to generate account statement report';
           this.snackbar.showNotification('snackbar-danger', backendMessage);
           this.isDownloading = false;
         },
@@ -817,6 +970,14 @@ export class ReportsComponent implements OnInit {
       .map((date) =>
         formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
       );
+
+    if (tranIds.length !== tranDates.length) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        `The number of Transaction IDs (${tranIds.length}) does not match the number of Transaction Dates (${tranDates.length}).`
+      );
+      return;
+    }
 
     this.isDownloading = true;
 
@@ -854,7 +1015,6 @@ export class ReportsComponent implements OnInit {
             error?.error?.message ||
             error?.message ||
             'Failed to generate STR report. Please try again.';
-
           this.snackbar.showNotification('snackbar-danger', backendMessage);
           this.isDownloading = false;
         },
@@ -939,6 +1099,14 @@ export class ReportsComponent implements OnInit {
         formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
       );
 
+    if (tranIds.length !== tranDates.length) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        `The number of Transaction IDs (${tranIds.length}) does not match the number of Transaction Dates (${tranDates.length}).`
+      );
+      return;
+    }
+
     this.isDownloading = true;
 
     this.service
@@ -988,7 +1156,7 @@ export class ReportsComponent implements OnInit {
   downloadCtrReport() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.ctrTranType || !this.ctrTranId || !this.ctrTranDate) {
+    if (!this.ctrTranId || !this.ctrTranDate) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all required CTR fields.'
@@ -1008,6 +1176,14 @@ export class ReportsComponent implements OnInit {
       .map((date) =>
         formatDate(new Date(date), 'dd-MMM-yy', 'en').toUpperCase()
       );
+
+    if (tranIds.length !== tranDates.length) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        `The number of Transaction IDs (${tranIds.length}) does not match the number of Transaction Dates (${tranDates.length}).`
+      );
+      return;
+    }
 
     this.isDownloading = true;
 
@@ -1052,4 +1228,8 @@ export class ReportsComponent implements OnInit {
       }
     });
   }
+
+  activeNewTab: string = 'customer';
+
+  manualSarCooperations: any[] = [];
 }
