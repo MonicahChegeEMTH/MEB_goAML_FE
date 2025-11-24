@@ -153,10 +153,7 @@ export class ReportsService {
     );
   }
 
-  downloadCtrReport(
-    tranIds: string[],
-    tranDates: string[]
-  ): Observable<any> {
+  downloadCtrReport(tranIds: string[], tranDates: string[]): Observable<any> {
     let params = new HttpParams();
 
     tranIds.forEach((id) => {
@@ -203,5 +200,28 @@ export class ReportsService {
     return this.http.post<
       { fileName: string; id: string; xmlContent: string }[]
     >(`${environment.apiUrl}/api/sar/manualSAR`, sarDataArray);
+  }
+
+  createEntityManualSar(
+    sarDataArray: {
+      reason: string;
+      action: string;
+      firstName: string;
+      lastName: string;
+      birthdate?: string;
+      occupation?: string;
+      idNumber: string;
+      nationality1?: string;
+      indicator: string;
+      name: string;
+      address: string;
+      town: string;
+      city: string;
+      countryCode: string;
+    }[]
+  ): Observable<any> {
+    return this.http.post<
+      { fileName: string; id: string; xmlContent: string }[]
+    >(`${environment.apiUrl}/api/sar/manualEntitySAR`, sarDataArray);
   }
 }
