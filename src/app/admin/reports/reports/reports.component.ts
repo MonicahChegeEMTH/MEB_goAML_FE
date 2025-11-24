@@ -105,18 +105,28 @@ export class ReportsComponent implements OnInit {
     },
   ];
 
+  cooperationList = [
+    {
+      firstName: '', // cooperation name
+      idNumber: '', // registration number
+      reason: '',
+      action: '',
+      indicators: [],
+    },
+  ];
+
   openSar(mode: 'existing' | 'new') {
     this.sarInputMode = mode;
     this.showReportForm('SAR');
   }
 
   showReportForm(type: string) {
-  this.selectedReportType = type;
+    this.selectedReportType = type;
 
-  this.selectedIndicators = [];   
-  this.selectedStrIndicators = [];  
-  this.selectedStarIndicators = [];  
-}
+    this.selectedIndicators = [];
+    this.selectedStrIndicators = [];
+    this.selectedStarIndicators = [];
+  }
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -658,6 +668,20 @@ export class ReportsComponent implements OnInit {
     }
   }
 
+  addCooperation() {
+    this.cooperationList.push({
+      firstName: '',
+      idNumber: '',
+      reason: '',
+      action: '',
+      indicators: [],
+    });
+  }
+
+  removeCooperation(index: number) {
+    this.cooperationList.splice(index, 1);
+  }
+
   downloadManualSar() {
     for (let c of this.manualSarCustomers) {
       if (!c.firstName || !c.lastName || !c.idNumber) {
@@ -987,39 +1011,37 @@ export class ReportsComponent implements OnInit {
 
     this.isDownloading = true;
 
-    this.service
-      .downloadCtrReport(this.ctrTranType, tranIds, tranDates)
-      .subscribe({
-        next: (response) => {
-          console.log('CTR report response:', response);
-          sessionStorage.setItem('strPreviewXML', response.xmlDocument);
-          this.snackbar.showNotification(
-            'snackbar-success',
-            'CTR report generated successfully.'
-          );
+    this.service.downloadCtrReport(tranIds, tranDates).subscribe({
+      next: (response) => {
+        console.log('CTR report response:', response);
+        sessionStorage.setItem('strPreviewXML', response.xmlDocument);
+        this.snackbar.showNotification(
+          'snackbar-success',
+          'CTR report generated successfully.'
+        );
 
-          this.router.navigate(['/admin/reports/reports-handling'], {
-            state: {
-              reportData: {
-                xmlContent: response.xmlContent,
-                fileName: response.fileName,
-                reportId: response.id,
-              },
+        this.router.navigate(['/admin/reports/reports-handling'], {
+          state: {
+            reportData: {
+              xmlContent: response.xmlContent,
+              fileName: response.fileName,
+              reportId: response.id,
             },
-          });
-        },
-        error: (error) => {
-          const backendMessage =
-            error?.error?.message ||
-            error?.message ||
-            'Failed to generate CTR report. Please try again';
-          this.snackbar.showNotification('snackbar-danger', backendMessage);
-          this.isDownloading = false;
-        },
-        complete: () => {
-          this.isDownloading = false;
-        },
-      });
+          },
+        });
+      },
+      error: (error) => {
+        const backendMessage =
+          error?.error?.message ||
+          error?.message ||
+          'Failed to generate CTR report. Please try again';
+        this.snackbar.showNotification('snackbar-danger', backendMessage);
+        this.isDownloading = false;
+      },
+      complete: () => {
+        this.isDownloading = false;
+      },
+    });
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
