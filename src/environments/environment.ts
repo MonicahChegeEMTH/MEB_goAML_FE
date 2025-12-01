@@ -12,14 +12,14 @@ export const environment = {
   // API: 'http://172.16.1.227:9600',
   // apiUrl: 'http://172.16.2.128:9600',
   // API: 'http://172.16.2.128:9600',
-  apiUrl: 'http://172.16.2.32:9600',
-  API: 'http://172.16.2.32:9600',
+  // apiUrl: 'http://172.16.2.32:9600',
+  // API: 'http://172.16.2.32:9600',
   // apiUrl: 'http://172.16.1.126:9600',
   // API: 'http://172.16.1.126:9600',
   // apiUrl: "http://172.16.0.31:9810",
   // API:  "http://172.16.0.31:9810",
-  //  apiUrl: "/backend-api",
-  //  API: "/backend-api",
+   apiUrl: "/backend-api",
+   API: "/backend-api",
 };
 
 /*
