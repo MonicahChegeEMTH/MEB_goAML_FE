@@ -116,9 +116,8 @@ export class ReportsComponent implements OnInit {
     action?: string;
     indicators?: string[];
     name: string;
-    address?: string;
-    town?: string;
-    city?: string;
+    regNumber: string;
+    business: string;
     countryCode?: string;
   }[] = [
     {
@@ -132,9 +131,8 @@ export class ReportsComponent implements OnInit {
       action: '',
       indicators: [],
       name: '',
-      address: '',
-      town: '',
-      city: '',
+      regNumber: '',
+      business: '',
       countryCode: '',
     },
   ];
@@ -719,9 +717,8 @@ export class ReportsComponent implements OnInit {
       occupation: '',
       birthdate: '',
       name: '',
-      address: '',
-      city: '',
-      town: '',
+      regNumber: '',
+      business: '',
       countryCode: '',
     });
   }
@@ -841,9 +838,8 @@ export class ReportsComponent implements OnInit {
       nationality1: c.nationality || '',
       indicator: (c.indicators || []).join(','),
       name: c.name,
-      address: c.address,
-      town: c.town,
-      city: c.city,
+      regNumber: c.regNumber,
+      business: c.business,
       countryCode: c.countryCode,
     }));
 
