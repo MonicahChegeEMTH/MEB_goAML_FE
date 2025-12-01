@@ -584,6 +584,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: xml,
                 fileName: `report_${reportId}.xml`,
                 reportId: reportId,
+                reportType: response.report_type
               },
             },
           });
@@ -597,6 +598,7 @@ export class ReportsComponent implements OnInit {
                   xmlContent: xmlText,
                   fileName: `report_${reportId}.xml`,
                   reportId: reportId,
+                  reportType: response.report_type
                 },
               },
             });
@@ -929,6 +931,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: response.xmlContent,
                 fileName: response.fileName,
                 reportId: response.id,
+                reportType: response.report_type
               },
             },
           });

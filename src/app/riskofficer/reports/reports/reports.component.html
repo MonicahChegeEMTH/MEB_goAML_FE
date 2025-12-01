@@ -123,7 +123,7 @@
               <input
                 matInput
                 placeholder="Enter basis of suspicion"
-                [(ngModel)]="sarAction"
+                [(ngModel)]="selectedAction"
               />
             </mat-form-field>
           </div>
@@ -170,7 +170,7 @@
               [color]="activeNewTab === 'cooperation' ? 'primary' : ''"
               (click)="activeNewTab = 'cooperation'"
             >
-              New Cooperative
+              New Legal Person
             </button>
           </div>
 
@@ -335,7 +335,7 @@
               style="margin-bottom: 20px"
               (click)="addCooperative()"
             >
-              + Add Cooperative
+              + Add Legal Person
             </button>
 
             <div
@@ -351,7 +351,7 @@
               <div class="filter-field">
                 <mat-form-field appearance="outline">
                   <mat-label
-                    >Cooperative's Name
+                    >Legal Person's Name
                     <span class="required">*</span></mat-label
                   >
                   <input
