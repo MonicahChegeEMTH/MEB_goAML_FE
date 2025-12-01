@@ -373,7 +373,7 @@
 .xml-preview pre {
   background: #1e1e1e;
   color: #dcdcdc;
-  padding: 1rem;
+  // padding: 1rem;
   border-radius: 6px;
   font-family: "Courier New", monospace;
   white-space: pre-wrap;
@@ -412,13 +412,13 @@
 
 .edit-actions {
   position: sticky;
-  top: 0; 
-  background-color: transparent; 
-  z-index: 10; 
+  top: 0;
+  background-color: transparent;
+  z-index: 10;
   margin-bottom: 10px;
   display: flex;
   gap: 10px;
-  padding: 0.5rem 0; 
+  padding: 0.5rem 0;
 }
 
 .btn.small-btn,
@@ -470,7 +470,7 @@
   word-break: break-word !important;
 }
 
-
-
-
-
+.xml-preview,
+.xml-editor {
+  padding-top: 0 !important;
+}

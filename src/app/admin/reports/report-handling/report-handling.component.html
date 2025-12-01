@@ -38,7 +38,7 @@
           <div class="edit-actions">
             <button
               class="btn small-btn"
-               *ngIf="!isReadOnly"
+              *ngIf="!isReadOnly"
               (click)="toggleEditMode()"
               [disabled]="isSaving"
             >
@@ -60,9 +60,18 @@
           </div>
 
           <div *ngIf="editMode">
-            <div
+            <!-- <div
               #xmlEditor
               contenteditable="true"
+              [innerHTML]="formattedXml"
+              (input)="onXmlEdit($event)"
+              class="xml-editor"
+              spellcheck="false"
+            ></div> -->
+            <div
+              #xmlEditor
+              [contenteditable]="!isReadOnly"
+              [class.readonly-editor]="isReadOnly"
               [innerHTML]="formattedXml"
               (input)="onXmlEdit($event)"
               class="xml-editor"

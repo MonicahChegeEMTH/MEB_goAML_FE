@@ -351,12 +351,26 @@
               <div class="filter-field">
                 <mat-form-field appearance="outline">
                   <mat-label
-                    >Legal Person's Name
+                    >Legal Name
                     <span class="required">*</span></mat-label
                   >
                   <input
                     matInput
-                    placeholder="Enter cooperative's name"
+                    placeholder="Enter legal name"
+                    [(ngModel)]="cust.name"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="filter-field">
+                <mat-form-field appearance="outline">
+                  <mat-label
+                    >Registration Number
+                    <span class="required">*</span></mat-label
+                  >
+                  <input
+                    matInput
+                    placeholder="Enter registration number"
                     [(ngModel)]="cust.name"
                   />
                 </mat-form-field>
@@ -1130,7 +1144,7 @@
                       color="primary"
                       aria-label="Preview XML"
                       (click)="
-                        $event.stopPropagation(); previewReport(report.id)
+                        $event.stopPropagation(); previewReport(report.id, report.type)
                       "
                       matTooltip="Preview XML"
                       [disabled]="isLoadingPreview[report.id]"
