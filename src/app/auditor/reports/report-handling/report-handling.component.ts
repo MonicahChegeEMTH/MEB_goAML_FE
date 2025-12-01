@@ -23,6 +23,8 @@ export class ReportHandlingComponent {
   isSaving: boolean = false;
   isDownloadingXML = false;
   isDownloadingZIP: { [key: string]: boolean } = {};
+  reportType: string = '';
+  isReadOnly: boolean;
 
   constructor(
     private tokenStorage: TokenStorageService,
@@ -39,10 +41,20 @@ export class ReportHandlingComponent {
 
     const navData = history.state?.reportData;
 
-    if (navData?.xmlContent) {
+    if (navData) {
+      this.reportType =
+        navData.report_type?.toUpperCase() ||
+        navData.reportType?.toUpperCase() ||
+        null;
       this.xmlContent = navData.xmlContent;
       this.fileName = navData.fileName || 'report.xml';
       this.reportId = navData.reportId || '';
+
+      console.log('DEBUG REPORT TYPE →', this.reportType);
+      console.log('NAV DATA →', navData);
+
+      this.isReadOnly = this.reportType === 'ACC_STMT';
+
       this.displayXml(this.xmlContent);
     } else {
       console.warn('No XML content found in navigation state:', navData);
@@ -79,17 +91,18 @@ export class ReportHandlingComponent {
     let highlightedNull = this.highlightNullFields(highlighted);
 
     this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
-      `<pre class="xml-preview-container">
-      <style>
-        .missing-field {
-          background-color: #ffdddd;
-          color: red;
-          border-radius: 4px;
-          padding: 2px 4px;
-        }
-      </style>
-      ${highlightedNull}
-    </pre>`
+      `<pre class="xml-preview-container"
+        style="white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; margin:0;">
+     <style>
+       .missing-field {
+         background-color: #ffdddd;
+         color: red;
+         border-radius: 4px;
+         padding: 2px 4px;
+       }
+     </style>
+     ${highlightedNull}
+  </pre>`
     );
   }
 
@@ -214,6 +227,7 @@ export class ReportHandlingComponent {
   }
 
   toggleEditMode(): void {
+    if (this.isReadOnly) return;
     this.editMode = !this.editMode;
 
     if (this.editMode) {
@@ -244,6 +258,13 @@ export class ReportHandlingComponent {
   }
 
   saveEditedXml(): void {
+    if (this.isReadOnly) {
+      this.snackbar.showNotification(
+        'snackbar-error',
+        'Editing is disabled for Account Statement reports.'
+      );
+      return;
+    }
     try {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(this.xmlContent, 'text/xml');

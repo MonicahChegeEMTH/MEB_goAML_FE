@@ -217,9 +217,8 @@ export class ReportsService {
       nationality1?: string;
       indicator: string;
       name: string;
-      address: string;
-      town: string;
-      city: string;
+      regNumber: string;
+      business: string;
       countryCode: string;
     }[]
   ): Observable<any> {

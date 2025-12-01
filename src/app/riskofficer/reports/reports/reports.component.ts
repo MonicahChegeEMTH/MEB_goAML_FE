@@ -116,9 +116,8 @@ export class ReportsComponent implements OnInit {
     action?: string;
     indicators?: string[];
     name: string;
-    address?: string;
-    town?: string;
-    city?: string;
+    regNumber: string;
+    business: string;
     countryCode?: string;
   }[] = [
     {
@@ -132,9 +131,8 @@ export class ReportsComponent implements OnInit {
       action: '',
       indicators: [],
       name: '',
-      address: '',
-      town: '',
-      city: '',
+      regNumber: '',
+      business: '',
       countryCode: '',
     },
   ];
@@ -569,14 +567,16 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  previewReport(reportId: string): void {
+  previewReport(reportId: string, reportType: string): void {
     if (this.isLoadingPreview[reportId]) return;
     this.isLoadingPreview[reportId] = true;
 
     this.service.downloadReport(reportId).subscribe({
       next: (response: any) => {
+        console.log('Report preview response:', response);
         if (response?.xmlContent || response?.xmlDocument) {
           const xml = response.xmlContent || response.xmlDocument;
+          const reportType = response.report_type || response.reportType;
 
           this.router.navigate(['/riskofficer/reports/reports-handling'], {
             state: {
@@ -584,6 +584,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: xml,
                 fileName: `report_${reportId}.xml`,
                 reportId: reportId,
+                reportType: reportType
               },
             },
           });
@@ -597,6 +598,7 @@ export class ReportsComponent implements OnInit {
                   xmlContent: xmlText,
                   fileName: `report_${reportId}.xml`,
                   reportId: reportId,
+                  reportType: reportType
                 },
               },
             });
@@ -715,9 +717,8 @@ export class ReportsComponent implements OnInit {
       occupation: '',
       birthdate: '',
       name: '',
-      address: '',
-      city: '',
-      town: '',
+      regNumber: '',
+      business: '',
       countryCode: '',
     });
   }
@@ -837,9 +838,8 @@ export class ReportsComponent implements OnInit {
       nationality1: c.nationality || '',
       indicator: (c.indicators || []).join(','),
       name: c.name,
-      address: c.address,
-      town: c.town,
-      city: c.city,
+      regNumber: c.regNumber,
+      business: c.business,
       countryCode: c.countryCode,
     }));
 
@@ -929,6 +929,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: response.xmlContent,
                 fileName: response.fileName,
                 reportId: response.id,
+                reportType: 'ACC_STMT',
               },
             },
           });
