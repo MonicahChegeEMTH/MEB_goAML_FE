@@ -14,6 +14,7 @@ import { debounceTime, forkJoin, Subject, switchMap, tap } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { IndicatorsLookupComponent } from '../indicators-lookup/indicators-lookup.component';
 
+type AccountResolveTarget = 'SAR' | 'ACC_STMT';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
@@ -81,6 +82,10 @@ export class ReportsComponent implements OnInit {
   selectedIndicatorText = '';
   selectedIndicator: any = null;
   isSearchingSwift = false;
+  accStmtIdentifierInput$ = new Subject<string>();
+private accountResolveTarget: AccountResolveTarget = 'SAR';
+
+
   manualSarCustomers: {
     firstName: string;
     lastName: string;
@@ -138,6 +143,7 @@ export class ReportsComponent implements OnInit {
   ];
 
   openSar(mode: 'existing' | 'new') {
+    this.accountResolveTarget = 'SAR';
     this.sarInputMode = mode;
     this.showReportForm('SAR');
   }
@@ -331,13 +337,32 @@ export class ReportsComponent implements OnInit {
     return accountNo;
   }
 
-  onAccountSelected(account: any) {
-    this.accountNumber = account.account_no;
-    this.identificationNumber = account.account_no;
-    this.accountList = [];
+  // onAccountSelected(account: any) {
+  //   this.accountNumber = account.account_no;
+  //   this.identificationNumber = account.account_no;
+  //   this.accountList = [];
 
-    this.isFetchingAccounts = false;
+  //   this.isFetchingAccounts = false;
+  // }
+
+  onAccountSelected(account: any) {
+  if (this.accountResolveTarget === 'SAR') {
+    this.accountNumber = account.account_no;
   }
+
+  if (this.accountResolveTarget === 'ACC_STMT') {
+    this.accStmtAccount = account.account_no;
+  }
+
+  this.identificationNumber = account.account_no;
+  this.accountList = [];
+  this.isFetchingAccounts = false;
+}
+
+openAccountStatement() {
+  this.accountResolveTarget = 'ACC_STMT';
+  this.showReportForm('AccStmt');
+}
 
   onAutocompleteClosed() {
     this.isFetchingAccounts = false;
@@ -901,13 +926,13 @@ export class ReportsComponent implements OnInit {
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
 
-    // if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
-    //   this.snackbar.showNotification(
-    //     'snackbar-danger',
-    //     'Please fill all required account fields'
-    //   );
-    //   return;
-    // }
+    if (!this.accountNumber || !this.accStmtFrom || !this.accStmtTo) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all required account fields'
+      );
+      return;
+    }
 
     this.isDownloading = true;
 
@@ -915,7 +940,7 @@ export class ReportsComponent implements OnInit {
     const formattedTo = this.formatDate(this.accStmtTo);
 
     this.service
-      .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
+      .downloadAccStmt(this.accountNumber, formattedFrom, formattedTo)
       .subscribe({
         next: (response) => {
           sessionStorage.setItem('accStmtPreviewXML', response.xmlDocument);
@@ -1079,13 +1104,13 @@ export class ReportsComponent implements OnInit {
   downloadStarReport() {
     this.markFormGroupTouched(this.filterForm);
 
-    // if (!this.starTranId || !this.starTranDate) {
-    //   this.snackbar.showNotification(
-    //     'snackbar-danger',
-    //     'Please fill all required STAR fields.'
-    //   );
-    //   return;
-    // }
+    if (!this.starTranId || !this.starTranDate) {
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Please fill all required STAR fields.'
+      );
+      return;
+    }
 
     const tranIds = this.starTranId
       .split(',')
@@ -1234,52 +1259,51 @@ export class ReportsComponent implements OnInit {
 
   manualSarCooperations: any[] = [];
 
-  searchBySwiftRef(): void {
-  const swiftRef = this.strTranId?.trim();
+  searchBySwiftRef(reportType: 'STR' | 'STAR'): void {
+    const swiftRef =
+      reportType === 'STR' ? this.strTranId?.trim() : this.starTranId?.trim();
 
-  if (!swiftRef) {
-    return;
+    if (!swiftRef) return;
+
+    this.isSearchingSwift = true;
+
+    this.service.getReportBySwiftRef(swiftRef).subscribe({
+      next: (response) => {
+        if (!response?.tranId || !response?.tranDate) {
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            'Transaction not found for the provided swift reference.'
+          );
+          this.isSearchingSwift = false;
+          return;
+        }
+
+        const formattedDate = formatDate(
+          new Date(response.tranDate),
+          'dd-MMM-yy',
+          'en'
+        ).toUpperCase();
+
+        if (reportType === 'STR') {
+          this.strTranId = response.tranId;
+          this.strTranDate = formattedDate;
+        } else {
+          this.starTranId = response.tranId;
+          this.starTranDate = formattedDate;
+        }
+      },
+
+      error: (error) => {
+        const message =
+          error?.error?.message ||
+          'No transaction found for the provided swift reference.';
+        this.snackbar.showNotification('snackbar-danger', message);
+        this.isSearchingSwift = false;
+      },
+
+      complete: () => {
+        this.isSearchingSwift = false;
+      },
+    });
   }
-
-  this.isSearchingSwift = true;
-
-  this.service.getReportBySwiftRef(swiftRef).subscribe({
-    next: (response) => {
-      if (!response?.tranId || !response?.tranDate) {
-        this.snackbar.showNotification(
-          'snackbar-danger',
-          'Transaction not found for the provided swift reference.'
-        );
-        this.isSearchingSwift = false; // stop spinner
-        return;
-      }
-
-      // Replace swift reference with actual Transaction ID
-      this.strTranId = response.tranId;
-
-      // Normalize and set transaction date
-      const formattedDate = formatDate(
-        new Date(response.tranDate),
-        'dd-MMM-yy',
-        'en'
-      ).toUpperCase();
-
-      this.strTranDate = formattedDate;
-    },
-
-    error: (error) => {
-      const message =
-        error?.error?.message ||
-        'No transaction found for the provided swift reference.';
-
-      this.snackbar.showNotification('snackbar-danger', message);
-      this.isSearchingSwift = false; // stop spinner on error
-    },
-
-    complete: () => {
-      this.isSearchingSwift = false; // stop spinner on success
-    },
-  });
-}
-
 }
