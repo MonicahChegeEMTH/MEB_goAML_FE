@@ -606,7 +606,7 @@
                 mat-icon-button
                 matSuffix
                 type="button"
-                (click)="searchBySwiftRef()"
+                (click)="searchBySwiftRef('STR')"
                 [disabled]="!strTranId || isSearchingSwift"
                 aria-label="Search by swift reference"
               >
@@ -747,15 +747,15 @@
               <input
                 matInput
                 placeholder="Enter transaction ID, separate with commas for multiple"
-                [(ngModel)]="strTranId"
+                [(ngModel)]="starTranId"
               />
 
               <button
                 mat-icon-button
                 matSuffix
                 type="button"
-                (click)="searchBySwiftRef()"
-                [disabled]="!strTranId || isSearchingSwift"
+                (click)="searchBySwiftRef('STAR')"
+                [disabled]="!starTranId || isSearchingSwift"
                 aria-label="Search by swift reference"
               >
                 <mat-icon *ngIf="!isSearchingSwift">search</mat-icon>
@@ -766,7 +766,7 @@
                 ></mat-progress-spinner>
               </button>
 
-              <mat-error *ngIf="!strTranId">
+              <mat-error *ngIf="!starTranId">
                 Transaction ID is required.
               </mat-error>
             </mat-form-field>
@@ -790,7 +790,7 @@
               <input
                 matInput
                 placeholder="Select date(s), multiple allowed"
-                [(ngModel)]="strTranDate"
+                [(ngModel)]="starTranDate"
               />
 
               <input
@@ -857,7 +857,7 @@
 
               <input
                 matInput
-                [ngModel]="selectedStrIndicators"
+                [ngModel]="selectedStarIndicators"
                 placeholder="Select or type indicator"
               />
 
