@@ -23,7 +23,6 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-
     'date',
     'type',
     'file_name',
@@ -902,13 +901,13 @@ export class ReportsComponent implements OnInit {
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
-      this.snackbar.showNotification(
-        'snackbar-danger',
-        'Please fill all required account fields'
-      );
-      return;
-    }
+    // if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
+    //   this.snackbar.showNotification(
+    //     'snackbar-danger',
+    //     'Please fill all required account fields'
+    //   );
+    //   return;
+    // }
 
     this.isDownloading = true;
 
@@ -1080,13 +1079,13 @@ export class ReportsComponent implements OnInit {
   downloadStarReport() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.starTranId || !this.starTranDate) {
-      this.snackbar.showNotification(
-        'snackbar-danger',
-        'Please fill all required STAR fields.'
-      );
-      return;
-    }
+    // if (!this.starTranId || !this.starTranDate) {
+    //   this.snackbar.showNotification(
+    //     'snackbar-danger',
+    //     'Please fill all required STAR fields.'
+    //   );
+    //   return;
+    // }
 
     const tranIds = this.starTranId
       .split(',')
