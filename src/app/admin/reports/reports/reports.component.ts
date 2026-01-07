@@ -81,6 +81,7 @@ export class ReportsComponent implements OnInit {
   sarInputMode: 'existing' | 'new' | null = null;
   selectedIndicatorText = '';
   selectedIndicator: any = null;
+  isSearchingSwift = false;
   manualSarCustomers: {
     firstName: string;
     lastName: string;
@@ -584,7 +585,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: xml,
                 fileName: `report_${reportId}.xml`,
                 reportId: reportId,
-                reportType: reportType
+                reportType: reportType,
               },
             },
           });
@@ -598,7 +599,7 @@ export class ReportsComponent implements OnInit {
                   xmlContent: xmlText,
                   fileName: `report_${reportId}.xml`,
                   reportId: reportId,
-                  reportType: reportType
+                  reportType: reportType,
                 },
               },
             });
@@ -1233,4 +1234,53 @@ export class ReportsComponent implements OnInit {
   activeNewTab: string = 'customer';
 
   manualSarCooperations: any[] = [];
+
+  searchBySwiftRef(): void {
+  const swiftRef = this.strTranId?.trim();
+
+  if (!swiftRef) {
+    return;
+  }
+
+  this.isSearchingSwift = true;
+
+  this.service.getReportBySwiftRef(swiftRef).subscribe({
+    next: (response) => {
+      if (!response?.tranId || !response?.tranDate) {
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Transaction not found for the provided swift reference.'
+        );
+        this.isSearchingSwift = false; // stop spinner
+        return;
+      }
+
+      // Replace swift reference with actual Transaction ID
+      this.strTranId = response.tranId;
+
+      // Normalize and set transaction date
+      const formattedDate = formatDate(
+        new Date(response.tranDate),
+        'dd-MMM-yy',
+        'en'
+      ).toUpperCase();
+
+      this.strTranDate = formattedDate;
+    },
+
+    error: (error) => {
+      const message =
+        error?.error?.message ||
+        'No transaction found for the provided swift reference.';
+
+      this.snackbar.showNotification('snackbar-danger', message);
+      this.isSearchingSwift = false; // stop spinner on error
+    },
+
+    complete: () => {
+      this.isSearchingSwift = false; // stop spinner on success
+    },
+  });
+}
+
 }
