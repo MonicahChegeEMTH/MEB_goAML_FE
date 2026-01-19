@@ -6,6 +6,7 @@
           <p class="greeting">Welcome Back</p>
           <h3>{{ firstname }} {{ lastname }}</h3>
           <h2 class="system-title">goAML Reporting System</h2>
+          <p>Schema Version 5.0</p>
         </div>
         <div class="illustration">
           <img src="assets/images/login/dashboard_img.png" alt="illustration" />
@@ -729,7 +730,6 @@
       <div class="filter-row" *ngIf="selectedReportType === 'STAR'">
         <div style="display: flex; flex-wrap: wrap; gap: 16px">
           <!-- Transaction ID / Swift Reference -->
-          <!-- Transaction ID / Swift Reference -->
           <div
             class="filter-field"
             style="
@@ -796,7 +796,7 @@
               <input
                 matInput
                 [matDatepicker]="picker"
-                (dateChange)="addTranDate($event)"
+                (dateChange)="addStarTranDate($event)"
                 style="display: none"
                 [max]="today"
               />
@@ -807,7 +807,7 @@
               ></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
 
-              <mat-error *ngIf="!strTranDate">
+              <mat-error *ngIf="!starTranDate">
                 Transaction Date is required.
               </mat-error>
             </mat-form-field>
