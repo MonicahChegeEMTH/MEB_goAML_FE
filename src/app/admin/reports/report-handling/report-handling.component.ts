@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 import { ReportsService } from '../service/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-report-handling',
@@ -26,6 +27,8 @@ export class ReportHandlingComponent {
   reportType: string = '';
   isReadOnly: boolean;
   originalXmlContent: string = '';
+  private xmlEditSubject = new Subject<string>();
+  undoStack: string[] = [];
 
   constructor(
     private tokenStorage: TokenStorageService,
@@ -36,6 +39,19 @@ export class ReportHandlingComponent {
   ) {}
 
   ngOnInit(): void {
+    this.xmlEditSubject.pipe(debounceTime(500)).subscribe((xml) => {
+      // Only push if changed
+      if (
+        !this.undoStack.length ||
+        this.undoStack[this.undoStack.length - 1] !== xml
+      ) {
+        this.undoStack.push(xml);
+
+        // Limit stack size
+        if (this.undoStack.length > 50) this.undoStack.shift();
+      }
+    });
+
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
@@ -253,10 +269,70 @@ export class ReportHandlingComponent {
     }
   }
 
-  onXmlEdit(event: Event): void {
-    const target = event.target as HTMLElement;
+  // onXmlEdit(event: Event): void {
+  //   const target = event.target as HTMLElement;
 
-    this.xmlContent = target.innerText || target.textContent || '';
+  //   this.xmlContent = target.innerText || target.textContent || '';
+  // }
+  private pushToUndoStack(xml: string) {
+    if (
+      !this.undoStack.length ||
+      this.undoStack[this.undoStack.length - 1] !== xml
+    ) {
+      this.undoStack.push(xml);
+      if (this.undoStack.length > 50) this.undoStack.shift();
+    }
+  }
+  
+
+  onXmlEdit(event: Event) {
+    const target = event.target as HTMLElement;
+    const newXml = target.innerText || target.textContent || '';
+
+    // Push immediately if stack empty
+    if (!this.undoStack.length) this.pushToUndoStack(this.xmlContent);
+
+    // Push if punctuation/space
+    const lastChar = newXml.slice(-1);
+    if ([' ', '\n', '.', ',', ';'].includes(lastChar)) {
+      this.pushToUndoStack(this.xmlContent);
+    }
+
+    // Also push after 500ms pause (debounce)
+    this.xmlEditSubject.next(newXml);
+
+    this.xmlContent = newXml;
+  }
+
+  private highlightXml(xml: string): string {
+    const formatted = this.formatXml(xml);
+    const escaped = this.escapeXml(formatted);
+    const highlighted = this.highlightEmptyFields(escaped);
+    const highlightedNull = this.highlightNullFields(highlighted);
+
+    return `<style>
+    .missing-field {
+      background-color: #ffdddd;
+      color: red;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+  </style>
+  ${highlightedNull}`;
+  }
+
+  undoXmlStep(): void {
+    if (this.undoStack.length === 0) return;
+
+    const previousXml = this.undoStack.pop()!;
+    this.xmlContent = previousXml;
+
+    // Re-render highlights properly via Angular binding
+    this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
+      this.highlightXml(this.xmlContent),
+    );
+
+    this.snackbar.showNotification('snackbar-info', 'Undo step applied.');
   }
 
   saveEditedXml(): void {
