@@ -64,7 +64,16 @@
               (click)="undoXmlChanges()"
               [disabled]="isSaving"
             >
+            <i class="far fa-undo"></i>
               Undo Changes
+            </button>
+            <button
+              class="btn save-btn"
+              *ngIf="editMode"
+              (click)="undoXmlStep()"
+              [disabled]="undoStack.length === 0 || isSaving"
+            >
+              Undo Step
             </button>
           </div>
 
