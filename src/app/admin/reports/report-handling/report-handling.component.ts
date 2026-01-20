@@ -25,13 +25,14 @@ export class ReportHandlingComponent {
   isDownloadingZIP: { [key: string]: boolean } = {};
   reportType: string = '';
   isReadOnly: boolean;
+  originalXmlContent: string = '';
 
   constructor(
     private tokenStorage: TokenStorageService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private reportService: ReportsService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +48,7 @@ export class ReportHandlingComponent {
         navData.reportType?.toUpperCase() ||
         null;
       this.xmlContent = navData.xmlContent;
+      this.originalXmlContent = navData.xmlContent;
       this.fileName = navData.fileName || 'report.xml';
       this.reportId = navData.reportId || '';
 
@@ -64,14 +66,14 @@ export class ReportHandlingComponent {
   private highlightEmptyFields(xml: string): string {
     return xml.replace(
       /(&lt;\w+&gt;)(\s*?)(&lt;\/\w+&gt;)/g,
-      `<span class="missing-field">$1$2$3</span>`
+      `<span class="missing-field">$1$2$3</span>`,
     );
   }
 
   private highlightNullFields(xml: string): string {
     return xml.replace(
       /(&lt;\w+&gt;)\(null\)(&lt;\/\w+&gt;)/g,
-      `<span class="missing-field">$1(null)$2</span>`
+      `<span class="missing-field">$1(null)$2</span>`,
     );
   }
 
@@ -102,7 +104,7 @@ export class ReportHandlingComponent {
        }
      </style>
      ${highlightedNull}
-  </pre>`
+  </pre>`,
     );
   }
 
@@ -244,7 +246,7 @@ export class ReportHandlingComponent {
           padding: 2px 4px;
         }
       </style>
-      ${highlighted}`
+      ${highlighted}`,
       );
     } else {
       this.displayXml(this.xmlContent);
@@ -261,7 +263,7 @@ export class ReportHandlingComponent {
     if (this.isReadOnly) {
       this.snackbar.showNotification(
         'snackbar-error',
-        'Editing is disabled for Account Statement reports.'
+        'Editing is disabled for Account Statement reports.',
       );
       return;
     }
@@ -273,7 +275,7 @@ export class ReportHandlingComponent {
       if (parserError) {
         this.snackbar.showNotification(
           'snackbar-error',
-          'Invalid XML. Please fix before saving.'
+          'Invalid XML. Please fix before saving.',
         );
         return;
       }
@@ -281,7 +283,7 @@ export class ReportHandlingComponent {
       if (!this.reportId) {
         this.snackbar.showNotification(
           'snackbar-error',
-          'Report ID missing. Cannot update.'
+          'Report ID missing. Cannot update.',
         );
         return;
       }
@@ -292,11 +294,12 @@ export class ReportHandlingComponent {
         .updateReport(this.reportId, this.xmlContent)
         .subscribe({
           next: () => {
+            this.originalXmlContent = this.xmlContent;
             this.displayXml(this.xmlContent);
             this.editMode = false;
             this.snackbar.showNotification(
               'snackbar-success',
-              'Report updated successfully!'
+              'Report updated successfully!',
             );
             this.isSaving = false;
           },
@@ -304,7 +307,7 @@ export class ReportHandlingComponent {
             console.error('Error updating report:', err);
             this.snackbar.showNotification(
               'snackbar-error',
-              'Failed to update the report. Please try again.'
+              'Failed to update the report. Please try again.',
             );
             this.isSaving = false;
           },
@@ -313,9 +316,33 @@ export class ReportHandlingComponent {
       console.error('Error parsing XML:', err);
       this.snackbar.showNotification(
         'snackbar-error',
-        'Unexpected error while saving changes.'
+        'Unexpected error while saving changes.',
       );
       this.isSaving = false;
     }
+  }
+
+  undoXmlChanges(): void {
+    // Restore original XML
+    this.xmlContent = this.originalXmlContent;
+
+    // Re-render editor with original XML
+    const formatted = this.formatXml(this.xmlContent);
+    const escaped = this.escapeXml(formatted);
+    const highlighted = this.highlightEmptyFields(escaped);
+
+    this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
+      `<style>
+      .missing-field {
+        background-color: #ffdddd;
+        color: black;
+        border-radius: 4px;
+        padding: 2px 4px;
+      }
+    </style>
+    ${highlighted}`,
+    );
+
+    this.snackbar.showNotification('snackbar-info', 'Changes reverted.');
   }
 }
