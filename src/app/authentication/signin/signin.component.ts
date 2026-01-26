@@ -85,60 +85,74 @@ export class SigninComponent
   }
 
   onVerifyOtp() {
-    const otp =
-      this.otpForm.value.first +
-      this.otpForm.value.second +
-      this.otpForm.value.third +
-      this.otpForm.value.fourth +
-      this.otpForm.value.fifth +
-      this.otpForm.value.sixth;
+  const otp =
+    this.otpForm.value.first +
+    this.otpForm.value.second +
+    this.otpForm.value.third +
+    this.otpForm.value.fourth +
+    this.otpForm.value.fifth +
+    this.otpForm.value.sixth;
 
-    this.loading = true;
+  this.loading = true;
 
-    const payload = {
-      username: this.maskedEmail,
-      otp: otp,
-    };
+  const payload = {
+    username: this.maskedEmail,
+    otp: otp,
+  };
 
-    this.authService.verifyOtp(payload).subscribe({
-      next: (res: any) => {
-        this.loading = false;
+  this.authService.verifyOtp(payload).subscribe({
+    next: (response: any) => {
+      this.loading = false;
 
-        const data = res.entity ?? res;
+      const raw = response.entity ?? response;
 
-        /* OTP SUCCESS BUT RESET REQUIRED */
-        if (data.firstLogin === true || data.requiresPasswordReset === true) {
-          this.resetStep = true;
-          this.otpStep = false;
-          return;
-        }
+      // 🔹 Normalize backend response
+      const data = {
+        ...raw.user,
+        token: raw.token,
+        message: raw.message,
+        status: raw.status,
+      };
 
-        /* OTP SUCCESS → LOGIN COMPLETE */
-        this.tokenStorage.saveToken(data.token, data.refreshToken);
-        this.tokenStorage.saveUser(data);
+      console.log('OTP VERIFY RESPONSE:', data);
 
-        const role = data.role;
-        console.log('LOGIN RESPONSE:', data);
+      /* 🔁 OTP SUCCESS BUT PASSWORD RESET REQUIRED */
+      if (data.firstLogin === 'Y') {
+        this.resetStep = true;
+        this.otpStep = false;
+        return;
+      }
 
-        if (role === Role.Admin) {
-          this.router.navigate(['/admin/dashboard/main']);
-        } else if (role === Role.Riskofficer) {
-          this.router.navigate(['/riskofficer/dashboard/main']);
-        } else if (role === Role.Auditor) {
-          this.router.navigate(['/auditor/dashboard/main']);
-        } else {
-          this.router.navigate(['/dashboard']);
-        }
-      },
-      error: () => {
-        this.loading = false;
-        this.snackbar.showNotification(
-          'snackbar-danger',
-          'Invalid OTP. Please try again.',
-        );
-      },
-    });
-  }
+      /* ✅ OTP SUCCESS → LOGIN COMPLETE */
+      this.otpStep = false;
+this.resetStep = false;
+this.submitted = false;
+
+      this.tokenStorage.saveToken(data.token, data.refreshToken);
+      this.tokenStorage.saveUser(data);
+
+      const role = data.role;
+      console.log('Redirecting with role:', role);
+
+      if (role === Role.Admin) {
+        this.router.navigate(['/admin/dashboard/main']);
+      } else if (role === Role.Riskofficer) {
+        this.router.navigate(['/riskofficer/dashboard/main']);
+      } else if (role === Role.Auditor) {
+        this.router.navigate(['/auditor/dashboard/main']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
+    },
+    error: () => {
+      this.loading = false;
+      this.snackbar.showNotification(
+        'snackbar-danger',
+        'Invalid OTP. Please try again.',
+      );
+    },
+  });
+}
 
   onResetPassword() {
     if (this.resetForm.invalid) return;
