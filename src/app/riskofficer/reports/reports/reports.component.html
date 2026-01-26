@@ -6,6 +6,7 @@
           <p class="greeting">Welcome Back</p>
           <h3>{{ firstname }} {{ lastname }}</h3>
           <h2 class="system-title">goAML Reporting System</h2>
+          <p>Schema Version 5.0</p>
         </div>
         <div class="illustration">
           <img src="assets/images/login/dashboard_img.png" alt="illustration" />
@@ -454,7 +455,7 @@
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'AccStmt'">
-        <div class="filter-field">
+        <!-- <div class="filter-field">
           <mat-form-field appearance="outline">
             <mat-label>Account Number <span class="required"></span></mat-label>
             <input
@@ -475,7 +476,70 @@
               >Account number is required.</mat-error
             >
           </mat-form-field>
-        </div>
+        </div> -->
+
+        <div class="filter-field">
+            <mat-form-field appearance="outline">
+              <mat-label
+                >Identifier Type <span class="required">*</span></mat-label
+              >
+              <mat-select
+                [(ngModel)]="selectedIdType"
+                (selectionChange)="onIdTypeChange($event.value)"
+              >
+                <mat-option value="nationalId">National ID</mat-option>
+                <mat-option value="passport">Passport Number</mat-option>
+                <mat-option value="registration"
+                  >Certificate of Registration</mat-option
+                >
+                <mat-option value="account">Account Number</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label
+                >{{ idPlaceholder }} <span class="required">*</span></mat-label
+              >
+
+              <input
+                type="text"
+                matInput
+                [(ngModel)]="identificationNumber"
+                [matAutocomplete]="auto"
+                (ngModelChange)="onIdentifierInputChange($event)"
+              />
+
+              <mat-progress-spinner
+                *ngIf="isFetchingAccounts"
+                matSuffix
+                class="gold-spinner"
+                mode="indeterminate"
+                diameter="24"
+              >
+              </mat-progress-spinner>
+
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (closed)="onAutocompleteClosed()"
+                [displayWith]="displayAccount"
+                [panelWidth]="'400px'"
+              >
+                <mat-option
+                  *ngFor="let acc of filteredAccounts"
+                  [value]="acc.account_no"
+                  (onSelectionChange)="onAccountSelected(acc)"
+                >
+                  <span style="width: 300px; display: inline-block">
+                    {{ acc.account_no }} - {{ acc.account_name }} ({{
+                      acc.scheme_type
+                    }})
+                  </span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
 
         <div class="filter-field">
           <mat-form-field appearance="outline">
@@ -515,212 +579,298 @@
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'STR'">
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Transaction ID <span class="required">*</span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Enter transaction ID, separate with commas for multiple"
-              [(ngModel)]="strTranId"
-            />
-            <mat-error *ngIf="!strTranId"
-              >Transaction ID is required.</mat-error
-            >
-          </mat-form-field>
-        </div>
+        <!-- First Row -->
+        <div style="display: flex; flex-wrap: wrap; gap: 16px">
+          <!-- Transaction ID / Swift Reference -->
+          <!-- Transaction ID / Swift Reference -->
+          <div
+            class="filter-field"
+            style="
+              display: inline-block;
+              width: 400px !important;
+              max-width: 400px !important;
+              min-width: 400px !important;
+            "
+          >
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Transaction ID/Swift Reference <span class="required">*</span>
+              </mat-label>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Transaction Date <span class="required">*</span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Select date(s), multiple allowed"
-              [(ngModel)]="strTranDate"
-            />
-            <input
-              matInput
-              [matDatepicker]="picker"
-              (dateChange)="addTranDate($event)"
-              style="display: none"
-              [max]="today"
-            />
+              <input
+                matInput
+                placeholder="Enter transaction ID, separate with commas for multiple"
+                [(ngModel)]="strTranId"
+              />
 
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="searchBySwiftRef('STR')"
+                [disabled]="!strTranId || isSearchingSwift"
+                aria-label="Search by swift reference"
+              >
+                <mat-icon *ngIf="!isSearchingSwift">search</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isSearchingSwift"
+                  diameter="18"
+                  mode="indeterminate"
+                ></mat-progress-spinner>
+              </button>
 
-            <mat-error *ngIf="!strTranDate">
-              Transaction Date is required.
-            </mat-error>
-          </mat-form-field>
-        </div>
+              <mat-error *ngIf="!strTranId">
+                Transaction ID is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Description of transaction</mat-label>
-            <input
-              matInput
-              placeholder="Enter description of transaction"
-              [(ngModel)]="strReason"
-            />
-          </mat-form-field>
-        </div>
+          <!-- Transaction Date -->
+          <div
+            class="filter-field"
+            style="
+              display: inline-block;
+              width: 300px !important;
+              max-width: 300px !important;
+              min-width: 300px !important;
+            "
+          >
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Transaction Date <span class="required">*</span>
+              </mat-label>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Basis of suspicion</mat-label>
-            <input
-              matInput
-              placeholder="Enter basis of suspicion"
-              [(ngModel)]="strAction"
-            />
-          </mat-form-field>
-        </div>
+              <input
+                matInput
+                placeholder="Select date(s), multiple allowed"
+                [(ngModel)]="strTranDate"
+              />
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Comments</mat-label>
-            <input
-              matInput
-              placeholder="Enter comments"
-              [(ngModel)]="strComments"
-            />
-          </mat-form-field>
-        </div>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                (dateChange)="addTranDate($event)"
+                style="display: none"
+                [max]="today"
+              />
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators <span class="required">*</span> </mat-label>
-            <!-- <input
-              [(ngModel)]="selectedStrIndicators"
-              placeholder="Select an indicator"
-              matInput
-            /> -->
-            <input
-              [ngModel]="selectedStrIndicators"
-              placeholder="Select or type indicator"
-              matInput
-            />
-            <button
-              mat-icon-button
-              matSuffix
-              (click)="pickIndicatorForReport('STR')"
-              aria-label="Pick indicator"
-            >
-              <mat-icon>search</mat-icon>
-            </button>
-          </mat-form-field>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+
+              <mat-error *ngIf="!strTranDate">
+                Transaction Date is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Description -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Description of transaction</mat-label>
+              <input
+                matInput
+                placeholder="Enter description of transaction"
+                [(ngModel)]="strReason"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Basis of Suspicion -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Basis of suspicion</mat-label>
+              <input
+                matInput
+                placeholder="Enter basis of suspicion"
+                [(ngModel)]="strAction"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Comments</mat-label>
+              <input
+                matInput
+                placeholder="Enter comments"
+                [(ngModel)]="strComments"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Indicators -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Indicators <span class="required">*</span>
+              </mat-label>
+
+              <input
+                matInput
+                [ngModel]="selectedStrIndicators"
+                placeholder="Select or type indicator"
+              />
+
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorForReport('STR')"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
         </div>
       </div>
 
       <div class="filter-row" *ngIf="selectedReportType === 'STAR'">
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Transaction ID <span class="required">*</span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Enter transaction ID, separate with commas for multiple"
-              [(ngModel)]="starTranId"
-            />
-            <mat-error *ngIf="!starTranId"
-              >Transaction ID is required.</mat-error
-            >
-          </mat-form-field>
-        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px">
+          <!-- Transaction ID / Swift Reference -->
+          <div
+            class="filter-field"
+            style="
+              display: inline-block;
+              width: 400px !important;
+              max-width: 400px !important;
+              min-width: 400px !important;
+            "
+          >
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Transaction ID/Swift Reference <span class="required">*</span>
+              </mat-label>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label
-              >Transaction Date <span class="required">*</span></mat-label
-            >
-            <input
-              matInput
-              placeholder="Select date(s), multiple allowed"
-              [(ngModel)]="starTranDate"
-            />
-            <input
-              matInput
-              [matDatepicker]="picker"
-              (dateChange)="addStarTranDate($event)"
-              style="display: none"
-              [max]="today"
-            />
+              <input
+                matInput
+                placeholder="Enter transaction ID, separate with commas for multiple"
+                [(ngModel)]="starTranId"
+              />
 
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="searchBySwiftRef('STAR')"
+                [disabled]="!starTranId || isSearchingSwift"
+                aria-label="Search by swift reference"
+              >
+                <mat-icon *ngIf="!isSearchingSwift">search</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isSearchingSwift"
+                  diameter="18"
+                  mode="indeterminate"
+                ></mat-progress-spinner>
+              </button>
 
-            <mat-error *ngIf="!starTranDate">
-              Transaction Date is required.
-            </mat-error>
-          </mat-form-field>
-        </div>
+              <mat-error *ngIf="!starTranId">
+                Transaction ID is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Description of transaction</mat-label>
-            <input
-              matInput
-              placeholder="Enter description of transaction"
-              [(ngModel)]="starReason"
-            />
-          </mat-form-field>
-        </div>
+          <!-- Transaction Date -->
+          <div
+            class="filter-field"
+            style="
+              display: inline-block;
+              width: 300px !important;
+              max-width: 300px !important;
+              min-width: 300px !important;
+            "
+          >
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Transaction Date <span class="required">*</span>
+              </mat-label>
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Basis of suspicion</mat-label>
-            <input
-              matInput
-              placeholder="Enter basis of suspicion"
-              [(ngModel)]="starAction"
-            />
-          </mat-form-field>
-        </div>
+              <input
+                matInput
+                placeholder="Select date(s), multiple allowed"
+                [(ngModel)]="starTranDate"
+              />
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Comments</mat-label>
-            <input
-              matInput
-              placeholder="Enter comments"
-              [(ngModel)]="starComments"
-            />
-          </mat-form-field>
-        </div>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                (dateChange)="addStarTranDate($event)"
+                style="display: none"
+                [max]="today"
+              />
 
-        <div class="filter-field">
-          <mat-form-field appearance="outline">
-            <mat-label>Indicators <span class="required">*</span></mat-label>
-            <!-- <input
-              [(ngModel)]="selectedStarIndicators"
-              placeholder="Select an indicator"
-              matInput
-            /> -->
-            <input
-              [ngModel]="selectedStarIndicators"
-              placeholder="Select or type indicator"
-              matInput
-            />
-            <button
-              mat-icon-button
-              matSuffix
-              (click)="pickIndicatorForReport('STAR')"
-              aria-label="Pick indicator"
-            >
-              <mat-icon>search</mat-icon>
-            </button>
-          </mat-form-field>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+
+              <mat-error *ngIf="!starTranDate">
+                Transaction Date is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Description -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Description of transaction</mat-label>
+              <input
+                matInput
+                placeholder="Enter description of transaction"
+                [(ngModel)]="strReason"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Basis of Suspicion -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Basis of suspicion</mat-label>
+              <input
+                matInput
+                placeholder="Enter basis of suspicion"
+                [(ngModel)]="strAction"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Comments</mat-label>
+              <input
+                matInput
+                placeholder="Enter comments"
+                [(ngModel)]="strComments"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Indicators -->
+          <div class="filter-field" style="display: inline-block; width: 360px">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>
+                Indicators <span class="required">*</span>
+              </mat-label>
+
+              <input
+                matInput
+                [ngModel]="selectedStarIndicators"
+                placeholder="Select or type indicator"
+              />
+
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="pickIndicatorForReport('STAR')"
+                aria-label="Pick indicator"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
         </div>
       </div>
 

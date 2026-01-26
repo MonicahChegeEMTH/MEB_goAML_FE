@@ -14,6 +14,7 @@ import { debounceTime, forkJoin, Subject, switchMap, tap } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { IndicatorsLookupComponent } from 'src/app/admin/reports/indicators-lookup/indicators-lookup.component';
 
+type AccountResolveTarget = 'SAR' | 'ACC_STMT';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
@@ -23,7 +24,6 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'account_number',
-
     'date',
     'type',
     'file_name',
@@ -81,6 +81,11 @@ export class ReportsComponent implements OnInit {
   sarInputMode: 'existing' | 'new' | null = null;
   selectedIndicatorText = '';
   selectedIndicator: any = null;
+  isSearchingSwift = false;
+  accStmtIdentifierInput$ = new Subject<string>();
+private accountResolveTarget: AccountResolveTarget = 'SAR';
+
+
   manualSarCustomers: {
     firstName: string;
     lastName: string;
@@ -138,6 +143,7 @@ export class ReportsComponent implements OnInit {
   ];
 
   openSar(mode: 'existing' | 'new') {
+    this.accountResolveTarget = 'SAR';
     this.sarInputMode = mode;
     this.showReportForm('SAR');
   }
@@ -331,13 +337,32 @@ export class ReportsComponent implements OnInit {
     return accountNo;
   }
 
-  onAccountSelected(account: any) {
-    this.accountNumber = account.account_no;
-    this.identificationNumber = account.account_no;
-    this.accountList = [];
+  // onAccountSelected(account: any) {
+  //   this.accountNumber = account.account_no;
+  //   this.identificationNumber = account.account_no;
+  //   this.accountList = [];
 
-    this.isFetchingAccounts = false;
+  //   this.isFetchingAccounts = false;
+  // }
+
+  onAccountSelected(account: any) {
+  if (this.accountResolveTarget === 'SAR') {
+    this.accountNumber = account.account_no;
   }
+
+  if (this.accountResolveTarget === 'ACC_STMT') {
+    this.accStmtAccount = account.account_no;
+  }
+
+  this.identificationNumber = account.account_no;
+  this.accountList = [];
+  this.isFetchingAccounts = false;
+}
+
+openAccountStatement() {
+  this.accountResolveTarget = 'ACC_STMT';
+  this.showReportForm('AccStmt');
+}
 
   onAutocompleteClosed() {
     this.isFetchingAccounts = false;
@@ -584,7 +609,7 @@ export class ReportsComponent implements OnInit {
                 xmlContent: xml,
                 fileName: `report_${reportId}.xml`,
                 reportId: reportId,
-                reportType: reportType
+                reportType: reportType,
               },
             },
           });
@@ -598,7 +623,7 @@ export class ReportsComponent implements OnInit {
                   xmlContent: xmlText,
                   fileName: `report_${reportId}.xml`,
                   reportId: reportId,
-                  reportType: reportType
+                  reportType: reportType,
                 },
               },
             });
@@ -901,7 +926,7 @@ export class ReportsComponent implements OnInit {
   downloadAccountStatement() {
     this.markFormGroupTouched(this.filterForm);
 
-    if (!this.accStmtAccount || !this.accStmtFrom || !this.accStmtTo) {
+    if (!this.accountNumber || !this.accStmtFrom || !this.accStmtTo) {
       this.snackbar.showNotification(
         'snackbar-danger',
         'Please fill all required account fields'
@@ -915,7 +940,7 @@ export class ReportsComponent implements OnInit {
     const formattedTo = this.formatDate(this.accStmtTo);
 
     this.service
-      .downloadAccStmt(this.accStmtAccount, formattedFrom, formattedTo)
+      .downloadAccStmt(this.accountNumber, formattedFrom, formattedTo)
       .subscribe({
         next: (response) => {
           sessionStorage.setItem('accStmtPreviewXML', response.xmlDocument);
@@ -1233,4 +1258,52 @@ export class ReportsComponent implements OnInit {
   activeNewTab: string = 'customer';
 
   manualSarCooperations: any[] = [];
+
+  searchBySwiftRef(reportType: 'STR' | 'STAR'): void {
+    const swiftRef =
+      reportType === 'STR' ? this.strTranId?.trim() : this.starTranId?.trim();
+
+    if (!swiftRef) return;
+
+    this.isSearchingSwift = true;
+
+    this.service.getReportBySwiftRef(swiftRef).subscribe({
+      next: (response) => {
+        if (!response?.tranId || !response?.tranDate) {
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            'Transaction not found for the provided swift reference.'
+          );
+          this.isSearchingSwift = false;
+          return;
+        }
+
+        const formattedDate = formatDate(
+          new Date(response.tranDate),
+          'dd-MMM-yy',
+          'en'
+        ).toUpperCase();
+
+        if (reportType === 'STR') {
+          this.strTranId = response.tranId;
+          this.strTranDate = formattedDate;
+        } else {
+          this.starTranId = response.tranId;
+          this.starTranDate = formattedDate;
+        }
+      },
+
+      error: (error) => {
+        const message =
+          error?.error?.message ||
+          'No transaction found for the provided swift reference.';
+        this.snackbar.showNotification('snackbar-danger', message);
+        this.isSearchingSwift = false;
+      },
+
+      complete: () => {
+        this.isSearchingSwift = false;
+      },
+    });
+  }
 }
