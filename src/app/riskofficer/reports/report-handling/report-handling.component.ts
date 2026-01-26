@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 import { ReportsService } from '../service/reports.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-report-handling',
@@ -25,16 +26,32 @@ export class ReportHandlingComponent {
   isDownloadingZIP: { [key: string]: boolean } = {};
   reportType: string = '';
   isReadOnly: boolean;
+  originalXmlContent: string = '';
+  private xmlEditSubject = new Subject<string>();
+  undoStack: string[] = [];
 
   constructor(
     private tokenStorage: TokenStorageService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private reportService: ReportsService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
   ) {}
 
   ngOnInit(): void {
+    this.xmlEditSubject.pipe(debounceTime(500)).subscribe((xml) => {
+      // Only push if changed
+      if (
+        !this.undoStack.length ||
+        this.undoStack[this.undoStack.length - 1] !== xml
+      ) {
+        this.undoStack.push(xml);
+
+        // Limit stack size
+        if (this.undoStack.length > 50) this.undoStack.shift();
+      }
+    });
+
     const user = this.tokenStorage.getUser();
     this.firstname = user.firstname;
     this.lastname = user.lastname;
@@ -47,6 +64,7 @@ export class ReportHandlingComponent {
         navData.reportType?.toUpperCase() ||
         null;
       this.xmlContent = navData.xmlContent;
+      this.originalXmlContent = navData.xmlContent;
       this.fileName = navData.fileName || 'report.xml';
       this.reportId = navData.reportId || '';
 
@@ -64,14 +82,14 @@ export class ReportHandlingComponent {
   private highlightEmptyFields(xml: string): string {
     return xml.replace(
       /(&lt;\w+&gt;)(\s*?)(&lt;\/\w+&gt;)/g,
-      `<span class="missing-field">$1$2$3</span>`
+      `<span class="missing-field">$1$2$3</span>`,
     );
   }
 
   private highlightNullFields(xml: string): string {
     return xml.replace(
       /(&lt;\w+&gt;)\(null\)(&lt;\/\w+&gt;)/g,
-      `<span class="missing-field">$1(null)$2</span>`
+      `<span class="missing-field">$1(null)$2</span>`,
     );
   }
 
@@ -102,7 +120,7 @@ export class ReportHandlingComponent {
        }
      </style>
      ${highlightedNull}
-  </pre>`
+  </pre>`,
     );
   }
 
@@ -244,24 +262,84 @@ export class ReportHandlingComponent {
           padding: 2px 4px;
         }
       </style>
-      ${highlighted}`
+      ${highlighted}`,
       );
     } else {
       this.displayXml(this.xmlContent);
     }
   }
 
-  onXmlEdit(event: Event): void {
-    const target = event.target as HTMLElement;
+  // onXmlEdit(event: Event): void {
+  //   const target = event.target as HTMLElement;
 
-    this.xmlContent = target.innerText || target.textContent || '';
+  //   this.xmlContent = target.innerText || target.textContent || '';
+  // }
+  private pushToUndoStack(xml: string) {
+    if (
+      !this.undoStack.length ||
+      this.undoStack[this.undoStack.length - 1] !== xml
+    ) {
+      this.undoStack.push(xml);
+      if (this.undoStack.length > 50) this.undoStack.shift();
+    }
+  }
+  
+
+  onXmlEdit(event: Event) {
+    const target = event.target as HTMLElement;
+    const newXml = target.innerText || target.textContent || '';
+
+    // Push immediately if stack empty
+    if (!this.undoStack.length) this.pushToUndoStack(this.xmlContent);
+
+    // Push if punctuation/space
+    const lastChar = newXml.slice(-1);
+    if ([' ', '\n', '.', ',', ';'].includes(lastChar)) {
+      this.pushToUndoStack(this.xmlContent);
+    }
+
+    // Also push after 500ms pause (debounce)
+    this.xmlEditSubject.next(newXml);
+
+    this.xmlContent = newXml;
+  }
+
+  private highlightXml(xml: string): string {
+    const formatted = this.formatXml(xml);
+    const escaped = this.escapeXml(formatted);
+    const highlighted = this.highlightEmptyFields(escaped);
+    const highlightedNull = this.highlightNullFields(highlighted);
+
+    return `<style>
+    .missing-field {
+      background-color: #ffdddd;
+      color: red;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+  </style>
+  ${highlightedNull}`;
+  }
+
+  undoXmlStep(): void {
+    if (this.undoStack.length === 0) return;
+
+    const previousXml = this.undoStack.pop()!;
+    this.xmlContent = previousXml;
+
+    // Re-render highlights properly via Angular binding
+    this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
+      this.highlightXml(this.xmlContent),
+    );
+
+    this.snackbar.showNotification('snackbar-info', 'Undo step applied.');
   }
 
   saveEditedXml(): void {
     if (this.isReadOnly) {
       this.snackbar.showNotification(
         'snackbar-error',
-        'Editing is disabled for Account Statement reports.'
+        'Editing is disabled for Account Statement reports.',
       );
       return;
     }
@@ -273,7 +351,7 @@ export class ReportHandlingComponent {
       if (parserError) {
         this.snackbar.showNotification(
           'snackbar-error',
-          'Invalid XML. Please fix before saving.'
+          'Invalid XML. Please fix before saving.',
         );
         return;
       }
@@ -281,7 +359,7 @@ export class ReportHandlingComponent {
       if (!this.reportId) {
         this.snackbar.showNotification(
           'snackbar-error',
-          'Report ID missing. Cannot update.'
+          'Report ID missing. Cannot update.',
         );
         return;
       }
@@ -292,11 +370,12 @@ export class ReportHandlingComponent {
         .updateReport(this.reportId, this.xmlContent)
         .subscribe({
           next: () => {
+            this.originalXmlContent = this.xmlContent;
             this.displayXml(this.xmlContent);
             this.editMode = false;
             this.snackbar.showNotification(
               'snackbar-success',
-              'Report updated successfully!'
+              'Report updated successfully!',
             );
             this.isSaving = false;
           },
@@ -304,7 +383,7 @@ export class ReportHandlingComponent {
             console.error('Error updating report:', err);
             this.snackbar.showNotification(
               'snackbar-error',
-              'Failed to update the report. Please try again.'
+              'Failed to update the report. Please try again.',
             );
             this.isSaving = false;
           },
@@ -313,9 +392,33 @@ export class ReportHandlingComponent {
       console.error('Error parsing XML:', err);
       this.snackbar.showNotification(
         'snackbar-error',
-        'Unexpected error while saving changes.'
+        'Unexpected error while saving changes.',
       );
       this.isSaving = false;
     }
+  }
+
+  undoXmlChanges(): void {
+    // Restore original XML
+    this.xmlContent = this.originalXmlContent;
+
+    // Re-render editor with original XML
+    const formatted = this.formatXml(this.xmlContent);
+    const escaped = this.escapeXml(formatted);
+    const highlighted = this.highlightEmptyFields(escaped);
+
+    this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
+      `<style>
+      .missing-field {
+        background-color: #ffdddd;
+        color: black;
+        border-radius: 4px;
+        padding: 2px 4px;
+      }
+    </style>
+    ${highlighted}`,
+    );
+
+    this.snackbar.showNotification('snackbar-info', 'Changes reverted.');
   }
 }

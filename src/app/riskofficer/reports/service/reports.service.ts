@@ -223,4 +223,10 @@ export class ReportsService {
       { fileName: string; id: string; xmlContent: string }[]
     >(`${environment.apiUrl}/api/sar/manualEntitySAR`, sarDataArray);
   }
+
+  getReportBySwiftRef(swiftRef: string): Observable<any> {
+  return this.http.get<any>(
+    `${environment.apiUrl}/api/reports/tran-id/${swiftRef}`
+  );
+}
 }

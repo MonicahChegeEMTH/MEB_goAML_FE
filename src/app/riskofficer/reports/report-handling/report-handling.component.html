@@ -6,6 +6,7 @@
           <p class="greeting">Welcome Back</p>
           <h3>{{ firstname }} {{ lastname }}</h3>
           <h2 class="system-title">goAML Reporting System</h2>
+          <p>Schema Version 5.0</p>
         </div>
         <div class="illustration">
           <img src="assets/images/login/dashboard_img.png" alt="illustration" />
@@ -56,6 +57,23 @@
               <ng-template #loading>
                 <span class="spinner"></span>Saving...</ng-template
               >
+            </button>
+            <button
+              class="btn save-btn"
+              *ngIf="editMode"
+              (click)="undoXmlChanges()"
+              [disabled]="isSaving"
+            >
+            <i class="far fa-undo"></i>
+              Undo Changes
+            </button>
+            <button
+              class="btn save-btn"
+              *ngIf="editMode"
+              (click)="undoXmlStep()"
+              [disabled]="undoStack.length === 0 || isSaving"
+            >
+              Undo Step
             </button>
           </div>
 
