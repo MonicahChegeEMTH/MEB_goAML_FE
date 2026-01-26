@@ -66,13 +66,24 @@ export class SigninComponent
 
     this.resetForm = this.formBuilder.group(
       {
-        newPassword: ['', Validators.required],
+        // newPassword: ['', Validators.required],
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            ),
+          ],
+        ],
         confirmPassword: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator },
     );
 
     this.currentYear = new Date().getFullYear();
+    this.onPasswordInput();
   }
   get f() {
     return this.authForm.controls;
@@ -85,74 +96,74 @@ export class SigninComponent
   }
 
   onVerifyOtp() {
-  const otp =
-    this.otpForm.value.first +
-    this.otpForm.value.second +
-    this.otpForm.value.third +
-    this.otpForm.value.fourth +
-    this.otpForm.value.fifth +
-    this.otpForm.value.sixth;
+    const otp =
+      this.otpForm.value.first +
+      this.otpForm.value.second +
+      this.otpForm.value.third +
+      this.otpForm.value.fourth +
+      this.otpForm.value.fifth +
+      this.otpForm.value.sixth;
 
-  this.loading = true;
+    this.loading = true;
 
-  const payload = {
-    username: this.maskedEmail,
-    otp: otp,
-  };
+    const payload = {
+      username: this.maskedEmail,
+      otp: otp,
+    };
 
-  this.authService.verifyOtp(payload).subscribe({
-    next: (response: any) => {
-      this.loading = false;
+    this.authService.verifyOtp(payload).subscribe({
+      next: (response: any) => {
+        this.loading = false;
 
-      const raw = response.entity ?? response;
+        const raw = response.entity ?? response;
 
-      // 🔹 Normalize backend response
-      const data = {
-        ...raw.user,
-        token: raw.token,
-        message: raw.message,
-        status: raw.status,
-      };
+        // 🔹 Normalize backend response
+        const data = {
+          ...raw.user,
+          token: raw.token,
+          message: raw.message,
+          status: raw.status,
+        };
 
-      console.log('OTP VERIFY RESPONSE:', data);
+        console.log('OTP VERIFY RESPONSE:', data);
 
-      /* 🔁 OTP SUCCESS BUT PASSWORD RESET REQUIRED */
-      if (data.firstLogin === 'Y') {
-        this.resetStep = true;
+        /* 🔁 OTP SUCCESS BUT PASSWORD RESET REQUIRED */
+        if (data.firstLogin === 'Y') {
+          this.resetStep = true;
+          this.otpStep = false;
+          return;
+        }
+
+        /* ✅ OTP SUCCESS → LOGIN COMPLETE */
         this.otpStep = false;
-        return;
-      }
+        this.resetStep = false;
+        this.submitted = false;
 
-      /* ✅ OTP SUCCESS → LOGIN COMPLETE */
-      this.otpStep = false;
-this.resetStep = false;
-this.submitted = false;
+        this.tokenStorage.saveToken(data.token, data.refreshToken);
+        this.tokenStorage.saveUser(data);
 
-      this.tokenStorage.saveToken(data.token, data.refreshToken);
-      this.tokenStorage.saveUser(data);
+        const role = data.role;
+        console.log('Redirecting with role:', role);
 
-      const role = data.role;
-      console.log('Redirecting with role:', role);
-
-      if (role === Role.Admin) {
-        this.router.navigate(['/admin/dashboard/main']);
-      } else if (role === Role.Riskofficer) {
-        this.router.navigate(['/riskofficer/dashboard/main']);
-      } else if (role === Role.Auditor) {
-        this.router.navigate(['/auditor/dashboard/main']);
-      } else {
-        this.router.navigate(['/dashboard']);
-      }
-    },
-    error: () => {
-      this.loading = false;
-      this.snackbar.showNotification(
-        'snackbar-danger',
-        'Invalid OTP. Please try again.',
-      );
-    },
-  });
-}
+        if (role === Role.Admin) {
+          this.router.navigate(['/admin/dashboard/main']);
+        } else if (role === Role.Riskofficer) {
+          this.router.navigate(['/riskofficer/dashboard/main']);
+        } else if (role === Role.Auditor) {
+          this.router.navigate(['/auditor/dashboard/main']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.snackbar.showNotification(
+          'snackbar-danger',
+          'Invalid OTP. Please try again.',
+        );
+      },
+    });
+  }
 
   onResetPassword() {
     if (this.resetForm.invalid) return;
@@ -165,14 +176,23 @@ this.submitted = false;
     };
 
     this.authService.firstLoginresetPassword(payload).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.loading = false;
+
         this.snackbar.showNotification(
           'snackbar-success',
-          'Password reset successful. Please log in.',
+          'Password reset successful. Please enter the OTP sent to your email/phone.',
         );
+
+        // 🔹 Switch directly to OTP input
         this.resetStep = false;
-        this.authForm.reset();
+        this.otpStep = true;
+
+        // Reset OTP form fields
+        this.otpForm.reset();
+
+        // Keep maskedEmail for OTP payload
+        // No need to reset authForm — user shouldn’t login again
       },
       error: () => (this.loading = false),
     });
@@ -280,5 +300,48 @@ this.submitted = false;
       );
       if (prevInput) prevInput.focus();
     }
+  }
+
+  onOtpPaste(event: ClipboardEvent) {
+    event.preventDefault();
+
+    const pastedData = event.clipboardData
+      ?.getData('text')
+      ?.replace(/\D/g, '') // digits only
+      .slice(0, 6);
+
+    if (!pastedData || pastedData.length < 6) {
+      return;
+    }
+
+    const controls = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth'];
+
+    controls.forEach((control, index) => {
+      this.otpForm.get(control)?.setValue(pastedData[index]);
+    });
+
+    // Move focus to last input
+    const lastInput = document.querySelector<HTMLInputElement>(
+      `[formControlName="sixth"]`,
+    );
+    lastInput?.focus();
+  }
+
+  passwordCriteria = {
+    minLength: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
+  };
+
+  onPasswordInput() {
+    const value = this.resetForm.get('newPassword')?.value || '';
+
+    this.passwordCriteria.minLength = value.length >= 8;
+    this.passwordCriteria.uppercase = /[A-Z]/.test(value);
+    this.passwordCriteria.lowercase = /[a-z]/.test(value);
+    this.passwordCriteria.number = /\d/.test(value);
+    this.passwordCriteria.special = /[@$!%*?&]/.test(value);
   }
 }

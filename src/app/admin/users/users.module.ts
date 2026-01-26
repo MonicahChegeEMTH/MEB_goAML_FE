@@ -39,6 +39,7 @@ import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { UsersComponent } from "./pages/users/users.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ResetPasswordConfirmComponent } from './pages/reset-password-confirm/reset-password-confirm.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     RejectedAccountsComponent,
     VerifyAccountComponent,
     UsersComponent,
-    ProfileComponent
+    ProfileComponent,
+    ResetPasswordConfirmComponent
   ],
   imports: [
     CommonModule,

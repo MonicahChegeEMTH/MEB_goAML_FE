@@ -38,13 +38,7 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      username: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-        ],
-      ],
+      username: [''],
       firstname: [
         '',
         [
@@ -61,13 +55,7 @@ export class AddAccountComponent extends BaseComponent implements OnInit {
           Validators.pattern(/^[A-Za-z\s]+$/),
         ],
       ],
-      phone: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^(\+?254|0)?7\d{8}$/),
-        ],
-      ],
+      phone: [''],
       employeeNumber: [''],
       role: [null, Validators.required],
     });

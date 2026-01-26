@@ -18,6 +18,7 @@ import { UpdateAccountComponent } from '../update-account/update-account.compone
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
+import { ResetPasswordConfirmComponent } from '../reset-password-confirm/reset-password-confirm.component';
 
 @Component({
   selector: 'app-users',
@@ -27,14 +28,15 @@ import { TokenStorageService } from 'src/app/core/service/token-storage.service'
 export class UsersComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'employeeNumber',
+    // 'employeeNumber',
     'username',
     'firstname',
     'lastname',
     'email',
-    'phonenumber',
+    // 'phonenumber',
     'role',
     'status',
+    'resetPassword',
     'actions',
   ];
   users: any[] = [];
@@ -50,13 +52,16 @@ export class UsersComponent extends BaseComponent implements OnInit {
   firstname: string;
   lastname: string;
   pagedUsers: any[] = [];
+  exporter: any;
+
+  resetInProgress: Set<number> = new Set();
 
   constructor(
     private userService: UserService,
     public dialog: MatDialog,
     private router: Router,
     private snackbar: SnackbarService,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
   ) {
     super();
   }
@@ -97,7 +102,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
     autoTable(doc, {
       head: [
         [
-          'Employee No',
+          // 'Employee No',
           'Username',
           'First Name',
           'Last Name',
@@ -106,7 +111,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
         ],
       ],
       body: this.dataSource.data.map((u) => [
-        u.employeeNumber,
+        // u.employeeNumber,
         u.username,
         u.firstname,
         u.lastname,
@@ -135,7 +140,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
           this.users = rawUsers.map((u, index) => ({
             sn: index + 1,
             id: u.id,
-            employeeNumber: u.employeeNumber,
+            // employeeNumber: u.employeeNumber,
             firstname: u.firstname || u.firstName || '',
             username: u.username || u.userName || '',
             lastname: u.lastname || u.lastName || '',
@@ -147,14 +152,14 @@ export class UsersComponent extends BaseComponent implements OnInit {
           }));
 
           const filteredUsers = this.users.filter(
-            (user) => user.tenantId === tenantId
+            (user) => user.tenantId === tenantId,
           );
 
           this.dataSource = new MatTableDataSource<any>(filteredUsers);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.activeAccounts = filteredUsers.filter(
-            (user) => user.status === 'Active'
+            (user) => user.status === 'Active',
           ).length;
           this.isLoading = false;
         },
@@ -163,14 +168,77 @@ export class UsersComponent extends BaseComponent implements OnInit {
           if (err.status === 403) {
             this.snackbar.showNotification(
               'snackbar-danger',
-              'Access Denied: Insufficient permissions to fetch users.'
+              'Access Denied: Insufficient permissions to fetch users.',
             );
           } else {
             this.snackbar.showNotification(
               'snackbar-danger',
-              err.error?.message || 'Failed to fetch users'
+              err.error?.message || 'Failed to fetch users',
             );
           }
+        },
+      });
+  }
+
+  openResetPasswordDialog(user: any): void {
+    const dialogRef = this.dialog.open(ResetPasswordConfirmComponent, {
+      width: '600px',
+      disableClose: true,
+      data: {
+        username: user.username,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.resetInProgress.add(user.id);
+        this.executePasswordReset(user.id);
+      }
+    });
+  }
+
+  private executePasswordReset(userId: number): void {
+    this.userService
+      .resetPassword(userId)
+      .pipe(takeUntil(this.subject))
+      .subscribe({
+        next: (res) => {
+          this.snackbar.showNotification(
+            'snackbar-success',
+            res?.message || 'Password reset successfully.',
+          );
+           this.resetInProgress.delete(userId);
+        },
+        error: (err) => {
+          this.resetInProgress.delete(userId);
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error?.message || 'Failed to reset password.',
+          );
+        },
+      });
+  }
+
+  resetPassword(userId: number) {
+    if (!confirm('Are you sure you want to reset this user’s password?')) {
+      return;
+    }
+
+    this.userService
+      .resetPassword(userId)
+      .pipe(takeUntil(this.subject))
+      .subscribe({
+        next: (res) => {
+          this.snackbar.showNotification(
+            'snackbar-success',
+            res?.message || 'Password reset successfully.',
+          );
+        },
+        error: (err) => {
+          this.snackbar.showNotification(
+            'snackbar-danger',
+            err.error?.message || 'Failed to reset password.',
+          );
         },
       });
   }
@@ -207,8 +275,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
   }
 
   lockAccountCall(account) {
-     console.log('🧩 Lock clicked for:', account);
-  console.log('🧩 ID passed to dialog:', account.id);
+    console.log('🧩 Lock clicked for:', account);
+    console.log('🧩 ID passed to dialog:', account.id);
     const dialogRef = this.dialog.open(LockAccountComponent, {
       data: {
         account: account,
@@ -289,5 +357,12 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   private setPagedData(startIndex: number, endIndex: number): void {
     this.pagedUsers = this.users.slice(startIndex, endIndex);
+  }
+
+  exportXlsx() {
+    this.exporter.exportTable('xlsx', {
+      fileName: 'users',
+      sheet: 'sheet1',
+    });
   }
 }
