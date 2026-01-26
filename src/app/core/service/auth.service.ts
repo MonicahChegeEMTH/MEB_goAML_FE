@@ -34,6 +34,16 @@ export class AuthService {
     return this.http.post<any>(authUrl, user);
   }
 
+  verifyOtp(user): Observable<any> {
+    const authUrl = `${environment.apiUrl}/api/verify-otp`
+    return this.http.post<any>(authUrl, user);
+  }
+
+  firstLoginresetPassword(user): Observable<any> {
+    const authUrl = `${environment.apiUrl}/api/reset-password`
+    return this.http.post<any>(authUrl, user);
+  }
+
   refreshToken(): Observable<any> {
     const refreshToken = this.tokenStorage.getRefreshToken()
     return this.http.post(REFRESH_TOKEN_API+refreshToken, {})
