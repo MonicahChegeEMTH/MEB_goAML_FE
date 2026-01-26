@@ -11,7 +11,11 @@
         <p class="subtitle">Login in to continue</p>
       </div>
 
-      <form  *ngIf="!otpStep && !resetStep" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      <form
+        *ngIf="!otpStep && !resetStep"
+        [formGroup]="authForm"
+        (ngSubmit)="onSubmit()"
+      >
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
           <input
@@ -67,41 +71,13 @@
           >
         </div>
       </form>
-
-      <!-- <form
-        *ngIf="otpStep && !resetStep"
-        [formGroup]="otpForm"
-        (ngSubmit)="onVerifyOtp()"
-      >
-        <h2 class="text-center">Enter OTP</h2>
-        <p class="text-muted text-center">OTP sent to {{ maskedEmail }}</p>
-
-        <div class="otp-inputs">
-          <input maxlength="1" formControlName="first" />
-          <input maxlength="1" formControlName="second" />
-          <input maxlength="1" formControlName="third" />
-          <input maxlength="1" formControlName="fourth" />
-        </div>
-
-        <button mat-raised-button color="primary" type="submit">
-          Verify OTP
-        </button>
-      </form> -->
       <form
         *ngIf="otpStep && !resetStep"
         [formGroup]="otpForm"
         (ngSubmit)="onVerifyOtp()"
       >
         <div class="card text-center otp-card">
-          <div class="text-center">
-            <!-- <img
-              src="assets/images/ncba.jpg"
-              width="200"
-              height="100"
-              alt="Logo"
-              class="otp-logo"
-            /> -->
-          </div>
+          <div class="text-center"></div>
           <h2 class="login-title">Enter OTP</h2>
           <p class="text-muted">
             Please enter the one-time password sent to
@@ -115,6 +91,7 @@
               (input)="moveForward($event, 'second')"
               autofocus
               (keydown)="moveBackward($event, null)"
+              (paste)="onOtpPaste($event)"
             />
             <input
               type="text"
@@ -137,14 +114,14 @@
               (input)="moveForward($event, 'fifth')"
               (keydown)="moveBackward($event, 'third')"
             />
-             <input
+            <input
               type="text"
               maxlength="1"
               formControlName="fifth"
               (input)="moveForward($event, 'sixth')"
               (keydown)="moveBackward($event, 'fourth')"
             />
-             <input
+            <input
               type="text"
               maxlength="1"
               formControlName="sixth"
@@ -164,7 +141,7 @@
         </div>
       </form>
 
-       <form
+      <form
         *ngIf="resetStep"
         [formGroup]="resetForm"
         (ngSubmit)="onResetPassword()"
@@ -173,12 +150,34 @@
           Reset Password
         </h2>
 
+        <div class="password-strength">
+          <p>Password must contain:</p>
+          <ul>
+            <li [class.valid]="passwordCriteria.minLength">
+              <mat-icon>check_circle</mat-icon> Minimum 8 characters
+            </li>
+            <li [class.valid]="passwordCriteria.uppercase">
+              <mat-icon>check_circle</mat-icon> At least one uppercase letter
+            </li>
+            <li [class.valid]="passwordCriteria.lowercase">
+              <mat-icon>check_circle</mat-icon> At least one lowercase letter
+            </li>
+            <li [class.valid]="passwordCriteria.number">
+              <mat-icon>check_circle</mat-icon> At least one number
+            </li>
+            <li [class.valid]="passwordCriteria.special">
+              <mat-icon>check_circle</mat-icon> At least one special character
+            </li>
+          </ul>
+        </div>
+
         <mat-form-field appearance="outline" class="example-full-width">
           <mat-label>New Password</mat-label>
           <input
             matInput
             [type]="hideNew ? 'password' : 'text'"
             formControlName="newPassword"
+            (input)="onPasswordInput()"
           />
           <button
             mat-icon-button
@@ -215,21 +214,26 @@
           >
         </mat-form-field>
         <div class="container-auth-form-btn">
-          <button mat-raised-button [disabled]="loading || !resetForm.valid" class="sign-in-btn full-width" type="submit">
-          Reset Password
-          <img
-            *ngIf="!loading"
-            src="assets/images/login/Vector.png"
-            alt="Arrow Vector"
-            class="arrow-vector-img"
-          />
-          <img
-            *ngIf="loading"
-            src="assets/images/login/loading.png"
-            alt="Loading..."
-            class="arrow-vector-img spin"
-          />
-        </button>
+          <button
+            mat-raised-button
+            [disabled]="loading || !resetForm.valid"
+            class="sign-in-btn full-width"
+            type="submit"
+          >
+            Reset Password
+            <img
+              *ngIf="!loading"
+              src="assets/images/login/Vector.png"
+              alt="Arrow Vector"
+              class="arrow-vector-img"
+            />
+            <img
+              *ngIf="loading"
+              src="assets/images/login/loading.png"
+              alt="Loading..."
+              class="arrow-vector-img spin"
+            />
+          </button>
         </div>
       </form>
 

@@ -135,6 +135,33 @@
   border-radius: 8px;
 }
 
+.password-strength {
+  font-size: 14px;
+  margin-top: 5px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      color: #999;
+      margin-bottom: 4px;
+
+      mat-icon {
+        font-size: 16px;
+        margin-right: 6px;
+      }
+
+      &.valid {
+        color: green;
+      }
+    }
+  }
+}
+
 .sign-in-btn {
   display: flex;
   align-items: center;

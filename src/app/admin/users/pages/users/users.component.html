@@ -1,6 +1,5 @@
 <section class="content">
   <div class="content-block">
-
     <div class="header-cards">
       <div class="header-card large-card">
         <div class="welcome">
@@ -124,7 +123,7 @@
                     }}</mat-cell
                   >
                 </ng-container>
-                <ng-container matColumnDef="employeeNumber">
+                <!-- <ng-container matColumnDef="employeeNumber">
                   <mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header
@@ -136,7 +135,7 @@
                     class="column-nowrap psl-3 tbl-col-width-per-12"
                     >{{ user.employeeNumber }}</mat-cell
                   >
-                </ng-container>
+                </ng-container> -->
                 <ng-container matColumnDef="username">
                   <mat-header-cell
                     *matHeaderCellDef
@@ -249,6 +248,43 @@
                     >
                       {{ user.status }}
                     </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="resetPassword">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    Reset Password
+                  </mat-header-cell>
+
+                  <mat-cell
+                    *matCellDef="let user"
+                    class="column-nowrap psl-3 tbl-col-width-per-15"
+                  >
+                    <!-- Processing state -->
+                    <span
+                      *ngIf="resetInProgress.has(user.id); else resetBtn"
+                      class="badge badge-pill col-grey reset-badge-loading"
+                    >
+                      <mat-progress-spinner
+                        diameter="14"
+                        mode="indeterminate"
+                      ></mat-progress-spinner>
+                      <span class="ms-2">Processing…</span>
+                    </span>
+
+                    <!-- Default state -->
+                    <ng-template #resetBtn>
+                      <span
+                        class="badge badge-pill col-orange cursor-pointer"
+                        matTooltip="Reset user password"
+                        (click)="openResetPasswordDialog(user)"
+                      >
+                        Reset Password
+                      </span>
+                    </ng-template>
                   </mat-cell>
                 </ng-container>
 
@@ -399,13 +435,13 @@
                 </button>
               </mat-menu>
               <mat-paginator
-            [length]="users.length"
-            [pageSize]="5"
-            [pageSizeOptions]="[5, 10, 25, 100]"
-            showFirstLastButtons
-            (page)="onPageChange($event)"
-          >
-          </mat-paginator>
+                [length]="users.length"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                showFirstLastButtons
+                (page)="onPageChange($event)"
+              >
+              </mat-paginator>
             </div>
           </div>
         </div>

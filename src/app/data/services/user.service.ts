@@ -12,7 +12,7 @@ export class UserService {
       .set('Content-Type', 'application/json')
       .set(
         'Authorization',
-        `Bearer ${localStorage.getItem('authToken') || ''}`
+        `Bearer ${localStorage.getItem('authToken') || ''}`,
       );
   }
 
@@ -48,10 +48,16 @@ export class UserService {
       headers: this.getTenantHeaders(),
     });
   }
+
+  resetPassword(userId: number): Observable<any> {
+    const url = `${environment.apiUrl}/api/${userId}/reset-password?userId=${userId}`;
+    return this.http.post<any>(url, {}, { headers: this.getTenantHeaders() });
+  }
+
   getAllCollectors(): Observable<any> {
     return this.http.get(
       `${environment.apiUrl}/api/v1/collections/analytics/collectors`,
-      { headers: this.getTenantHeaders() }
+      { headers: this.getTenantHeaders() },
     );
   }
 
@@ -69,7 +75,7 @@ export class UserService {
     return this.http.put<any>(
       deleteUserAccountUrl,
       { reason },
-      { headers: this.getTenantHeaders() }
+      { headers: this.getTenantHeaders() },
     );
   }
 
@@ -88,7 +94,7 @@ export class UserService {
     return this.http.put<any>(
       lockUserAccountUrl,
       {},
-      { headers: this.getTenantHeaders() }
+      { headers: this.getTenantHeaders() },
     );
   }
 
@@ -106,7 +112,7 @@ export class UserService {
     return this.http.put<any>(
       restoreDeletedUserAccountUrl,
       {},
-      { headers: this.getTenantHeaders() }
+      { headers: this.getTenantHeaders() },
     );
   }
 
@@ -116,7 +122,7 @@ export class UserService {
     return this.http.put<any>(
       unlockUserAccountUrl,
       {},
-      { headers: this.getTenantHeaders() }
+      { headers: this.getTenantHeaders() },
     );
   }
 

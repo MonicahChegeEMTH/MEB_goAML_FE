@@ -142,6 +142,23 @@
     align-items: center;
   }
 }
+.col-grey {
+  background-color: transparent;
+  color: #fff;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.reset-badge-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+}
+
+.reset-badge-loading mat-progress-spinner {
+  display: block;
+}
 
 .reports-card {
   background: #ffffff;

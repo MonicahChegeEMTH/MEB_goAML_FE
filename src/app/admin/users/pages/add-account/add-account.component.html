@@ -18,7 +18,7 @@
           <div class="body">
             <form [formGroup]="userForm" class="m-4">
               <div class="row">
-                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                   <mat-form-field
                     class="example-full-width mb-3"
                     appearance="outline"
@@ -40,8 +40,8 @@
                       employee No cannot contain numbers or special characters
                     </mat-error>
                   </mat-form-field>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                </div> -->
+                <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                   <mat-form-field
                     class="example-full-width mb-3"
                     appearance="outline"
@@ -53,13 +53,13 @@
                     >
                       Username is required
                     </mat-error>
-                    <!-- <mat-error
+                    <mat-error
                       *ngIf="userForm.get('username')?.hasError('pattern')"
                     >
                       Username cannot contain numbers or special characters
-                    </mat-error> -->
+                    </mat-error>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
                   <mat-form-field
                     class="example-full-width mb-3"
@@ -135,17 +135,14 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
-
-                <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-3">
+                 <div class="col-xl-4 col-lg- col-md-12 col-sm-12 mb-3">
                   <mat-form-field
                     class="example-full-width mb-3"
                     appearance="outline"
                   >
                     <mat-label>Mobile</mat-label>
-                    <input matInput formControlName="phone" required />
-                    <mat-error
+                    <input matInput formControlName="phone" />
+                    <!-- <mat-error
                       *ngIf="userForm.get('phone').hasError('required')"
                     >
                       Mobile number is required
@@ -155,7 +152,7 @@
                     >
                       Enter a valid phone number (e.g. +254712345678 or
                       0712345678)
-                    </mat-error>
+                    </mat-error> -->
                   </mat-form-field>
                 </div>
               </div>
