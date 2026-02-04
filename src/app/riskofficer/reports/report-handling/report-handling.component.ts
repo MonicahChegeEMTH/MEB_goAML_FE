@@ -71,7 +71,7 @@ export class ReportHandlingComponent {
       console.log('DEBUG REPORT TYPE →', this.reportType);
       console.log('NAV DATA →', navData);
 
-      this.isReadOnly = this.reportType === 'ACC_STMT';
+      // this.isReadOnly = this.reportType === 'ACC_STMT';
 
       this.displayXml(this.xmlContent);
     } else {

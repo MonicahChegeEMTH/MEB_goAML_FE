@@ -230,7 +230,7 @@ export class SigninComponent
         }
 
         /* -------- OTP FLOW -------- */
-        if (res.otp) {
+        if (res.firstLogin === false) {
           this.otpStep = true;
           this.resetStep = false;
           this.loading = false;
