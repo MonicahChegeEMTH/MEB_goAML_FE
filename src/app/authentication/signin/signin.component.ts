@@ -7,6 +7,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { TokenStorageService } from 'src/app/core/service/token-storage.service';
 import { NotificationService } from 'src/app/data/services/notification.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
+import { IdleTimeoutService } from '../idle-timeout.service';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -41,6 +42,7 @@ export class SigninComponent
     private tokenStorage: TokenStorageService,
     private notificationService: NotificationService,
     private snackbar: SnackbarService,
+    private idleTimeoutService: IdleTimeoutService
   ) {
     super();
   }
@@ -126,21 +128,19 @@ export class SigninComponent
         };
 
         console.log('OTP VERIFY RESPONSE:', data);
-
-        /* 🔁 OTP SUCCESS BUT PASSWORD RESET REQUIRED */
         if (data.firstLogin === 'Y') {
           this.resetStep = true;
           this.otpStep = false;
           return;
         }
 
-        /* ✅ OTP SUCCESS → LOGIN COMPLETE */
         this.otpStep = false;
         this.resetStep = false;
         this.submitted = false;
 
         this.tokenStorage.saveToken(data.token, data.refreshToken);
         this.tokenStorage.saveUser(data);
+        this.idleTimeoutService.startWatching();
 
         const role = data.role;
         console.log('Redirecting with role:', role);
@@ -183,16 +183,9 @@ export class SigninComponent
           'snackbar-success',
           'Password reset successful. Please enter the OTP sent to your email/phone.',
         );
-
-        // 🔹 Switch directly to OTP input
         this.resetStep = false;
         this.otpStep = true;
-
-        // Reset OTP form fields
         this.otpForm.reset();
-
-        // Keep maskedEmail for OTP payload
-        // No need to reset authForm — user shouldn’t login again
       },
       error: () => (this.loading = false),
     });
@@ -245,6 +238,7 @@ export class SigninComponent
         /* -------- NORMAL LOGIN (NO OTP, NO RESET) -------- */
         this.tokenStorage.saveToken(res.token, res.refreshToken);
         this.tokenStorage.saveUser(res);
+        this.idleTimeoutService.startWatching();
 
         const role = res.role;
 
@@ -307,7 +301,7 @@ export class SigninComponent
 
     const pastedData = event.clipboardData
       ?.getData('text')
-      ?.replace(/\D/g, '') // digits only
+      ?.replace(/\D/g, '')
       .slice(0, 6);
 
     if (!pastedData || pastedData.length < 6) {
@@ -320,7 +314,6 @@ export class SigninComponent
       this.otpForm.get(control)?.setValue(pastedData[index]);
     });
 
-    // Move focus to last input
     const lastInput = document.querySelector<HTMLInputElement>(
       `[formControlName="sixth"]`,
     );

@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { Event, Router, NavigationStart, NavigationEnd } from "@angular/router";
 import { PlatformLocation } from "@angular/common";
+import { IdleTimeoutService } from "./authentication/idle-timeout.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -8,12 +9,10 @@ import { PlatformLocation } from "@angular/common";
 })
 export class AppComponent {
   currentUrl: string;
-  constructor(public _router: Router, location: PlatformLocation) {
+  constructor(public _router: Router, location: PlatformLocation,private idleTimeoutService: IdleTimeoutService) {
     this._router.events.subscribe((routerEvent: Event) => {
       if (routerEvent instanceof NavigationStart) {
-        // location.onPopState(() => {
-        //   window.location.reload();
-        // });
+      
         this.currentUrl = routerEvent.url.substring(
           routerEvent.url.lastIndexOf("/") + 1
         );
@@ -23,4 +22,9 @@ export class AppComponent {
       window.scrollTo(0, 0);
     });
   }
+  ngOnInit() {
+  
+    if (localStorage.getItem('auth-token')) {
+      this.idleTimeoutService.startWatching();
+    }}
 }
