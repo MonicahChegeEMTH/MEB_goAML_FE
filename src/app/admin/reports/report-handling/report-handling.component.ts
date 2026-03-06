@@ -29,7 +29,10 @@ export class ReportHandlingComponent {
   originalXmlContent: string = '';
   private xmlEditSubject = new Subject<string>();
   undoStack: string[] = [];
-
+searchTerm: string = '';
+replaceTerm: string = '';
+matchIndexes: number[] = [];
+currentMatchIndex: number = -1;
   constructor(
     private tokenStorage: TokenStorageService,
     private sanitizer: DomSanitizer,
@@ -284,56 +287,112 @@ export class ReportHandlingComponent {
     }
   }
   
+onXmlEdit(event: Event) {
+  const target = event.target as HTMLElement;
+  const newXml = target.innerText || target.textContent || '';
 
-  onXmlEdit(event: Event) {
-    const target = event.target as HTMLElement;
-    const newXml = target.innerText || target.textContent || '';
+  if (!this.undoStack.length) this.pushToUndoStack(this.xmlContent);
 
-    // Push immediately if stack empty
-    if (!this.undoStack.length) this.pushToUndoStack(this.xmlContent);
-
-    // Push if punctuation/space
-    const lastChar = newXml.slice(-1);
-    if ([' ', '\n', '.', ',', ';'].includes(lastChar)) {
-      this.pushToUndoStack(this.xmlContent);
-    }
-
-    // Also push after 500ms pause (debounce)
-    this.xmlEditSubject.next(newXml);
-
-    this.xmlContent = newXml;
+  const lastChar = newXml.slice(-1);
+  if ([' ', '\n', '.', ',', ';'].includes(lastChar)) {
+    this.pushToUndoStack(this.xmlContent);
   }
 
-  private highlightXml(xml: string): string {
-    const formatted = this.formatXml(xml);
-    const escaped = this.escapeXml(formatted);
-    const highlighted = this.highlightEmptyFields(escaped);
-    const highlightedNull = this.highlightNullFields(highlighted);
+  this.xmlEditSubject.next(newXml);
+  this.xmlContent = newXml;
 
-    return `<style>
-    .missing-field {
-      background-color: #ffdddd;
-      color: red;
-      border-radius: 4px;
-      padding: 2px 4px;
-    }
-  </style>
-  ${highlightedNull}`;
+
+  if (this.searchTerm) this.findMatches();
+}
+
+
+private highlightSearch() {
+  if (!this.searchTerm) {
+    this.displayXml(this.xmlContent);
+    return;
   }
 
-  undoXmlStep(): void {
-    if (this.undoStack.length === 0) return;
+  const formatted = this.formatXml(this.xmlContent);
+  const escaped = this.escapeXml(formatted);
 
-    const previousXml = this.undoStack.pop()!;
-    this.xmlContent = previousXml;
+  const regex = new RegExp(this.escapeRegex(this.searchTerm), 'gi');
 
-    // Re-render highlights properly via Angular binding
-    this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(
-      this.highlightXml(this.xmlContent),
-    );
+  const highlighted = escaped.replace(
+    regex,
+    `<span class="search-hit">$&</span>`
+  );
 
-    this.snackbar.showNotification('snackbar-info', 'Undo step applied.');
+  this.formattedXml = this.sanitizer.bypassSecurityTrustHtml(`
+    <style>
+      .search-hit {
+        background: yellow;
+        color: black;
+        border-radius: 3px;
+        padding: 1px 3px;
+      }
+    </style>
+    ${highlighted}
+  `);
+}
+
+findMatches() {
+  this.matchIndexes = [];
+  this.currentMatchIndex = -1;
+
+  if (!this.searchTerm) {
+    this.displayXml(this.xmlContent);
+    return;
   }
+
+  const regex = new RegExp(this.escapeRegex(this.searchTerm), 'gi');
+
+  let match;
+  while ((match = regex.exec(this.xmlContent)) !== null) {
+    this.matchIndexes.push(match.index);
+  }
+
+  this.highlightSearch();
+}
+
+findNext() {
+  if (!this.matchIndexes.length) return;
+
+  this.currentMatchIndex =
+    (this.currentMatchIndex + 1) % this.matchIndexes.length;
+
+  this.snackbar.showNotification(
+    'snackbar-info',
+    `Match ${this.currentMatchIndex + 1} of ${this.matchIndexes.length}`
+  );
+}
+
+replaceOne() {
+  if (!this.searchTerm) return;
+
+  this.pushToUndoStack(this.xmlContent);
+
+  const regex = new RegExp(this.escapeRegex(this.searchTerm));
+  this.xmlContent = this.xmlContent.replace(regex, this.replaceTerm);
+
+  this.findMatches();
+}
+
+replaceAll() {
+  if (!this.searchTerm) return;
+
+  this.pushToUndoStack(this.xmlContent);
+
+  const regex = new RegExp(this.escapeRegex(this.searchTerm), 'gi');
+  this.xmlContent = this.xmlContent.replace(regex, this.replaceTerm);
+
+  this.findMatches();
+
+  this.snackbar.showNotification(
+    'snackbar-success',
+    'All matches replaced'
+  );
+}
+  
 
   saveEditedXml(): void {
     if (this.isReadOnly) {
@@ -397,12 +456,15 @@ export class ReportHandlingComponent {
       this.isSaving = false;
     }
   }
+  private escapeRegex(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
   undoXmlChanges(): void {
-    // Restore original XML
+    
     this.xmlContent = this.originalXmlContent;
 
-    // Re-render editor with original XML
+   
     const formatted = this.formatXml(this.xmlContent);
     const escaped = this.escapeXml(formatted);
     const highlighted = this.highlightEmptyFields(escaped);

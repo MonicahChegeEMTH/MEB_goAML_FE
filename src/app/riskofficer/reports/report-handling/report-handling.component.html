@@ -74,6 +74,30 @@
             >
               Undo Step
             </button>
+
+
+<div class="find-replace" *ngIf="editMode">
+  <input
+    type="text"
+    placeholder="Find..."
+    [(ngModel)]="searchTerm"
+    (input)="findMatches()"
+    class="find-input"
+  />
+
+  <input
+    type="text"
+    placeholder="Replace..."
+    [(ngModel)]="replaceTerm"
+    class="replace-input"
+  />
+
+  <button class="btn small-btn" (click)="findNext()">Next</button>
+  <button class="btn small-btn" (click)="replaceOne()">Replace</button>
+  <button class="btn small-btn" (click)="replaceAll()">Replace All</button>
+</div>
+
+
           </div>
 
           <div *ngIf="editMode">

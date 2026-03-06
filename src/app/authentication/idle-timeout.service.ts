@@ -9,7 +9,7 @@ const USER_KEY = 'auth-user';
 })
 export class IdleTimeoutService {
   private timeoutId: any;
-  private readonly IDLE_TIME = 2 * 60 * 1000; // 2 minutes
+  private readonly IDLE_TIME = 10 * 60 * 1000; // 2 minutes
 
   constructor(private router: Router, private ngZone: NgZone) {}
 
