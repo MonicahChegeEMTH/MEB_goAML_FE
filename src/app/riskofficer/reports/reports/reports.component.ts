@@ -323,16 +323,19 @@ private accountResolveTarget: AccountResolveTarget = 'SAR';
     return hasChanged;
   }
 
-  fetchAccountsObservable(identifier: string) {
-    const docCodeMap: any = {
-      nationalId: 'NATID',
-      passport: 'PASSP',
-      registration: 'REG1',
-    };
-    const docCode = docCodeMap[this.selectedIdType] || '';
-    return this.service.getAccounts(docCode, identifier);
-  }
+  // fetchAccountsObservable(identifier: string) {
+  //   const docCodeMap: any = {
+  //     nationalId: 'NATID',
+  //     passport: 'PASSP',
+  //     registration: 'REG1',
+  //   };
+  //   const docCode = docCodeMap[this.selectedIdType] || '';
+  //   return this.service.getAccounts(docCode, identifier);
+  // }
 
+  fetchAccountsObservable(identifier: string) {
+  return this.service.getAccounts(identifier);
+}
   displayAccount(accountNo: string) {
     return accountNo;
   }
@@ -482,22 +485,22 @@ openAccountStatement() {
     const docCode = docCodeMap[this.selectedIdType] || '';
     this.isFetchingAccounts = true;
 
-    this.service.getAccounts(docCode, this.identificationNumber).subscribe({
-      next: (data: any[]) => {
-        this.accountList = data;
-        if (data.length === 1) {
-          this.accountNumber = data[0].account_no;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch accounts:', err);
-        this.accountList = [];
-        this.snackbar.showNotification(
-          'snackbar-danger',
-          'Failed to fetch accounts'
-        );
-      },
-    });
+  this.service.getAccounts(this.identificationNumber).subscribe({
+  next: (data: any[]) => {
+    this.accountList = data;
+    if (data.length === 1) {
+      this.accountNumber = data[0].account_no;
+    }
+  },
+  error: (err) => {
+    console.error('Failed to fetch accounts:', err);
+    this.accountList = [];
+    this.snackbar.showNotification(
+      'snackbar-danger',
+      'Failed to fetch accounts'
+    );
+  },
+});
   }
 
   customFilter() {

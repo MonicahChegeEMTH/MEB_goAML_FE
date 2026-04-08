@@ -51,14 +51,22 @@ export class ReportsService {
     );
   }
 
-  getAccounts(docCode: string, referenceNumber: string) {
-    return this.http.get<any[]>(
-      `${environment.apiUrl}/api/reports/allAccounts`,
-      {
-        params: { doccode: docCode, referencenumber: referenceNumber },
-      }
-    );
-  }
+  // getAccounts(docCode: string, referenceNumber: string) {
+  //   return this.http.get<any[]>(
+  //     `${environment.apiUrl}/api/reports/allAccounts`,
+  //     {
+  //       params: { doccode: docCode, referencenumber: referenceNumber },
+  //     }
+  //   );
+  // }
+   getAccounts(referenceNumber: string) {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/api/reports/allAccounts`,
+    {
+      params: { referencenumber: referenceNumber },
+    }
+  );
+}
 
   getIndicators(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/api/sar/indicators`);
