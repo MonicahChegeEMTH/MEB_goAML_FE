@@ -11,7 +11,7 @@
   margin-right: 20px;
   width: 275px;
   border-radius: 20px 20px 20px 20px;
-  box-shadow: 0 4px 10px #001e3c33;
+  box-shadow: 0 4px 10px #19398A33;
   z-index: 1000;
 }
 
@@ -58,7 +58,7 @@
   display: flex !important;
   align-items: center;
   justify-content: center; 
-  background-color: #001e3c;
+  background-color: #19398A;
   color: #fff;
   width: 100%; 
   border: none;
@@ -121,7 +121,7 @@
   font-weight: 500;
   font-size: 17px;
   line-height: 55px;
-  color: #001e3c !important;
+  color: #19398A !important;
   background: transparent;
   border-radius: 0;
   text-decoration: none;
@@ -151,7 +151,7 @@ app-sidebar .sidebar .list li a {
   font-weight: 500;
   font-size: 17px;
   line-height: 55px;
-  color: #001e3c !important;
+  color: #19398A !important;
   background: transparent;
   border-radius: 8px;
   text-decoration: none;
@@ -160,7 +160,7 @@ app-sidebar .sidebar .list li a {
 
 app-sidebar .sidebar .list li a:hover {
   background: #f9f9f9;
-  color: #001e3c;
+  color: #19398A;
 }
 
 app-sidebar .sidebar .list li.active > a {
@@ -206,18 +206,18 @@ app-sidebar .sidebar .list li.active > a {
   font-weight: 500;
   font-size: 17px;
   line-height: 55px;
-  color: #001e3c !important;
+  color: #19398A !important;
   background: transparent;
   border-radius: 0;
   opacity: 1;
 }
 
 .sidebar .name-container .hide-menu {
-  color: #001e3c !important;
+  color: #19398A !important;
 }
 
 app-sidebar .sidebar .list li a .hide-menu {
-  color: #001e3c !important;
+  color: #19398A !important;
 }
 
 .sidebar .active > .menu-top {
@@ -234,7 +234,7 @@ app-sidebar .sidebar .list li a .hide-menu {
   font-weight: 500;
   font-size: 17px;
   line-height: 55px;
-  color: var(--NCBAYELLOW, #b08b2e);
+  color: var(--NCBAYELLOW, #FDB913);
   background: transparent;
   border-radius: 0;
   opacity: 1;

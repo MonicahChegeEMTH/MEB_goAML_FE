@@ -17,114 +17,114 @@
     <section class="report-container">
       <h2 class="title">Report Handling</h2>
       <div class="tab-buttons">
-        <button
-          class="btn preview-btn"
-          [class.active]="activeTab === 'preview'"
-          (click)="activeTab = 'preview'"
-        >
+        <button class="btn preview-btn" [class.active]="activeTab === 'preview'" (click)="activeTab = 'preview'">
           Preview
         </button>
-        <button
-          class="btn download-btn"
-          [class.active]="activeTab === 'download'"
-          (click)="activeTab = 'download'"
-          (click)="downloadXML()"
-        >
+        <button class="btn download-btn" [class.active]="activeTab === 'download'" (click)="activeTab = 'download'"
+          (click)="downloadXML()">
           Download
         </button>
       </div>
 
       <div class="xml-section">
-        <div class="xml-box" *ngIf="xmlContent; else noReport">
+        <!-- <div class="xml-box" *ngIf="xmlContent; else noReport">
           <div class="edit-actions">
-            <button
-              class="btn small-btn"
-              (click)="toggleEditMode()"
-              [disabled]="isSaving"
-            >
+            <button class="btn small-btn" (click)="toggleEditMode()" [disabled]="isSaving">
               {{ editMode ? "Preview XML" : "Edit XML" }}
             </button>
-            <button
-              class="btn save-btn"
-              *ngIf="editMode"
-              (click)="saveEditedXml()"
-              [disabled]="isSaving"
-            >
-              <ng-container *ngIf="!isSaving; else loading"
-                >Save Changes</ng-container
-              >
+            <button class="btn save-btn" *ngIf="editMode" (click)="saveEditedXml()" [disabled]="isSaving">
+              <ng-container *ngIf="!isSaving; else loading">Save Changes</ng-container>
               <ng-template #loading>
-                <span class="spinner"></span>Saving...</ng-template
-              >
+                <span class="spinner"></span>Saving...</ng-template>
             </button>
-            <button
-              class="btn save-btn"
-              *ngIf="editMode"
-              (click)="undoXmlChanges()"
-              [disabled]="isSaving"
-            >
-            <i class="far fa-undo"></i>
+            <button class="btn save-btn" *ngIf="editMode" (click)="undoXmlChanges()" [disabled]="isSaving">
+              <i class="far fa-undo"></i>
               Undo Changes
             </button>
-            <button
-              class="btn save-btn"
-              *ngIf="editMode"
-              (click)="undoXmlStep()"
-              [disabled]="undoStack.length === 0 || isSaving"
-            >
+            <button class="btn save-btn" *ngIf="editMode" (click)="undoXmlStep()"
+              [disabled]="undoStack.length === 0 || isSaving">
               Undo Step
             </button>
 
 
-<div class="find-replace" *ngIf="editMode">
-  <input
-    type="text"
-    placeholder="Find..."
-    [(ngModel)]="searchTerm"
-    (input)="findMatches()"
-    class="find-input"
-  />
+            <div class="find-replace" *ngIf="editMode">
+              <input type="text" placeholder="Find..." [(ngModel)]="searchTerm" (input)="findMatches()"
+                class="find-input" />
 
-  <input
-    type="text"
-    placeholder="Replace..."
-    [(ngModel)]="replaceTerm"
-    class="replace-input"
-  />
+              <input type="text" placeholder="Replace..." [(ngModel)]="replaceTerm" class="replace-input" />
 
-  <button class="btn small-btn" (click)="findNext()">Next</button>
-  <button class="btn small-btn" (click)="replaceOne()">Replace</button>
-  <button class="btn small-btn" (click)="replaceAll()">Replace All</button>
-</div>
+              <button class="btn small-btn" (click)="findNext()">Next</button>
+              <button class="btn small-btn" (click)="replaceOne()">Replace</button>
+              <button class="btn small-btn" (click)="replaceAll()">Replace All</button>
+            </div>
 
 
           </div>
 
           <div *ngIf="editMode">
-            <div
-              #xmlEditor
-              contenteditable="true"
-              [innerHTML]="formattedXml"
-              (input)="onXmlEdit($event)"
-              class="xml-editor"
-              spellcheck="false"
-            ></div>
-            <!-- <div
-              #xmlEditor
-              [contenteditable]="!isReadOnly"
-              [class.readonly-editor]="isReadOnly"
-              [innerHTML]="formattedXml"
-              (input)="onXmlEdit($event)"
-              class="xml-editor"
-              spellcheck="false"
-            ></div> -->
+            <div #xmlEditor contenteditable="true" [innerHTML]="formattedXml" (input)="onXmlEdit($event)"
+              class="xml-editor" spellcheck="false"></div>
           </div>
 
-          <div
-            *ngIf="!editMode"
-            [innerHTML]="formattedXml"
-            class="xml-preview"
-          ></div>
+          <div *ngIf="!editMode" [innerHTML]="formattedXml" class="xml-preview"></div>
+        </div> -->
+
+        <div class="xml-box" *ngIf="xmlContent; else noReport">
+
+          <!-- Row 1: Action buttons -->
+          <div class="edit-actions">
+            <div class="btn-group">
+              <button class="btn small-btn" (click)="toggleEditMode()" [disabled]="isSaving">
+                <i class="far fa-eye"></i>
+                {{ editMode ? "Preview XML" : "Edit XML" }}
+              </button>
+            </div>
+
+            <div class="btn-divider"></div>
+
+            <div class="btn-group" *ngIf="editMode">
+              <button class="btn save-btn" (click)="saveEditedXml()" [disabled]="isSaving">
+                <ng-container *ngIf="!isSaving; else loading">
+                  <i class="far fa-save"></i> Save Changes
+                </ng-container>
+                <ng-template #loading>
+                  <span class="spinner"></span>Saving...
+                </ng-template>
+              </button>
+              <button class="btn undo-btn" (click)="undoXmlChanges()" [disabled]="isSaving">
+                <i class="far fa-undo"></i> Undo Changes
+              </button>
+              <button class="btn undo-btn" (click)="undoXmlStep()" [disabled]="undoStack.length === 0 || isSaving">
+                <i class="far fa-corner-up-left"></i> Undo Step
+              </button>
+            </div>
+          </div>
+
+          <!-- Row 2: Find & Replace (only in edit mode) -->
+          <div class="find-replace-bar" *ngIf="editMode">
+            <div class="find-group">
+              <label>Find</label>
+              <input type="text" placeholder="Search in XML…" [(ngModel)]="searchTerm" (input)="findMatches()"
+                class="find-input" />
+              <button class="btn mini-btn" (click)="findPrev()">Prev</button>
+              <button class="btn mini-btn mini-btn-accent" (click)="findNext()">Next</button>
+            </div>
+            <div class="bar-divider"></div>
+            <div class="replace-group">
+              <label>Replace</label>
+              <input type="text" placeholder="Replace with…" [(ngModel)]="replaceTerm" class="replace-input" />
+              <button class="btn mini-btn" (click)="replaceOne()">Replace</button>
+              <button class="btn mini-btn" (click)="replaceAll()">Replace All</button>
+            </div>
+          </div>
+
+          <!-- Editor / Preview -->
+          <div *ngIf="editMode">
+            <div #xmlEditor contenteditable="true" [innerHTML]="formattedXml" (input)="onXmlEdit($event)"
+              class="xml-editor" spellcheck="false"></div>
+          </div>
+          <div *ngIf="!editMode" [innerHTML]="formattedXml" class="xml-preview"></div>
+
         </div>
 
         <ng-template #noReport>
@@ -133,24 +133,12 @@
 
         <div class="side-content">
           <div class="download-buttons">
-            <button
-              class="btn gold-btn"
-              (click)="downloadXML()"
-              [disabled]="isDownloadingXML"
-            >
-              <ng-container *ngIf="!isDownloadingXML; else xmlLoading"
-                >Download XML</ng-container
-              >
+            <button class="btn gold-btn" (click)="downloadXML()" [disabled]="isDownloadingXML">
+              <ng-container *ngIf="!isDownloadingXML; else xmlLoading">Download XML</ng-container>
               <ng-template #xmlLoading>Download XML</ng-template>
             </button>
-            <button
-              class="btn dark-btn"
-              (click)="downloadZIP(reportId)"
-              [disabled]="isDownloadingZIP[reportId]"
-            >
-              <ng-container *ngIf="!isDownloadingZIP[reportId]; else zipLoading"
-                >Download ZIP</ng-container
-              >
+            <button class="btn dark-btn" (click)="downloadZIP(reportId)" [disabled]="isDownloadingZIP[reportId]">
+              <ng-container *ngIf="!isDownloadingZIP[reportId]; else zipLoading">Download ZIP</ng-container>
               <ng-template #zipLoading>Download ZIP</ng-template>
             </button>
           </div>

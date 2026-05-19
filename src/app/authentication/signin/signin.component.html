@@ -7,61 +7,32 @@
     <mat-card class="login-card">
       <div class="logo">
         <h2>Welcome to goAML</h2>
-        <h3 style="color: #b08b2e">Reporting Solution</h3>
+        <h3 style="color: #FDB913">Reporting Solution</h3>
         <p class="subtitle">Login in to continue</p>
       </div>
 
-      <form
-        *ngIf="!otpStep && !resetStep"
-        [formGroup]="authForm"
-        (ngSubmit)="onSubmit()"
-      >
+      <form *ngIf="!otpStep && !resetStep" [formGroup]="authForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
-          <input
-            matInput
-            formControlName="username"
-            placeholder="Enter Username"
-            required
-          />
+          <input matInput formControlName="username" placeholder="Enter Username" required />
           <mat-icon matSuffix>person</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-          <input
-            matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            formControlName="password"
-            placeholder="Enter Password"
-            required
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            (click)="hidePassword = !hidePassword"
-          >
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+            placeholder="Enter Password" required />
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
             <mat-icon>{{
               hidePassword ? "visibility_off" : "visibility"
-            }}</mat-icon>
+              }}</mat-icon>
           </button>
         </mat-form-field>
 
         <button mat-raised-button class="sign-in-btn full-width" type="submit">
           SIGN IN
-          <img
-            *ngIf="!loading"
-            src="assets/images/login/Vector.png"
-            alt="Arrow Vector"
-            class="arrow-vector-img"
-          />
-          <img
-            *ngIf="loading"
-            src="assets/images/login/loading.png"
-            alt="Loading..."
-            class="arrow-vector-img spin"
-          />
+          <img *ngIf="!loading" src="assets/images/login/Vector.png" alt="Arrow Vector" class="arrow-vector-img" />
+          <img *ngIf="loading" src="assets/images/login/loading.png" alt="Loading..." class="arrow-vector-img spin" />
         </button>
 
         <!-- <div class="login-options">
@@ -71,11 +42,7 @@
           >
         </div> -->
       </form>
-      <form
-        *ngIf="otpStep && !resetStep"
-        [formGroup]="otpForm"
-        (ngSubmit)="onVerifyOtp()"
-      >
+      <form *ngIf="otpStep && !resetStep" [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()">
         <div class="card text-center otp-card">
           <div class="text-center"></div>
           <h2 class="login-title">Enter OTP</h2>
@@ -84,69 +51,28 @@
             <span class="otp-email">{{ maskedEmail }}</span>
           </p>
           <div class="otp-inputs d-flex justify-content-center">
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="first"
-              (input)="moveForward($event, 'second')"
-              autofocus
-              (keydown)="moveBackward($event, null)"
-              (paste)="onOtpPaste($event)"
-            />
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="second"
-              (input)="moveForward($event, 'third')"
-              (keydown)="moveBackward($event, 'first')"
-            />
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="third"
-              (input)="moveForward($event, 'fourth')"
-              (keydown)="moveBackward($event, 'second')"
-            />
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="fourth"
-              (input)="moveForward($event, 'fifth')"
-              (keydown)="moveBackward($event, 'third')"
-            />
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="fifth"
-              (input)="moveForward($event, 'sixth')"
-              (keydown)="moveBackward($event, 'fourth')"
-            />
-            <input
-              type="text"
-              maxlength="1"
-              formControlName="sixth"
-              (input)="moveForward($event, null)"
-              (keydown)="moveBackward($event, 'fifth')"
-            />
+            <input type="text" maxlength="1" formControlName="first" (input)="moveForward($event, 'second')" autofocus
+              (keydown)="moveBackward($event, null)" (paste)="onOtpPaste($event)" />
+            <input type="text" maxlength="1" formControlName="second" (input)="moveForward($event, 'third')"
+              (keydown)="moveBackward($event, 'first')" />
+            <input type="text" maxlength="1" formControlName="third" (input)="moveForward($event, 'fourth')"
+              (keydown)="moveBackward($event, 'second')" />
+            <input type="text" maxlength="1" formControlName="fourth" (input)="moveForward($event, 'fifth')"
+              (keydown)="moveBackward($event, 'third')" />
+            <input type="text" maxlength="1" formControlName="fifth" (input)="moveForward($event, 'sixth')"
+              (keydown)="moveBackward($event, 'fourth')" />
+            <input type="text" maxlength="1" formControlName="sixth" (input)="moveForward($event, null)"
+              (keydown)="moveBackward($event, 'fifth')" />
           </div>
-          <button
-            mat-raised-button
-            color="primary"
-            [disabled]="loading || !otpForm.valid"
-            class="auth-form-btn otp-btn"
-            type="submit"
-          >
+          <button mat-raised-button color="primary" [disabled]="loading || !otpForm.valid" class="auth-form-btn otp-btn"
+            type="submit">
             Verify OTP
           </button>
         </div>
       </form>
 
-      <form
-        *ngIf="resetStep"
-        [formGroup]="resetForm"
-        (ngSubmit)="onResetPassword()"
-      >
-        <h2 class="login-title text-center" style="color: #b08b2e">
+      <form *ngIf="resetStep" [formGroup]="resetForm" (ngSubmit)="onResetPassword()">
+        <h2 class="login-title text-center" style="color: #FDB913">
           Reset Password
         </h2>
 
@@ -173,66 +99,30 @@
 
         <mat-form-field appearance="outline" class="example-full-width">
           <mat-label>New Password</mat-label>
-          <input
-            matInput
-            [type]="hideNew ? 'password' : 'text'"
-            formControlName="newPassword"
-            (input)="onPasswordInput()"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            (click)="hideNew = !hideNew"
-          >
+          <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPassword"
+            (input)="onPasswordInput()" />
+          <button mat-icon-button matSuffix type="button" (click)="hideNew = !hideNew">
             <mat-icon>{{ hideNew ? "visibility_off" : "visibility" }}</mat-icon>
           </button>
-          <mat-error *ngIf="resetForm.get('newPassword')?.hasError('required')"
-            >Required</mat-error
-          >
+          <mat-error *ngIf="resetForm.get('newPassword')?.hasError('required')">Required</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="example-full-width">
           <mat-label>Confirm Password</mat-label>
-          <input
-            matInput
-            [type]="hideConfirm ? 'password' : 'text'"
-            formControlName="confirmPassword"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            (click)="hideConfirm = !hideConfirm"
-          >
+          <input matInput [type]="hideConfirm ? 'password' : 'text'" formControlName="confirmPassword" />
+          <button mat-icon-button matSuffix type="button" (click)="hideConfirm = !hideConfirm">
             <mat-icon>{{
               hideConfirm ? "visibility_off" : "visibility"
-            }}</mat-icon>
+              }}</mat-icon>
           </button>
-          <mat-error *ngIf="resetForm.hasError('mismatch')"
-            >Passwords do not match</mat-error
-          >
+          <mat-error *ngIf="resetForm.hasError('mismatch')">Passwords do not match</mat-error>
         </mat-form-field>
         <div class="container-auth-form-btn">
-          <button
-            mat-raised-button
-            [disabled]="loading || !resetForm.valid"
-            class="sign-in-btn full-width"
-            type="submit"
-          >
+          <button mat-raised-button [disabled]="loading || !resetForm.valid" class="sign-in-btn full-width"
+            type="submit">
             Reset Password
-            <img
-              *ngIf="!loading"
-              src="assets/images/login/Vector.png"
-              alt="Arrow Vector"
-              class="arrow-vector-img"
-            />
-            <img
-              *ngIf="loading"
-              src="assets/images/login/loading.png"
-              alt="Loading..."
-              class="arrow-vector-img spin"
-            />
+            <img *ngIf="!loading" src="assets/images/login/Vector.png" alt="Arrow Vector" class="arrow-vector-img" />
+            <img *ngIf="loading" src="assets/images/login/loading.png" alt="Loading..." class="arrow-vector-img spin" />
           </button>
         </div>
       </form>
